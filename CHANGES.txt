@@ -2,7 +2,7 @@ Changelog of lizard-krw
 ===================================================
 
 
-0.1 (unreleased)
+0.1 (2010-12-07)
 ----------------
 
 - Copy the following items from krw-waternet:
