@@ -1,0 +1,251 @@
+{# KRW measure view: info and graphs on KRW measures #}
+{% extends "lizard_map/lizardgis.html" %}
+{% load workspaces %}
+{% load utility %}
+
+{% block subtitle %} {{ measure.name }} {% endblock %}
+
+{% block portal-tabs %}
+<ul>
+  <li class="selected"><a href="/">Overzicht</a></li>
+  <li class="last"><a href="/analysis">Analyse</a></li>
+</ul>
+{% endblock portal-tabs %}
+
+{% block breadcrumbs %}
+<a href="{% url homepage %}">home</a>
+&rarr;
+<a href="{% url krw_waternet.waterbody area=measure.waterbody.slug %}" class="lizard-map-link">{{ measure.waterbody.name }}</a>
+&rarr;
+<a href="{% url krw_waternet.krw_waterbody_measures waterbody_slug=measure.waterbody.slug %}" class="lizard-map-link">Maatregelen</a>
+&rarr;
+<a href="{% url krw_waternet.measure measure_id=measure.id %}" class="lizard-map-link">{{ measure.name }}</a>
+{% endblock %}
+
+{% block sidebar %}
+<div class="sidebarbox">
+  <h2>Kaart</h2>
+  <a href="/">
+  <img src="{% url krw_waternet.tiny_map waterbody_slug=measure.waterbody.slug %}"
+       height="140"
+       width="300"
+       alt="geselecteerde waterlichaam"/>
+  </a>
+</div>
+<div class="sidebarbox sidebarbox-stretched">
+  <h2>
+    Info
+    <span class="ss_sprite ss_calendar_view_day sidebarbox-action-icon popup-trigger"
+          rel="#summary-datepicker">&nbsp;</span>
+  </h2>
+  <div>
+    {% date_popup %}
+    <dl>
+      <dt>Naam</dt>
+      <dd>{{ measure.name }}</dd>
+
+      <dt>Beschrijving</dt>
+      <dd>{{ measure.description }}</dd>
+
+      <dt>Type</dt>
+      <dd>{{ measure.type }}</dd>
+
+      <dt>Code</dt>
+      <dd>{{ measure.code }}</dd>
+
+      <dt>Waterlichaam</dt>
+      <dd><a href="{{ measure.waterbody.get_absolute_url }}">{{ measure.waterbody }}</a></dd>
+
+      {% if measure.parent %}
+      <dt>Hoofdmaatregel</dt>
+      <dd>
+        <a href="{% url krw_waternet.measure measure_id=measure.parent.id %}">
+          {{ measure.parent.name }}
+        </a>
+      </dd>
+      {% endif %}
+
+      <dt>Deelmaatregelen</dt>
+      <dd>
+        {% with "krw_waternet/measure_tree_snippet.html" as ourselves %}
+          {% include ourselves %}
+        {% endwith %}
+      </dd>
+    </dl>
+  </div>
+</div>
+{% endblock %}
+
+{% block object-actions %}
+{# Look up icon classes in http://www.ajaxbestiary.com/Labs/SilkSprite/ #}
+<span title="Werkt nog niet" class="notworking ss_sprite ss_printer">Printen</span> |
+<span title="Werkt nog niet" class="notworking ss_sprite ss_application_go">Exporteren</span> |
+<span class="ss_sprite ss_help"><a href="{% url help %}" target="_blank">Help</a></span>
+{% endblock %}
+
+
+{% block content %}
+<div id="textual">
+  <h2>{{ measure.name }}</h2>
+  <div style="width: 100%; height: 100px;" class="img-use-my-size">
+    <a href="{% url krw_waternet.measure_graph measure_id=measure.id %}" class="replace-with-image">
+      afbeelding nog niet geladen
+    </a>
+  </div>
+  <table class="generic-table">
+    <tbody>
+      <tr>
+        <th>Eigenaar</th><td>{{ measure.owner }}</td>
+      </tr>
+
+      {% if measure.parent %}
+      <tr>
+        <th>Onderdeel van maatregel</th><td>{{ measure.parent }}</td>
+      </tr>
+      {% endif %}
+
+      {% if measure.is_indicator %}
+      <tr>
+        <th>Indicator</th>
+        <td>
+          {% if measure.is_indicator %}
+          Ja. Deze maatregel wordt in het samenvattingsscherm getoond.
+          {% else %}
+          Nee. Deze maatregel wordt niet in het samenvattingsscherm getoond.
+          {% endif %}
+        </td>
+      </tr>
+      {% endif %}
+
+      <tr>
+        <th>Gebied</th><td>{{ measure.area }}</td>
+      </tr>
+
+      <tr>
+        <th>Gebiedsplan</th><td>{{ measure.area_plan }}</td>
+      </tr>
+
+      <tr>
+        <th>SGBP categorie</th><td>{{ measure.catchment_area_plan }}</td>
+      </tr>
+
+      <tr>
+        <th>SGBP waarde (incl. optelling deelmaatregelen)</th><td>{{ measure.catchment_area_plan_value_sum }}</td>
+      </tr>
+
+      <tr>
+        <th>SGBP eenheid</th><td>{{ measure.catchment_area_plan_unit }}</td>
+      </tr>
+
+      <tr>
+        <th>Verantwoordelijke organisatie</th><td>{{ measure.responsible_organization }}</td>
+      </tr>
+
+      <tr>
+        <th>Verantwoordelijke afdeling</th><td>{{ measure.responsible_department }}</td>
+      </tr>
+
+      <tr>
+        <th>Kosten (incl. optelling deelmaatregelen)</th>
+        <td>{{ measure.price_sum|euro }}</td>
+      </tr>
+
+      <tr>
+        <th>Einddatum</th>
+        <td>Deze maatregel: {% firstof measure.obligation_end_date "geen" %}. Vroegste van deelmaatregelen: {% firstof measure.obligation_end_date_min "geen" %}. Laatste van deelmaatregelen: {% firstof measure.obligation_end_date_max "geen" %}</td>
+      </tr>
+
+      <tr>
+        <th>Medefinanciering vereist</th>
+        <td>{% if measure.need_co_funding %}Ja{% else %}Nee{% endif %}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Stand van zaken</h2>
+  <table class="generic-table">
+    <tbody>
+      {% with measure.status_moment as status_moment %}
+        {% if status_moment %}
+        <tr>
+          <th>Status</th><td>{{ status_moment.status }}</td>
+        </tr>
+        {% ifnotequal measure status_moment.measure %}
+        <tr>
+          <th>Maatgevende deelmaatregel</th><td>{{ status_moment.measure }}</td>
+        </tr>
+        {% endifnotequal %}
+        <tr>
+          <th>Sinds</th><td>{{ status_moment.datetime }}</td>
+        </tr>
+        <tr>
+          <th>Beschrijving</th><td>{{ status_moment.description }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <th>Status</th><td>Geen statusinfo beschikbaar</td>
+        </tr>
+        {% endif %}
+      {% endwith %}
+    </tbody>
+  </table>
+
+  <h2>Financierende organisaties</h2>
+  <table class="generic-table">
+    <thead>
+      <tr>
+        <th>Maatregel</th>
+        <th>Organisatie</th>
+        <th>Categorie</th>
+        <th>Bedrag</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for funding_organization in measure.fundingorganization_set.all %}
+      <tr>
+        <td>
+          {{ measure }}
+        </td>
+        <td>
+          {{ funding_organization.organization }}
+        </td>
+        <td>
+          {{ funding_organization.funding_category }}
+        </td>
+        <td>
+          {{ funding_organization.price|euro }}
+        </td>
+      </tr>
+      {% endfor %}
+      {% for m in measure.get_descendants %}
+        {% for funding_organization in m.fundingorganization_set.all %}
+        <tr>
+          <td>
+            {{ m }}
+          </td>
+          <td>
+            {{ funding_organization.organization }}
+          </td>
+          <td>
+            {{ funding_organization.funding_category }}
+          </td>
+          <td>
+            {{ funding_organization.price|euro }}
+          </td>
+        </tr>
+        {% endfor %}
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="3">
+          Totaal
+        </td>
+        <td>
+          {{ measure.funding_organization_price_sum|euro }}
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+{% endblock %}

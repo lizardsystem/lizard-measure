@@ -1,0 +1,33 @@
+{% extends "lizard_map/wms.html" %}
+{% load workspaces %}
+{% block subtitle %} Gebiedskeuze {% endblock %}
+
+{% block portal-tabs %}
+<ul>
+  <li class="selected"><a href="/">Overzicht</a></li
+  ><li class="last"><a href="/analysis">Analyse</a></li>
+</ul>
+{% endblock portal-tabs %}
+
+{% block breadcrumbs %}
+<a href="{% url homepage %}">home</a>
+{% endblock %}
+
+{% block sidebar %}
+<div class="sidebarbox sidebarbox-stretched">
+  <h2>Gebiedskeuze</h2>
+  <p>
+    KRW maatregelen en scores worden per gebied bekeken, dus u kunt hier een
+    keuze maken.
+  </p>
+  <ul class="without-bullets">
+    {% for water_body in water_bodies %}
+    <li>
+      <a href="{{ water_body.get_absolute_url }}">
+        {{ water_body.name }}
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

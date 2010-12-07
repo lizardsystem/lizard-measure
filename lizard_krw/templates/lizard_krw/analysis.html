@@ -1,0 +1,56 @@
+{# Summary view: small map on the left to show selection; graphs on the right #}
+{% extends "lizard_map/wms.html" %}
+{% load workspaces %}
+
+{% block subtitle %} Analysis {% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url homepage %}">home</a>
+&rarr;
+<a href="{% url analysis_start %}" class="lizard-map-link">analyse</a>
+{% endblock %}
+
+{% block sidebar %}
+<div id="iconbox" class="sidebarbox sidebarbox-stretched iconlist">
+  <h2>Gegevensbronnen</h2>
+  <ul>
+      <li>
+        <a href="/krw-browser/" class="lizard-map-link">
+          <img src="{{ STATIC_URL }}krw_waternet/krw.png" />
+          <div>KRW gegevens</div>
+        </a>
+      </li>
+      <li>
+        <a href="/fews-browser/" class="lizard-map-link">
+          <img src="{{ STATIC_URL }}lizard_ui/app_icons/meetgegevens.png" />
+          <div>Meetgegevens</div>
+        </a>
+      </li>
+      <li>
+        <a href="{% url sticky-browser %}" class="lizard-map-link">
+          <img src="{{ STATIC_URL }}lizard_sticky/sticky.png" />
+          <div>Geeltjes</div>
+        </a>
+      </li>
+      <li>
+        <a class="notworking">
+          <img src="{{ STATIC_URL }}lizard_ui/app_icons/kaartlagen.png" />
+          <div>Kaartlagen</div>
+        </a>
+      </li>
+      <li>
+        <a class="notworking">
+          <img src="{{ STATIC_URL }}lizard_ui/app_icons/modelresultaten.png" />
+          <div>Rapportage</div>
+        </a>
+      </li>
+  </ul>
+</div>
+
+{% for workspace in workspaces.user %}
+  {% workspace workspace %}
+{% empty %}
+No workspace
+{% endfor %}
+
+{% endblock %}

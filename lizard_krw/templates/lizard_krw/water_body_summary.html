@@ -1,0 +1,104 @@
+{# Water body summary view: small map on the left to show selection; graphs on the right #}
+{% extends "lizard_map/lizardgis.html" %}
+{% load markup %}
+{% load workspaces %}
+
+{% block subtitle %} {{ water_body.name }} {% endblock %}
+
+
+{% block portal-tabs %}
+<ul>
+  <li class="selected"><a href="/">Overzicht</a></li
+  ><li class="last"><a href="/analysis">Analyse</a></li>
+</ul>
+{% endblock portal-tabs %}
+
+{% block breadcrumbs %}
+<a href="{% url homepage %}">home</a>
+&rarr;
+<a href="{% url krw_waternet.waterbody area=water_body.slug %}" class="lizard-map-link">{{ water_body.name }}</a>
+{% endblock %}
+
+{% block sidebar %}
+<div class="sidebarbox">
+  <h2>Kaart</h2>
+  <a href="/">
+  <img src="{% url krw_waternet.tiny_map waterbody_slug=water_body.slug %}"
+       height="140"
+       width="300"
+       alt="geselecteerde waterlichaam"/>
+  </a>
+</div>
+<div class="sidebarbox sidebarbox-stretched">
+  <h2>
+    Info
+    <span class="ss_sprite ss_calendar_view_day sidebarbox-action-icon popup-trigger"
+          rel="#summary-datepicker">&nbsp;</span>
+  </h2>
+  <div>
+    {% date_popup %}
+    <dl>
+      <dt>Naam</dt>
+      <dd>{{ water_body.name }}</dd>
+
+      {% if water_body.description %}
+      {{ water_body.description|markdown:"def_list" }}
+      {% endif %}
+
+      {% if shown_indicators %}
+      <dt>Indicatoren</dt>
+      <dd>
+        <ul>
+        {% for indicator in shown_indicators %}
+        <li>{{ indicator.timeserie.name }}{% if indicator.target_value %} richtwaarde: {{ indicator.target_value }}{% endif %}{% if indicator.boundary_value %} grenswaarde: {{ indicator.boundary_value }}{% endif %}</li>
+        {% endfor %}
+        </ul>
+      </dd>
+      {% endif %}
+
+      {% if unused_indicators %}
+      <dt>Niet-getoonde indicatoren</dt>
+      <dd>
+        <ul>
+        {% for indicator in shown_indicators %}
+        <li>{{ indicator.timeserie.name }}{% if indicator.target_value %} richtwaarde: {{ indicator.target_value }}{% endif %}{% if indicator.boundary_value %} grenswaarde: {{ indicator.boundary_value }}{% endif %}</li>
+        {% endfor %}
+        </ul>
+      </dd>
+      {% endif %}
+
+    </dl>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="evenly-spaced-vertical">
+  {% if not indicators %}
+  <div class="vertical-item">
+    <b>Warning:</b> No indicators defined yet.
+  </div>
+  {% endif %}
+  {% for indicator in indicators %}
+  <div class="vertical-item img-use-my-size">
+    <a class="replace-with-image"
+       href="{{ indicator.get_absolute_url }}">
+      image
+    </a>
+  </div>
+  {% endfor %}
+  <div class="vertical-item img-use-my-size">
+    <a class="replace-with-image"
+       href="{% url krw_waternet.krw_score_graph area=water_body.slug %}">
+      krw score image
+    </a>
+  </div>
+  <div class="vertical-item img-use-my-size">
+    <a class="replace-with-image"
+       href="{% url krw_waternet.krw_measure_graph waterbody_slug=water_body.slug %}"
+       data-href-click="{% url krw_waternet.krw_waterbody_measures waterbody_slug=water_body.slug %}">
+      krw measure image
+    </a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,302 @@
+[
+  {
+    "pk": 1,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Amstellandboezem",
+      "slug": "amstellandboezem"
+    }
+  },
+  {
+    "pk": 2,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Botshol",
+      "slug": "botshol"
+    }
+  },
+  {
+    "pk": 10,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Gaasperplas",
+      "slug": "gaasterplas"
+    }
+  },
+  {
+    "pk": 26,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": "verzamelbak gebiedsbreed",
+      "name": "gebiedsbreed",
+      "slug": "gebiedsbreed"
+    }
+  },
+  {
+    "pk": 4,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Grote Maarsseveense Plas",
+      "slug": "grote-maarsseveense-plas"
+    }
+  },
+  {
+    "pk": 11,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Hollands Ankeveense plassen",
+      "slug": "hollandse-ankeveense-plassen"
+    }
+  },
+  {
+    "pk": 6,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Kortenhoefse Plassen",
+      "slug": "kortenhoefse-plassen"
+    }
+  },
+  {
+    "pk": 7,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Loenderveen Oost",
+      "slug": "loenderveen-oost"
+    }
+  },
+  {
+    "pk": 8,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": "Status\r\n:   kunstmatig\r\nType\r\n:   M30 - zwak brakke wateren\r\nBijzonderheden\r\n:   Natura2000/TOP-gebied verdroging Botshol\r\n\r\nHoofdpunten analyse\r\n:   - Succesvol herstel\r\n    - Variatie door meteorologie\r\n    - Oevervegetatie te lijden door constant peil\r\n\r\nNormoverschrijding chemie huidige situatie\r\n:   - Overige relevante verontreinigende stoffen: koper, zink\r\n    - Prioritaire stoffen totaal: cadmium, kwik",
+      "name": "Loosdrechtse Plassen",
+      "slug": "loosdrechtse-plassen"
+    }
+  },
+  {
+    "pk": 9,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Molenpolder en Tienhovense Plassen",
+      "slug": "molenpolder-en-tienhovense-plassen"
+    }
+  },
+  {
+    "pk": 12,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Naardermeer",
+      "slug": "naardermeer"
+    }
+  },
+  {
+    "pk": 13,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Noorder IJplas",
+      "slug": "noorder-ijplas"
+    }
+  },
+  {
+    "pk": 14,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Ouderkerkerplas",
+      "slug": "ouderkerkerplas"
+    }
+  },
+  {
+    "pk": 15,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Sloterplas",
+      "slug": "sloterplas"
+    }
+  },
+  {
+    "pk": 16,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Spiegelplas",
+      "slug": "spiegelplas"
+    }
+  },
+  {
+    "pk": 17,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Ster en Zodden",
+      "slug": "ster-en-zodden"
+    }
+  },
+  {
+    "pk": 18,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Stichtse Ankeveense Plassen",
+      "slug": "stichtse-ankeveense-plassen"
+    }
+  },
+  {
+    "pk": 19,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Terra Nova",
+      "slug": "terra-nova"
+    }
+  },
+  {
+    "pk": 20,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Tussenboezem Vinkeveen a",
+      "slug": "tussenboezem-vinkeveen-a"
+    }
+  },
+  {
+    "pk": 21,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Tussenboezem Vinkeveen b",
+      "slug": "tussenboezem-vinkeveen-b"
+    }
+  },
+  {
+    "pk": 27,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": "",
+      "name": "Vaarten Amsterdam",
+      "slug": "vaarten-amsterdam"
+    }
+  },
+  {
+    "pk": 33,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": "",
+      "name": "Vaarten Groot Mijdrecht",
+      "slug": "vaarten-groot-mijdrecht"
+    }
+  },
+  {
+    "pk": 31,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": "",
+      "name": "Vaarten Ronde Hoep",
+      "slug": "vaarten-ronde-hoep"
+    }
+  },
+  {
+    "pk": 29,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": "",
+      "name": "Vaarten Ronde Venen",
+      "slug": "vaarten-ronde-venen"
+    }
+  },
+  {
+    "pk": 28,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": "",
+      "name": "Vaarten Vechtstreek",
+      "slug": "vaarten-vechtstreek"
+    }
+  },
+  {
+    "pk": 32,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": "",
+      "name": "Vaarten Westeramstel",
+      "slug": "vaarten-westeramstel"
+    }
+  },
+  {
+    "pk": 30,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": "",
+      "name": "Vaarten Zevenhoven",
+      "slug": "vaarten-zevenhoven"
+    }
+  },
+  {
+    "pk": 22,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Vecht",
+      "slug": "vecht"
+    }
+  },
+  {
+    "pk": 23,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Vinkeveense Plassen",
+      "slug": "vinkeveense-plassen"
+    }
+  },
+  {
+    "pk": 24,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Waterleidingplas",
+      "slug": "waterleidingplas"
+    }
+  },
+  {
+    "pk": 25,
+    "model": "lizard_krw.waterbody",
+    "fields": {
+      "description": null,
+      "name": "Wijde Blik",
+      "slug": "wijdeblik"
+    }
+  },
+  {
+    "pk": 1,
+    "model": "lizard_map.workspace",
+    "fields": {
+      "name": "Homepage",
+      "visible": true,
+      "owner": null
+    }
+  },
+  {
+    "pk": 1,
+    "model": "lizard_map.workspaceitem",
+    "fields": {
+      "index": 0,
+      "name": "Waterlichamen",
+      "visible": true,
+      "adapter_layer_json": "{\"layer_name\": \"Waterlichamen\", \"resource_module\": \"lizard_map\", \"resource_name\": \"test_shapefiles/KRWwaterlichamen_merge.shp\", \"search_property_name\": \"WGBNAAM\"}",
+      "workspace": 1,
+      "adapter_class": "adapter_shapefile"
+    }
+  }
+]
