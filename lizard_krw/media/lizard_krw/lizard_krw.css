@@ -1,0 +1,64 @@
+.filter button
+{ width: 20px;
+  height: 20px;
+  font-size: 10px;
+  text-align: center;
+}
+
+.layer-visibility
+{ width: 10px;
+  height: 10px;
+  }
+
+/* TODO: this isn't a valid identifier */
+#sidebar .sidebarbox.highlight h2
+{background-color: #FF0000;
+ background-image: none;
+  }
+
+.layer-name
+{ font-family: "Arial";
+  }
+
+.layer-location
+{ font-weight: bolder;
+  }
+
+.layer-parameter
+{ font-size: 0.7em;
+  }
+
+.layer-info
+{ font-size: 0.8em;
+  }
+
+.layer-legend
+{ font-size: 0.8em;
+  }
+
+/* Sidebar filter/parameter/dragging styling */
+#navigation li span.file,
+.workspace-acceptable
+{ cursor: pointer;
+  }
+
+#navigation li.selected
+{
+  background-color: #f2f2f2;
+  }
+
+/* Indicate clickability of accordeon headers */
+#filter-parameter-accordeon h3
+{ cursor: pointer;
+  }
+
+/* Parameter list styling */
+
+#parametertree li.selected
+{ /* For parameteres that are selected */
+  background-color: #f2f2f2;
+}
+
+.map-actions
+{ display: inline;
+  }

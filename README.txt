@@ -2,8 +2,56 @@ lizard-krw
 ==========================================
 
 Introduction
+------------
 
-Usage, etc.
+Krw summary screen: 2 indicators, krw scores panel and krw measures.
+
+
+Usage
+-----
+
+- Add lizard_krw to setup.py
+
+- Add PIL, matplotlib (more?) in buildout.cfg:sysegg
+
+- Optionally pin lizard_krw in buildout.cfg
+
+- Add lizard_krw in the django settings.py
+
+- Mount lizard_krw on '^krw/' in urls.py. DO NOT MOUNT ON OTHER URL OR
+  THE JS WILL NOT WORK.
+
+    (r'^krw/', include('lizard_krw.urls')),
+
+- Override lizard_ui/lizardbase.html template and add css and js:
+
+    {% extends "lizard_ui/realbase.html" %}
+
+    {% block sitetitle %}
+      - Lizard Volg- en Stuursysteem
+    {% endblock sitetitle %}
+
+    {% block css %}
+    {{ block.super }}
+    <link type="text/css"
+          href="{{ STATIC_URL }}lizard_krw/lizard_krw.css"
+          rel="stylesheet" />
+    {% endblock css %}
+
+    {% block javascript %}
+    {{ block.super }}
+    <script type="text/javascript"
+            src="{{ STATIC_URL }}lizard_krw/lizard_krw.js"></script>
+    {% endblock javascript %}
+
+    {% block portal-tabs %}
+    <ul>
+      <li><a href="/">Overzicht</a></li>
+      <li class="selected last"><a href="/analysis">Analyse</a></li>
+    </ul>
+    {% endblock portal-tabs %}
+
+- Fill waterbodies and make workspace no 1. Put them in a fixture.
 
 
 Development installation
