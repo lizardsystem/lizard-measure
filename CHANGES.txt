@@ -5,7 +5,7 @@ Changelog of lizard-krw
 0.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Added initial South migration.
 
 
 0.1 (2010-12-07)
