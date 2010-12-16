@@ -5,7 +5,7 @@ Changelog of lizard-krw
 0.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- New measure model and accompanying models + migrations.
 
 
 0.2 (2010-12-16)

@@ -1,19 +1,16 @@
 from django.contrib import admin
 
 from lizard_krw.models import AlphaScore
-from lizard_krw.models import Area
-from lizard_krw.models import AreaPlan
-from lizard_krw.models import CatchmentAreaPlan
 from lizard_krw.models import Color
-from lizard_krw.models import Department
-from lizard_krw.models import FundingCategory
+from lizard_krw.models import Executive
 from lizard_krw.models import FundingOrganization
 from lizard_krw.models import GoalScore
+from lizard_krw.models import KRWWaterType
 from lizard_krw.models import Measure
 from lizard_krw.models import MeasureCategory
+from lizard_krw.models import MeasureCode
 from lizard_krw.models import MeasureStatus
 from lizard_krw.models import MeasureStatusMoment
-from lizard_krw.models import MeasureType
 from lizard_krw.models import Organization
 from lizard_krw.models import Score
 from lizard_krw.models import SingleIndicator
@@ -53,19 +50,16 @@ class MeasureAdmin(admin.ModelAdmin):
 
 
 admin.site.register(AlphaScore)
-admin.site.register(Area)
-admin.site.register(AreaPlan)
-admin.site.register(CatchmentAreaPlan)
 admin.site.register(Color)
-admin.site.register(Department)
-admin.site.register(FundingCategory)
+admin.site.register(Executive)
 admin.site.register(FundingOrganization)
 admin.site.register(GoalScore, ScoreAdmin)
+admin.site.register(KRWWaterType)
 admin.site.register(Measure, MeasureAdmin)
 admin.site.register(MeasureCategory)
+admin.site.register(MeasureCode)
 admin.site.register(MeasureStatus)
 admin.site.register(MeasureStatusMoment)
-admin.site.register(MeasureType)
 admin.site.register(Organization)
 admin.site.register(Score, ScoreAdmin)
 admin.site.register(SingleIndicator)

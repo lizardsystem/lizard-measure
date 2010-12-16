@@ -30,6 +30,17 @@ SCORE_CATEGORIES = {
 SCORE_CATEGORY_CHOICES = SCORE_CATEGORIES.items()
 
 
+class KRWWaterType(models.Model):
+    """
+    TypeKRWTypologie, zie Aquo standaard domein
+    """
+    name = models.CharField(max_length=80)
+    code = models.CharField(max_length=8)
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.code, self.name)
+
+
 class WaterBody(models.Model):
     """Specific area for which we want to know KRW scores"""
 
@@ -43,12 +54,13 @@ class WaterBody(models.Model):
         max_length=80,
         help_text=u"The ID corresponding to the shapefile ID.")
     slug = models.SlugField(help_text=u"Name used for URL.")
+    water_type = models.ForeignKey(KRWWaterType)
 
     description = models.TextField(null=True, blank=True,
                                    help_text="You can use markdown")
 
     def __unicode__(self):
-        return unicode(self.name)
+        return u'%s - %s' % (self.ident, self.name)
 
     @models.permalink
     def get_absolute_url(self):
@@ -220,8 +232,7 @@ class GoalScore(models.Model):
 
 
 class MeasureCategory(models.Model):
-    """maatregel categorie, volgt uit typeMaatregel van aquo (alleen
-    zij hebben het niet genormaliseerd)
+    """Measure Category. i.e. Beheermaatregelen
     """
 
     class Meta:
@@ -234,25 +245,20 @@ class MeasureCategory(models.Model):
         return u'%s' % (self.name)
 
 
-class MeasureType(models.Model):
-    """typeMaatregel uit aquo standaard
-    http://www.idsw.nl/Aquo/uitwisselmodellen/index.htm?goto=6:205
+class MeasureCode(models.Model):
+    """Measure Code. i.e. BE01 Beheermaatregelen uitvoeren actief
+    visstands- of schelpdierstandsbeheer
     """
 
     class Meta:
-        verbose_name = _("Measure type")
-        verbose_name_plural = _("Measure types")
-        ordering = ['type', ]
+        verbose_name = _("Measure code")
+        verbose_name_plural = _("Measure codes")
 
-    type = models.CharField(max_length=200)
-    category = models.ForeignKey(MeasureCategory)
-    description = models.TextField(blank=True, null=True)
+    code = models.CharField(max_length=80)
+    description = models.TextField()
 
     def __unicode__(self):
-        return u'%s - %s' % (self.type, self.description)
-
-
-######
+        return u'%s' % (self.code)
 
 
 class Unit(models.Model):
@@ -260,19 +266,32 @@ class Unit(models.Model):
     http://www.idsw.nl/Aquo/uitwisselmodellen/index.htm?goto=6:192
     """
 
+    sign = models.CharField(max_length=20)
+    description = models.TextField(blank=True, null=True)
+
     class Meta:
         verbose_name = _("Unit")
         verbose_name_plural = _("Units")
-
-    sign = models.CharField(max_length=20)
-    description = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
         return u'%s' % self.sign
 
 
+class Executive(models.Model):
+    """Uitvoerder_Initiatiefnemer. i.e. Landbouw, Provincie
+    """
+    name = models.CharField(max_length=200)
+
+    class Meta:
+        verbose_name = _("Executive")
+        verbose_name_plural = _("Executives")
+
+    def __unicode__(self):
+        return u'%s' % self.name
+
+
 class Organization(models.Model):
-    """Companies that occur in Measures
+    """Companies that occur in Measures: Funding Organizations
     """
 
     class Meta:
@@ -280,22 +299,6 @@ class Organization(models.Model):
         verbose_name_plural = _("Organizations")
 
     name = models.CharField(max_length=200)
-
-    def __unicode__(self):
-        return u'%s' % self.name
-
-
-class FundingCategory(models.Model):
-    """Each funding organization can have his own categories,
-    i.e. exploitatie, krediet KRW uitvoering
-    """
-
-    class Meta:
-        verbose_name = _("Funding category")
-        verbose_name_plural = _("Funding categories")
-
-    name = models.CharField(max_length=200)
-    organization = models.ForeignKey(Organization)
 
     def __unicode__(self):
         return u'%s' % self.name
@@ -310,75 +313,13 @@ class FundingOrganization(models.Model):
         verbose_name = _("Funding organization")
         verbose_name_plural = _("Funding organizations")
 
-    price = models.FloatField()  # in euro's
+    cost = models.FloatField()  # in euro's
     organization = models.ForeignKey(Organization)
     measure = models.ForeignKey('Measure')
-    funding_category = models.ForeignKey(FundingCategory)
 
     def __unicode__(self):
         return u'%s: %s (EUR %f,-)' % (
-            self.organization, self.measure, self.price)
-
-
-class Department(models.Model):
-    """
-    Internal department, i.e. Beheer, P&R, beleid
-    """
-
-    class Meta:
-        verbose_name = _("Department")
-        verbose_name_plural = _("Departments")
-
-    name = models.CharField(max_length=200)
-
-    def __unicode__(self):
-        return u'%s' % self.name
-
-
-class AreaPlan(models.Model):
-    """
-    Watergebiedsplan, area plan for water management (short: area
-    plan)
-    """
-
-    class Meta:
-        verbose_name = _("Area plan")
-        verbose_name_plural = _("Area plans")
-
-    name = models.CharField(max_length=200)
-
-    def __unicode__(self):
-        return u'%s' % self.name
-
-
-class CatchmentAreaPlan(models.Model):
-    """
-    Stroomgebiedsbeheersplan
-    """
-
-    class Meta:
-        verbose_name = _("Catchment area plan")
-        verbose_name_plural = _("Catchment area plans")
-
-    name = models.CharField(max_length=200)
-
-    def __unicode__(self):
-        return u'%s' % self.name
-
-
-class Area(models.Model):
-    """
-    (Deel)gebied
-    """
-
-    class Meta:
-        verbose_name = _("Area")
-        verbose_name_plural = _("Areas")
-
-    name = models.CharField(max_length=200)
-
-    def __unicode__(self):
-        return u'%s' % self.name
+            self.organization, self.measure, self.cost)
 
 
 class MeasureStatus(models.Model):
@@ -421,6 +362,17 @@ class MeasureStatusMoment(models.Model):
         return u'%s %s %s' % (self.measure, self.status, self.datetime)
 
 
+class MeasurePeriod(models.Model):
+    """Period"""
+
+    start_date = models.DateField()
+    end_date = models.DateField()
+    description = models.TextField(null=True, blank=True)
+
+    def __unicode__(self):
+        return '%r - %r' % (self.start_date, self.end_date)
+
+
 class Measure(AL_Node):
     """
     KRW maatregel, uit voorbeeld maatregelen Martine Lodewijk
@@ -457,33 +409,37 @@ class Measure(AL_Node):
 
     is_indicator = models.BooleanField(default=False)
 
+    waterbody = models.ForeignKey(
+        WaterBody,
+        help_text="Bij welk waterlichaam hoort deze maatregel?")
+
     name = models.CharField(max_length=200)
+    identity = models.CharField(
+        blank=True, null=True, max_length=80,
+        help_text="Maatregelidentiteit indien aanwezig")
     description = models.CharField(max_length=200, blank=True, null=True)
-    type = models.ForeignKey(MeasureType)  # typeMaatregel
 
-    code = models.CharField(max_length=80)  # not used in software
-    waterbody = models.ForeignKey(WaterBody)  # waterlichaam
-    area = models.ForeignKey(Area)  # deelgebied
+    category = models.ForeignKey(
+        MeasureCategory,
+        help_text="Hoofdcategorie")
+    code = models.ForeignKey(
+        MeasureCode,
+        help_text="SGBP code")
 
-    area_plan = models.ForeignKey(AreaPlan)
-    catchment_area_plan = models.ForeignKey(CatchmentAreaPlan)
-    catchment_area_plan_value = models.FloatField()
-    catchment_area_plan_unit = models.ForeignKey(Unit)
+    value = models.FloatField(
+        help_text="Omvang van maatregel, inhoud afhankelijk van eenheid")
+    unit = models.ForeignKey(
+        Unit,
+        help_text="Eenheid behorende bij omvang van maatregel")
 
-    responsible_organization = models.ForeignKey(Organization)
-    responsible_department = models.ForeignKey(Department)
+    executive = models.ForeignKey(
+        Executive,
+        help_text="Initiatiefnemer/uitvoerder")
+    total_costs = models.FloatField(null=True, blank=True)
+    investment_costs = models.FloatField(null=True, blank=True)
+    exploitation_costs = models.FloatField(null=True, blank=True)
 
-    price = models.FloatField(blank=True, null=True)  # cost in euro's
-    funding_organization = models.ManyToManyField(
-        Organization,
-        through=FundingOrganization,
-        related_name='funding_organizations',
-        null=True,
-        blank=True)
-
-    obligation_end_date = models.DateField(blank=True, null=True)
-
-    need_co_funding = models.BooleanField(default=False)
+    period = models.ForeignKey(MeasurePeriod)
 
     status = models.ManyToManyField(MeasureStatus,
                                     through='MeasureStatusMoment')
@@ -549,12 +505,12 @@ class Measure(AL_Node):
         Calculates sum of all children, where the unit is the same.
         """
 
-        result = self.catchment_area_plan_value
+        result = self.value
         descendants = self.get_descendants()
         for descendant in descendants:
-            if (descendant.catchment_area_plan_unit ==
-                self.catchment_area_plan_unit):
-                result += descendant.catchment_area_plan_value
+            if (descendant.unit ==
+                self.unit):
+                result += descendant.value
         return result
 
     def price_sum(self):
@@ -564,11 +520,11 @@ class Measure(AL_Node):
 
         result = 0.0
         descendants = self.get_descendants()
-        if self.price is not None:
-            result += self.price
+        if self.total_costs is not None:
+            result += self.total_costs
         for descendant in descendants:
-            if descendant.price is not None:
-                result += descendant.price
+            if descendant.total_costs is not None:
+                result += descendant.total_costs
         return result
 
     def obligation_end_date_min_max(self):
@@ -599,6 +555,7 @@ class Measure(AL_Node):
             for funding_organization in funding_organizations:
                 result += funding_organization.price
         return result
+
 
 # Import iBever KRW scores in XML format
 
