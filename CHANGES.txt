@@ -2,7 +2,7 @@ Changelog of lizard-krw
 ===================================================
 
 
-0.5 (unreleased)
+0.5 (2010-12-16)
 ----------------
 
 - Restarted migration steps from 0001.
