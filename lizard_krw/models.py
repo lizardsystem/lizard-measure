@@ -250,15 +250,15 @@ class MeasureCode(models.Model):
     visstands- of schelpdierstandsbeheer
     """
 
+    code = models.CharField(max_length=80)
+    description = models.TextField()
+
     class Meta:
         verbose_name = _("Measure code")
         verbose_name_plural = _("Measure codes")
 
-    code = models.CharField(max_length=80)
-    description = models.TextField()
-
     def __unicode__(self):
-        return u'%s' % (self.code)
+        return u'%s - %s' % (self.code, self.description)
 
 
 class Unit(models.Model):
@@ -371,8 +371,13 @@ class MeasurePeriod(models.Model):
     end_date = models.DateField()
     description = models.TextField(null=True, blank=True)
 
+    class Meta:
+        ordering = ('start_date', 'end_date', )
+        verbose_name = _("Measure period")
+        verbose_name_plural = _("Measure periods")
+
     def __unicode__(self):
-        return '%r - %r' % (self.start_date, self.end_date)
+        return '%d - %d' % (self.start_date.year, self.end_date.year)
 
 
 class Measure(AL_Node):
@@ -441,7 +446,7 @@ class Measure(AL_Node):
     investment_costs = models.FloatField(null=True, blank=True)
     exploitation_costs = models.FloatField(null=True, blank=True)
 
-    period = models.ForeignKey(MeasurePeriod)
+    period = models.ForeignKey(MeasurePeriod, null=True, blank=True)
 
     status = models.ManyToManyField(MeasureStatus,
                                     through='MeasureStatusMoment')
