@@ -349,9 +349,10 @@ def analysis_start(request,
         context_instance=RequestContext(request))
 
 
-def select_area(request, template='lizard_krw/select_area.html'):
+def select_area(request, template='lizard_krw/select_area.html',
+                homepage_key=HOMEPAGE_KEY):
     water_bodies = WaterBody.objects.all()
-    special_homepage_workspace = get_object_or_404(Workspace, pk=HOMEPAGE_KEY)
+    special_homepage_workspace = get_object_or_404(Workspace, pk=homepage_key)
     return render_to_response(
         template,
         {'water_bodies': water_bodies,
@@ -382,6 +383,8 @@ def krw_browser(request):
 
 def waterbody_shapefile_search(request):
     """Return url to redirect to if a waterbody is found.
+
+    Only works with adapter lizard_shape.
     """
     google_x = float(request.GET.get('x'))
     google_y = float(request.GET.get('y'))
@@ -398,8 +401,9 @@ def waterbody_shapefile_search(request):
 
     # Return url of first found object.
     for search_result in search_results:
-        name_in_shapefile = search_result['name']
-        water_body = WaterBody.objects.get(name=name_in_shapefile)
+        #name_in_shapefile = search_result['name']
+        id_in_shapefile = search_result['identifier']['id']
+        water_body = WaterBody.objects.get(ident=id_in_shapefile)
         return HttpResponse(water_body.get_absolute_url())
 
     # Nothing found? Return an empty response and the javascript popup handler

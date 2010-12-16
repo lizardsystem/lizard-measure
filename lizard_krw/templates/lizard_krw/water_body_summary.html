@@ -16,14 +16,14 @@
 {% block breadcrumbs %}
 <a href="{% url homepage %}">home</a>
 &rarr;
-<a href="{% url krw_waternet.waterbody area=water_body.slug %}" class="lizard-map-link">{{ water_body.name }}</a>
+<a href="{% url lizard_krw.waterbody area=water_body.slug %}" class="lizard-map-link">{{ water_body.name }}</a>
 {% endblock %}
 
 {% block sidebar %}
 <div class="sidebarbox">
   <h2>Kaart</h2>
   <a href="/">
-  <img src="{% url krw_waternet.tiny_map waterbody_slug=water_body.slug %}"
+  <img src="{% url lizard_krw.tiny_map waterbody_slug=water_body.slug %}"
        height="140"
        width="300"
        alt="geselecteerde waterlichaam"/>
@@ -89,14 +89,14 @@
   {% endfor %}
   <div class="vertical-item img-use-my-size">
     <a class="replace-with-image"
-       href="{% url krw_waternet.krw_score_graph area=water_body.slug %}">
+       href="{% url lizard_krw.krw_score_graph area=water_body.slug %}">
       krw score image
     </a>
   </div>
   <div class="vertical-item img-use-my-size">
     <a class="replace-with-image"
-       href="{% url krw_waternet.krw_measure_graph waterbody_slug=water_body.slug %}"
-       data-href-click="{% url krw_waternet.krw_waterbody_measures waterbody_slug=water_body.slug %}">
+       href="{% url lizard_krw.krw_measure_graph waterbody_slug=water_body.slug %}"
+       data-href-click="{% url lizard_krw.krw_waterbody_measures waterbody_slug=water_body.slug %}">
       krw measure image
     </a>
   </div>

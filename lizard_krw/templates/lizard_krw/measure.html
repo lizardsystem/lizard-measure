@@ -15,18 +15,18 @@
 {% block breadcrumbs %}
 <a href="{% url homepage %}">home</a>
 &rarr;
-<a href="{% url krw_waternet.waterbody area=measure.waterbody.slug %}" class="lizard-map-link">{{ measure.waterbody.name }}</a>
+<a href="{% url lizard_krw.waterbody area=measure.waterbody.slug %}" class="lizard-map-link">{{ measure.waterbody.name }}</a>
 &rarr;
-<a href="{% url krw_waternet.krw_waterbody_measures waterbody_slug=measure.waterbody.slug %}" class="lizard-map-link">Maatregelen</a>
+<a href="{% url lizard_krw.krw_waterbody_measures waterbody_slug=measure.waterbody.slug %}" class="lizard-map-link">Maatregelen</a>
 &rarr;
-<a href="{% url krw_waternet.measure measure_id=measure.id %}" class="lizard-map-link">{{ measure.name }}</a>
+<a href="{% url lizard_krw.measure measure_id=measure.id %}" class="lizard-map-link">{{ measure.name }}</a>
 {% endblock %}
 
 {% block sidebar %}
 <div class="sidebarbox">
   <h2>Kaart</h2>
   <a href="/">
-  <img src="{% url krw_waternet.tiny_map waterbody_slug=measure.waterbody.slug %}"
+  <img src="{% url lizard_krw.tiny_map waterbody_slug=measure.waterbody.slug %}"
        height="140"
        width="300"
        alt="geselecteerde waterlichaam"/>
@@ -59,7 +59,7 @@
       {% if measure.parent %}
       <dt>Hoofdmaatregel</dt>
       <dd>
-        <a href="{% url krw_waternet.measure measure_id=measure.parent.id %}">
+        <a href="{% url lizard_krw.measure measure_id=measure.parent.id %}">
           {{ measure.parent.name }}
         </a>
       </dd>
@@ -67,7 +67,7 @@
 
       <dt>Deelmaatregelen</dt>
       <dd>
-        {% with "krw_waternet/measure_tree_snippet.html" as ourselves %}
+        {% with "lizard_krw/measure_tree_snippet.html" as ourselves %}
           {% include ourselves %}
         {% endwith %}
       </dd>
@@ -88,7 +88,7 @@
 <div id="textual">
   <h2>{{ measure.name }}</h2>
   <div style="width: 100%; height: 100px;" class="img-use-my-size">
-    <a href="{% url krw_waternet.measure_graph measure_id=measure.id %}" class="replace-with-image">
+    <a href="{% url lizard_krw.measure_graph measure_id=measure.id %}" class="replace-with-image">
       afbeelding nog niet geladen
     </a>
   </div>

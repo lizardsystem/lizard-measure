@@ -15,16 +15,16 @@
 {% block breadcrumbs %}
 <a href="{% url homepage %}">home</a>
 &rarr;
-<a href="{% url krw_waternet.waterbody area=waterbody.slug %}" class="lizard-map-link">{{ waterbody.name }}</a>
+<a href="{% url lizard_krw.waterbody area=waterbody.slug %}" class="lizard-map-link">{{ waterbody.name }}</a>
 &rarr;
-<a href="{% url krw_waternet.krw_waterbody_measures waterbody_slug=waterbody.slug %}" class="lizard-map-link">Maatregelen</a>
+<a href="{% url lizard_krw.krw_waterbody_measures waterbody_slug=waterbody.slug %}" class="lizard-map-link">Maatregelen</a>
 {% endblock %}
 
 {% block sidebar %}
 <div class="sidebarbox">
   <h2>Kaart</h2>
   <a href="/">
-  <img src="{% url krw_waternet.tiny_map waterbody_slug=waterbody.slug %}"
+  <img src="{% url lizard_krw.tiny_map waterbody_slug=waterbody.slug %}"
        height="140"
        width="300"
        alt="geselecteerde waterlichaam"/>
@@ -59,14 +59,14 @@
 <div id="textual">
   <h2>Maatregelen voor {{ waterbody.name }}</h2>
   <div style="width: 100%; height: 250px;" class="img-use-my-size">
-    <a href="{% url krw_waternet.krw_measure_graph waterbody_slug=waterbody.slug %}" class="replace-with-image">
+    <a href="{% url lizard_krw.krw_measure_graph waterbody_slug=waterbody.slug %}" class="replace-with-image">
       afbeelding nog niet geladen
     </a>
   </div>
   <ul>
     {% for measure in main_measures %}
     <li><a href="{{ measure.get_absolute_url }}">{{ measure }}{% if measure.status_moment %} ({{ measure.status_moment.status }}){% endif %}</a>{% if measure.is_indicator %} (indicator){% endif %}
-        {% with "krw_waternet/measure_tree_snippet.html" as ourselves %}
+        {% with "lizard_krw/measure_tree_snippet.html" as ourselves %}
           {% include ourselves %}
         {% endwith %}
     </li>

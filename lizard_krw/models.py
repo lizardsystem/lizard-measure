@@ -39,6 +39,9 @@ class WaterBody(models.Model):
         ordering = ("name",)
 
     name = models.CharField(max_length=80)
+    ident = models.CharField(
+        max_length=80,
+        help_text=u"The ID corresponding to the shapefile ID.")
     slug = models.SlugField(help_text=u"Name used for URL.")
 
     description = models.TextField(null=True, blank=True,
@@ -49,7 +52,7 @@ class WaterBody(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('krw_waternet.waterbody',
+        return ('lizard_krw.waterbody',
                 (),
                 {'area': str(self.slug)})
 
@@ -93,7 +96,7 @@ class SingleIndicator(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('krw_waternet.indicator_graph',
+        return ('lizard_krw.indicator_graph',
                 (),
                 {'area': str(self.water_body.slug),
                  'id': str(self.id)})
@@ -530,7 +533,7 @@ class Measure(AL_Node):
         """
 
         # Import here to prevent cyclic imports.
-        from krw_waternet.layers import WorkspaceItemAdapterKrw
+        from lizard_krw.layers import WorkspaceItemAdapterKrw
         adapter = WorkspaceItemAdapterKrw(
             workspace_item=None, layer_arguments={"layer": "measure"})
 
@@ -539,7 +542,7 @@ class Measure(AL_Node):
                              width=width, height=height)
 
     def get_absolute_url(self):
-        return reverse('krw_waternet.measure', kwargs={'measure_id': self.pk})
+        return reverse('lizard_krw.measure', kwargs={'measure_id': self.pk})
 
     def catchment_area_plan_value_sum(self):
         """

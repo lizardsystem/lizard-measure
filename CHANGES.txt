@@ -5,6 +5,10 @@ Changelog of lizard-krw
 0.2 (unreleased)
 ----------------
 
+- Fixed reverse urls.
+
+- Added WaterBody.ident.
+
 - Added initial South migration.
 
 
