@@ -7,7 +7,7 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Deleting model 'Department'
         db.delete_table('lizard_krw_department')
 
@@ -92,6 +92,9 @@ class Migration(SchemaMigration):
         # Deleting field 'Measure.catchment_area_plan'
         db.delete_column('lizard_krw_measure', 'catchment_area_plan_id')
 
+        # Deleting field 'Measure.code'. Manually added by KKH 20101216
+        db.delete_column('lizard_krw_measure', 'code')
+
         # Adding field 'Measure.identity'
         db.add_column('lizard_krw_measure', 'identity', self.gf('django.db.models.fields.IntegerField')(default=0), keep_default=False)
 
@@ -117,16 +120,19 @@ class Migration(SchemaMigration):
         db.add_column('lizard_krw_measure', 'exploitation_costs', self.gf('django.db.models.fields.FloatField')(null=True, blank=True), keep_default=False)
 
         # Renaming column for 'Measure.code' to match new field type.
-        db.rename_column('lizard_krw_measure', 'code', 'code_id')
+        # db.rename_column('lizard_krw_measure', 'code', 'code_id')
+        # Adding field 'Measure.code'. Manually added bij KKH 20101216
+        db.add_column('lizard_krw_measure', 'code_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True), keep_default=False)
+
         # Changing field 'Measure.code'
-        db.alter_column('lizard_krw_measure', 'code_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_krw.MeasureCode']))
+        # db.alter_column('lizard_krw_measure', 'code_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_krw.MeasureCode']))
 
         # Adding index on 'Measure', fields ['code']
         db.create_index('lizard_krw_measure', ['code_id'])
 
 
     def backwards(self, orm):
-        
+
         # Removing index on 'Measure', fields ['code']
         db.delete_index('lizard_krw_measure', ['code_id'])
 

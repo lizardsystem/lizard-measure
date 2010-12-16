@@ -7,21 +7,15 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-
-        # Changing field 'Measure.identity'
-        db.alter_column('lizard_krw_measure', 'identity', self.gf('django.db.models.fields.CharField')(max_length=80, null=True))
+        
+        # Changing field 'Measure.period'
+        db.alter_column('lizard_krw_measure', 'period_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_krw.MeasurePeriod'], null=True))
 
 
     def backwards(self, orm):
-
-        # Changing field 'Measure.identity'
-        # db.alter_column('lizard_krw_measure', 'identity', self.gf('django.db.models.fields.IntegerField')(default=0))
-
-        # Deleting field 'Measure.area'. Manually added.
-        db.delete_column('lizard_krw_measure', 'identity')
-
-        # Adding field 'FundingOrganization.cost'. Manually added.
-        db.add_column('lizard_krw_measure', 'identity', self.gf('django.db.models.fields.IntegerField')(default=0), keep_default=False)
+        
+        # Changing field 'Measure.period'
+        db.alter_column('lizard_krw_measure', 'period_id', self.gf('django.db.models.fields.related.ForeignKey')(default=1, to=orm['lizard_krw.MeasurePeriod']))
 
 
     models = {
@@ -118,6 +112,7 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'owner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
             'parent': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_krw.Measure']", 'null': 'True', 'blank': 'True'}),
+            'period': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_krw.MeasurePeriod']", 'null': 'True', 'blank': 'True'}),
             'status': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['lizard_krw.MeasureStatus']", 'through': "orm['lizard_krw.MeasureStatusMoment']", 'symmetrical': 'False'}),
             'total_costs': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'unit': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_krw.Unit']"}),
@@ -136,7 +131,7 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         },
         'lizard_krw.measureperiod': {
-            'Meta': {'object_name': 'MeasurePeriod'},
+            'Meta': {'ordering': "('start_date', 'end_date')", 'object_name': 'MeasurePeriod'},
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'end_date': ('django.db.models.fields.DateField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),

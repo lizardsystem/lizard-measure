@@ -2,10 +2,10 @@ Changelog of lizard-krw
 ===================================================
 
 
-0.4 (unreleased)
+0.4 (2010-12-16)
 ----------------
 
-- Nothing changed yet.
+- Manually changed migrations. Not sure yet if it works correctly.
 
 
 0.3 (2010-12-16)
