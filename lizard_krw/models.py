@@ -256,6 +256,7 @@ class MeasureCode(models.Model):
     class Meta:
         verbose_name = _("Measure code")
         verbose_name_plural = _("Measure codes")
+        ordering = ('code', )
 
     def __unicode__(self):
         return u'%s - %s' % (self.code, self.description)
@@ -327,11 +328,6 @@ class MeasureStatus(models.Model):
     Status van een (deel)maatregel
     """
 
-    class Meta:
-        verbose_name = _("Measure status")
-        verbose_name_plural = _("Measure statuses")
-        ordering = ('-value', )
-
     name = models.CharField(max_length=200)
     # Color is matplotlib style, i.e. '0.75', 'red', '#eeff00'.
     color = models.CharField(
@@ -339,6 +335,11 @@ class MeasureStatus(models.Model):
         help_text="Color is matplotlib style, i.e. '0.75', 'red', '#eeff00'")
     # Value is 1.0 for up and running, 0 for nothing. Used for ordering.
     value = models.FloatField(default=0.0)
+
+    class Meta:
+        verbose_name = _("Measure status")
+        verbose_name_plural = _("Measure statuses")
+        ordering = ('-value', )
 
     def __unicode__(self):
         return u'%s' % self.name
@@ -388,10 +389,6 @@ class Measure(AL_Node):
     name, start_date, end_date, status
 
     """
-
-    class Meta:
-        verbose_name = _("Measure")
-        verbose_name_plural = _("Measures")
 
     AGGREGATION_TYPE_CHOICES = (
         (1, _('Min')),
@@ -450,6 +447,11 @@ class Measure(AL_Node):
 
     status = models.ManyToManyField(MeasureStatus,
                                     through='MeasureStatusMoment')
+
+    class Meta:
+        verbose_name = _("Measure")
+        verbose_name_plural = _("Measures")
+        ordering = ('waterbody', 'name', )
 
     def __unicode__(self):
         return u'%s: %s' % (self.waterbody.name, self.name)
