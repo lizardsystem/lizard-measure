@@ -263,22 +263,26 @@ def single_measure_graph(request, measure_id, width=None, height=None):
 
 # TODO: cache should be different for IE...
 @cache_page(24 * 60 * 60)
-def tiny_map(request, waterbody_slug=None):
+def tiny_map(request, waterbody_slug=None, shape_id=None,
+             bbox=(523838.00391791, 6818214.5267836,
+                   575010.91942212, 6869720.7532931)):
     """Return PNG of area map. Code based on lizard_map.views:wms"""
     width = 300
     height = 140
-    bbox = (523838.00391791, 6818214.5267836, 575010.91942212, 6869720.7532931)
 
     # Map settings
     mapnik_map = mapnik.Map(width, height)
     mapnik_map.srs = coordinates.GOOGLE
     mapnik_map.background = mapnik.Color('transparent')
 
+    layer_arguments = {
+        'layer': 'background',
+        'waterbody_slug': waterbody_slug}
+    if shape_id is not None:
+        layer_arguments.update({'shape_id': shape_id})
     workspace_item_adapter = WorkspaceItemAdapterKrw(
         None,
-        layer_arguments={
-            'layer': 'background',
-            'waterbody_slug': waterbody_slug})
+        layer_arguments=layer_arguments)
     layers, styles = workspace_item_adapter.layer()
     for layer in layers:
         mapnik_map.layers.append(layer)

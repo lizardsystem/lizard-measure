@@ -8,6 +8,8 @@ from lizard_map import coordinates
 from lizard_map import workspace
 from lizard_map.utility import short_string
 
+from lizard_shape.models import Shape
+
 from lizard_krw.models import SCORE_CATEGORY_FYTO
 from lizard_krw.models import SCORE_CATEGORY_FLORA
 from lizard_krw.models import SCORE_CATEGORY_FAUNA
@@ -52,6 +54,9 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
       'waterbody_slug': ...,
       }
 
+    if you fill in shape_id in layer_arguments, the adapter will take
+    the shapefile associated with that shape.
+
     """
 
     def __init__(self, *args, **kwargs):
@@ -69,6 +74,14 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
             self.waterbody_slug = self.layer_arguments['waterbody_slug']
         else:
             self.waterbody_slug = None
+        if 'shape_id' in self.layer_arguments:
+            self.shape_id = self.layer_arguments['shape_id']
+            self.shape = Shape.objects.get(pk=self.shape_id)
+            self.shape_filename = str(self.shape.shp_file.file.name)
+        else:
+            self.shape_filename = pkg_resources.resource_filename(
+                'lizard_map',
+                'test_shapefiles/KRWwaterlichamen_merge.shp')
 
     def layer(self, layer_ids=None, request=None):
         """Return layer and styles for a shapefile.
@@ -80,9 +93,7 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
         layer = mapnik.Layer("Krw gegevens", coordinates.RD)
         # TODO: ^^^ translation!
         layer.datasource = mapnik.Shapefile(
-            file=pkg_resources.resource_filename(
-                'lizard_map',
-                'test_shapefiles/KRWwaterlichamen_merge.shp'))
+            file=self.shape_filename)
         area_looks = mapnik.PolygonSymbolizer(
             mapnik.Color(self.layer_colors[self.layer_name]))
         if self.layer_name == 'background':
