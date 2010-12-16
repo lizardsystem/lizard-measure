@@ -5,6 +5,8 @@ Changelog of lizard-krw
 0.2 (unreleased)
 ----------------
 
+- Area_search now matches ident instead of name.
+
 - Fixed reverse urls.
 
 - Added WaterBody.ident.
