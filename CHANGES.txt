@@ -2,7 +2,7 @@ Changelog of lizard-krw
 ===================================================
 
 
-0.2 (unreleased)
+0.2 (2010-12-16)
 ----------------
 
 - Krw adapter can now show alternative maps.
