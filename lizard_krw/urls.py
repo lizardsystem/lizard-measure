@@ -61,6 +61,11 @@ urlpatterns = patterns(
         name="lizard_krw_homepage_area_search"),
     # Map clicking, workspaces
     (r'^map/', include('lizard_map.urls')),
+    # Fake help page.
+    url(r'^$',
+        'lizard_krw.views.select_area',
+        name="help"
+        ),
     )
 
 

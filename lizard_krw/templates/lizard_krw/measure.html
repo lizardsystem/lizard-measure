@@ -44,11 +44,14 @@
       <dt>Naam</dt>
       <dd>{{ measure.name }}</dd>
 
+      <dt>Identiteit</dt>
+      <dd>{{ measure.identity }}</dd>
+
       <dt>Beschrijving</dt>
       <dd>{{ measure.description }}</dd>
 
-      <dt>Type</dt>
-      <dd>{{ measure.type }}</dd>
+      <dt>Categorie</dt>
+      <dd>{{ measure.category }}</dd>
 
       <dt>Code</dt>
       <dd>{{ measure.code }}</dd>
@@ -118,46 +121,35 @@
       {% endif %}
 
       <tr>
-        <th>Gebied</th><td>{{ measure.area }}</td>
+        <th>SGBP waarde (incl. optelling deelmaatregelen)</th><td>{{ measure.value_sum }}</td>
       </tr>
 
       <tr>
-        <th>Gebiedsplan</th><td>{{ measure.area_plan }}</td>
+        <th>SGBP eenheid</th><td>{{ measure.unit }}</td>
       </tr>
 
       <tr>
-        <th>SGBP categorie</th><td>{{ measure.catchment_area_plan }}</td>
+        <th>Initiatiefnemer/uitvoerder</th><td>{{ measure.executive }}</td>
       </tr>
 
       <tr>
-        <th>SGBP waarde (incl. optelling deelmaatregelen)</th><td>{{ measure.catchment_area_plan_value_sum }}</td>
+        <th>Totale kosten (incl. optelling deelmaatregelen)</th>
+        <td>{{ measure.costs_sum|euro }}</td>
       </tr>
 
       <tr>
-        <th>SGBP eenheid</th><td>{{ measure.catchment_area_plan_unit }}</td>
+        <th>Investeringskosten (incl. optelling deelmaatregelen)</th>
+        <td>{{ measure.investment_costs_sum|euro }}</td>
       </tr>
 
       <tr>
-        <th>Verantwoordelijke organisatie</th><td>{{ measure.responsible_organization }}</td>
+        <th>Exploitatiekosten (incl. optelling deelmaatregelen)</th>
+        <td>{{ measure.exploitation_costs_sum|euro }}</td>
       </tr>
 
       <tr>
-        <th>Verantwoordelijke afdeling</th><td>{{ measure.responsible_department }}</td>
-      </tr>
-
-      <tr>
-        <th>Kosten (incl. optelling deelmaatregelen)</th>
-        <td>{{ measure.price_sum|euro }}</td>
-      </tr>
-
-      <tr>
-        <th>Einddatum</th>
-        <td>Deze maatregel: {% firstof measure.obligation_end_date "geen" %}. Vroegste van deelmaatregelen: {% firstof measure.obligation_end_date_min "geen" %}. Laatste van deelmaatregelen: {% firstof measure.obligation_end_date_max "geen" %}</td>
-      </tr>
-
-      <tr>
-        <th>Medefinanciering vereist</th>
-        <td>{% if measure.need_co_funding %}Ja{% else %}Nee{% endif %}</td>
+        <th>Periode</th>
+        <td>{{ measure.period }}</td>
       </tr>
     </tbody>
   </table>
@@ -210,10 +202,7 @@
           {{ funding_organization.organization }}
         </td>
         <td>
-          {{ funding_organization.funding_category }}
-        </td>
-        <td>
-          {{ funding_organization.price|euro }}
+          {{ funding_organization.cost|euro }}
         </td>
       </tr>
       {% endfor %}
@@ -227,10 +216,7 @@
             {{ funding_organization.organization }}
           </td>
           <td>
-            {{ funding_organization.funding_category }}
-          </td>
-          <td>
-            {{ funding_organization.price|euro }}
+            {{ funding_organization.cost|euro }}
           </td>
         </tr>
         {% endfor %}
@@ -242,7 +228,7 @@
           Totaal
         </td>
         <td>
-          {{ measure.funding_organization_price_sum|euro }}
+          {{ measure.funding_organization_cost_sum|euro }}
         </td>
       </tr>
     </tfoot>

@@ -334,7 +334,9 @@ class MeasureStatus(models.Model):
 
     name = models.CharField(max_length=200)
     # Color is matplotlib style, i.e. '0.75', 'red', '#eeff00'.
-    color = models.CharField(max_length=20)
+    color = models.CharField(
+        max_length=20,
+        help_text="Color is matplotlib style, i.e. '0.75', 'red', '#eeff00'")
     # Value is 1.0 for up and running, 0 for nothing. Used for ordering.
     value = models.FloatField(default=0.0)
 
@@ -500,7 +502,7 @@ class Measure(AL_Node):
     def get_absolute_url(self):
         return reverse('lizard_krw.measure', kwargs={'measure_id': self.pk})
 
-    def catchment_area_plan_value_sum(self):
+    def value_sum(self):
         """
         Calculates sum of all children, where the unit is the same.
         """
@@ -513,18 +515,43 @@ class Measure(AL_Node):
                 result += descendant.value
         return result
 
-    def price_sum(self):
+    def costs_sum(self):
         """
-        Calculates sum of all children. None=0
+        Calculates sum of all children for total_costs. None=0
         """
 
         result = 0.0
-        descendants = self.get_descendants()
+        children = self.get_children()
         if self.total_costs is not None:
             result += self.total_costs
-        for descendant in descendants:
-            if descendant.total_costs is not None:
-                result += descendant.total_costs
+        for child in children:
+            result += child.costs_sum()
+        return result
+
+    def investment_costs_sum(self):
+        """
+        Calculates sum of all children for investment_costs. None=0
+        """
+
+        result = 0.0
+        children = self.get_children()
+        if self.investment_costs is not None:
+            result += self.investment_costs
+        for child in children:
+            result += child.investment_costs_sum()
+        return result
+
+    def exploitation_costs_sum(self):
+        """
+        Calculates sum of all children for exploitation_costs. None=0
+        """
+
+        result = 0.0
+        children = self.get_children()
+        if self.exploitation_costs is not None:
+            result += self.exploitation_costs
+        for child in children:
+            result += child.exploitation_costs_sum()
         return result
 
     def obligation_end_date_min_max(self):
@@ -546,14 +573,14 @@ class Measure(AL_Node):
         minimum, maximum = self.obligation_end_date_min_max()
         return maximum
 
-    def funding_organization_price_sum(self):
+    def funding_organization_cost_sum(self):
         result = 0.0
         for funding_organization in self.fundingorganization_set.all():
-            result += funding_organization.price
+            result += funding_organization.cost
         for descendant in self.get_descendants():
             funding_organizations = descendant.fundingorganization_set.all()
             for funding_organization in funding_organizations:
-                result += funding_organization.price
+                result += funding_organization.cost
         return result
 
 

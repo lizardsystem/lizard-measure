@@ -9,6 +9,7 @@ from lizard_krw.models import KRWWaterType
 from lizard_krw.models import Measure
 from lizard_krw.models import MeasureCategory
 from lizard_krw.models import MeasureCode
+from lizard_krw.models import MeasurePeriod
 from lizard_krw.models import MeasureStatus
 from lizard_krw.models import MeasureStatusMoment
 from lizard_krw.models import Organization
@@ -58,6 +59,7 @@ admin.site.register(KRWWaterType)
 admin.site.register(Measure, MeasureAdmin)
 admin.site.register(MeasureCategory)
 admin.site.register(MeasureCode)
+admin.site.register(MeasurePeriod)
 admin.site.register(MeasureStatus)
 admin.site.register(MeasureStatusMoment)
 admin.site.register(Organization)
