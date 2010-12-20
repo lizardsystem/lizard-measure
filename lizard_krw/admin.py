@@ -50,6 +50,10 @@ class MeasureAdmin(admin.ModelAdmin):
         ]
 
 
+class MeasureStatusAdmin(admin.ModelAdmin):
+    list_display = ['name', 'value', ]
+
+
 admin.site.register(AlphaScore)
 admin.site.register(Color)
 admin.site.register(Executive)
@@ -60,7 +64,7 @@ admin.site.register(Measure, MeasureAdmin)
 admin.site.register(MeasureCategory)
 admin.site.register(MeasureCode)
 admin.site.register(MeasurePeriod)
-admin.site.register(MeasureStatus)
+admin.site.register(MeasureStatus, MeasureStatusAdmin)
 admin.site.register(MeasureStatusMoment)
 admin.site.register(Organization)
 admin.site.register(Score, ScoreAdmin)
