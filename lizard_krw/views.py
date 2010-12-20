@@ -18,6 +18,7 @@ from lizard_krw.models import AlphaScore
 from lizard_krw.models import GoalScore
 from lizard_krw.models import Measure
 from lizard_krw.models import MeasureStatus
+from lizard_krw.models import SCORE_CATEGORIES
 from lizard_krw.models import SCORE_CATEGORY_FAUNA
 from lizard_krw.models import SCORE_CATEGORY_FLORA
 from lizard_krw.models import SCORE_CATEGORY_FYTO
@@ -154,7 +155,11 @@ def krw_score_graph(request, area=None):
 
     # Y ticks.
     krw_graph.axes.set_yticks([0, 10, 20, 30])
-    krw_graph.axes.set_yticklabels(['vis', 'fauna', 'flora', 'fyto'])
+    krw_graph.axes.set_yticklabels([
+            SCORE_CATEGORIES[SCORE_CATEGORY_VIS],
+            SCORE_CATEGORIES[SCORE_CATEGORY_FAUNA],
+            SCORE_CATEGORIES[SCORE_CATEGORY_FLORA],
+            SCORE_CATEGORIES[SCORE_CATEGORY_FYTO]])
 
     krw_graph.axes.set_ylim(-5, 35)
 

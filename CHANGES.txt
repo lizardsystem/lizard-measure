@@ -5,6 +5,8 @@ Changelog of lizard-krw
 0.6 (unreleased)
 ----------------
 
+- Renamed krw score classes.
+
 - Fixed saving alpha scores. TODO: refactor goal score/alpha score/color.
 
 
