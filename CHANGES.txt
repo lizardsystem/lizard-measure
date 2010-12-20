@@ -5,7 +5,7 @@ Changelog of lizard-krw
 0.6 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fixed saving alpha scores. TODO: refactor goalscore/alpha score/color.
 
 
 0.5 (2010-12-16)

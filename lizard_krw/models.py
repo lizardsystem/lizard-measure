@@ -218,13 +218,15 @@ class GoalScore(models.Model):
 
         # Auto-generate alpha_score corresponding to value.
         if self.value < 0.2:
-            self.alpha_score = AlphaScore.objects.get(name='slecht')
+            self.alpha_score = AlphaScore.objects.get(name='Slecht')
         elif self.value >= 0.2 and self.value < 0.4:
-            self.alpha_score = AlphaScore.objects.get(name='ontoereikend')
+            self.alpha_score = AlphaScore.objects.get(name='Ontoereikend')
         elif self.value >= 0.4 and self.value < 0.6:
-            self.alpha_score = AlphaScore.objects.get(name='matig')
-        elif self.value >= 0.6:
-            self.alpha_score = AlphaScore.objects.get(name='goed')
+            self.alpha_score = AlphaScore.objects.get(name='Matig')
+        elif self.value >= 0.6 and self.value < 0.8:
+            self.alpha_score = AlphaScore.objects.get(name='Goed')
+        elif self.value >= 0.8:
+            self.alpha_score = AlphaScore.objects.get(name='Zeer goed')
 
         super(GoalScore, self).save(*args, **kwargs)
 
