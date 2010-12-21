@@ -181,7 +181,7 @@ class Score(models.Model):
     value = models.FloatField()  # Unused, but present in XML import file.
 
     def __unicode__(self):
-        return '%s - %s - %s - %s (%f)' % (
+        return '%s - %s - %s - %s (%.2f)' % (
             self.start_date, self.waterbody,
             SCORE_CATEGORIES[self.category], self.alpha_score,
             self.value)
@@ -297,11 +297,12 @@ class Organization(models.Model):
     """Companies that occur in Measures: Funding Organizations
     """
 
+    name = models.CharField(max_length=200)
+
     class Meta:
         verbose_name = _("Organization")
         verbose_name_plural = _("Organizations")
-
-    name = models.CharField(max_length=200)
+        ordering = ('name', )
 
     def __unicode__(self):
         return u'%s' % self.name
@@ -441,9 +442,12 @@ class Measure(AL_Node):
     executive = models.ForeignKey(
         Executive,
         help_text="Initiatiefnemer/uitvoerder")
-    total_costs = models.FloatField(null=True, blank=True)
-    investment_costs = models.FloatField(null=True, blank=True)
-    exploitation_costs = models.FloatField(null=True, blank=True)
+    total_costs = models.IntegerField(
+        null=True, blank=True, help_text="Totale kosten in euro's")
+    investment_costs = models.IntegerField(
+        null=True, blank=True, help_text="Investeringskosten in euro's")
+    exploitation_costs = models.IntegerField(
+        null=True, blank=True, help_text="Exploitatiekosten in euro's")
 
     period = models.ForeignKey(MeasurePeriod, null=True, blank=True)
 

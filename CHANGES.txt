@@ -2,10 +2,14 @@ Changelog of lizard-krw
 ===================================================
 
 
-0.7 (unreleased)
+0.7 (2010-12-21)
 ----------------
 
-- Nothing changed yet.
+- Updated krw score layout.
+
+- Changed measure costs (3x) from float to integer.
+
+- Order Organizations by name.
 
 
 0.6 (2010-12-20)
