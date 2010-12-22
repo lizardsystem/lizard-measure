@@ -5,6 +5,8 @@ Changelog of lizard-krw
 0.8 (unreleased)
 ----------------
 
+- Added migration.
+
 - Added generate_measure_codes management command.
 
 
