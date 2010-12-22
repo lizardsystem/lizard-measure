@@ -5,7 +5,7 @@ Changelog of lizard-krw
 0.8 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Added generate_measure_codes management command.
 
 
 0.7 (2010-12-21)
