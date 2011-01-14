@@ -12,6 +12,7 @@ long_description = '\n\n'.join([
 install_requires = [
     'Django',
     'django-staticfiles',
+    'django-extensions',
     'lizard-map',
     'lizard-ui',
     'lizard-fewsunblobbed',
