@@ -1,0 +1,1324 @@
+[
+  {
+    "pk": 1,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "K1",
+      "name": "Open polyhalien kustwater"
+    }
+  },
+  {
+    "pk": 2,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "K2",
+      "name": "Beschut polyhalien kustwater"
+    }
+  },
+  {
+    "pk": 3,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "K3",
+      "name": "Euhalien kustwater"
+    }
+  },
+  {
+    "pk": 4,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "O1",
+      "name": "Estuarium met beperkt getijverschil"
+    }
+  },
+  {
+    "pk": 5,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "O2",
+      "name": "Estuarium met matig getijverschil"
+    }
+  },
+  {
+    "pk": 6,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M1a",
+      "name": "Zoete gebufferde sloten"
+    }
+  },
+  {
+    "pk": 7,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M1b",
+      "name": "Niet-zoete gebufferde sloten"
+    }
+  },
+  {
+    "pk": 8,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M2",
+      "name": "Zwak gebufferde sloten (poldersloten)"
+    }
+  },
+  {
+    "pk": 9,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M3",
+      "name": "Gebufferde (regionale) kanalen"
+    }
+  },
+  {
+    "pk": 10,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M4",
+      "name": "Zwak gebufferde (regionale) kanalen"
+    }
+  },
+  {
+    "pk": 11,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M5",
+      "name": "Ondiep lijnvormig water, open verbinding met rivier/ ge\u00efnundeerd"
+    }
+  },
+  {
+    "pk": 12,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M6a",
+      "name": "Grote ondiepe kanalen zonder scheepvaart"
+    }
+  },
+  {
+    "pk": 13,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M6b",
+      "name": "Grote ondiepe kanalen met scheepvaart"
+    }
+  },
+  {
+    "pk": 14,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M7a",
+      "name": "Grote diepe kanalen zonder scheepvaart"
+    }
+  },
+  {
+    "pk": 15,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M7b",
+      "name": "Grote diepe kanalen met scheepvaart"
+    }
+  },
+  {
+    "pk": 16,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M8",
+      "name": "Gebufferde laagveensloten"
+    }
+  },
+  {
+    "pk": 17,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M9",
+      "name": "Zwak gebufferde hoogveen sloten"
+    }
+  },
+  {
+    "pk": 18,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M10",
+      "name": "Laagveen vaarten en kanalen"
+    }
+  },
+  {
+    "pk": 19,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M11",
+      "name": "Kleine ondiepe gebufferde plassen"
+    }
+  },
+  {
+    "pk": 20,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M12",
+      "name": "Kleine ondiepe zwak gebufferde plassen (vennen)"
+    }
+  },
+  {
+    "pk": 21,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M13",
+      "name": "Kleine ondiepe zure plassen (vennen)"
+    }
+  },
+  {
+    "pk": 22,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M14",
+      "name": "Grote ondiepe gebufferde plassen"
+    }
+  },
+  {
+    "pk": 23,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M16",
+      "name": "Diepe gebufferde meren"
+    }
+  },
+  {
+    "pk": 24,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M17",
+      "name": "Diepe zwakgebufferde meren"
+    }
+  },
+  {
+    "pk": 25,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M18",
+      "name": "Diepe zure meren"
+    }
+  },
+  {
+    "pk": 26,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M19",
+      "name": "Diepe meren in open verbinding met rivier"
+    }
+  },
+  {
+    "pk": 27,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M20",
+      "name": "Matig grote diepe gebufferde meren"
+    }
+  },
+  {
+    "pk": 28,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M21",
+      "name": "Grote diepe gebufferde meren"
+    }
+  },
+  {
+    "pk": 29,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M22",
+      "name": "Kleine ondiepe kalkrijke plassen"
+    }
+  },
+  {
+    "pk": 30,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M23",
+      "name": "Grote ondiepe kalkrijke plassen"
+    }
+  },
+  {
+    "pk": 31,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M24",
+      "name": "Diepe kalkrijke meren"
+    }
+  },
+  {
+    "pk": 32,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M25",
+      "name": "Ondiepe laagveenplassen"
+    }
+  },
+  {
+    "pk": 33,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M26",
+      "name": "Ondiepe zwak gebufferde hoogveenplassen/vennen"
+    }
+  },
+  {
+    "pk": 34,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M27",
+      "name": "Matig grote ondiepe laagveenplassen"
+    }
+  },
+  {
+    "pk": 35,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M28",
+      "name": "Diepe laagveenmeren"
+    }
+  },
+  {
+    "pk": 36,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M29",
+      "name": "Matig grote diepe  laagveenmeren"
+    }
+  },
+  {
+    "pk": 37,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M30",
+      "name": "Zwak brakke wateren"
+    }
+  },
+  {
+    "pk": 38,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M31",
+      "name": "Kleine brakke tot zoute wateren"
+    }
+  },
+  {
+    "pk": 39,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "M32",
+      "name": "Grote brakke tot zoute meren"
+    }
+  },
+  {
+    "pk": 40,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "R1",
+      "name": "Droogvallende bron"
+    }
+  },
+  {
+    "pk": 41,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "R2",
+      "name": "Permanente bron"
+    }
+  },
+  {
+    "pk": 42,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "R3",
+      "name": "Droogvallende langzaam stromende bovenloop op zand"
+    }
+  },
+  {
+    "pk": 43,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "R4",
+      "name": "Permanente langzaam stromende bovenloop op zand"
+    }
+  },
+  {
+    "pk": 44,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "R5",
+      "name": "Langzaam stromende middenloop/benedenloop op zand"
+    }
+  },
+  {
+    "pk": 45,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "R6",
+      "name": "Langzaam stromend riviertje op zand/klei"
+    }
+  },
+  {
+    "pk": 46,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "R7",
+      "name": "Langzaam stromende rivier/nevengeul op zand/klei"
+    }
+  },
+  {
+    "pk": 47,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "R8",
+      "name": "Zoet getijdenwater (uitlopers rivier) op zand/klei"
+    }
+  },
+  {
+    "pk": 48,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "R9",
+      "name": "Langzaam stromende bovenloop op kalkhoudende bodem"
+    }
+  },
+  {
+    "pk": 49,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "R10",
+      "name": "Langzaam stromende middenloop op kalkhoudende bodem"
+    }
+  },
+  {
+    "pk": 50,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "R11",
+      "name": "Langzaam stromende bovenloop op veenbodem"
+    }
+  },
+  {
+    "pk": 51,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "R12",
+      "name": "Langzaam stromende middenloop/benedenloop op veenbodem"
+    }
+  },
+  {
+    "pk": 52,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "R13",
+      "name": "Snelstromende bovenloop op  zand"
+    }
+  },
+  {
+    "pk": 53,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "R14",
+      "name": "Snelstromende middenloop/benedenloop op zand"
+    }
+  },
+  {
+    "pk": 54,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "R15",
+      "name": "Snelstromend riviertje op kiezelhoudende bodem"
+    }
+  },
+  {
+    "pk": 55,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "R16",
+      "name": "Snelstromende rivier/nevengeul op zandbodem of grind"
+    }
+  },
+  {
+    "pk": 56,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "R17",
+      "name": "Snelstromende  bovenloop op kalkhoudende bodem"
+    }
+  },
+  {
+    "pk": 57,
+    "model": "lizard_krw.krwwatertype",
+    "fields": {
+      "code": "R18",
+      "name": "Snelstromende middenloop/benedenloop op kalkhoudende bodem"
+    }
+  },
+  {
+    "pk": 1,
+    "model": "lizard_krw.color",
+    "fields": {
+      "r": 0,
+      "b": 255,
+      "g": 128
+    }
+  },
+  {
+    "pk": 2,
+    "model": "lizard_krw.color",
+    "fields": {
+      "r": 0,
+      "b": 255,
+      "g": 255
+    }
+  },
+  {
+    "pk": 3,
+    "model": "lizard_krw.color",
+    "fields": {
+      "r": 0,
+      "b": 255,
+      "g": 0
+    }
+  },
+  {
+    "pk": 4,
+    "model": "lizard_krw.color",
+    "fields": {
+      "r": 128,
+      "b": 255,
+      "g": 0
+    }
+  },
+  {
+    "pk": 5,
+    "model": "lizard_krw.color",
+    "fields": {
+      "r": 189,
+      "b": 189,
+      "g": 189
+    }
+  },
+  {
+    "pk": 6,
+    "model": "lizard_krw.color",
+    "fields": {
+      "r": 0,
+      "b": 0,
+      "g": 255
+    }
+  },
+  {
+    "pk": 7,
+    "model": "lizard_krw.color",
+    "fields": {
+      "r": 255,
+      "b": 0,
+      "g": 255
+    }
+  },
+  {
+    "pk": 8,
+    "model": "lizard_krw.color",
+    "fields": {
+      "r": 255,
+      "b": 0,
+      "g": 128
+    }
+  },
+  {
+    "pk": 9,
+    "model": "lizard_krw.color",
+    "fields": {
+      "r": 255,
+      "b": 0,
+      "g": 0
+    }
+  },
+  {
+    "pk": 10,
+    "model": "lizard_krw.color",
+    "fields": {
+      "r": 128,
+      "b": 0,
+      "g": 255
+    }
+  },
+  {
+    "pk": 1,
+    "model": "lizard_krw.alphascore",
+    "fields": {
+      "color": 9,
+      "name": "Slecht"
+    }
+  },
+  {
+    "pk": 2,
+    "model": "lizard_krw.alphascore",
+    "fields": {
+      "color": 8,
+      "name": "Ontoereikend"
+    }
+  },
+  {
+    "pk": 3,
+    "model": "lizard_krw.alphascore",
+    "fields": {
+      "color": 7,
+      "name": "Matig"
+    }
+  },
+  {
+    "pk": 4,
+    "model": "lizard_krw.alphascore",
+    "fields": {
+      "color": 10,
+      "name": "Goed"
+    }
+  },
+  {
+    "pk": 5,
+    "model": "lizard_krw.alphascore",
+    "fields": {
+      "color": 6,
+      "name": "Zeer goed"
+    }
+  },
+  {
+    "pk": 1,
+    "model": "lizard_krw.measurecategory",
+    "fields": {
+      "name": "Beheermaatregelen"
+    }
+  },
+  {
+    "pk": 2,
+    "model": "lizard_krw.measurecategory",
+    "fields": {
+      "name": "Bronmaatregelen"
+    }
+  },
+  {
+    "pk": 3,
+    "model": "lizard_krw.measurecategory",
+    "fields": {
+      "name": "GGOR maatregelen"
+    }
+  },
+  {
+    "pk": 4,
+    "model": "lizard_krw.measurecategory",
+    "fields": {
+      "name": "Immissiemaatregelen"
+    }
+  },
+  {
+    "pk": 5,
+    "model": "lizard_krw.measurecategory",
+    "fields": {
+      "name": "Inrichtingsmaatregelen"
+    }
+  },
+  {
+    "pk": 6,
+    "model": "lizard_krw.measurecategory",
+    "fields": {
+      "name": "RO-maatregelen"
+    }
+  },
+  {
+    "pk": 7,
+    "model": "lizard_krw.measurecategory",
+    "fields": {
+      "name": "Instrumentele maatregelen"
+    }
+  },
+  {
+    "pk": 8,
+    "model": "lizard_krw.measurecategory",
+    "fields": {
+      "name": "WB21 maatregelen"
+    }
+  },
+  {
+    "pk": 9,
+    "model": "lizard_krw.measurecategory",
+    "fields": {
+      "name": "Overig"
+    }
+  },
+  {
+    "pk": 3,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "BE01",
+      "description": "Beheermaatregelen uitvoeren actief visstands- of schelpdierstandsbeheer"
+    }
+  },
+  {
+    "pk": 4,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "BE02",
+      "description": "Beheermaatregelen uitvoeren actief vegetatiebeheer (enten, zaaien, planten)"
+    }
+  },
+  {
+    "pk": 5,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "BE03",
+      "description": "Beheermaatregelen uitvoeren op waterkwaliteit gericht onderhouds-/maaibeheer (water & natte oever)"
+    }
+  },
+  {
+    "pk": 6,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "BE04",
+      "description": "Beheermaatregelen Verwijderen eutrofe bagger"
+    }
+  },
+  {
+    "pk": 7,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "BE05",
+      "description": "Beheermaatregelen verwijderen vervuilde bagger (m.u.v. eutrofe bagger)"
+    }
+  },
+  {
+    "pk": 8,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "BE06",
+      "description": "Beheermaatregelen aanpassen begroeiing langs water"
+    }
+  },
+  {
+    "pk": 9,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "BE07",
+      "description": "Beheermaatregelen Beheren van grootschalige grondwaterverontreinigingen"
+    }
+  },
+  {
+    "pk": 10,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "BE08",
+      "description": "Beheermaatregelen overige beheermaatregelen"
+    }
+  },
+  {
+    "pk": 11,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "BR01",
+      "description": "Bronmaatregelen verminderen emissie nutri\u00ebnten landbouw"
+    }
+  },
+  {
+    "pk": 12,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "BR02",
+      "description": "Bronmaatregelen verminderen emissie zware metalen en overige microverontreinigingen landbouw"
+    }
+  },
+  {
+    "pk": 13,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "BR03",
+      "description": "Bronmaatregelen verminderen emissie gewasbeschermingsmiddelen landbouw"
+    }
+  },
+  {
+    "pk": 14,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "BR04",
+      "description": "Bronmaatregelen verminderen emissie scheepvaart"
+    }
+  },
+  {
+    "pk": 15,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "BR05",
+      "description": "Bronmaatregelen verminderen emissie verkeer"
+    }
+  },
+  {
+    "pk": 16,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "BR06",
+      "description": "Bronmaatregelen verminderen diffuse emissie industrie"
+    }
+  },
+  {
+    "pk": 17,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "BR07",
+      "description": "Bronmaatregelen saneren uitlogende oeverbescherming"
+    }
+  },
+  {
+    "pk": 18,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "BR08",
+      "description": "Bronmaatregelen verminderen emissies bouwmaterialen"
+    }
+  },
+  {
+    "pk": 19,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "BR09",
+      "description": "Bronmaatregelen verminderen emissie gewasbeschermingsmiddelen stad"
+    }
+  },
+  {
+    "pk": 20,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "BR10",
+      "description": "Bronmaatregelen overige bronmaatregelen"
+    }
+  },
+  {
+    "pk": 21,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "GGOR",
+      "description": "Overige maatregelen GGOR maatregelen"
+    }
+  },
+  {
+    "pk": 22,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IM01",
+      "description": "Immissiemaatregelen verminderen belasting RWZI \u2013 nutri\u00ebnten"
+    }
+  },
+  {
+    "pk": 23,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IM02",
+      "description": "Immissiemaatregelen verminderen belasting RWZI \u2013 overige stoffen"
+    }
+  },
+  {
+    "pk": 24,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IM03",
+      "description": "Immissiemaatregelen aanpakken overstorten gemengde stelsels"
+    }
+  },
+  {
+    "pk": 25,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IM04",
+      "description": "Immissiemaatregelen zuiveren + afkoppelen verhard oppervlak"
+    }
+  },
+  {
+    "pk": 26,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IM05",
+      "description": "Immissiemaatregelen herstellen lekke riolen"
+    }
+  },
+  {
+    "pk": 27,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IM06",
+      "description": "Immissiemaatregelen opheffen ongezuiverde lozingen"
+    }
+  },
+  {
+    "pk": 28,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IM07",
+      "description": "Immissiemaatregelen spuitvrije zones"
+    }
+  },
+  {
+    "pk": 29,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IM08",
+      "description": "Immissiemaatregelen mestvrije zones"
+    }
+  },
+  {
+    "pk": 30,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IM09",
+      "description": "Immissiemaatregelen aanleg zuiveringsmoeras bij lozings- en/of innamepunt"
+    }
+  },
+  {
+    "pk": 31,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IM10",
+      "description": "Immissiemaatregelen saneren verontreinigde landbodems"
+    }
+  },
+  {
+    "pk": 32,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IM11",
+      "description": "Immissiemaatregelen saneren verontreinigde landbodem en/of grondwater"
+    }
+  },
+  {
+    "pk": 33,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IM12",
+      "description": "Immissiemaatregelen overige emissiereducerende maatregelen"
+    }
+  },
+  {
+    "pk": 34,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IN01",
+      "description": "Inrichtingsmaatregelen vasthouden water in haarvaten van het systeem"
+    }
+  },
+  {
+    "pk": 35,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IN02",
+      "description": "Inrichtingsmaatregelen omleiden/scheiden waterstromen"
+    }
+  },
+  {
+    "pk": 36,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IN03",
+      "description": "Inrichtingsmaatregelen invoeren/wijzigen doorspoelen"
+    }
+  },
+  {
+    "pk": 37,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IN04",
+      "description": "Inrichtingsmaatregelen verbreden (snel) stromend water/hermeanderen, NVO < 3 m"
+    }
+  },
+  {
+    "pk": 38,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IN05",
+      "description": "Inrichtingsmaatregelen verbreden (snel) stromend water/hermeanderen, 3m < NVO < 10 m"
+    }
+  },
+  {
+    "pk": 39,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IN06",
+      "description": "Inrichtingsmaatregelen verbreden (snel) stromend water/ hermeanderen , NVO >10 m"
+    }
+  },
+  {
+    "pk": 40,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IN07",
+      "description": "Inrichtingsmaatregelen verbreden watergang/-systeem langzaam stromend of stilstaand: NVO < 3 m"
+    }
+  },
+  {
+    "pk": 41,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IN08",
+      "description": "Inrichtingsmaatregelen verbreden watergang/-systeem langzaam stromend of stilstaand: 3m < NVO < 10 m"
+    }
+  },
+  {
+    "pk": 42,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IN09",
+      "description": "Inrichtingsmaatregelen verbreden watergang/-systeem langzaam stromend of stilstaand: NVO >10 m "
+    }
+  },
+  {
+    "pk": 43,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IN10",
+      "description": "Inrichtingsmaatregelen verbreden watergang/-systeem: aansluiten wetland of verlagen uiterwaard"
+    }
+  },
+  {
+    "pk": 44,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IN11",
+      "description": "Inrichtingsmaatregelen aanleg nevengeul/herstel verbinding"
+    }
+  },
+  {
+    "pk": 45,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IN12",
+      "description": "Inrichtingsmaatregelen verdiepen watergang/-systeem (overdimensioneren)"
+    }
+  },
+  {
+    "pk": 46,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IN13",
+      "description": "Inrichtingsmaatregelen verondiepen watergang/-systeem"
+    }
+  },
+  {
+    "pk": 47,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IN14",
+      "description": "Inrichtingsmaatregelen aanpassen streefpeil"
+    }
+  },
+  {
+    "pk": 48,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IN15",
+      "description": "Inrichtingsmaatregelen Vispasseerbaar maken kunstwerken"
+    }
+  },
+  {
+    "pk": 49,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IN16",
+      "description": "Inrichtingsmaatregelen verwijderen stuw"
+    }
+  },
+  {
+    "pk": 50,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IN17",
+      "description": "Inrichtingsmaatregelen aanleg speciale leefgebieden voor vis"
+    }
+  },
+  {
+    "pk": 51,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IN18",
+      "description": "Inrichtingsmaatregelen aanleg speciale leefgebieden flora en fauna"
+    }
+  },
+  {
+    "pk": 52,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IN19",
+      "description": "Inrichtingsmaatregelen aanleg zuiveringsmoeras"
+    }
+  },
+  {
+    "pk": 53,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "IN20",
+      "description": "Inrichtingsmaatregelen overige inrichtingsmaatregelen"
+    }
+  },
+  {
+    "pk": 54,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "RO01",
+      "description": "RO-maatregelen wijzigen landbouwfunctie"
+    }
+  },
+  {
+    "pk": 55,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "RO02",
+      "description": "RO-maatregelen beperken recreatie"
+    }
+  },
+  {
+    "pk": 56,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "RO03",
+      "description": "RO-maatregelen beperken scheepvaart"
+    }
+  },
+  {
+    "pk": 57,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "RO04",
+      "description": "RO-maatregelen wijzigen visserij"
+    }
+  },
+  {
+    "pk": 58,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "RO05",
+      "description": "RO-maatregelen wijzigen stedelijke functie"
+    }
+  },
+  {
+    "pk": 59,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "RO06",
+      "description": "RO-maatregelen mijden risicovolle functies in grondwaterbeschermingsgebieden"
+    }
+  },
+  {
+    "pk": 60,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "RO07",
+      "description": "RO-maatregelen verminderen/verplaatsen van de grondwaterwinning"
+    }
+  },
+  {
+    "pk": 61,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "RO08",
+      "description": "RO-maatregelen Stopzetten van kleine winningen (campings)"
+    }
+  },
+  {
+    "pk": 62,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "RO09",
+      "description": "RO-maatregelen overige RO-maatregelen"
+    }
+  },
+  {
+    "pk": 70,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "S01",
+      "description": "Instrumentele maatregelen uitvoeren onderzoek"
+    }
+  },
+  {
+    "pk": 71,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "S02",
+      "description": "Instrumentele maatregelen geven van voorlichting"
+    }
+  },
+  {
+    "pk": 72,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "S03",
+      "description": "Instrumentele maatregelen aanpassen/introduceren (nieuwe) wetgeving"
+    }
+  },
+  {
+    "pk": 73,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "S04",
+      "description": "Instrumentele maatregelen opstellen nieuw plan"
+    }
+  },
+  {
+    "pk": 74,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "S05",
+      "description": "Instrumentele maatregelen financi\u00eble maatregelen"
+    }
+  },
+  {
+    "pk": 75,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "S06",
+      "description": "Instrumentele maatregelen overige instrumentele maatregelen"
+    }
+  },
+  {
+    "pk": 69,
+    "model": "lizard_krw.measurecode",
+    "fields": {
+      "code": "WB21",
+      "description": "Overige maatregelen WB21 maatregelen"
+    }
+  },
+  {
+    "pk": 1,
+    "model": "lizard_krw.unit",
+    "fields": {
+      "description": "",
+      "sign": "ha"
+    }
+  },
+  {
+    "pk": 2,
+    "model": "lizard_krw.unit",
+    "fields": {
+      "description": "",
+      "sign": "stuks"
+    }
+  },
+  {
+    "pk": 3,
+    "model": "lizard_krw.unit",
+    "fields": {
+      "description": "",
+      "sign": "km"
+    }
+  },
+  {
+    "pk": 4,
+    "model": "lizard_krw.unit",
+    "fields": {
+      "description": "",
+      "sign": "m3"
+    }
+  },
+  {
+    "pk": 1,
+    "model": "lizard_krw.executive",
+    "fields": {
+      "name": "Landbouw"
+    }
+  },
+  {
+    "pk": 2,
+    "model": "lizard_krw.executive",
+    "fields": {
+      "name": "Onbekend"
+    }
+  },
+  {
+    "pk": 3,
+    "model": "lizard_krw.executive",
+    "fields": {
+      "name": "Overig"
+    }
+  },
+  {
+    "pk": 4,
+    "model": "lizard_krw.executive",
+    "fields": {
+      "name": "Provincie"
+    }
+  },
+  {
+    "pk": 5,
+    "model": "lizard_krw.executive",
+    "fields": {
+      "name": "Rijk"
+    }
+  },
+  {
+    "pk": 6,
+    "model": "lizard_krw.executive",
+    "fields": {
+      "name": "Rijkswaterstaat"
+    }
+  },
+  {
+    "pk": 7,
+    "model": "lizard_krw.executive",
+    "fields": {
+      "name": "Terreinbeheerder"
+    }
+  },
+  {
+    "pk": 8,
+    "model": "lizard_krw.executive",
+    "fields": {
+      "name": "Waterschap"
+    }
+  },
+  {
+    "pk": 6,
+    "model": "lizard_krw.organization",
+    "fields": {
+      "name": "Gemeente"
+    }
+  },
+  {
+    "pk": 7,
+    "model": "lizard_krw.organization",
+    "fields": {
+      "name": "Niet van toepassing"
+    }
+  },
+  {
+    "pk": 1,
+    "model": "lizard_krw.organization",
+    "fields": {
+      "name": "Overig"
+    }
+  },
+  {
+    "pk": 2,
+    "model": "lizard_krw.organization",
+    "fields": {
+      "name": "Provincie"
+    }
+  },
+  {
+    "pk": 3,
+    "model": "lizard_krw.organization",
+    "fields": {
+      "name": "Rijkswaterstaat"
+    }
+  },
+  {
+    "pk": 4,
+    "model": "lizard_krw.organization",
+    "fields": {
+      "name": "Terreinbeheerder"
+    }
+  },
+  {
+    "pk": 5,
+    "model": "lizard_krw.organization",
+    "fields": {
+      "name": "Waterschap"
+    }
+  }
+]

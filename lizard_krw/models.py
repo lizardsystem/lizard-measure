@@ -166,12 +166,13 @@ class Score(models.Model):
     value >= 0.6         goed
     """
 
+    # degene die het heeft ingevoerd
+    owner = models.ForeignKey(User)
+
     class Meta:
         verbose_name = _("Score")
         verbose_name_plural = _("Scores")
         ordering = ('start_date', 'waterbody', 'category', 'alpha_score')
-
-    owner = models.ForeignKey(User)  # degene die het heeft ingevoerd
 
     waterbody = models.ForeignKey(WaterBody)
     start_date = models.DateTimeField()
@@ -190,12 +191,7 @@ class Score(models.Model):
 class GoalScore(models.Model):
     """krw goal score, it has nothing to do with the FIFA worldcup"""
 
-    class Meta:
-        verbose_name = _("Goal Score")
-        verbose_name_plural = _("Goal Scores")
-        ordering = ('start_date', 'waterbody', 'category', 'alpha_score')
-
-    owner = models.ForeignKey(User)  # degene die het heeft ingevoerd
+    owner = models.ForeignKey(User)
 
     waterbody = models.ForeignKey(WaterBody)
     start_date = models.DateTimeField()
@@ -203,6 +199,11 @@ class GoalScore(models.Model):
     category = models.IntegerField(choices=SCORE_CATEGORY_CHOICES)
     alpha_score = models.ForeignKey(AlphaScore, default=None)
     value = models.FloatField()  # Unused, but present in XML import file.
+
+    class Meta:
+        verbose_name = _("Goal Score")
+        verbose_name_plural = _("Goal Scores")
+        ordering = ('start_date', 'waterbody', 'category', 'alpha_score')
 
     def __unicode__(self):
         return '%s - %s - %s - %s' % (
@@ -237,11 +238,11 @@ class MeasureCategory(models.Model):
     """Measure Category. i.e. Beheermaatregelen
     """
 
+    name = models.CharField(max_length=200)
+
     class Meta:
         verbose_name = _("Measure category")
         verbose_name_plural = _("Measure categories")
-
-    name = models.CharField(max_length=200)
 
     def __unicode__(self):
         return u'%s' % (self.name)
@@ -403,6 +404,7 @@ class Measure(AL_Node):
     AGGREGATION_TYPE_AVG = 3
 
     owner = models.ForeignKey(User)
+
     # a measure can be splitted in a tree form
     parent = models.ForeignKey('Measure', blank=True, null=True)
     node_order_by = ['name']
