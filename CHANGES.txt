@@ -5,7 +5,8 @@ Changelog of lizard-krw
 0.9 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Changed required field water_type in water_body to optional with
+  migration (no backwards migration).
 
 
 0.8 (2010-12-22)

@@ -54,7 +54,7 @@ class WaterBody(models.Model):
         max_length=80,
         help_text=u"The ID corresponding to the shapefile ID.")
     slug = models.SlugField(help_text=u"Name used for URL.")
-    water_type = models.ForeignKey(KRWWaterType)
+    water_type = models.ForeignKey(KRWWaterType, null=True, blank=True)
 
     description = models.TextField(null=True, blank=True,
                                    help_text="You can use markdown")
