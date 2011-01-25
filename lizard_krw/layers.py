@@ -328,10 +328,12 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
         graph.axes.set_ylim(-0.5, len(measures) - 0.5)
 
         # Legend
-        # handles = [Line2D([], [], color=status.color, lw=10) for
-        #            status in MeasureStatus.objects.all()]
-        # labels = [status.name for status in MeasureStatus.objects.all()]
-        # graph.legend(handles, labels)
+        legend_handles, legend_labels = [], []
+        for measure_status in MeasureStatus.objects.all():
+            legend_handles.append(
+                Line2D([], [], color=measure_status.color, lw=10))
+            legend_labels.append(measure_status.name)
+        graph.legend(legend_handles, legend_labels, ncol=3)
 
     @classmethod
     def _image_score(cls, graph, layer_name, waterbodies,
@@ -362,7 +364,7 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
                 score_colors.append(color)
 
             graph.axes.broken_barh(score_data,
-                                   (-0.5 + index, 1),
+                                   (index - 0.45, 1),
                                    facecolors=score_colors,
                                    edgecolors='grey')
 
@@ -371,14 +373,15 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
             short_string(wb.__unicode__(), 17) for wb in waterbodies]
         graph.axes.set_yticks(range(len(waterbodies)))
         graph.axes.set_yticklabels(waterbodies_short)
+        graph.axes.set_ylim(-0.5, len(waterbodies) - 0.5)
+
         # Legend.
-        # legend_handles = []
-        # legend_labels = []
-        # for alpha_score in AlphaScore.objects.all():
-        #     legend_handles.append(
-        #         Line2D([], [], color=alpha_score.color.html, lw=10))
-        #     legend_labels.append(alpha_score.name)
-        # graph.legend(legend_handles, legend_labels)
+        legend_handles, legend_labels = [], []
+        for alpha_score in AlphaScore.objects.all():
+            legend_handles.append(
+                Line2D([], [], color=alpha_score.color.html, lw=10))
+            legend_labels.append(alpha_score.name)
+        graph.legend(legend_handles, legend_labels, ncol=2)
 
     def image(self, identifier_list,
               start_date, end_date,
@@ -411,7 +414,9 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
             height = 170.0
 
         # Calculate own height, which can be smaller than given.
-        height = min((len(measures) + len(waterbodies)) * 40 + 20, height)
+        #height = min((len(measures) + len(waterbodies)) * 40 + 20 +
+        #             len(legend_handles) * 10.0, height)
+
         graph = adapter.Graph(start_date, end_date, width, height)
         if measures:
             # krw measures
@@ -421,22 +426,6 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
             self._image_score(graph, self.layer_name, waterbodies,
                               start_date, end_date)
 
-
-        legend_handles, legend_labels = [], []
-
-        # Legend handles and labels. Background does not have labels.
-        if self.layer_name in ["score-vis", "score-fyto", "score-flora", "score-fauna"]:
-            for alpha_score in AlphaScore.objects.all():
-                legend_handles.append(
-                    Line2D([], [], color=alpha_score.color.html, lw=10))
-                legend_labels.append(alpha_score.name)
-        elif self.layer_name == "measure":
-            for measure_status in MeasureStatus.objects.all():
-                legend_handles.append(
-                    Line2D([], [], color=measure_status.color.html, lw=10))
-                legend_labels.append(measure_status.name)
-
-        graph.legend(legend_handles, legend_labels)
         graph.add_today()
         return graph.http_png()
 
