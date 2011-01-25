@@ -371,7 +371,7 @@ def select_area(request, template='lizard_krw/select_area.html',
         context_instance=RequestContext(request))
 
 
-def krw_browser(request):
+def krw_browser(request, template='lizard_krw/krw-browser.html'):
     """Show krw browser.
 
     Automatically makes new workspace if not yet available
@@ -382,7 +382,7 @@ def krw_browser(request):
     date_range_form = DateRangeForm(
         current_start_end_dates(request, for_form=True))
     return render_to_response(
-        'lizard_krw/krw-browser.html',
+        template,
         {'date_range_form': date_range_form,
          'workspaces': workspaces,
          'javascript_hover_handler': 'popup_hover_handler',
