@@ -1,6 +1,7 @@
 import mapnik
 import pkg_resources
 from matplotlib.dates import date2num
+from matplotlib.lines import Line2D
 import datetime
 
 from lizard_map import adapter
@@ -14,7 +15,9 @@ from lizard_krw.models import SCORE_CATEGORY_FYTO
 from lizard_krw.models import SCORE_CATEGORY_FLORA
 from lizard_krw.models import SCORE_CATEGORY_FAUNA
 from lizard_krw.models import SCORE_CATEGORY_VIS
+from lizard_krw.models import AlphaScore
 from lizard_krw.models import Measure
+from lizard_krw.models import MeasureStatus
 from lizard_krw.models import MeasureStatusMoment
 from lizard_krw.models import Score
 from lizard_krw.models import WaterBody
@@ -418,6 +421,22 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
             self._image_score(graph, self.layer_name, waterbodies,
                               start_date, end_date)
 
+
+        legend_handles, legend_labels = [], []
+
+        # Legend handles and labels. Background does not have labels.
+        if self.layer_name in ["score-vis", "score-fyto", "score-flora", "score-fauna"]:
+            for alpha_score in AlphaScore.objects.all():
+                legend_handles.append(
+                    Line2D([], [], color=alpha_score.color.html, lw=10))
+                legend_labels.append(alpha_score.name)
+        elif self.layer_name == "measure":
+            for measure_status in MeasureStatus.objects.all():
+                legend_handles.append(
+                    Line2D([], [], color=measure_status.color.html, lw=10))
+                legend_labels.append(measure_status.name)
+
+        graph.legend(legend_handles, legend_labels)
         graph.add_today()
         return graph.http_png()
 

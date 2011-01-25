@@ -586,6 +586,69 @@
     }
   },
   {
+    "pk": 7,
+    "model": "lizard_krw.measurestatus",
+    "fields": {
+      "color": "#ffff00",
+      "name": "Afgerond",
+      "value": 1.0
+    }
+  },
+  {
+    "pk": 6,
+    "model": "lizard_krw.measurestatus",
+    "fields": {
+      "color": "#00ff00",
+      "name": "In Uitvoering",
+      "value": 0.59999999999999998
+    }
+  },
+  {
+    "pk": 1,
+    "model": "lizard_krw.measurestatus",
+    "fields": {
+      "color": "#00ffff",
+      "name": "Gepland",
+      "value": 0.40000000000000002
+    }
+  },
+  {
+    "pk": 2,
+    "model": "lizard_krw.measurestatus",
+    "fields": {
+      "color": "#0080ff",
+      "name": "Begroot",
+      "value": 0.29999999999999999
+    }
+  },
+  {
+    "pk": 3,
+    "model": "lizard_krw.measurestatus",
+    "fields": {
+      "color": "#0000ff",
+      "name": "Concept",
+      "value": 0.20000000000000001
+    }
+  },
+  {
+    "pk": 4,
+    "model": "lizard_krw.measurestatus",
+    "fields": {
+      "color": "#8000ff",
+      "name": "Nieuw",
+      "value": 0.10000000000000001
+    }
+  },
+  {
+    "pk": 5,
+    "model": "lizard_krw.measurestatus",
+    "fields": {
+      "color": "#bdbdbd",
+      "name": "Onbekend",
+      "value": 0.0
+    }
+  },
+  {
     "pk": 1,
     "model": "lizard_krw.measurecategory",
     "fields": {

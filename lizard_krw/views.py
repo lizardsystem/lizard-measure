@@ -334,28 +334,29 @@ def waterbody_summary(request,
         context_instance=RequestContext(request))
 
 
-def analysis_start(request,
-                   template='lizard_krw/analysis.html'):
-    """Main analysis screen
+# Obsolete: make your own analysis (apps) screen.
+# def analysis_start(request,
+#                    template='lizard_krw/analysis.html'):
+#     """Main analysis screen
 
-    If you want a new workspace, add "new_workspace" to the GET parameters
+#     If you want a new workspace, add "new_workspace" to the GET parameters
 
-    """
-    date_range_form = DateRangeForm(
-        current_start_end_dates(request, for_form=True))
+#     """
+#     date_range_form = DateRangeForm(
+#         current_start_end_dates(request, for_form=True))
 
-    new_workspace = request.GET.__contains__('new_workspace')
-    workspace_manager = WorkspaceManager(request)
-    workspaces = workspace_manager.load_or_create(new_workspace=new_workspace)
-    date_range_form = DateRangeForm(
-        current_start_end_dates(request, for_form=True))
-    return render_to_response(
-        template,
-        {'date_range_form': date_range_form,
-         'workspaces': workspaces,
-         'javascript_hover_handler': 'popup_hover_handler',
-         'javascript_click_handler': 'popup_click_handler'},
-        context_instance=RequestContext(request))
+#     new_workspace = request.GET.__contains__('new_workspace')
+#     workspace_manager = WorkspaceManager(request)
+#     workspaces = workspace_manager.load_or_create(new_workspace=new_workspace)
+#     date_range_form = DateRangeForm(
+#         current_start_end_dates(request, for_form=True))
+#     return render_to_response(
+#         template,
+#         {'date_range_form': date_range_form,
+#          'workspaces': workspaces,
+#          'javascript_hover_handler': 'popup_hover_handler',
+#          'javascript_click_handler': 'popup_click_handler'},
+#         context_instance=RequestContext(request))
 
 
 def select_area(request, template='lizard_krw/select_area.html',
