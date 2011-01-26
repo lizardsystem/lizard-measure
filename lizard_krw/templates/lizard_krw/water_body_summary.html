@@ -38,6 +38,12 @@
       <dt>Naam waterlichaam</dt>
       <dd>{{ water_body.name }}</dd>
 
+      <dt>Code waterlichaam</dt>
+      <dd>{{ water_body.code }}</dd>
+
+      <dt>Status</dt>
+      <dd>{{ water_body.status }}</dd>
+
       {% if water_body.description %}
       {{ water_body.description|markdown:"def_list" }}
       {% endif %}

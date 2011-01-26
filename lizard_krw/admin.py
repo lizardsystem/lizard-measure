@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+from lizard_krw.models import Area
 from lizard_krw.models import AlphaScore
 from lizard_krw.models import Executive
 from lizard_krw.models import FundingOrganization
@@ -11,7 +12,9 @@ from lizard_krw.models import MeasureCode
 from lizard_krw.models import MeasurePeriod
 from lizard_krw.models import MeasureStatus
 from lizard_krw.models import MeasureStatusMoment
+from lizard_krw.models import Municipality
 from lizard_krw.models import Organization
+from lizard_krw.models import Province
 from lizard_krw.models import Score
 from lizard_krw.models import SingleIndicator
 from lizard_krw.models import Unit
@@ -58,6 +61,7 @@ class AlphaScoreAdmin(admin.ModelAdmin):
 
 
 admin.site.register(AlphaScore, AlphaScoreAdmin)
+admin.site.register(Area)
 admin.site.register(Executive)
 admin.site.register(FundingOrganization)
 admin.site.register(GoalScore, ScoreAdmin)
@@ -68,7 +72,9 @@ admin.site.register(MeasureCode)
 admin.site.register(MeasurePeriod)
 admin.site.register(MeasureStatus, MeasureStatusAdmin)
 admin.site.register(MeasureStatusMoment)
+admin.site.register(Municipality)
 admin.site.register(Organization)
+admin.site.register(Province)
 admin.site.register(Score, ScoreAdmin)
 admin.site.register(SingleIndicator)
 admin.site.register(Unit)

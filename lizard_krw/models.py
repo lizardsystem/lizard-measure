@@ -42,6 +42,12 @@ class KRWWaterType(models.Model):
         return u'%s - %s' % (self.code, self.name)
 
 
+class WaterBodyStatus(models.Model):
+    """Waterbody status
+    """
+    name = models.CharField(max_length=80)
+
+
 class Area(models.Model):
     """Deelgebied"""
     name = models.CharField(max_length=200)
@@ -74,8 +80,8 @@ class WaterBody(models.Model):
                                    help_text="extra info, not displayed")
 
     # Infoscreen. All fields are optional.
-    status = models.TextField(
-        null=True, blank=True, help_text="status")
+    status = models.ForeignKey(
+        WaterBodyStatus, null=True, blank=True, help_text="status")
     water_type = models.ForeignKey(
         KRWWaterType, null=True, blank=True, help_text="krw water type")
 
