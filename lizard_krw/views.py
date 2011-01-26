@@ -131,10 +131,11 @@ def krw_score_graph(request, waterbody_slug):
         }  # Dict of lists
     for score in scores:
         category = score.category
+        alpha_score = score.alpha_score
         display_score[category].append(
             (date2num(score.start_date), score_width))
         display_colors[category].append(
-            score.alpha_score.color.html)
+            alpha_score.color.html)
 
     display_positions = {
         SCORE_CATEGORY_FYTO: (27, 6),
@@ -243,7 +244,8 @@ def krw_measure_graph(request, waterbody_slug=None):
 
     # Legend
     measure_statuses = MeasureStatus.objects.all()
-    handles = [Line2D([], [], color=s.color, lw=10) for s in measure_statuses]
+    handles = [Line2D([], [], color=s.color.html, lw=10)
+               for s in measure_statuses]
     labels = [status.name for status in measure_statuses]
     krw_graph.legend(handles, labels)
     krw_graph.legend_space()

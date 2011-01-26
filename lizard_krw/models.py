@@ -161,7 +161,7 @@ class Score(models.Model):
     class Meta:
         verbose_name = _("Score")
         verbose_name_plural = _("Scores")
-        ordering = ('start_date', 'waterbody', 'category', 'alpha_score')
+        ordering = ('start_date', 'waterbody', 'category')
 
     waterbody = models.ForeignKey(WaterBody)
     start_date = models.DateTimeField()
@@ -171,10 +171,17 @@ class Score(models.Model):
     value = models.FloatField()
 
     def __unicode__(self):
-        return '%s - %s - %s - %s (%.2f)' % (
+        return '%s - %s - %s (%.2f)' % (
             self.start_date, self.waterbody,
-            SCORE_CATEGORIES[self.category], self.alpha_score,
+            SCORE_CATEGORIES[self.category],
             self.value)
+
+    @property
+    def alpha_score(self):
+        """Returns corresponding alpha score."""
+        return AlphaScore.objects.get(
+            min_value__lte=self.value,
+            max_value__gt=self.value)
 
 
 class GoalScore(models.Model):
@@ -192,12 +199,19 @@ class GoalScore(models.Model):
     class Meta:
         verbose_name = _("Goal Score")
         verbose_name_plural = _("Goal Scores")
-        ordering = ('start_date', 'waterbody', 'category', 'alpha_score')
+        ordering = ('start_date', 'waterbody', 'category')
 
     def __unicode__(self):
         return '%s - %s - %s - %s' % (
             self.start_date, self.waterbody,
             SCORE_CATEGORIES[self.category], self.alpha_score)
+
+    @property
+    def alpha_score(self):
+        """Returns corresponding alpha score."""
+        return AlphaScore.objects.get(
+            min_value__lte=self.value,
+            max_value__gt=self.value)
 
 
 # Measures

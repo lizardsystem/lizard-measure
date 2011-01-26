@@ -53,7 +53,11 @@ class MeasureStatusAdmin(admin.ModelAdmin):
     list_display = ['name', 'value', 'color', ]
 
 
-admin.site.register(AlphaScore)
+class AlphaScoreAdmin(admin.ModelAdmin):
+    list_display = ['name', 'min_value', 'max_value', 'color', ]
+
+
+admin.site.register(AlphaScore, AlphaScoreAdmin)
 admin.site.register(Executive)
 admin.site.register(FundingOrganization)
 admin.site.register(GoalScore, ScoreAdmin)

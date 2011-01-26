@@ -289,7 +289,7 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
 
                 measure_bar.append((date2num(msm_datetime),
                                     date_length))
-                measure_colors.append(measure_status_moment.status.color)
+                measure_colors.append(measure_status_moment.status.color.html)
             return measure_bar, measure_colors
 
         if end_date_realized is None:
