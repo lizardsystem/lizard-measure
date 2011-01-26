@@ -1,7 +1,6 @@
 from django.contrib import admin
 
 from lizard_krw.models import AlphaScore
-from lizard_krw.models import Color
 from lizard_krw.models import Executive
 from lizard_krw.models import FundingOrganization
 from lizard_krw.models import GoalScore
@@ -55,7 +54,6 @@ class MeasureStatusAdmin(admin.ModelAdmin):
 
 
 admin.site.register(AlphaScore)
-admin.site.register(Color)
 admin.site.register(Executive)
 admin.site.register(FundingOrganization)
 admin.site.register(GoalScore, ScoreAdmin)
