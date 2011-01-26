@@ -1,15 +1,13 @@
 {# info and graphs on KRW scores for a specific waterbody #}
-{% extends "lizard_map/lizardgis.html" %}
+{% extends "lizard_ui/lizardbase.html" %}
 {% load workspaces %}
 
 {% block subtitle %} KRW scores voor {{ waterbody.name }} {% endblock %}
 
 
 {% block portal-tabs %}
-<ul>
-  <li class="selected"><a href="/">Overzicht</a></li>
-  <li class="last"><a href="/analysis">Analyse</a></li>
-</ul>
+{{ block.super }}
+<div id="portal-tab-selected" data-selected="#portal-tab-overzicht"></div>
 {% endblock portal-tabs %}
 
 {% block breadcrumbs %}

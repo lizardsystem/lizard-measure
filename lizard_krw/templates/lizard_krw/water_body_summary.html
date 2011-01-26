@@ -5,12 +5,9 @@
 
 {% block subtitle %} {{ water_body.name }} {% endblock %}
 
-
 {% block portal-tabs %}
-<ul>
-  <li class="selected"><a href="/">Overzicht</a></li
-  ><li class="last"><a href="/analysis">Analyse</a></li>
-</ul>
+{{ block.super }}
+<div id="portal-tab-selected" data-selected="#portal-tab-overzicht"></div>
 {% endblock portal-tabs %}
 
 {% block breadcrumbs %}

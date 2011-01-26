@@ -136,6 +136,9 @@ class AlphaScore(models.Model):
     color = ColorField(default='808080')
     # color = models.ForeignKey('Color', default=1)
 
+    class Meta:
+        ordering = ['-min_value', ]
+
     def __unicode__(self):
         return self.name
 

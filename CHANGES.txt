@@ -5,6 +5,13 @@ Changelog of lizard-krw
 0.9 (unreleased)
 ----------------
 
+- Reversed vertical order of krw measures in krw measure graph.
+
+- Added explicit AlphaScore order ("-min_value").
+
+- Refactored portal-tabs. Portal-tabs are now inherited from the
+  (overwritten) lizard_ui/lizardbase.html.
+
 - Refactored color fields and AlphaScore.
 
 - Added krw scores page.

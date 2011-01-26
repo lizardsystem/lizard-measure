@@ -306,7 +306,7 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
             measure_bar, measure_colors = calc_bar_colors(
                 measure, measure_status_moments, end_date_realized, False)
             graph.axes.broken_barh(measure_bar,
-                                   (index - 0.3, 0.6),
+                                   (-index - 0.3, 0.6),
                                    facecolors=measure_colors,
                                    edgecolors=measure_colors)
             # planning
@@ -317,15 +317,16 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
             measure_bar_p, measure_colors_p = calc_bar_colors(
                 measure, measure_status_moments_p, end_date, True)
             graph.axes.broken_barh(measure_bar_p,
-                                   (index - 0.45, 0.1),
+                                   (-index - 0.45, 0.1),
                                    facecolors=measure_colors_p,
                                    edgecolors=measure_colors_p)
 
         # Y ticks
         yticklabels = [short_string(measure.name, 17) for measure in measures]
-        graph.axes.set_yticks(range(len(measures)))
+        yticklabels.reverse()
+        graph.axes.set_yticks(range(-len(measures) + 0.5, 1))
         graph.axes.set_yticklabels(yticklabels)
-        graph.axes.set_ylim(-0.5, len(measures) - 0.5)
+        graph.axes.set_ylim(-len(measures) + 0.5, 0.5)
 
         # Legend
         if add_legend:
