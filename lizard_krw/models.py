@@ -13,6 +13,7 @@ from django.utils.translation import ugettext as _
 from treebeard.al_tree import AL_Node  # Adjacent list implementation
 
 from lizard_fewsunblobbed.models import Timeserie
+from lizard_map.models import ColorField
 
 
 # Krw score categories.
@@ -143,10 +144,14 @@ class Color(models.Model):
 
 
 class AlphaScore(models.Model):
-    """Alphanumeric scores"""
+    """Alphanumeric scores. This is the translation from a numeric
+    score value to a name and a color."""
 
+    min_value = models.FloatField(default=0.0)
+    max_value = models.FloatField(default=1.0)
     name = models.CharField(max_length=200)
-    color = models.ForeignKey('Color', default=1)
+    color = ColorField(default='808080')
+    # color = models.ForeignKey('Color', default=1)
 
     def __unicode__(self):
         return self.name
@@ -157,13 +162,14 @@ class AlphaScore(models.Model):
 class Score(models.Model):
     """krw score
 
-    As far as I can tell, based on existing scores, the numeric value
+    Based on existing scores, the numeric value
     can be translated to an alpha score as follows:
 
     value < 0.2          slecht
     0.2 <= value < 0.4   ontoereikend
     0.4 <= value < 0.6   matig
-    value >= 0.6         goed
+    0.6 <= value < 0.8   goed
+    value >= 0.8         zeer goed
     """
 
     # degene die het heeft ingevoerd
@@ -178,8 +184,8 @@ class Score(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     category = models.IntegerField(choices=SCORE_CATEGORY_CHOICES)
-    alpha_score = models.ForeignKey(AlphaScore)
-    value = models.FloatField()  # Unused, but present in XML import file.
+    # alpha_score = models.ForeignKey(AlphaScore)
+    value = models.FloatField()
 
     def __unicode__(self):
         return '%s - %s - %s - %s (%.2f)' % (
@@ -197,8 +203,8 @@ class GoalScore(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     category = models.IntegerField(choices=SCORE_CATEGORY_CHOICES)
-    alpha_score = models.ForeignKey(AlphaScore, default=None)
-    value = models.FloatField()  # Unused, but present in XML import file.
+    #alpha_score = models.ForeignKey(AlphaScore, default=None)
+    value = models.FloatField()
 
     class Meta:
         verbose_name = _("Goal Score")
@@ -210,26 +216,6 @@ class GoalScore(models.Model):
             self.start_date, self.waterbody,
             SCORE_CATEGORIES[self.category], self.alpha_score)
 
-    def save(self, *args, **kwargs):
-        """
-        Finds corresponding alpha score if not filled in
-        manually. Expecting existing alpha scores 'slecht',
-        'ontoereikend', 'matig', 'goed'. See also Score.
-        """
-
-        # Auto-generate alpha_score corresponding to value.
-        if self.value < 0.2:
-            self.alpha_score = AlphaScore.objects.get(name='Slecht')
-        elif self.value >= 0.2 and self.value < 0.4:
-            self.alpha_score = AlphaScore.objects.get(name='Ontoereikend')
-        elif self.value >= 0.4 and self.value < 0.6:
-            self.alpha_score = AlphaScore.objects.get(name='Matig')
-        elif self.value >= 0.6 and self.value < 0.8:
-            self.alpha_score = AlphaScore.objects.get(name='Goed')
-        elif self.value >= 0.8:
-            self.alpha_score = AlphaScore.objects.get(name='Zeer goed')
-
-        super(GoalScore, self).save(*args, **kwargs)
 
 # Measures
 
@@ -334,9 +320,9 @@ class MeasureStatus(models.Model):
 
     name = models.CharField(max_length=200)
     # Color is matplotlib style, i.e. '0.75', 'red', '#eeff00'.
-    color = models.CharField(
+    color = ColorField(
         max_length=20,
-        help_text="Color is matplotlib style, i.e. '0.75', 'red', '#eeff00'")
+        help_text="Color is rrggbb")
     # Value is 1.0 for up and running, 0 for nothing. Used for ordering.
     value = models.FloatField(default=0.0)
 

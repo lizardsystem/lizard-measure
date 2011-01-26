@@ -5,6 +5,8 @@ Changelog of lizard-krw
 0.9 (unreleased)
 ----------------
 
+- Refactored color fields and AlphaScore.
+
 - Added krw scores page.
 
 - Added legends to krw graphs in adapter/analysis.

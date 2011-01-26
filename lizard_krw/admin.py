@@ -51,7 +51,7 @@ class MeasureAdmin(admin.ModelAdmin):
 
 
 class MeasureStatusAdmin(admin.ModelAdmin):
-    list_display = ['name', 'value', ]
+    list_display = ['name', 'value', 'color', ]
 
 
 admin.site.register(AlphaScore)

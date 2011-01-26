@@ -1,0 +1,89 @@
+{# info and graphs on KRW scores for a specific waterbody #}
+{% extends "lizard_map/lizardgis.html" %}
+{% load workspaces %}
+
+{% block subtitle %} KRW scores voor {{ waterbody.name }} {% endblock %}
+
+
+{% block portal-tabs %}
+<ul>
+  <li class="selected"><a href="/">Overzicht</a></li>
+  <li class="last"><a href="/analysis">Analyse</a></li>
+</ul>
+{% endblock portal-tabs %}
+
+{% block breadcrumbs %}
+<a href="{% url homepage %}">home</a>
+&rarr;
+<a href="{% url lizard_krw.waterbody area=waterbody.slug %}" class="lizard-map-link">{{ waterbody.name }}</a>
+&rarr;
+<a href="{% url lizard_krw.krw_scores waterbody_slug=waterbody.slug %}" class="lizard-map-link">Scores</a>
+{% endblock %}
+
+{% block sidebar %}
+<div class="sidebarbox">
+  <h2>Kaart</h2>
+  <a href="/">
+  <img src="{% url lizard_krw.tiny_map waterbody_slug=waterbody.slug %}"
+       height="140"
+       width="300"
+       alt="geselecteerde waterlichaam"/>
+  </a>
+</div>
+<div class="sidebarbox sidebarbox-stretched">
+  <h2>
+    Info
+    <span class="ss_sprite ss_calendar_view_day sidebarbox-action-icon popup-trigger"
+          rel="#summary-datepicker">&nbsp;</span>
+  </h2>
+  <div>
+    {% date_popup %}
+    <div>
+      <p>Bovenaan wordt een afbeelding getoond voor de krw scores van waterlichaam {{ waterbody.name }}.</p>
+
+      <p>Onder worden de krw scores in per categorie weergegeven.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block content %}
+<div id="textual">
+  <h2>KRW scores voor {{ waterbody.name }}</h2>
+  <div style="width: 100%; height: 250px;" class="img-use-my-size">
+    <a href="{% url lizard_krw.krw_score_graph waterbody_slug=waterbody.slug %}" class="replace-with-image">
+      afbeelding nog niet geladen
+    </a>
+  </div>
+
+  {% for scores_item in scores_list %}
+    <h3>{{ scores_item.name }}</h3>
+    <ul>
+      {% for goalscore in scores_item.goalscores %}
+      <li>{{ goalscore.start_date|date:"Y-m-d" }}: {{ goalscore.alpha_score }}</li>
+      {% empty %}
+      <li>Geen doelscores beschikbaar.</li>
+      {% endfor %}
+      {% if not scores_item.scores %}
+      <li>Geen scores beschikbaar.</li>
+      {% endif %}
+    </ul>
+    {% if scores_item.scores %}
+    <table>
+      <thead>
+        <tr><th>Datum</th><th>Waarde</th></tr>
+      </thead>
+      <tbody>
+        {% for score in scores_item.scores %}
+        <tr>
+          <td>{{ score.start_date|date:"Y-m-d" }}</td>
+          <td>{{ score.alpha_score }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endblock %}
