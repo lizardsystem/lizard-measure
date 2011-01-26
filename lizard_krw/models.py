@@ -126,23 +126,6 @@ class SingleIndicator(models.Model):
         return Timeserie.objects.get(pk=self.timeserie_id)
 
 
-class Color(models.Model):
-    """
-    Color for krw scores
-    """
-
-    r = models.IntegerField()
-    g = models.IntegerField()
-    b = models.IntegerField()
-
-    def __unicode__(self):
-        return '#%02x%02x%02x' % (self.r, self.g, self.b)
-
-    @property
-    def html(self):
-        return '#%02x%02x%02x' % (self.r, self.g, self.b)
-
-
 class AlphaScore(models.Model):
     """Alphanumeric scores. This is the translation from a numeric
     score value to a name and a color."""
