@@ -42,6 +42,21 @@ class KRWWaterType(models.Model):
         return u'%s - %s' % (self.code, self.name)
 
 
+class Area(models.Model):
+    """Deelgebied"""
+    name = models.CharField(max_length=200)
+
+
+class Province(models.Model):
+    """Provincie"""
+    name = models.CharField(max_length=200)
+
+
+class Municipality(models.Model):
+    """Gemeente"""
+    name = models.CharField(max_length=200)
+
+
 class WaterBody(models.Model):
     """Specific area for which we want to know KRW scores"""
 
@@ -51,14 +66,39 @@ class WaterBody(models.Model):
         ordering = ("name",)
 
     name = models.CharField(max_length=80)
+    slug = models.SlugField(help_text=u"Name used for URL.")
     ident = models.CharField(
         max_length=80,
         help_text=u"The ID corresponding to the shapefile ID.")
-    slug = models.SlugField(help_text=u"Name used for URL.")
-    water_type = models.ForeignKey(KRWWaterType, null=True, blank=True)
-
     description = models.TextField(null=True, blank=True,
-                                   help_text="You can use markdown")
+                                   help_text="extra info, not displayed")
+
+    # Infoscreen. All fields are optional.
+    status = models.TextField(
+        null=True, blank=True, help_text="status")
+    water_type = models.ForeignKey(
+        KRWWaterType, null=True, blank=True, help_text="krw water type")
+
+    protected_area_reason = models.TextField(
+        null=True, blank=True, help_text="beschermd gebied vanwege")
+
+    code = models.CharField(max_length=80, null=True, blank=True)
+    area = models.ManyToManyField(
+        Area, null=True, blank=True, help_text="deelgebied")
+    province = models.ManyToManyField(
+        Province, null=True, blank=True, help_text="provincie")
+    municipality = models.ManyToManyField(
+        Municipality, null=True, blank=True, help_text="gemeente")
+
+    characteristics = models.TextField(
+        null=True, blank=True, help_text="karakteristiek")
+    current_situation_chemicals = models.TextField(
+        null=True, blank=True,
+        help_text="Normoverschrijding chemie huidige situatie")
+    control_parameters = models.TextField(
+        null=True, blank=True,
+        help_text="stuurparameters")
+
 
     def __unicode__(self):
         return u'%s - %s' % (self.ident, self.name)

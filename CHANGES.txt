@@ -5,6 +5,10 @@ Changelog of lizard-krw
 0.9 (unreleased)
 ----------------
 
+- Added fields to waterbody.
+
+- Added models Area, Province, Municipality.
+
 - Reversed vertical order of krw measures in krw measure graph.
 
 - Added explicit AlphaScore order ("-min_value").
