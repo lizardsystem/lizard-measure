@@ -98,15 +98,12 @@ def indicator_graph(request,
     return krw_graph.http_png()
 
 
-def krw_score_graph(request, area=None):
+def krw_score_graph(request, waterbody_slug):
     """
     Draws a krw score chart
     """
 
-    # fetch relevant data, create krw_graph
-    if area is None:
-        area = request.GET.get("area")
-    waterbody = get_object_or_404(WaterBody, slug=area)
+    waterbody = get_object_or_404(WaterBody, slug=waterbody_slug)
 
     start_date, end_date = current_start_end_dates(request)
     # we fit 50 scores in the graph
@@ -241,7 +238,8 @@ def krw_measure_graph(request, waterbody_slug=None):
     krw_graph.axes.set_ylim(0, len(measures))
 
     WorkspaceItemAdapterKrw._image_measures(
-        krw_graph, measures, start_date, end_date, end_date_realized)
+        krw_graph, measures, start_date, end_date, end_date_realized,
+        add_legend=False)
 
     # Legend
     measure_statuses = MeasureStatus.objects.all()
@@ -450,3 +448,30 @@ def krw_waterbody_measures(request, waterbody_slug):
          },
         context_instance=RequestContext(request))
 
+
+def krw_scores(request, waterbody_slug, template='lizard_krw/krw_scores.html'):
+    """
+    Displays big table with krw scores for a specific waterbody.
+    """
+    waterbody = WaterBody.objects.get(slug=waterbody_slug)
+    scores = Score.objects.filter(waterbody=waterbody)
+    goalscores = GoalScore.objects.filter(waterbody=waterbody)
+
+    scores_list = []  # Must contain list of {scores, name, goalscore}
+
+    for category in [SCORE_CATEGORY_FYTO, SCORE_CATEGORY_FLORA,
+                     SCORE_CATEGORY_FAUNA, SCORE_CATEGORY_VIS]:
+        scores = scores.filter(category=category)
+        goalscores = goalscores.filter(category=category)
+        category_name = SCORE_CATEGORIES[category]
+        scores_list.append({'scores': scores,
+                           'goalscores': goalscores,
+                           'name': category_name})
+
+    return render_to_response(
+        template,
+        {'scores': scores,
+         'scores_list': scores_list,
+         'waterbody': waterbody,
+            },
+        context_instance=RequestContext(request))

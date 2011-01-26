@@ -257,7 +257,7 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
 
     @classmethod
     def _image_measures(cls, graph, measures, start_date, end_date,
-                        end_date_realized=None):
+                        end_date_realized=None, add_legend=True):
         """Function to draw measures
 
         TODO: when a single measure is drawn, sometimes the whole
@@ -328,12 +328,13 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
         graph.axes.set_ylim(-0.5, len(measures) - 0.5)
 
         # Legend
-        legend_handles, legend_labels = [], []
-        for measure_status in MeasureStatus.objects.all():
-            legend_handles.append(
-                Line2D([], [], color=measure_status.color, lw=10))
-            legend_labels.append(measure_status.name)
-        graph.legend(legend_handles, legend_labels, ncol=3)
+        if add_legend:
+            legend_handles, legend_labels = [], []
+            for measure_status in MeasureStatus.objects.all():
+                legend_handles.append(
+                    Line2D([], [], color=measure_status.color, lw=10))
+                legend_labels.append(measure_status.name)
+            graph.legend(legend_handles, legend_labels, ncol=3)
 
     @classmethod
     def _image_score(cls, graph, layer_name, waterbodies,

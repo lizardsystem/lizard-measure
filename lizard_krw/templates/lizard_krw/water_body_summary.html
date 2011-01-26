@@ -89,7 +89,8 @@
   {% endfor %}
   <div class="vertical-item img-use-my-size">
     <a class="replace-with-image"
-       href="{% url lizard_krw.krw_score_graph area=water_body.slug %}">
+       href="{% url lizard_krw.krw_score_graph waterbody_slug=water_body.slug %}"
+       data-href-click="{% url lizard_krw.krw_scores waterbody_slug=water_body.slug %}">
       krw score image
     </a>
   </div>

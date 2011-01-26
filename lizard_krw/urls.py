@@ -25,11 +25,15 @@ urlpatterns = patterns(
         name="lizard_krw.krw_browser"
         ),
     # Graphs for the summary view.
-    (r'^summary/(?P<area>.*)/graph/(?P<id>.*)/$',
+    (r'^summary/(?P<waterbody_slug>.*)/krw_scores/$',
+     'lizard_krw.views.krw_scores',
+     {},
+     "lizard_krw.krw_scores"),
+    (r'^summary/(?P<area>.*)/indicator/graph/(?P<id>.*)/$',
      'lizard_krw.views.indicator_graph',
      {},
      "lizard_krw.indicator_graph"),
-    (r'^summary/(?P<area>.*)/krw_score/$',
+    (r'^summary/(?P<waterbody_slug>.*)/krw_scores/image/$',
      'lizard_krw.views.krw_score_graph',
      {},
      "lizard_krw.krw_score_graph"),
