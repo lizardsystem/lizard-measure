@@ -19,6 +19,7 @@ from lizard_krw.models import Score
 from lizard_krw.models import SingleIndicator
 from lizard_krw.models import Unit
 from lizard_krw.models import WaterBody
+from lizard_krw.models import WaterBodyStatus
 from lizard_krw.models import XMLImport
 from lizard_krw.models import XMLImportMeetobject
 
@@ -79,5 +80,6 @@ admin.site.register(Score, ScoreAdmin)
 admin.site.register(SingleIndicator)
 admin.site.register(Unit)
 admin.site.register(WaterBody, WaterBodyAdmin)
+admin.site.register(WaterBodyStatus)
 admin.site.register(XMLImport)
 admin.site.register(XMLImportMeetobject)
