@@ -117,7 +117,6 @@ class WaterBody(models.Model):
         null=True, blank=True,
         help_text="stuurparameters")
 
-
     def __unicode__(self):
         return u'%s - %s' % (self.ident, self.name)
 
