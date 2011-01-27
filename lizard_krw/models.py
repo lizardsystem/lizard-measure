@@ -47,20 +47,32 @@ class WaterBodyStatus(models.Model):
     """
     name = models.CharField(max_length=80)
 
+    def __unicode__(self):
+        return u'%s' % self.name
+
 
 class Area(models.Model):
     """Deelgebied"""
     name = models.CharField(max_length=200)
+
+    def __unicode__(self):
+        return u'%s' % self.name
 
 
 class Province(models.Model):
     """Provincie"""
     name = models.CharField(max_length=200)
 
+    def __unicode__(self):
+        return u'%s' % self.name
+
 
 class Municipality(models.Model):
     """Gemeente"""
     name = models.CharField(max_length=200)
+
+    def __unicode__(self):
+        return u'%s' % self.name
 
 
 class WaterBody(models.Model):

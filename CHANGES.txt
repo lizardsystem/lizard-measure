@@ -5,6 +5,8 @@ Changelog of lizard-krw
 0.9 (unreleased)
 ----------------
 
+- Updated summary screen with extra parameters.
+
 - Added fields to waterbody.
 
 - Added models Area, Province, Municipality.

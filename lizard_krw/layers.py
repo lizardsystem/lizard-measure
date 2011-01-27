@@ -324,7 +324,7 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
         # Y ticks
         yticklabels = [short_string(measure.name, 17) for measure in measures]
         yticklabels.reverse()
-        graph.axes.set_yticks(range(-len(measures) + 0.5, 1))
+        graph.axes.set_yticks(range(int(-len(measures) + 0.5), 1))
         graph.axes.set_yticklabels(yticklabels)
         graph.axes.set_ylim(-len(measures) + 0.5, 0.5)
 

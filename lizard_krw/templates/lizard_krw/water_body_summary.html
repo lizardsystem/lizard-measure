@@ -41,8 +41,50 @@
       <dt>Code waterlichaam</dt>
       <dd>{{ water_body.code }}</dd>
 
+      {% if water_body.status %}
       <dt>Status</dt>
       <dd>{{ water_body.status }}</dd>
+      {% endif %}
+
+      {% if water_body.water_type %}
+      <dt>Type en omschrijving</dt>
+      <dd>{{ water_body.water_type }}</dd>
+      {% endif %}
+
+      {% if water_body.protected_area_reason %}
+      <dt>Beschermd gebied vanwege</dt>
+      <dd>{{ water_body.protected_area_reason }}</dd>
+      {% endif %}
+
+      {% if water_body.area.all %}
+      <dt>Deelgebied</dt>
+      <dd>{{ water_body.area.all|join:", " }}</dd>
+      {% endif %}
+
+      {% if water_body.province.all %}
+      <dt>Provincie</dt>
+      <dd>{{ water_body.province.all|join:", " }}</dd>
+      {% endif %}
+
+      {% if water_body.municipality.all %}
+      <dt>Gemeente</dt>
+      <dd>{{ water_body.municipality.all|join:", " }}</dd>
+      {% endif %}
+
+      {% if water_body.characteristics %}
+      <dt>Karakteristiek</dt>
+      <dd>{{ water_body.characteristics }}</dd>
+      {% endif %}
+
+      {% if water_body.current_situation_chemicals %}
+      <dt>Normoverschrijding chemie huidige situatie</dt>
+      <dd>{{ water_body.current_situation_chemicals }}</dd>
+      {% endif %}
+
+      {% if water_body.control_parameters %}
+      <dt>Stuurparameters</dt>
+      <dd>{{ water_body.control_parameters }}</dd>
+      {% endif %}
 
       {% if water_body.description %}
       {{ water_body.description|markdown:"def_list" }}
