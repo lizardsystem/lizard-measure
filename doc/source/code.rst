@@ -1,6 +1,6 @@
 Code documentation
 ==================
 
-.. automodule:: lizard_map.models
+.. automodule:: lizard_krw.models
    :members:
 
