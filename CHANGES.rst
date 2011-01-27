@@ -5,6 +5,8 @@ Changelog of lizard-krw
 0.9 (unreleased)
 ----------------
 
+- Updated migration 0004: on sqlite it generated an error.
+
 - Updated summary screen with extra parameters.
 
 - Added fields to waterbody.

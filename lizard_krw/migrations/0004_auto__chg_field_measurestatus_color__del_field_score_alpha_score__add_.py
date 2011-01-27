@@ -7,7 +7,7 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Changing field 'MeasureStatus.color'
         db.alter_column('lizard_krw_measurestatus', 'color', self.gf('lizard_map.models.ColorField')(max_length=8))
 
@@ -26,14 +26,20 @@ class Migration(SchemaMigration):
         db.alter_column('lizard_krw_alphascore', 'color', self.gf('lizard_map.models.ColorField')(max_length=8))
 
         # Removing index on 'AlphaScore', fields ['color']
-        db.delete_index('lizard_krw_alphascore', ['color_id'])
+        try:
+            db.delete_index('lizard_krw_alphascore', ['color_id'])
+        except:
+            # On sqlite, one do not have an index on this column.
+            print ("Warning: (probably) django.db.utils.DatabaseError: "
+                   "no index removed for "
+                   "db.delete_index('lizard_krw_alphascore', ['color_id'])")
 
         # Deleting field 'GoalScore.alpha_score'
         db.delete_column('lizard_krw_goalscore', 'alpha_score_id')
 
 
     def backwards(self, orm):
-        
+
         # Adding index on 'AlphaScore', fields ['color']
         db.create_index('lizard_krw_alphascore', ['color_id'])
 
