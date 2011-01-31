@@ -10,14 +10,6 @@
 <div id="portal-tab-selected" data-selected="#portal-tab-overzicht"></div>
 {% endblock portal-tabs %}
 
-{% block breadcrumbs %}
-<a href="{% url homepage %}">home</a>
-&rarr;
-<a href="{% url lizard_krw.waterbody area=waterbody.slug %}" class="lizard-map-link">{{ waterbody.name }}</a>
-&rarr;
-<a href="{% url lizard_krw.krw_waterbody_measures waterbody_slug=waterbody.slug %}" class="lizard-map-link">Maatregelen</a>
-{% endblock %}
-
 {% block sidebar %}
 <div class="sidebarbox">
   <h2>Kaart</h2>

@@ -3,6 +3,7 @@
 import StringIO
 import datetime
 
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render_to_response
@@ -324,13 +325,19 @@ def waterbody_summary(request,
                          indicators[2:]]
     date_range_form = DateRangeForm(
         current_start_end_dates(request, for_form=True))
+    crumbs = [{'name': 'home',
+               'url': '/'},
+              {'name': water_body.name,
+               'url': water_body.get_absolute_url()},]
+
     return render_to_response(
         template,
         {'water_body': water_body,
          'indicators': indicators,
          'shown_indicators': shown_indicators,
          'unused_indicators': unused_indicators,
-         'date_range_form': date_range_form},
+         'date_range_form': date_range_form,
+         'crumbs': crumbs},
         context_instance=RequestContext(request))
 
 
@@ -421,32 +428,54 @@ def waterbody_shapefile_search(request):
     return HttpResponse('')
 
 
-def measure_detail(request, measure_id):
+def measure_detail(request, measure_id, template='lizard_krw/measure.html'):
     measure = get_object_or_404(Measure, pk=measure_id)
 
     date_range_form = DateRangeForm(
         current_start_end_dates(request, for_form=True))
 
+    crumbs = [{'name': 'home',
+               'url': '/'},
+              {'name': measure.waterbody.name,
+               'url': measure.waterbody.get_absolute_url()},
+              {'name': 'Maatregelen',
+               'url': reverse(
+                'lizard_krw.krw_waterbody_measures',
+                kwargs={'waterbody_slug': measure.waterbody.slug})},
+              {'name': measure.name,
+               'url': measure.get_absolute_url()}]
+
     return render_to_response(
-        'lizard_krw/measure.html',
+        template,
         {'measure': measure,
          'date_range_form': date_range_form,
+         'crumbs': crumbs
          },
         context_instance=RequestContext(request))
 
 
-def krw_waterbody_measures(request, waterbody_slug):
+def krw_waterbody_measures(request, waterbody_slug,
+                           template='lizard_krw/waterbody_measures.html'):
     waterbody = get_object_or_404(WaterBody, slug=waterbody_slug)
     date_range_form = DateRangeForm(
         current_start_end_dates(request, for_form=True))
     #get measures without parent: main measures
     main_measures = waterbody.measure_set.filter(parent=None)
+    crumbs = [{'name': 'home',
+               'url': '/'},
+              {'name': waterbody.name,
+               'url': waterbody.get_absolute_url()},
+              {'name': 'Maatregelen',
+               'url': reverse(
+                'lizard_krw.krw_waterbody_measures',
+                kwargs={'waterbody_slug': waterbody.slug})},]
 
     return render_to_response(
-        'lizard_krw/waterbody_measures.html',
+        template,
         {'waterbody': waterbody,
          'date_range_form': date_range_form,
          'main_measures': main_measures,
+         'crumbs': crumbs
          },
         context_instance=RequestContext(request))
 
