@@ -37,6 +37,7 @@ from lizard_map.workspace import WorkspaceManager
 
 
 HOMEPAGE_KEY = 1  # Primary key of the Workspace for rendering the homepage.
+CRUMB_HOMEPAGE = {'name': 'home', 'url': '/'}
 
 
 def indicator_graph(request,
@@ -325,8 +326,7 @@ def waterbody_summary(request,
                          indicators[2:]]
     date_range_form = DateRangeForm(
         current_start_end_dates(request, for_form=True))
-    crumbs = [{'name': 'home',
-               'url': '/'},
+    crumbs = [CRUMB_HOMEPAGE,
               {'name': water_body.name,
                'url': water_body.get_absolute_url()},]
 
@@ -341,45 +341,26 @@ def waterbody_summary(request,
         context_instance=RequestContext(request))
 
 
-# Obsolete: make your own analysis (apps) screen.
-# def analysis_start(request,
-#                    template='lizard_krw/analysis.html'):
-#     """Main analysis screen
-
-#     If you want a new workspace, add "new_workspace" to the GET parameters
-
-#     """
-#     date_range_form = DateRangeForm(
-#         current_start_end_dates(request, for_form=True))
-
-#     new_workspace = request.GET.__contains__('new_workspace')
-#     workspace_manager = WorkspaceManager(request)
-#     workspaces = workspace_manager.load_or_create(new_workspace=new_workspace)
-#     date_range_form = DateRangeForm(
-#         current_start_end_dates(request, for_form=True))
-#     return render_to_response(
-#         template,
-#         {'date_range_form': date_range_form,
-#          'workspaces': workspaces,
-#          'javascript_hover_handler': 'popup_hover_handler',
-#          'javascript_click_handler': 'popup_click_handler'},
-#         context_instance=RequestContext(request))
-
-
 def select_area(request, template='lizard_krw/select_area.html',
                 homepage_key=HOMEPAGE_KEY):
     water_bodies = WaterBody.objects.all()
-    special_homepage_workspace = get_object_or_404(Workspace, pk=homepage_key)
+    special_homepage_workspace = get_object_or_404(
+        Workspace, pk=homepage_key)
+
+    crumbs = [CRUMB_HOMEPAGE]
+
     return render_to_response(
         template,
         {'water_bodies': water_bodies,
          'workspaces': {'user': [special_homepage_workspace]},
          'javascript_hover_handler': 'popup_hover_handler',
-         'javascript_click_handler': 'homepage_area_click_handler'},
+         'javascript_click_handler': 'homepage_area_click_handler',
+         'crumbs': crumbs},
         context_instance=RequestContext(request))
 
 
-def krw_browser(request, template='lizard_krw/krw-browser.html'):
+def krw_browser(request, template='lizard_krw/krw-browser.html',
+                crumbs_prepend=None):
     """Show krw browser.
 
     Automatically makes new workspace if not yet available
@@ -389,12 +370,22 @@ def krw_browser(request, template='lizard_krw/krw-browser.html'):
     workspaces = workspace_manager.load_or_create()
     date_range_form = DateRangeForm(
         current_start_end_dates(request, for_form=True))
+
+    if crumbs_prepend is not None:
+        crumbs = crumbs_prepend
+    else:
+        crumbs = [{'name': 'home', 'url': '/'}]
+    crumbs.append({'name': 'krw gegevens',
+                   'title': 'krw gegevens',
+                   'url': reverse('krw-browser')})
+
     return render_to_response(
         template,
         {'date_range_form': date_range_form,
          'workspaces': workspaces,
          'javascript_hover_handler': 'popup_hover_handler',
-         'javascript_click_handler': 'popup_click_handler'},
+         'javascript_click_handler': 'popup_click_handler',
+         'crumbs': crumbs},
         context_instance=RequestContext(request))
 
 
@@ -428,14 +419,14 @@ def waterbody_shapefile_search(request):
     return HttpResponse('')
 
 
-def measure_detail(request, measure_id, template='lizard_krw/measure.html'):
+def measure_detail(request, measure_id,
+                   template='lizard_krw/measure.html'):
     measure = get_object_or_404(Measure, pk=measure_id)
 
     date_range_form = DateRangeForm(
         current_start_end_dates(request, for_form=True))
 
-    crumbs = [{'name': 'home',
-               'url': '/'},
+    crumbs = [CRUMB_HOMEPAGE,
               {'name': measure.waterbody.name,
                'url': measure.waterbody.get_absolute_url()},
               {'name': 'Maatregelen',
@@ -461,8 +452,8 @@ def krw_waterbody_measures(request, waterbody_slug,
         current_start_end_dates(request, for_form=True))
     #get measures without parent: main measures
     main_measures = waterbody.measure_set.filter(parent=None)
-    crumbs = [{'name': 'home',
-               'url': '/'},
+
+    crumbs = [CRUMB_HOMEPAGE,
               {'name': waterbody.name,
                'url': waterbody.get_absolute_url()},
               {'name': 'Maatregelen',
@@ -480,7 +471,8 @@ def krw_waterbody_measures(request, waterbody_slug,
         context_instance=RequestContext(request))
 
 
-def krw_scores(request, waterbody_slug, template='lizard_krw/krw_scores.html'):
+def krw_scores(request, waterbody_slug,
+               template='lizard_krw/krw_scores.html'):
     """
     Displays big table with krw scores for a specific waterbody.
     """
@@ -499,10 +491,19 @@ def krw_scores(request, waterbody_slug, template='lizard_krw/krw_scores.html'):
                            'goalscores': goalscores,
                            'name': category_name})
 
+    crumbs = [
+        CRUMB_HOMEPAGE,
+        {'name': waterbody.name,
+         'url': waterbody.get_absolute_url()},
+        {'name': 'Scores',
+         'url': reverse('lizard_krw.krw_scores', kwargs={
+                    'waterbody_slug': waterbody.slug})}]
+
     return render_to_response(
         template,
         {'scores': scores,
          'scores_list': scores_list,
          'waterbody': waterbody,
+         'crumbs': crumbs,
             },
         context_instance=RequestContext(request))
