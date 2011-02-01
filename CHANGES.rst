@@ -2,7 +2,7 @@ Changelog of lizard-krw
 ===================================================
 
 
-0.9 (unreleased)
+0.9 (2011-02-01)
 ----------------
 
 - Updated all views/templates with new breadcrumbs method.
