@@ -503,6 +503,10 @@ class Measure(AL_Node):
     parent = models.ForeignKey('Measure', blank=True, null=True)
     node_order_by = ['name']
 
+    measure_collection = models.ForeignKey(
+        'MeasureCollection', blank=True, null=True,
+        help_text="Bij welk maatregelenpakket hoort deze maatregel?")
+
     # aggregation is used to 'summarize' the statuses from child measures
     # and its own status (they are equal in value, normally one would not give
     # status to main measure if it has child measures)

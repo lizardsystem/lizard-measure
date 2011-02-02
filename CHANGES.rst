@@ -5,7 +5,10 @@ Changelog of lizard-krw
 0.10 (unreleased)
 -----------------
 
-- Added model MeasureCollection, Department and corresponding migration.
+- Added model MeasureCollection, Department and corresponding
+  migration.
+
+- Added measure_collection to Measure model and migration.
 
 
 0.9 (2011-02-01)
