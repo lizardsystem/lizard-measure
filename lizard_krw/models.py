@@ -478,6 +478,12 @@ class MeasureCollection(models.Model):
     estimated_costs_internal = models.IntegerField(null=True, blank=True)
     need_co_funding = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ('name', )
+
+    def __unicode__(self):
+        return u'%s' % self.name
+
 
 class Measure(AL_Node):
     """
