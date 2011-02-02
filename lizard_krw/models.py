@@ -352,6 +352,20 @@ class Organization(models.Model):
         return u'%s' % self.name
 
 
+class Department(models.Model):
+    """Department of an organization
+    """
+
+    name = models.CharField(max_length=200)
+    organization = models.ForeignKey(Organization, blank=True, null=True)
+
+    class Meta:
+        ordering = ('name', )
+
+    def __unicode__(self):
+        return u'%s' % self.name
+
+
 class FundingOrganization(models.Model):
     """
 
@@ -428,9 +442,46 @@ class MeasurePeriod(models.Model):
         return '%d - %d' % (self.start_date.year, self.end_date.year)
 
 
+class Urgency(models.Model):
+    """Urgency. Can be ordered using numeric value."""
+    name = models.CharField(max_length=200)
+    value = models.FloatField()
+
+    class Meta:
+        ordering = ('-value',)
+
+    def __unicode__(self):
+        return self.name
+
+
+class MeasureCollection(models.Model):
+    """KRW maatregelpakket."""
+
+    name = models.CharField(max_length=200)
+    shortname = models.CharField(max_length=40)
+
+    waterbody = models.ForeignKey(
+        WaterBody,
+        help_text="Bij welk waterlichaam hoort dit maatregelpakket?")
+    area = models.ManyToManyField(
+        Area, null=True, blank=True, help_text="deelgebied")
+
+    urgency = models.ForeignKey(Urgency)
+    responsible_organization = models.ForeignKey(
+        Organization,
+        help_text="Verantwoordelijke organisatie")
+    responsible_department = models.ForeignKey(
+        Department,
+        help_text="Verantwoordelijke interne afdeling")
+
+    estimated_costs_total = models.IntegerField(null=True, blank=True)
+    estimated_costs_internal = models.IntegerField(null=True, blank=True)
+    need_co_funding = models.BooleanField(default=False)
+
+
 class Measure(AL_Node):
     """
-    KRW maatregel, uit voorbeeld maatregelen Martine Lodewijk
+    KRW maatregel,
 
     For drawing the measure graph, we only need the fields:
     name, start_date, end_date, status
