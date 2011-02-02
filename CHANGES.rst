@@ -2,7 +2,7 @@ Changelog of lizard-krw
 ===================================================
 
 
-0.10 (unreleased)
+0.10 (2011-02-02)
 -----------------
 
 - Added model MeasureCollection, Department and corresponding
