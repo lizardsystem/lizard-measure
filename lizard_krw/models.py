@@ -495,24 +495,36 @@ class MeasureCollection(models.Model):
         For each measure, fetch current status moment. Then return the
         minimum, if any.
         """
-        measure_status_moments = []
-        # .status_moment(dt=dt, is_planning=is_planning)
-        for measure in self.measure_set.all():
-            measure_status_moment = measure.measurestatusmoment_set.filter(
-                is_planning=is_planning,
-                datetime__lte=dt).distinct().order_by('-datetime')
-            if measure_status_moment:
-                measure_status_moments.append(measure_status_moment[0])
-            else:
-                measure_status_moments.append(None)
+        measure_status_moments = [
+            measure.status_moment(
+                dt=dt, is_planning=is_planning)
+            for measure in self.measure_set.all()]
+        # for measure in self.measure_set.all():
+        #     measure_status_moment = measure.measurestatusmoment_set.filter(
+        #         is_planning=is_planning,
+        #         datetime__lte=dt).distinct().order_by('-datetime')
+        #     if measure_status_moment:
+        #         measure_status_moments.append(measure_status_moment[0])
+        #     else:
+        #         measure_status_moments.append(None)
+        if None in measure_status_moments:
+            return None
 
         return min(measure_status_moments, key=lambda msm: msm.status.value)
 
     def measure_status_moments(
-        self, dt=datetime.datetime.now(), is_planning=False):
-        """Calculates measure_status_moments, aggregated from
-        measures. Returns in memory objects."""
-        pass
+        self, start_date, end_date, is_planning=False):
+        """Calculates list of measure_status_moments, aggregated from
+        measures."""
+        result = []
+        for msm_date in MeasureStatusMoment.objects.filter(
+            measure__measure_collection=self, is_planning=is_planning):
+            result.append(self.status_moment(
+                    dt=msm_date.datetime, is_planning=is_planning))
+        #remove None's: the datetimes where some of the measures
+        #statuses are defined
+        result = filter(None, result)
+        return result
 
 
 class Measure(AL_Node):

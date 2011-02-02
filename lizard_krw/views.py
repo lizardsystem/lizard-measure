@@ -248,6 +248,7 @@ def krw_measure_graph(request, waterbody_slug=None):
     #     start_date, end_date, end_date_realized,
     #     add_legend=False)
     # Draw krw measure collections
+    print measure_collections[0].measure_status_moments(start_date, end_date)
 
     # Legend
     measure_statuses = MeasureStatus.objects.all()
