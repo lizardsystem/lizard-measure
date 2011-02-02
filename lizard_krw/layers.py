@@ -269,6 +269,9 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
 
         def calc_bar_colors(measure, measure_status_moments, end_date,
                             is_planning):
+            """Returns calculated bars. The bars are aggregated from
+            measure_status_moments from sub measures.
+            """
             measure_bar = []
             measure_colors = []
             for msm_index, measure_status_moment_datetime in enumerate(
@@ -333,7 +336,7 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
             legend_handles, legend_labels = [], []
             for measure_status in MeasureStatus.objects.all():
                 legend_handles.append(
-                    Line2D([], [], color=measure_status.color, lw=10))
+                    Line2D([], [], color=measure_status.color.html, lw=10))
                 legend_labels.append(measure_status.name)
             graph.legend(legend_handles, legend_labels, ncol=3)
 

@@ -39,6 +39,10 @@ class FundingOrganizationInline(admin.TabularInline):
     model = FundingOrganization
 
 
+class MeasureInline(admin.TabularInline):
+    model = Measure
+
+
 class WaterBodyAdmin(admin.ModelAdmin):
     inlines = [
         SingleIndicatorInline,
@@ -53,6 +57,14 @@ class MeasureAdmin(admin.ModelAdmin):
     list_filter = ['waterbody', ]
     inlines = [
         MeasureStatusMomentInline, FundingOrganizationInline,
+        ]
+
+
+class MeasureCollectionAdmin(admin.ModelAdmin):
+    list_filter = ['waterbody', ]
+    list_display = ['__unicode__', 'waterbody', ]
+    inlines = [
+        MeasureInline,
         ]
 
 
@@ -74,7 +86,7 @@ admin.site.register(KRWWaterType)
 admin.site.register(Measure, MeasureAdmin)
 admin.site.register(MeasureCategory)
 admin.site.register(MeasureCode)
-admin.site.register(MeasureCollection)
+admin.site.register(MeasureCollection, MeasureCollectionAdmin)
 admin.site.register(MeasurePeriod)
 admin.site.register(MeasureStatus, MeasureStatusAdmin)
 admin.site.register(MeasureStatusMoment)

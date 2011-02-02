@@ -50,6 +50,11 @@ urlpatterns = patterns(
      'lizard_krw.views.tiny_map',
      {},
      "lizard_krw.tiny_map"),
+    # Measure collection
+    (r'^measure_collection/(?P<measure_collection_id>\d+)/$',
+     'lizard_krw.views.measure_collection',
+     {},
+     "lizard_krw.measure_collection"),
     # KRW measure info
     (r'^measure/(?P<measure_id>\d+)/$',
      'lizard_krw.views.measure_detail',

@@ -18,6 +18,7 @@ from lizard_krw.layers import WorkspaceItemAdapterKrw
 from lizard_krw.models import AlphaScore
 from lizard_krw.models import GoalScore
 from lizard_krw.models import Measure
+from lizard_krw.models import MeasureCollection
 from lizard_krw.models import MeasureStatus
 from lizard_krw.models import SCORE_CATEGORIES
 from lizard_krw.models import SCORE_CATEGORY_FAUNA
@@ -229,6 +230,8 @@ def krw_measure_graph(request, waterbody_slug=None):
         waterbody_slug = request.GET.get("waterbody")
     waterbody = get_object_or_404(WaterBody, slug=waterbody_slug)
 
+    measure_collections = MeasureCollection.objects.filter(
+        waterbody=waterbody)
     measures = Measure.objects.filter(is_indicator=True, waterbody=waterbody)
 
     start_date, end_date = current_start_end_dates(request)
@@ -240,9 +243,11 @@ def krw_measure_graph(request, waterbody_slug=None):
 
     krw_graph.axes.set_ylim(0, len(measures))
 
-    WorkspaceItemAdapterKrw._image_measures(
-        krw_graph, measures, start_date, end_date, end_date_realized,
-        add_legend=False)
+    # WorkspaceItemAdapterKrw._image_measures(
+    #     krw_graph, measures,
+    #     start_date, end_date, end_date_realized,
+    #     add_legend=False)
+    # Draw krw measure collections
 
     # Legend
     measure_statuses = MeasureStatus.objects.all()
@@ -419,6 +424,15 @@ def waterbody_shapefile_search(request):
     return HttpResponse('')
 
 
+def measure_collection(request, measure_collection_id,
+                       template='lizard_krw/measure_collection.html',
+                       crumbs_prepend=None):
+    return render_to_response(
+        template,
+        {},
+        context_instance=RequestContext(request))
+
+
 def measure_detail(request, measure_id,
                    template='lizard_krw/measure.html'):
     measure = get_object_or_404(Measure, pk=measure_id)
@@ -450,8 +464,10 @@ def krw_waterbody_measures(request, waterbody_slug,
     waterbody = get_object_or_404(WaterBody, slug=waterbody_slug)
     date_range_form = DateRangeForm(
         current_start_end_dates(request, for_form=True))
-    #get measures without parent: main measures
+    # Obsolete: use MeasureCollections instead
+    # get measures without parent: main measures
     main_measures = waterbody.measure_set.filter(parent=None)
+    measure_collections = waterbody.measurecollection_set.all()
 
     crumbs = [CRUMB_HOMEPAGE,
               {'name': waterbody.name,
@@ -466,6 +482,7 @@ def krw_waterbody_measures(request, waterbody_slug,
         {'waterbody': waterbody,
          'date_range_form': date_range_form,
          'main_measures': main_measures,
+         'measure_collections': measure_collections,
          'crumbs': crumbs
          },
         context_instance=RequestContext(request))

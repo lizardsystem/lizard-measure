@@ -482,7 +482,37 @@ class MeasureCollection(models.Model):
         ordering = ('name', )
 
     def __unicode__(self):
-        return u'%s' % self.name
+        return u'%s - %s' % (self.waterbody, self.name)
+
+    def get_absolute_url(self):
+        return reverse('lizard_krw.measure_collection',
+                       kwargs={'measure_collection_id': self.pk})
+
+    def status_moment(self, dt=datetime.datetime.now(), is_planning=False):
+        """Returns status_moment for a measure collection. Or None if
+        one of the measures does not have a status.
+
+        For each measure, fetch current status moment. Then return the
+        minimum, if any.
+        """
+        measure_status_moments = []
+        # .status_moment(dt=dt, is_planning=is_planning)
+        for measure in self.measure_set.all():
+            measure_status_moment = measure.measurestatusmoment_set.filter(
+                is_planning=is_planning,
+                datetime__lte=dt).distinct().order_by('-datetime')
+            if measure_status_moment:
+                measure_status_moments.append(measure_status_moment[0])
+            else:
+                measure_status_moments.append(None)
+
+        return min(measure_status_moments, key=lambda msm: msm.status.value)
+
+    def measure_status_moments(
+        self, dt=datetime.datetime.now(), is_planning=False):
+        """Calculates measure_status_moments, aggregated from
+        measures. Returns in memory objects."""
+        pass
 
 
 class Measure(AL_Node):
