@@ -80,6 +80,38 @@ class ModelTest(TestCase):
             None)
 
 
+    def test_measure_planning(self):
+        """Test measure functions: status_moment. What is the status
+        given a certain datetime? Now for planning.
+        """
+        m1 = Measure(waterbody=self.wb, name="Measure1",
+                     category=self.category, code=self.code,
+                     value=0.0, unit=self.unit, executive=self.executive)
+        m1.save()
+
+        # No status assigned: None
+        self.assertEquals(
+            m1.status_moment(dt=self.now, is_planning=True),
+            None)
+
+        # Add status
+        m1.measurestatusmoment_set.create(
+            status=MeasureStatus.objects.get(name="Nieuw"),
+            datetime=datetime.date(2010, 5, 25),
+            is_planning=True)
+        self.assertEquals(
+            m1.status_moment(dt=self.now, is_planning=True).status.name,
+            "Nieuw")
+        self.assertEquals(
+            m1.status_moment(dt=datetime.date(2010, 5, 25),
+                             is_planning=True).status.name,
+            "Nieuw")
+        self.assertEquals(
+            m1.status_moment(dt=datetime.date(2010, 3, 31),
+                             is_planning=True),
+            None)
+
+
     def test_measure_collection2(self):
         """Testing statuses of measure collections. The status of a
         measure collection is aggregated from underlying measures.
