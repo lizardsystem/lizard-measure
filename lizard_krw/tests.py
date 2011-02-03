@@ -197,3 +197,8 @@ class ModelTest(TestCase):
 
         self.assertEquals(msm[1].status.name, "Begroot")
         self.assertEquals(msm[1].datetime, datetime.date(2010, 9, 1))
+
+        # Empty planning?
+        msm_planning = mc.measure_status_moments(is_planning=True)
+
+        self.assertEquals(len(msm_planning), 0)
