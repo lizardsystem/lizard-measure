@@ -29,7 +29,7 @@
   <div>
     {% date_popup %}
     <dl>
-      <dt>Naam maatregelpakket</dt>
+      <dt>Maatregelpakket</dt>
       <dd>{{ measure_collection.name }}</dd>
 
       <dt>Waterlichaam</dt>
@@ -58,7 +58,7 @@
 
 {% block content %}
 <div id="textual">
-  <h2>{{ measure_collection.name }}</h2>
+  <h2>Maatregelpakket: {{ measure_collection.name }}</h2>
   <div style="width: 100%; height: 130px;" class="img-use-my-size">
     <a href="{% url lizard_krw.measure_collection_graph measure_collection_id=measure_collection.id %}"
        class="replace-with-image">

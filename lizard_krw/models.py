@@ -500,18 +500,14 @@ class MeasureCollection(models.Model):
             measure.status_moment(
                 dt=dt, is_planning=is_planning)
             for measure in self.measure_set.all()]
-        # for measure in self.measure_set.all():
-        #     measure_status_moment = measure.measurestatusmoment_set.filter(
-        #         is_planning=is_planning,
-        #         datetime__lte=dt).distinct().order_by('-datetime')
-        #     if measure_status_moment:
-        #         measure_status_moments.append(measure_status_moment[0])
-        #     else:
-        #         measure_status_moments.append(None)
         if None in measure_status_moments:
             return None
 
         return min(measure_status_moments, key=lambda msm: msm.status.value)
+
+    def status_moment_planned(self):
+        """For use in templates"""
+        return self.status_moment(is_planning=True)
 
     def measure_status_moments(self, end_date=None, is_planning=False):
         """Calculates list of measure_status_moments, aggregated from
@@ -665,6 +661,10 @@ class Measure(AL_Node):
             # TODO: implement
             return min(measure_status_moments,
                        key=lambda msm: msm.status.value)
+
+    def status_moment_planned(self):
+        """For use in templates"""
+        return self.status_moment(is_planning=True)
 
     def measure_status_moments(self, end_date=None, is_planning=False):
         msm = self.measurestatusmoment_set.filter(is_planning=is_planning)

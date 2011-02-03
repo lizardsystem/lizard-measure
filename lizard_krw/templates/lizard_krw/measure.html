@@ -29,13 +29,16 @@
   <div>
     {% date_popup %}
     <dl>
-      <dt>Naam maatregel</dt>
+      <dt>Maatregel</dt>
       <dd>{{ measure.name }}</dd>
 
       {% if measure.description %}
       <dt>Beschrijving</dt>
       <dd>{{ measure.description }}</dd>
       {% endif %}
+
+      <dt>Maatregelpakket</dt>
+      <dd><a href="{{ measure.measure_collection.get_absolute_url }}">{% firstof measure.measure_collection.name '(geen maatregelpakket)' %}</a></dd>
 
       {% if measure.identity %}
       <dt>Identiteit</dt>
@@ -50,8 +53,6 @@
       <dt>Waterlichaam</dt>
       <dd><a href="{{ measure.measure_collection.waterbody.get_absolute_url }}">{{ measure.measure_collection.waterbody }}</a></dd>
 
-      <dt>Maatregelpakket</dt>
-      <dd><a href="{{ measure.measure_collection.get_absolute_url }}">{% firstof measure.measure_collection.name '(geen maatregelpakket)' %}</a></dd>
     </dl>
   </div>
 </div>
@@ -67,7 +68,7 @@
 
 {% block content %}
 <div id="textual">
-  <h2>{{ measure.name }}</h2>
+  <h2>Maatregel: {{ measure.name }}</h2>
   <div style="width: 100%; height: 130px;" class="img-use-my-size">
     <a href="{% url lizard_krw.measure_graph measure_id=measure.id %}" class="replace-with-image">
       afbeelding nog niet geladen
@@ -123,22 +124,33 @@
       {% with measure.status_moment as status_moment %}
         {% if status_moment %}
         <tr>
-          <th>Status</th><td>{{ status_moment.status }}</td>
+          <th>Status</th><td>{{ status_moment.status }} (vanaf {{ status_moment.datetime }})</td>
         </tr>
-        {% ifnotequal measure status_moment.measure %}
+        {% if status_moment.description %}
         <tr>
-          <th>Maatgevende deelmaatregel</th><td>{{ status_moment.measure }}</td>
+          <th>Beschrijving status</th><td>{{ status_moment.description }}</td>
         </tr>
-        {% endifnotequal %}
-        <tr>
-          <th>Sinds</th><td>{{ status_moment.datetime }}</td>
-        </tr>
-        <tr>
-          <th>Beschrijving</th><td>{{ status_moment.description }}</td>
-        </tr>
+        {% endif %}
         {% else %}
         <tr>
           <th>Status</th><td>Geen statusinfo beschikbaar</td>
+        </tr>
+        {% endif %}
+      {% endwith %}
+      {# Planning #}
+      {% with measure.status_moment_planned as status_moment %}
+        {% if status_moment %}
+        <tr>
+          <th>Planning</th><td>{{ status_moment.status }} (vanaf {{ status_moment.datetime }})</td>
+        </tr>
+        {% if status_moment.description %}
+        <tr>
+          <th>Beschrijving planning</th><td>{{ status_moment.description }}</td>
+        </tr>
+        {% endif %}
+        {% else %}
+        <tr>
+          <th>Planning</th><td>Geen planning beschikbaar</td>
         </tr>
         {% endif %}
       {% endwith %}
