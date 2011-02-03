@@ -256,11 +256,15 @@ def krw_measure_graph(request,
 
     krw_graph.axes.set_ylim(0, len(measure_collections))
 
+    title = None
+    if len(measure_collections) == 1:
+        title = measure_collections[0].name
+
     # Draw krw measure collections
     WorkspaceItemAdapterKrw._image_measures(
         krw_graph, measure_collections,
         start_date, end_date, end_date_realized,
-        add_legend=False)
+        add_legend=False, title=title)
 
     # Legend
     measure_statuses = MeasureStatus.objects.all()

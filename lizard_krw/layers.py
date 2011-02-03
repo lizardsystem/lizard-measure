@@ -257,7 +257,8 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
 
     @classmethod
     def _image_measures(cls, graph, measures, start_date, end_date,
-                        end_date_realized=None, add_legend=True):
+                        end_date_realized=None, add_legend=True,
+                        title=None):
         """Function to draw measures
 
         TODO: when a single measure is drawn, sometimes the whole
@@ -293,7 +294,9 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
 
         if end_date_realized is None:
             end_date_realized = min(end_date, datetime.datetime.now().date())
-        graph.suptitle("krw maatregel(en)")
+        if title is None:
+            title = "krw maatregel(en)"
+        graph.suptitle(title)
         for index, measure in enumerate(measures):
             # realized
             measure_bar, measure_colors = calc_bar_colors(
