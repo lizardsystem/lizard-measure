@@ -218,21 +218,34 @@ def krw_score_graph(request, waterbody_slug):
     return krw_graph.http_png()
 
 
-def krw_measure_graph(request, waterbody_slug=None):
+def krw_measure_graph(request,
+                      waterbody_slug=None,
+                      measure_collection_id=None,
+                      measure_id=None):
     """
-    Draw krw measure graphs.
+    Draw krw measure graphs. Can include measure collections and
+    measures as well.
 
     uses datetime.datetime.now() for current time
 
     uses _image_measures draw function from WorkspaceItemAdapterKrw
-    """
-    if waterbody_slug is None:
-        waterbody_slug = request.GET.get("waterbody")
-    waterbody = get_object_or_404(WaterBody, slug=waterbody_slug)
 
-    measure_collections = MeasureCollection.objects.filter(
-        waterbody=waterbody)
-    measures = Measure.objects.filter(is_indicator=True, waterbody=waterbody)
+    If waterbody_slug: add all measure_collections
+    If measure_collection_id: add measure_collection
+    If measure_id: add measure
+    """
+
+    measure_collections = []  # Can also include measures.
+    if waterbody_slug:
+        waterbody = get_object_or_404(WaterBody, slug=waterbody_slug)
+        measure_collections.extend(MeasureCollection.objects.filter(
+                waterbody=waterbody))
+    if measure_collection_id:
+        measure_collections.append(
+            get_object_or_404(MeasureCollection, pk=measure_collection_id))
+    if measure_id:
+        measure_collections.append(
+            get_object_or_404(Measure, pk=measure_id))
 
     start_date, end_date = current_start_end_dates(request)
     # one cannot realize things in the future, so do not visualize
@@ -241,7 +254,7 @@ def krw_measure_graph(request, waterbody_slug=None):
     height = request.GET.get('height', 400)
     krw_graph = Graph(start_date, end_date, width, height)
 
-    krw_graph.axes.set_ylim(0, len(measures))
+    krw_graph.axes.set_ylim(0, len(measure_collections))
 
     # Draw krw measure collections
     WorkspaceItemAdapterKrw._image_measures(
@@ -260,17 +273,6 @@ def krw_measure_graph(request, waterbody_slug=None):
     krw_graph.add_today()
 
     return krw_graph.http_png()
-
-
-def single_measure_graph(request, measure_id, width=None, height=None):
-    """
-    Graph for single measure, not using workspace technology
-    """
-    measure = get_object_or_404(Measure, pk=measure_id)
-    if width is None:
-        width = 650.0
-    start_date, end_date = current_start_end_dates(request)
-    return measure.image(start_date, end_date, width=width, height=height)
 
 
 # TODO: cache should be different for IE...
@@ -427,9 +429,29 @@ def waterbody_shapefile_search(request):
 def measure_collection(request, measure_collection_id,
                        template='lizard_krw/measure_collection.html',
                        crumbs_prepend=None):
+    measure_collection = MeasureCollection.objects.get(
+        pk=measure_collection_id)
+    if crumbs_prepend:
+        crumbs = list(crumbs_prepend)
+    else:
+        crumbs = [CRUMB_HOMEPAGE]
+    crumbs.extend(
+        [{'name': measure_collection.waterbody.name,
+          'url': measure_collection.waterbody.get_absolute_url()},
+         {'name': 'Maatregelen',
+          'url': reverse(
+                    'lizard_krw.krw_waterbody_measures',
+                    kwargs={'waterbody_slug':
+                            measure_collection.waterbody.slug})},
+         {'name': measure_collection.name,
+          'url': reverse(
+                    'lizard_krw.measure_collection',
+                    kwargs={'measure_collection_id':
+                            measure_collection_id})},])
     return render_to_response(
         template,
-        {},
+        {'measure_collection': measure_collection,
+         'crumbs': crumbs},
         context_instance=RequestContext(request))
 
 

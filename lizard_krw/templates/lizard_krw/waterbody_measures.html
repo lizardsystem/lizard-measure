@@ -67,7 +67,7 @@
     {% endfor %}
     {# For the short time backwards compatibility #}
     {% for measure in main_measures %}
-    <li><a href="{{ measure.get_absolute_url }}">{{ measure }}{% if measure.status_moment %} ({{ measure.status_moment.status }}){% endif %}</a>{% if measure.is_indicator %} (indicator){% endif %}
+    <li><a href="{{ measure.get_absolute_url }}">{{ measure.name }}{% if measure.status_moment %} ({{ measure.status_moment.status }}){% endif %}</a>{% if measure.is_indicator %} (indicator){% endif %}
         {% with "lizard_krw/measure_tree_snippet.html" as ourselves %}
           {% include ourselves %}
         {% endwith %}

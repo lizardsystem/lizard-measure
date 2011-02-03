@@ -55,13 +55,17 @@ urlpatterns = patterns(
      'lizard_krw.views.measure_collection',
      {},
      "lizard_krw.measure_collection"),
+    (r'^measure_collection/(?P<measure_collection_id>\d+)/graph/$',
+     'lizard_krw.views.krw_measure_graph',
+     {},
+     "lizard_krw.measure_collection_graph"),
     # KRW measure info
     (r'^measure/(?P<measure_id>\d+)/$',
      'lizard_krw.views.measure_detail',
      {},
      "lizard_krw.measure"),
     (r'^measure/(?P<measure_id>\d+)/graph/$',
-     'lizard_krw.views.single_measure_graph',
+     'lizard_krw.views.krw_measure_graph',
      {},
      "lizard_krw.measure_graph"),
     # Search stuff.

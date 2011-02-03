@@ -1,9 +1,9 @@
 {# KRW measure view: info and graphs on KRW measures #}
-{% extends "lizard_map/lizardgis.html" %}
+{% extends "lizard_ui/lizardbase.html" %}
 {% load workspaces %}
 {% load utility %}
 
-{% block subtitle %} {{ measure.name }} {% endblock %}
+{% block subtitle %} Maatregelpakket {{ measure_collection.name }} {% endblock %}
 
 {% block portal-tabs %}
 {{ block.super }}
@@ -29,29 +29,20 @@
   <div>
     {% date_popup %}
     <dl>
-      <dt>Naam maatregel</dt>
-      <dd>{{ measure.name }}</dd>
-
-      {% if measure.description %}
-      <dt>Beschrijving</dt>
-      <dd>{{ measure.description }}</dd>
-      {% endif %}
-
-      {% if measure.identity %}
-      <dt>Identiteit</dt>
-      <dd>{{ measure.identity }}</dd>
-      {% endif %}
-
-      {% if measure.category %}
-      <dt>Categorie</dt>
-      <dd>{{ measure.category }}</dd>
-      {% endif %}
+      <dt>Naam maatregelpakket</dt>
+      <dd>{{ measure_collection.name }}</dd>
 
       <dt>Waterlichaam</dt>
-      <dd><a href="{{ measure.measure_collection.waterbody.get_absolute_url }}">{{ measure.measure_collection.waterbody }}</a></dd>
+      <dd><a href="{{ measure_collection.waterbody.get_absolute_url }}">{{ measure_collection.waterbody }}</a></dd>
 
-      <dt>Maatregelpakket</dt>
-      <dd><a href="{{ measure.measure_collection.get_absolute_url }}">{% firstof measure.measure_collection.name '(geen maatregelpakket)' %}</a></dd>
+      <dt>Maatregelen</dt>
+      <dd>
+        <ul>
+          {% for measure in measure_collection.measure_set.all %}
+          <li><a href="{{ measure.get_absolute_url }}">{{ measure.name }} ({{ measure.status_moment.status }})</a></li>
+          {% endfor %}
+        </ul>
+      </dd>
     </dl>
   </div>
 </div>
@@ -67,67 +58,75 @@
 
 {% block content %}
 <div id="textual">
-  <h2>{{ measure.name }}</h2>
+  <h2>{{ measure_collection.name }}</h2>
   <div style="width: 100%; height: 130px;" class="img-use-my-size">
-    <a href="{% url lizard_krw.measure_graph measure_id=measure.id %}" class="replace-with-image">
+    <a href="{% url lizard_krw.measure_collection_graph measure_collection_id=measure_collection.id %}"
+       class="replace-with-image">
       afbeelding nog niet geladen
     </a>
   </div>
   <table class="generic-table">
     <tbody>
       <tr>
-        <th>Naam maatregel</th><td>{{ measure.name }}</td>
+        <th>Naam maatregelpakket</th>
+        <td>{{ measure_collection.name }}</td>
       </tr>
 
       <tr>
-        <th>Deelgebied</th><td>{{ measure.measure_collection.area_set.all|join:", " }}</td>
+        <th>Deelgebied</th>
+        <td>{{ measure_collection.area_set.all|join:", " }}</td>
       </tr>
 
       <tr>
-        <th>Code</th><td>{% firstof measure.code '(geen code)' %}</td>
+        <th>Urgentie</th>
+        <td>{{ measure_collection.urgency }}</td>
       </tr>
 
       <tr>
-        <th>SGBP</th><td>{{ measure.value_sum }} {{ measure.unit }}</td>
+        <th>Verantwoordelijke organisatie</th>
+        <td>{{ measure_collection.responsible_organization }}</td>
       </tr>
 
       <tr>
-        <th>Initiatiefnemer/uitvoerder</th><td>{{ measure.executive }}</td>
+        <th>Verantwoordelijke afdeling</th>
+        <td>{{ measure_collection.responsible_department }}</td>
       </tr>
 
       <tr>
-        <th>Totale kosten (incl. optelling deelmaatregelen)</th>
-        <td>{{ measure.costs_sum|euro }}</td>
+        <th>Geraamde kosten totaal</th>
+        <td>{{ measure_collection.estimated_costs_total|euro }}</td>
       </tr>
 
       <tr>
-        <th>Investeringskosten (incl. optelling deelmaatregelen)</th>
-        <td>{{ measure.investment_costs_sum|euro }}</td>
+        <th>Geraamde kosten intern</th>
+        <td>{{ measure_collection.estimated_costs_internal|euro }}</td>
       </tr>
 
+      {% if measure_collection.need_co_funding %}
       <tr>
-        <th>Exploitatiekosten (incl. optelling deelmaatregelen)</th>
-        <td>{{ measure.exploitation_costs_sum|euro }}</td>
+        <th colspan="2">Medefinanciering is vereist</th>
       </tr>
+      {% else %}
+      <tr>
+        <th colspan="2">Medefinanciering is niet vereist</th>
+      </tr>
+      {% endif %}
 
-      <tr>
-        <th>Periode</th>
-        <td>{{ measure.period }}</td>
-      </tr>
     </tbody>
   </table>
 
   <h2>Stand van zaken</h2>
   <table class="generic-table">
     <tbody>
-      {% with measure.status_moment as status_moment %}
+      {% with measure_collection.status_moment as status_moment %}
         {% if status_moment %}
         <tr>
           <th>Status</th><td>{{ status_moment.status }}</td>
         </tr>
         {% ifnotequal measure status_moment.measure %}
         <tr>
-          <th>Maatgevende deelmaatregel</th><td>{{ status_moment.measure }}</td>
+          <th>Maatgevende maatregel</th>
+          <td>{{ status_moment.measure.name }}</td>
         </tr>
         {% endifnotequal %}
         <tr>
@@ -145,36 +144,33 @@
     </tbody>
   </table>
 
-  <h2>Financierende organisaties</h2>
+  <h2>Maatregelen</h2>
   <table class="generic-table">
     <thead>
       <tr>
-        <th>Organisatie</th>
-        <th>Bedrag</th>
+        <th>Maatregel</th>
+        <th>Periode</th>
+        <th>Omvang</th>
+        <th>Kosten</th>
       </tr>
     </thead>
     <tbody>
-      {% for funding_organization in measure.fundingorganization_set.all %}
+      {% for measure in measure_collection.measure_set.all %}
       <tr>
         <td>
-          {{ funding_organization.organization }}
+          {{ measure.name }}
         </td>
         <td>
-          {{ funding_organization.cost|euro }}
+          {% firstof measure.period '(geen periode)' %}
+        </td>
+        <td>
+          {{ measure.value }} {{ measure.unit }}
+        </td>
+        <td>
+          {{ measure.total_costs }}
         </td>
       </tr>
       {% endfor %}
     </tbody>
-    <tfoot>
-      <tr>
-        <td>
-          Totaal
-        </td>
-        <td>
-          {{ measure.funding_organization_cost_sum|euro }}
-        </td>
-      </tr>
-    </tfoot>
   </table>
-</div>
 {% endblock %}

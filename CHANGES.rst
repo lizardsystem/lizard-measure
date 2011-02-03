@@ -5,6 +5,10 @@ Changelog of lizard-krw
 0.11 (unreleased)
 -----------------
 
+- Refactored krw measure graph and adapter.image function.
+
+- Added measure_collection view.
+
 - Changed measure user from required to optional.
 
 
