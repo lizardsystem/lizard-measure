@@ -118,7 +118,7 @@ class WaterBody(models.Model):
         help_text="stuurparameters")
 
     def __unicode__(self):
-        return u'%s - %s' % (self.ident, self.name)
+        return u'%s' % (self.name)
 
     @models.permalink
     def get_absolute_url(self):
@@ -512,17 +512,20 @@ class MeasureCollection(models.Model):
 
         return min(measure_status_moments, key=lambda msm: msm.status.value)
 
-    def measure_status_moments(
-        self, start_date, end_date, is_planning=False):
+    def measure_status_moments(self, is_planning=False):
         """Calculates list of measure_status_moments, aggregated from
-        measures."""
+        measures using "minimum"."""
         result = []
-        for msm_date in MeasureStatusMoment.objects.filter(
-            measure__measure_collection=self, is_planning=is_planning):
-            result.append(self.status_moment(
-                    dt=msm_date.datetime, is_planning=is_planning))
-        #remove None's: the datetimes where some of the measures
-        #statuses are defined
+        msm_dates = MeasureStatusMoment.objects.filter(
+            measure__measure_collection=self, is_planning=is_planning)
+        for msm_date in msm_dates:
+            status_moment = self.status_moment(
+                dt=msm_date.datetime, is_planning=is_planning)
+            #remove None's: the datetimes where some of the measures
+            #statuses are defined
+            if status_moment is not None:
+                status_moment.datetime = msm_date.datetime
+                result.append(status_moment)
         result = filter(None, result)
         return result
 
@@ -545,7 +548,7 @@ class Measure(AL_Node):
     AGGREGATION_TYPE_MAX = 2
     AGGREGATION_TYPE_AVG = 3
 
-    owner = models.ForeignKey(User)
+    owner = models.ForeignKey(User, blank=True, null=True)
 
     # a measure can be splitted in a tree form
     parent = models.ForeignKey('Measure', blank=True, null=True)

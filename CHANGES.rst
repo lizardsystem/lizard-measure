@@ -5,7 +5,7 @@ Changelog of lizard-krw
 0.11 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Changed measure user from required to optional.
 
 
 0.10 (2011-02-02)
