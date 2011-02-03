@@ -14,6 +14,7 @@ from treebeard.al_tree import AL_Node  # Adjacent list implementation
 
 from lizard_fewsunblobbed.models import Timeserie
 from lizard_map.models import ColorField
+from lizard_map.utility import short_string
 
 
 # Krw score categories.
@@ -411,16 +412,16 @@ class MeasureStatusMoment(models.Model):
     MeasureStatus in time
     """
 
-    class Meta:
-        verbose_name = _("Measure status moment")
-        verbose_name_plural = _("Measure status moments")
-        ordering = ("datetime", )
-
     measure = models.ForeignKey('Measure')
     status = models.ForeignKey(MeasureStatus)
     datetime = models.DateField()
     is_planning = models.BooleanField(default=False)
     description = models.TextField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = _("Measure status moment")
+        verbose_name_plural = _("Measure status moments")
+        ordering = ("datetime", )
 
     def __unicode__(self):
         return u'%s %s %s' % (self.measure, self.status, self.datetime)
@@ -512,12 +513,14 @@ class MeasureCollection(models.Model):
 
         return min(measure_status_moments, key=lambda msm: msm.status.value)
 
-    def measure_status_moments(self, is_planning=False):
+    def measure_status_moments(self, end_date=None, is_planning=False):
         """Calculates list of measure_status_moments, aggregated from
         measures using "minimum"."""
         result = []
         msm_dates = MeasureStatusMoment.objects.filter(
             measure__measure_collection=self, is_planning=is_planning)
+        if end_date is not None:
+            msm_dates = msm_dates.filter(datetime__lte=end_date)
         for msm_date in msm_dates:
             status_moment = self.status_moment(
                 dt=msm_date.datetime, is_planning=is_planning)
@@ -536,6 +539,15 @@ class Measure(AL_Node):
 
     For drawing the measure graph, we only need the fields:
     name, start_date, end_date, status
+
+    OBSOLETE:
+    - aggregation_type
+    - parent/child relation
+    - waterbody
+    - is_indicator
+
+    TODO:
+    - refactor status_moment to remove parent/child calculations.
 
     """
 
@@ -613,6 +625,10 @@ class Measure(AL_Node):
     def __unicode__(self):
         return u'%s: %s' % (self.waterbody.name, self.name)
 
+    @property
+    def shortname(self):
+        return short_string(self.name, 17)
+
     def status_moment(self, dt=datetime.datetime.now(), is_planning=False):
         """
         Get status, defaults to today, return MeasureStatusMoment or
@@ -649,6 +665,12 @@ class Measure(AL_Node):
             # TODO: implement
             return min(measure_status_moments,
                        key=lambda msm: msm.status.value)
+
+    def measure_status_moments(self, end_date=None, is_planning=False):
+        msm = self.measurestatusmoment_set.filter(is_planning=is_planning)
+        if end_date is not None:
+            msm = msm.filter(datetime__lte=end_date)
+        return msm
 
     def image(self, start_date, end_date, width=None, height=None):
         """Return image from adapter for measures.

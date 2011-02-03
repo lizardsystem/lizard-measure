@@ -243,13 +243,11 @@ def krw_measure_graph(request, waterbody_slug=None):
 
     krw_graph.axes.set_ylim(0, len(measures))
 
-    # WorkspaceItemAdapterKrw._image_measures(
-    #     krw_graph, measures,
-    #     start_date, end_date, end_date_realized,
-    #     add_legend=False)
     # Draw krw measure collections
-    #print measure_collections[1]
-    print measure_collections[1].measure_status_moments()
+    WorkspaceItemAdapterKrw._image_measures(
+        krw_graph, measure_collections,
+        start_date, end_date, end_date_realized,
+        add_legend=False)
 
     # Legend
     measure_statuses = MeasureStatus.objects.all()

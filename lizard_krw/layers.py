@@ -267,32 +267,28 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
 
         """
 
-        def calc_bar_colors(measure, measure_status_moments, end_date,
-                            is_planning):
+        def calc_bar_colors(measure, end_date, is_planning):
             """Returns calculated bars. The bars are aggregated from
             measure_status_moments from sub measures.
+
+            ** measure can also be a measure_collection. It uses the
+               status_moment function only.
             """
             measure_bar = []
             measure_colors = []
-            for msm_index, measure_status_moment_datetime in enumerate(
-                measure_status_moments):
-
-                measure_status_moment = measure.status_moment(
-                    dt=measure_status_moment_datetime.datetime,
-                    is_planning=is_planning)
-
-                # enddate: infinity or next status moment
+            measure_status_moments = measure.measure_status_moments(
+                end_date=end_date, is_planning=is_planning)
+            for msm_index, msm in enumerate(measure_status_moments):
+                # drawing enddate: "infinity" or next status moment
                 if msm_index == len(measure_status_moments) - 1:
                     msm_end_date = end_date
                 else:
                     msm_end_date = measure_status_moments[
                         msm_index + 1].datetime
-                msm_datetime = measure_status_moment.datetime
-                date_length = date2num(msm_end_date) - date2num(msm_datetime)
+                date_length = date2num(msm_end_date) - date2num(msm.datetime)
 
-                measure_bar.append((date2num(msm_datetime),
-                                    date_length))
-                measure_colors.append(measure_status_moment.status.color.html)
+                measure_bar.append((date2num(msm.datetime), date_length))
+                measure_colors.append(msm.status.color.html)
             return measure_bar, measure_colors
 
         if end_date_realized is None:
@@ -300,32 +296,22 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
         graph.suptitle("krw maatregel(en)")
         for index, measure in enumerate(measures):
             # realized
-            measure_and_descendants = [measure, ] + measure.get_descendants()
-            measure_status_moments = (MeasureStatusMoment.objects.filter(
-                measure__in=measure_and_descendants,
-                is_planning=False,
-                datetime__lte=end_date_realized)
-                                      .distinct().order_by('datetime'))
             measure_bar, measure_colors = calc_bar_colors(
-                measure, measure_status_moments, end_date_realized, False)
+                measure, end_date_realized, False)
             graph.axes.broken_barh(measure_bar,
                                    (-index - 0.3, 0.6),
                                    facecolors=measure_colors,
                                    edgecolors=measure_colors)
             # planning
-            measure_status_moments_p = MeasureStatusMoment.objects.filter(
-                measure__in=measure_and_descendants,
-                is_planning=True,
-                datetime__lte=end_date).distinct().order_by('datetime')
             measure_bar_p, measure_colors_p = calc_bar_colors(
-                measure, measure_status_moments_p, end_date, True)
+                measure, end_date, True)
             graph.axes.broken_barh(measure_bar_p,
                                    (-index - 0.45, 0.1),
                                    facecolors=measure_colors_p,
                                    edgecolors=measure_colors_p)
 
         # Y ticks
-        yticklabels = [short_string(measure.name, 17) for measure in measures]
+        yticklabels = [measure.shortname for measure in measures]
         yticklabels.reverse()
         graph.axes.set_yticks(range(int(-len(measures) + 0.5), 1))
         graph.axes.set_yticklabels(yticklabels)
