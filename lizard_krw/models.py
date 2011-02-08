@@ -338,6 +338,20 @@ class Executive(models.Model):
         return u'%s' % self.name
 
 
+class ExecutivePart(models.Model):
+    """Specialisering Uitvoerder_Initiatiefnemer.
+    """
+    name = models.CharField(max_length=200)
+    executive = models.ForeignKey(Executive)
+
+    class Meta:
+        verbose_name = _("Executive part")
+        verbose_name_plural = _("Executive parts")
+
+    def __unicode__(self):
+        return u'%s (%s)' % (self.name, self.executive)
+
+
 class Organization(models.Model):
     """Companies that occur in Measures: Funding Organizations
     """
@@ -617,6 +631,10 @@ class Measure(AL_Node):
     executive = models.ForeignKey(
         Executive,
         help_text="Initiatiefnemer/uitvoerder")
+    executive_part = models.ForeignKey(
+        ExecutivePart,
+        help_text="Uitvoerder meer specifiek",
+        blank=True, null=True)
     total_costs = models.IntegerField(
         null=True, blank=True, help_text="Totale kosten in euro's")
     investment_costs = models.IntegerField(
