@@ -2,8 +2,8 @@ Changelog of lizard-krw
 ===================================================
 
 
-0.11 (unreleased)
------------------
+1.0 (2011-02-08)
+----------------
 
 - Improved calculations and added tests for calculation of
   status_moments and measure_status_moments.
