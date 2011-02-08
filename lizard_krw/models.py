@@ -446,7 +446,16 @@ class MeasureStatusMoment(models.Model):
     status = models.ForeignKey(MeasureStatus)
     datetime = models.DateField()
     is_planning = models.BooleanField(default=False)
-    description = models.TextField(blank=True, null=True)
+    description = models.TextField(
+        blank=True, null=True,
+        help_text="Beschrijving statusupdate. Aangeraden om dit in te vullen")
+
+    investment_expenditure = models.IntegerField(
+        blank=True, null=True,
+        help_text="Gemaakte investeringskosten")
+    exploitation_expenditure = models.IntegerField(
+        blank=True, null=True,
+        help_text="Gemaakte exploitatiekosten")
 
     class Meta:
         verbose_name = _("Measure status moment")

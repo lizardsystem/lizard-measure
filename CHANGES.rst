@@ -5,6 +5,9 @@ Changelog of lizard-krw
 0.11 (unreleased)
 -----------------
 
+- Added fields investment_expenditure and exploitation_expenditure to
+  MeasureStatusMoment.
+
 - Removed estimated_costs_total and estimated_costs_internal from
   MeasureCollection.
 
