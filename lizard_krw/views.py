@@ -240,6 +240,8 @@ def krw_measure_graph(request,
         waterbody = get_object_or_404(WaterBody, slug=waterbody_slug)
         measure_collections.extend(MeasureCollection.objects.filter(
                 waterbody=waterbody))
+        measure_collections.extend(Measure.objects.filter(
+                waterbody=waterbody, is_indicator=True))
     if measure_collection_id:
         measure_collections.append(
             get_object_or_404(MeasureCollection, pk=measure_collection_id))

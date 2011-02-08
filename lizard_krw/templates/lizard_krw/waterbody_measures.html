@@ -29,9 +29,9 @@
   <div>
     {% date_popup %}
     <div>
-      <p>Van maatregelpakketten wordt een afbeelding getoond.</p>
+      <p>Bovenaan wordt een afbeelding getoond van maatregelverzamelingen.</p>
 
-      <p>Onder staan maatregelpakketten met de bijbehorende maatregelen. Door op de links te klikken kunnen maatregelpakketten en maatregelen in meer detail bekeken worden.</p>
+      <p>Hieronder staan de maatregelverzamelingen op een rij, inclusief onderliggende (deel-)maatregelen. Door op de links te klikken kunnen maatregelverzamelingen en (deel)maatregelen in meer detail bekeken worden.</p>
     </div>
   </div>
 </div>
@@ -53,21 +53,28 @@
       afbeelding nog niet geladen
     </a>
   </div>
+  <h2>Maatregelverzamelingen</h2>
   <ul>
     {% for measure_collection in measure_collections %}
     <li>
       <a href="{{ measure_collection.get_absolute_url }}">{{ measure_collection.name }} ({% firstof measure_collection.status_moment.status 'geen status' %})</a>
       <ul>
       {% for measure in measure_collection.measure_set.all %}
-      <li><a href="{{ measure.get_absolute_url }}">{{ measure.name }}{% if measure.status_moment %} ({{ measure.status_moment.status }}){% endif %}</a>
-      </li>
+        <li><a href="{{ measure.get_absolute_url }}">{{ measure.name }}{% if measure.status_moment %} ({{ measure.status_moment.status }}){% endif %}</a>
+          {% with "lizard_krw/measure_tree_snippet.html" as ourselves %}
+            {% include ourselves %}
+          {% endwith %}
+        </li>
       {% endfor %}
       </ul>
     </li>
     {% endfor %}
-    {# For the short time backwards compatibility #}
+  </ul>
+
+  <h2>Maatregelen</h2>
+  <ul>
     {% for measure in main_measures %}
-    <li><a href="{{ measure.get_absolute_url }}">{{ measure.name }}{% if measure.status_moment %} ({{ measure.status_moment.status }}){% endif %}</a>{% if measure.is_indicator %} (indicator){% endif %}
+    <li><a href="{{ measure.get_absolute_url }}">{{ measure.name }}{% if measure.status_moment %} ({{ measure.status_moment.status }}){% endif %}</a>
         {% with "lizard_krw/measure_tree_snippet.html" as ourselves %}
           {% include ourselves %}
         {% endwith %}

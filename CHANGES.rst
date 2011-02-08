@@ -5,6 +5,9 @@ Changelog of lizard-krw
 0.11 (unreleased)
 -----------------
 
+- Added option to add MeasureCollections as well as Measures to the
+  measure overview screen.
+
 - Added fields investment_expenditure and exploitation_expenditure to
   MeasureStatusMoment.
 
