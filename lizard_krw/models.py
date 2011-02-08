@@ -584,6 +584,12 @@ class MeasureCollection(models.Model):
             costs += measure.exploitation_costs_sum()
         return costs
 
+    def funding_organization_cost_sum(self):
+        costs = 0.0
+        for measure in self.measure_set.all():
+            costs += measure.funding_organization_cost_sum()
+        return costs
+
 
 class Measure(AL_Node):
     """
@@ -685,6 +691,16 @@ class Measure(AL_Node):
     def shortname(self):
         return short_string(self.name, 17)
 
+    def status_moment_self(self, dt=datetime.datetime.now(),
+                           is_planning=False):
+        """Returns own status_moment"""
+        measure_status_moment_set = self.measurestatusmoment_set.filter(
+            is_planning=is_planning,
+            datetime__lte=dt).distinct().order_by("-datetime")
+        if measure_status_moment_set:
+            return measure_status_moment_set[0]
+        return None
+
     def status_moment(self, dt=datetime.datetime.now(), is_planning=False):
         """
         Get status, defaults to today, return MeasureStatusMoment or
@@ -693,22 +709,26 @@ class Measure(AL_Node):
         make artificial (aggregated) MeasureStatusMoment in case of
         AVG
         """
-        # collect status_moments from children
+        # Collect status_moments from children and self.
         measure_status_moments = [
-            m.status_moment(dt=dt, is_planning=is_planning) \
+            m.status_moment(dt=dt, is_planning=is_planning)
             for m in self.get_children()]
-        # calc own status_moment
-        measure_status_moment_set = self.measurestatusmoment_set.filter(
-            is_planning=is_planning,
-            datetime__lte=dt).distinct().order_by("-datetime")
-        if measure_status_moment_set:
-            measure_status_moments.append(measure_status_moment_set[0])
+        measure_status_moments.append(self.status_moment_self(dt=dt,
+                                      is_planning=is_planning))
 
-        # remove all Nones
+        # Apparently some directly related measures has no status
+        if (None in measure_status_moments and
+            self.aggregation_type == self.AGGREGATION_TYPE_MIN):
+
+            return None
+
+        # Remove Nones
         measure_status_moments = filter(None, measure_status_moments)
 
+        # No status info at all.
         if not measure_status_moments:
             return None
+
         #min, max or avg out of measure_status_moments
         if self.aggregation_type == self.AGGREGATION_TYPE_MIN:
             return min(measure_status_moments,

@@ -30,7 +30,7 @@
     {% date_popup %}
     <dl>
       <dt>Maatregel</dt>
-      <dd>{{ measure.name }}</dd>
+      <dd><a href="{{ measure.get_absolute_url }}">{{ measure.name }}</a></dd>
 
       {% if measure.description %}
       <dt>Beschrijving</dt>
@@ -53,6 +53,23 @@
       <dt>Waterlichaam</dt>
       <dd><a href="{{ measure.measure_collection.waterbody.get_absolute_url }}">{{ measure.measure_collection.waterbody }}</a></dd>
 
+      {% if measure.parent %}
+      <dt>Bovenliggende maatregel</dt>
+      <dd>
+        <a href="{{ measure.parent.get_absolute_url }}">
+          {{ measure.parent.name }}
+        </a>
+      </dd>
+      {% endif %}
+
+      {% if measure.measure_set.all %}
+      <dt>Onderliggende maatregelen</dt>
+      <dd>
+        {% with "lizard_krw/measure_tree_snippet.html" as ourselves %}
+          {% include ourselves %}
+        {% endwith %}
+      </dd>
+      {% endif %}
     </dl>
   </div>
 </div>
@@ -124,24 +141,52 @@
       {% with measure.status_moment as status_moment %}
         {% if status_moment %}
         <tr>
-          <th>Status</th><td>{{ status_moment.status }} (vanaf {{ status_moment.datetime }})</td>
+          <th>Status (geaggregeerd)</th>
+          <td>{{ status_moment.status }} (vanaf {{ status_moment.datetime }})</td>
+        </tr>
+        <tr>
+          <th>Maatgevende maatregel</th>
+          <td>{{ status_moment.measure.name }}</td>
         </tr>
         {% if status_moment.description %}
         <tr>
-          <th>Beschrijving status</th><td>{{ status_moment.description }}</td>
+          <th>Beschrijving geaggregeerde status</th><td>{{ status_moment.description }}</td>
         </tr>
         {% endif %}
         {% else %}
         <tr>
-          <th>Status</th><td>Geen statusinfo beschikbaar</td>
+          <th>Status (geaggregeerd)</th><td>Geen statusinfo beschikbaar. De maatregel of (een van de) onderliggende maatregelen heeft geen status.</td>
         </tr>
         {% endif %}
       {% endwith %}
+
+      {# Own status without aggregation #}
+      {% with measure.status_moment_self as status_moment %}
+        {% if status_moment %}
+        <tr>
+          <th>Status (eigen)</th>
+          <td>{{ status_moment.status }} (vanaf {{ status_moment.datetime }})</td>
+        </tr>
+        {% if status_moment.description %}
+        <tr>
+          <th>Beschrijving eigen status</th>
+          <td>{{ status_moment.description }}</td>
+        </tr>
+        {% endif %}
+        {% else %}
+        <tr>
+          <th>Status (geaggregeerd)</th>
+          <td>Geen statusinfo beschikbaar</td>
+        </tr>
+        {% endif %}
+      {% endwith %}
+
       {# Planning #}
       {% with measure.status_moment_planned as status_moment %}
         {% if status_moment %}
         <tr>
-          <th>Planning</th><td>{{ status_moment.status }} (vanaf {{ status_moment.datetime }})</td>
+          <th>Planning (geaggregeerd)</th>
+          <td>{{ status_moment.status }} (vanaf {{ status_moment.datetime }})</td>
         </tr>
         {% if status_moment.description %}
         <tr>

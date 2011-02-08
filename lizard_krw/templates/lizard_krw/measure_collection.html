@@ -30,7 +30,7 @@
     {% date_popup %}
     <dl>
       <dt>Maatregelverzameling</dt>
-      <dd>{{ measure_collection.name }}</dd>
+      <dd><a href="{{ measure.measure_collection.get_absolute_url }}">{{ measure_collection.name }}</a></dd>
 
       <dt>Waterlichaam</dt>
       <dd><a href="{{ measure_collection.waterbody.get_absolute_url }}">{{ measure_collection.waterbody }}</a></dd>
@@ -73,7 +73,7 @@
     <tbody>
       <tr>
         <th>Naam maatregelverzameling</th>
-        <td>{{ measure_collection.name }}</td>
+        <td><a href="{{ measure.measure_collection.get_absolute_url }}">{{ measure_collection.name }}</a></td>
       </tr>
 
       <tr>
@@ -233,4 +233,58 @@
       </tr>
     </tfoot>
   </table>
+
+  <h2>Financierende organisaties</h2>
+  <table class="generic-table">
+    <thead>
+      <tr>
+        <th>Maatregel</th>
+        <th>Organisatie</th>
+        <th>Bedrag</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for measure in measure_collection.measure_set.all %}
+      {% for funding_organization in measure.fundingorganization_set.all %}
+      <tr>
+        <td>
+          {{ measure.name }}
+        </td>
+        <td>
+          {{ funding_organization.organization }}
+        </td>
+        <td>
+          {{ funding_organization.cost|euro }}
+        </td>
+      </tr>
+      {% endfor %}
+      {% for measure_part in measure.get_descendants %}
+        {% for funding_organization in measure_part.fundingorganization_set.all %}
+      <tr>
+        <td>
+          {{ measure_part.name }}
+        </td>
+        <td>
+          {{ funding_organization.organization }}
+        </td>
+        <td>
+          {{ funding_organization.cost|euro }}
+        </td>
+      </tr>
+        {% endfor %}
+      {% endfor %}
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="2">
+          Totaal
+        </td>
+        <td>
+          {{ measure_collection.funding_organization_cost_sum|euro }}
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+
 {% endblock %}

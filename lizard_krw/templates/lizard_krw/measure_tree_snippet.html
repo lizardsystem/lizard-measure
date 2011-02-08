@@ -2,7 +2,7 @@
   {% for child_measure in measure.get_children %}
   <li>
     <a href="{% url lizard_krw.measure measure_id=child_measure.id %}">
-      {{ child_measure.name }}{% with child_measure.status_moment as status_moment %}{% if status_moment %} ({{ status_moment.status }}){% endif %}{% endwith %}
+      {{ child_measure.name }}{% with child_measure.status_moment as status_moment %}{% if status_moment %} ({{ status_moment.status }}){% else %} (geen status){% endif %}{% endwith %}
     </a>
     {% with "lizard_krw/measure_tree_snippet.html" as ourselves %}
       {% with child_measure as measure %}
