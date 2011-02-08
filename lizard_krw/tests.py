@@ -189,6 +189,7 @@ class ModelTest(TestCase):
         # See if the list of measure status moments is correct.
         #
         msm = mc.measure_status_moments()
+        print msm
 
         self.assertEquals(len(msm), 2)
 
@@ -308,3 +309,23 @@ class ModelTest(TestCase):
         self.assertEquals(msm_m[0].datetime, datetime.date(2010, 1, 1))
         self.assertEquals(msm_m[1].status.name, "Gepland")
         self.assertEquals(msm_m[1].datetime, datetime.date(2011, 1, 1))
+
+        # Finally make a measure collection and add m to it. The
+        # measure collection should give the same msm.
+        mc = MeasureCollection(name="MeasureCollection",
+                               shortname="MeasureCollection",
+                               waterbody=self.wb,
+                               urgency=self.urgency,
+                               responsible_organization=self.organization,
+                               responsible_department=self.department)
+        mc.save()
+        m.measure_collection = mc
+        m.save()
+
+        msm_collection = mc.measure_status_moments()
+        print msm_collection
+        self.assertEquals(len(msm_collection), 2)
+        self.assertEquals(msm_collection[0].status.name, "Nieuw")
+        self.assertEquals(msm_collection[0].datetime, datetime.date(2010, 1, 1))
+        self.assertEquals(msm_collection[1].status.name, "Gepland")
+        self.assertEquals(msm_collection[1].datetime, datetime.date(2011, 1, 1))

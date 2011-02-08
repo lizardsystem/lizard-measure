@@ -550,10 +550,16 @@ class MeasureCollection(models.Model):
         """Calculates list of measure_status_moments, aggregated from
         measures using "minimum"."""
         result = []
-        msm_dates = MeasureStatusMoment.objects.filter(
-            measure__measure_collection=self, is_planning=is_planning)
-        if end_date is not None:
-            msm_dates = msm_dates.filter(datetime__lte=end_date)
+        # msm_dates = MeasureStatusMoment.objects.filter(
+        #     measure__measure_collection=self, is_planning=is_planning)
+        # if end_date is not None:
+        #     msm_dates = msm_dates.filter(datetime__lte=end_date)
+
+        msm_dates = []
+        for measure in self.measure_set.all():
+            msm_dates.extend(measure.measure_status_moments(
+                    end_date=end_date, is_planning=is_planning))
+
         for msm_date in msm_dates:
             status_moment = self.status_moment(
                 dt=msm_date.datetime, is_planning=is_planning)
@@ -563,6 +569,8 @@ class MeasureCollection(models.Model):
                 status_moment.datetime = msm_date.datetime
                 result.append(status_moment)
         result = filter(None, result)
+        result = sorted(result, key=lambda m: m.datetime)
+
         return result
 
     def costs_sum(self):
