@@ -243,8 +243,10 @@ def krw_measure_graph(request,
         measure_collections.extend(Measure.objects.filter(
                 waterbody=waterbody, is_indicator=True))
     if measure_collection_id:
-        measure_collections.append(
-            get_object_or_404(MeasureCollection, pk=measure_collection_id))
+        measure_collection = get_object_or_404(
+            MeasureCollection, pk=measure_collection_id)
+        measure_collections.append(measure_collection)
+        measure_collections.extend(measure_collection.measure_set.all())
     if measure_id:
         measure_collections.append(
             get_object_or_404(Measure, pk=measure_id))
