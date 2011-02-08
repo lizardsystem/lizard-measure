@@ -505,8 +505,6 @@ class MeasureCollection(models.Model):
         Department,
         help_text="Verantwoordelijke interne afdeling")
 
-    estimated_costs_total = models.IntegerField(null=True, blank=True)
-    estimated_costs_internal = models.IntegerField(null=True, blank=True)
     need_co_funding = models.BooleanField(default=False)
 
     class Meta:

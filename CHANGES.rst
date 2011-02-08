@@ -5,6 +5,9 @@ Changelog of lizard-krw
 0.11 (unreleased)
 -----------------
 
+- Removed estimated_costs_total and estimated_costs_internal from
+  MeasureCollection.
+
 - Added model ExecutivePart.
 
 - Added model OrganizationPart.
