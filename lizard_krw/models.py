@@ -353,6 +353,20 @@ class Organization(models.Model):
         return u'%s' % self.name
 
 
+class OrganizationPart(models.Model):
+    """Which part of the organization?"""
+    name = models.CharField(max_length=200)
+    organization = models.ForeignKey(Organization)
+
+    class Meta:
+        verbose_name = _("Organization Part")
+        verbose_name_plural = _("Organization Parts")
+        ordering = ('name', )
+
+    def __unicode__(self):
+        return u'%s (%s)' % (self.name, self.organization)
+
+
 class Department(models.Model):
     """Department of an organization
     """
@@ -378,6 +392,8 @@ class FundingOrganization(models.Model):
 
     cost = models.FloatField()  # in euro's
     organization = models.ForeignKey(Organization)
+    organization_part = models.ForeignKey(
+        OrganizationPart, blank=True, null=True)
     measure = models.ForeignKey('Measure')
 
     def __unicode__(self):

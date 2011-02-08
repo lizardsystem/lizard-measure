@@ -5,6 +5,8 @@ Changelog of lizard-krw
 0.11 (unreleased)
 -----------------
 
+- Added model OrganizationPart.
+
 - Refactored krw measure graph and adapter.image function.
 
 - Added measure_collection view.
