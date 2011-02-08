@@ -37,8 +37,8 @@
       <dd>{{ measure.description }}</dd>
       {% endif %}
 
-      <dt>Maatregelpakket</dt>
-      <dd><a href="{{ measure.measure_collection.get_absolute_url }}">{% firstof measure.measure_collection.name '(geen maatregelpakket)' %}</a></dd>
+      <dt>Maatregelverzameling</dt>
+      <dd><a href="{{ measure.measure_collection.get_absolute_url }}">{% firstof measure.measure_collection.name '(geen maatregelverzameling)' %}</a></dd>
 
       {% if measure.identity %}
       <dt>Identiteit</dt>
@@ -161,6 +161,7 @@
   <table class="generic-table">
     <thead>
       <tr>
+        <th>Maatregel</th>
         <th>Organisatie</th>
         <th>Bedrag</th>
       </tr>
@@ -169,6 +170,9 @@
       {% for funding_organization in measure.fundingorganization_set.all %}
       <tr>
         <td>
+          {{ measure.name }}
+        </td>
+        <td>
           {{ funding_organization.organization }}
         </td>
         <td>
@@ -176,10 +180,25 @@
         </td>
       </tr>
       {% endfor %}
+      {% for measure_part in measure.get_descendants %}
+        {% for funding_organization in measure_part.fundingorganization_set.all %}
+      <tr>
+        <td>
+          {{ measure_part.name }}
+        </td>
+        <td>
+          {{ funding_organization.organization }}
+        </td>
+        <td>
+          {{ funding_organization.cost|euro }}
+        </td>
+      </tr>
+        {% endfor %}
+      {% endfor %}
     </tbody>
     <tfoot>
       <tr>
-        <td>
+        <td colspan="2">
           Totaal
         </td>
         <td>

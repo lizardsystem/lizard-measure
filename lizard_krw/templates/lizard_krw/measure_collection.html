@@ -3,7 +3,7 @@
 {% load workspaces %}
 {% load utility %}
 
-{% block subtitle %} Maatregelpakket {{ measure_collection.name }} {% endblock %}
+{% block subtitle %} Maatregelverzameling {{ measure_collection.name }} {% endblock %}
 
 {% block portal-tabs %}
 {{ block.super }}
@@ -29,7 +29,7 @@
   <div>
     {% date_popup %}
     <dl>
-      <dt>Maatregelpakket</dt>
+      <dt>Maatregelverzameling</dt>
       <dd>{{ measure_collection.name }}</dd>
 
       <dt>Waterlichaam</dt>
@@ -39,7 +39,11 @@
       <dd>
         <ul>
           {% for measure in measure_collection.measure_set.all %}
-          <li><a href="{{ measure.get_absolute_url }}">{{ measure.name }} ({{ measure.status_moment.status }})</a></li>
+          <li><a href="{{ measure.get_absolute_url }}">{{ measure.name }}{% if measure.status_moment %} ({{ measure.status_moment.status }}){% endif %}</a>
+            {% with "lizard_krw/measure_tree_snippet.html" as ourselves %}
+              {% include ourselves %}
+            {% endwith %}
+          </li>
           {% endfor %}
         </ul>
       </dd>
@@ -58,7 +62,7 @@
 
 {% block content %}
 <div id="textual">
-  <h2>Maatregelpakket: {{ measure_collection.name }}</h2>
+  <h2>Maatregelverzameling: {{ measure_collection.name }}</h2>
   <div style="width: 100%; height: 130px;" class="img-use-my-size">
     <a href="{% url lizard_krw.measure_collection_graph measure_collection_id=measure_collection.id %}"
        class="replace-with-image">
@@ -68,7 +72,7 @@
   <table class="generic-table">
     <tbody>
       <tr>
-        <th>Naam maatregelpakket</th>
+        <th>Naam maatregelverzameling</th>
         <td>{{ measure_collection.name }}</td>
       </tr>
 
@@ -94,12 +98,17 @@
 
       <tr>
         <th>Geraamde kosten totaal</th>
-        <td>{{ measure_collection.estimated_costs_total|euro }}</td>
+        <td>{{ measure_collection.costs_sum|euro }}</td>
       </tr>
 
       <tr>
-        <th>Geraamde kosten intern</th>
-        <td>{{ measure_collection.estimated_costs_internal|euro }}</td>
+        <th>Investeringskosten</th>
+        <td>{{ measure_collection.investment_costs_sum|euro }}</td>
+      </tr>
+
+      <tr>
+        <th>Exploitatiekosten</th>
+        <td>{{ measure_collection.exploitation_costs_sum|euro }}</td>
       </tr>
 
       {% if measure_collection.need_co_funding %}
@@ -152,13 +161,17 @@
         <th>Periode</th>
         <th>Omvang</th>
         <th>Kosten</th>
+        <th>Exploitatiekosten</th>
+        <th>Investeringskosten</th>
       </tr>
     </thead>
     <tbody>
       {% for measure in measure_collection.measure_set.all %}
       <tr>
         <td>
+          <a href="{{ measure.get_absolute_url }}">
           {{ measure.name }}
+          </a>
         </td>
         <td>
           {% firstof measure.period '(geen periode)' %}
@@ -167,10 +180,57 @@
           {{ measure.value }} {{ measure.unit }}
         </td>
         <td>
-          {{ measure.total_costs }}
+          {{ measure.total_costs|euro }}
+        </td>
+        <td>
+          {{ measure.investment_costs|euro }}
+        </td>
+        <td>
+          {{ measure.total_costs|euro }}
+        </td>
+      </tr>
+      {# Add descendants #}
+      {% for measure_part in measure.get_descendants %}
+      <tr>
+        <td>
+          <a href="{{ measure_part.get_absolute_url }}">
+          {{ measure_part.name }}
+          </a>
+        </td>
+        <td>
+          {% firstof measure_part.period '(geen periode)' %}
+        </td>
+        <td>
+          {{ measure_part.value }} {{ measure_part.unit }}
+        </td>
+        <td>
+          {{ measure_part.total_costs|euro }}
+        </td>
+        <td>
+          {{ measure_part.investment_costs|euro }}
+        </td>
+        <td>
+          {{ measure_part.total_costs|euro }}
         </td>
       </tr>
       {% endfor %}
+      {% endfor %}
     </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="3">
+          Totaal maatregelverzameling
+        </td>
+        <td>
+          {{ measure_collection.costs_sum|euro }}
+        </td>
+        <td>
+          {{ measure_collection.investment_costs_sum|euro }}
+        </td>
+        <td>
+          {{ measure_collection.exploitation_costs_sum|euro }}
+        </td>
+      </tr>
+    </tfoot>
   </table>
 {% endblock %}

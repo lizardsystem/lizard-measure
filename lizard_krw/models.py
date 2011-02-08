@@ -565,6 +565,25 @@ class MeasureCollection(models.Model):
         result = filter(None, result)
         return result
 
+    def costs_sum(self):
+        """Returns sum of total costs of measures."""
+        costs = 0.0
+        for measure in self.measure_set.all():
+            costs += measure.costs_sum()
+        return costs
+
+    def investment_costs_sum(self):
+        costs = 0.0
+        for measure in self.measure_set.all():
+            costs += measure.investment_costs_sum()
+        return costs
+
+    def exploitation_costs_sum(self):
+        costs = 0.0
+        for measure in self.measure_set.all():
+            costs += measure.exploitation_costs_sum()
+        return costs
+
 
 class Measure(AL_Node):
     """
