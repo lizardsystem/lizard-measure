@@ -39,7 +39,7 @@
       <dd>
         <ul>
           {% for measure in measure_collection.measure_set.all %}
-          <li><a href="{{ measure.get_absolute_url }}">{{ measure.name }}{% if measure.status_moment %} ({{ measure.status_moment.status }}){% endif %}</a>
+          <li><a href="{{ measure.get_absolute_url }}">{{ measure.name }}{% if measure.status_moment %} ({{ measure.status_moment.status }}){% else %} (geen status){% endif %}</a>
             {% with "lizard_krw/measure_tree_snippet.html" as ourselves %}
               {% include ourselves %}
             {% endwith %}

@@ -237,19 +237,23 @@ def krw_measure_graph(request,
 
     measure_collections = []  # Can also include measures.
     if waterbody_slug:
+        # Add measure collection and all measures with is_indicator=True.
         waterbody = get_object_or_404(WaterBody, slug=waterbody_slug)
         measure_collections.extend(MeasureCollection.objects.filter(
                 waterbody=waterbody))
         measure_collections.extend(Measure.objects.filter(
                 waterbody=waterbody, is_indicator=True))
     if measure_collection_id:
+        # Add collection and its direct underlying measures.
         measure_collection = get_object_or_404(
             MeasureCollection, pk=measure_collection_id)
         measure_collections.append(measure_collection)
         measure_collections.extend(measure_collection.measure_set.all())
     if measure_id:
-        measure_collections.append(
-            get_object_or_404(Measure, pk=measure_id))
+        # Add measure and its direct underlying children.
+        measure = get_object_or_404(Measure, pk=measure_id)
+        measure_collections.append(measure)
+        measure_collections.extend(measure.get_children())
 
     start_date, end_date = current_start_end_dates(request)
     # one cannot realize things in the future, so do not visualize

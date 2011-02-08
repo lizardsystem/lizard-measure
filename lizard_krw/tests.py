@@ -202,3 +202,109 @@ class ModelTest(TestCase):
         msm_planning = mc.measure_status_moments(is_planning=True)
 
         self.assertEquals(len(msm_planning), 0)
+
+
+    def test_measure_status(self):
+        """A measure status is aggregated from its own
+        measure_status_moments (if no children) OR that of its children.
+
+        Measure m has children ma and mb. ma has child maa.
+
+        Measure status moments:
+        m   |--------------------------------------------------|
+        ma  |--------------------------------------------------|
+
+                      Nieuw                Afgerond
+        maa |--------|--------------------|--------------------|
+                      2009-01-01           2011-01-01
+
+                           Gepland
+        mb  |-------------|------------------------------------|
+                           2010-01-01
+
+        Aggregated status (takes "lowest" status):
+                     (niks)Nieuw           Gepland
+        m   |--------x----|---------------|--------------------|
+                           2010-01-01      2011-01-01
+
+                      Nieuw                Afgerond
+        ma  |--------|--------------------|--------------------|
+                      2009-01-01           2011-01-01
+
+                      Nieuw                Afgerond
+        maa |--------|--------------------|--------------------|
+                      2009-01-01           2011-01-01
+
+                           Gepland
+        mb  |-------------|------------------------------------|
+                           2010-01-01
+        """
+
+        m = Measure(waterbody=self.wb, name="Measure",
+                    category=self.category, code=self.code,
+                    value=0.0, unit=self.unit, executive=self.executive)
+        m.save()
+
+        ma = Measure(waterbody=self.wb, name="Measure-a",
+                     category=self.category, code=self.code,
+                     value=0.0, unit=self.unit, executive=self.executive,
+                     parent=m)
+        ma.save()
+
+        maa = Measure(waterbody=self.wb, name="Measure-aa",
+                      category=self.category, code=self.code,
+                      value=0.0, unit=self.unit, executive=self.executive,
+                      parent=ma)
+        maa.save()
+
+        mb = Measure(waterbody=self.wb, name="Measure-b",
+                     category=self.category, code=self.code,
+                     value=0.0, unit=self.unit, executive=self.executive,
+                     parent=m)
+        mb.save()
+
+        # No statuses added: m has no status.
+        self.assertEqual(m.status_moment(dt=self.now), None)
+        self.assertEqual(m.measure_status_moments(end_date=self.now), [])
+
+        # Add status to maa. Test ma and maa.
+        maa.measurestatusmoment_set.create(
+            status=MeasureStatus.objects.get(name="Afgerond"),
+            datetime=datetime.date(2011, 1, 1))
+        self.assertEquals(
+            maa.status_moment(dt=self.now).status.name, "Afgerond")
+        self.assertEquals(
+            ma.status_moment(dt=self.now).status.name, "Afgerond")
+
+        msm_ma = ma.measure_status_moments(end_date=self.now)
+        msm_maa = maa.measure_status_moments(end_date=self.now)
+        # ma has msm with 1 item, "Afgerond" at 2011-01-01
+        self.assertEquals(len(msm_ma), 1)
+        self.assertEquals(msm_ma[0].status.name, "Afgerond")
+        self.assertEquals(msm_ma[0].datetime, datetime.date(2011, 1, 1))
+        # ma has the same status as maa
+        self.assertEquals(msm_ma[0].status.name, msm_maa[0].status.name)
+        self.assertEquals(msm_ma[0].datetime, msm_maa[0].datetime)
+        # m has no status, because of mb.
+        self.assertEquals(m.measure_status_moments(end_date=self.now), [])
+
+        # Add status to mb. Test m.
+        mb.measurestatusmoment_set.create(
+            status=MeasureStatus.objects.get(name="Gepland"),
+            datetime=datetime.date(2010, 1, 1))
+        maa.measurestatusmoment_set.create(
+            status=MeasureStatus.objects.get(name="Nieuw"),
+            datetime=datetime.date(2009, 1, 1))
+        msm_m = m.measure_status_moments(end_date=self.now, debug=True)
+        msm_ma = ma.measure_status_moments(end_date=self.now)
+        msm_mb = mb.measure_status_moments(end_date=self.now)
+
+        self.assertEquals(
+            ma.status_moment(dt=datetime.date(2010, 1, 1)).status.name,
+            "Nieuw")
+
+        self.assertEquals(len(msm_m), 2)
+        self.assertEquals(msm_m[0].status.name, "Nieuw")
+        self.assertEquals(msm_m[0].datetime, datetime.date(2010, 1, 1))
+        self.assertEquals(msm_m[1].status.name, "Gepland")
+        self.assertEquals(msm_m[1].datetime, datetime.date(2011, 1, 1))

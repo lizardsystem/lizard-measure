@@ -703,18 +703,20 @@ class Measure(AL_Node):
 
     def status_moment(self, dt=datetime.datetime.now(), is_planning=False):
         """
-        Get status, defaults to today, return MeasureStatusMoment or
-        None. Aggregates from child measures
+        Get status for a given datetime (defaults to today)
+        returns MeasureStatusMoment or None.
 
-        make artificial (aggregated) MeasureStatusMoment in case of
-        AVG
+        If any children: Aggregates from child measures
+
         """
-        # Collect status_moments from children and self.
-        measure_status_moments = [
-            m.status_moment(dt=dt, is_planning=is_planning)
-            for m in self.get_children()]
-        measure_status_moments.append(self.status_moment_self(dt=dt,
-                                      is_planning=is_planning))
+        # Collect status_moments from children OR self.
+        if not self.get_children():
+            msm_self = self.status_moment_self(dt=dt, is_planning=is_planning)
+            measure_status_moments = [msm_self, ]
+        else:
+            measure_status_moments = [
+                m.status_moment(dt=dt, is_planning=is_planning)
+                for m in self.get_children()]
 
         # Apparently some directly related measures has no status
         if (None in measure_status_moments and
@@ -746,10 +748,41 @@ class Measure(AL_Node):
         """For use in templates"""
         return self.status_moment(is_planning=True)
 
-    def measure_status_moments(self, end_date=None, is_planning=False):
-        msm = self.measurestatusmoment_set.filter(is_planning=is_planning)
+    def measure_status_moments(self, end_date=None, is_planning=False,
+                               debug=False):
+        """If the measure has no children, take own
+        measure_status_moments. Else return calculated aggregated list
+        of status moments. """
+        msm_dates = self.measurestatusmoment_set.filter(
+            is_planning=is_planning)
         if end_date is not None:
-            msm = msm.filter(datetime__lte=end_date)
+            msm_dates = msm_dates.filter(datetime__lte=end_date)
+
+        # No children: we're finished.
+        if not self.get_children():
+            return msm_dates
+
+        # With children:
+        # Collect all msms where the date is used to calculate statuses.
+        msm_dates = list(msm_dates)
+        for measure_child in self.measure_set.all():
+            msm_dates_children = measure_child.measure_status_moments(
+                is_planning=is_planning, end_date=end_date)
+            msm_dates_children = filter(None, msm_dates_children)
+            msm_dates.extend(list(msm_dates_children))
+        # For each date, calculate status and append to msm.
+        msm = []
+        for msm_date in msm_dates:
+            status_moment = self.status_moment(
+                dt=msm_date.datetime, is_planning=is_planning)
+            # Remove None's: they can only appear at 'the front' of
+            # the timeline and they are irrelevant.
+            if status_moment:
+                status_moment.datetime = msm_date.datetime
+                msm.append(status_moment)
+
+        msm = sorted(msm, key=lambda m: m.datetime)
+
         return msm
 
     def image(self, start_date, end_date, width=None, height=None):

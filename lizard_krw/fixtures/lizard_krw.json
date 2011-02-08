@@ -1,2201 +1,2197 @@
 [
   {
-    "pk": 1, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 1,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "K1", 
+      "code": "K1",
       "name": "Open polyhalien kustwater"
     }
-  }, 
+  },
   {
-    "pk": 2, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 2,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "K2", 
+      "code": "K2",
       "name": "Beschut polyhalien kustwater"
     }
-  }, 
+  },
   {
-    "pk": 3, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 3,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "K3", 
+      "code": "K3",
       "name": "Euhalien kustwater"
     }
-  }, 
+  },
   {
-    "pk": 4, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 4,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "O1", 
+      "code": "O1",
       "name": "Estuarium met beperkt getijverschil"
     }
-  }, 
+  },
   {
-    "pk": 5, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 5,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "O2", 
+      "code": "O2",
       "name": "Estuarium met matig getijverschil"
     }
-  }, 
+  },
   {
-    "pk": 6, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 6,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M1a", 
+      "code": "M1a",
       "name": "Zoete gebufferde sloten"
     }
-  }, 
+  },
   {
-    "pk": 7, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 7,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M1b", 
+      "code": "M1b",
       "name": "Niet-zoete gebufferde sloten"
     }
-  }, 
+  },
   {
-    "pk": 8, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 8,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M2", 
+      "code": "M2",
       "name": "Zwak gebufferde sloten (poldersloten)"
     }
-  }, 
+  },
   {
-    "pk": 9, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 9,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M3", 
+      "code": "M3",
       "name": "Gebufferde (regionale) kanalen"
     }
-  }, 
+  },
   {
-    "pk": 10, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 10,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M4", 
+      "code": "M4",
       "name": "Zwak gebufferde (regionale) kanalen"
     }
-  }, 
+  },
   {
-    "pk": 11, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 11,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M5", 
+      "code": "M5",
       "name": "Ondiep lijnvormig water, open verbinding met rivier/ ge\u00efnundeerd"
     }
-  }, 
+  },
   {
-    "pk": 12, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 12,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M6a", 
+      "code": "M6a",
       "name": "Grote ondiepe kanalen zonder scheepvaart"
     }
-  }, 
+  },
   {
-    "pk": 13, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 13,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M6b", 
+      "code": "M6b",
       "name": "Grote ondiepe kanalen met scheepvaart"
     }
-  }, 
+  },
   {
-    "pk": 14, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 14,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M7a", 
+      "code": "M7a",
       "name": "Grote diepe kanalen zonder scheepvaart"
     }
-  }, 
+  },
   {
-    "pk": 15, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 15,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M7b", 
+      "code": "M7b",
       "name": "Grote diepe kanalen met scheepvaart"
     }
-  }, 
+  },
   {
-    "pk": 16, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 16,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M8", 
+      "code": "M8",
       "name": "Gebufferde laagveensloten"
     }
-  }, 
+  },
   {
-    "pk": 17, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 17,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M9", 
+      "code": "M9",
       "name": "Zwak gebufferde hoogveen sloten"
     }
-  }, 
+  },
   {
-    "pk": 18, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 18,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M10", 
+      "code": "M10",
       "name": "Laagveen vaarten en kanalen"
     }
-  }, 
+  },
   {
-    "pk": 19, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 19,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M11", 
+      "code": "M11",
       "name": "Kleine ondiepe gebufferde plassen"
     }
-  }, 
+  },
   {
-    "pk": 20, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 20,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M12", 
+      "code": "M12",
       "name": "Kleine ondiepe zwak gebufferde plassen (vennen)"
     }
-  }, 
+  },
   {
-    "pk": 21, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 21,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M13", 
+      "code": "M13",
       "name": "Kleine ondiepe zure plassen (vennen)"
     }
-  }, 
+  },
   {
-    "pk": 22, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 22,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M14", 
+      "code": "M14",
       "name": "Grote ondiepe gebufferde plassen"
     }
-  }, 
+  },
   {
-    "pk": 23, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 23,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M16", 
+      "code": "M16",
       "name": "Diepe gebufferde meren"
     }
-  }, 
+  },
   {
-    "pk": 24, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 24,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M17", 
+      "code": "M17",
       "name": "Diepe zwakgebufferde meren"
     }
-  }, 
+  },
   {
-    "pk": 25, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 25,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M18", 
+      "code": "M18",
       "name": "Diepe zure meren"
     }
-  }, 
+  },
   {
-    "pk": 26, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 26,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M19", 
+      "code": "M19",
       "name": "Diepe meren in open verbinding met rivier"
     }
-  }, 
+  },
   {
-    "pk": 27, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 27,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M20", 
+      "code": "M20",
       "name": "Matig grote diepe gebufferde meren"
     }
-  }, 
+  },
   {
-    "pk": 28, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 28,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M21", 
+      "code": "M21",
       "name": "Grote diepe gebufferde meren"
     }
-  }, 
+  },
   {
-    "pk": 29, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 29,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M22", 
+      "code": "M22",
       "name": "Kleine ondiepe kalkrijke plassen"
     }
-  }, 
+  },
   {
-    "pk": 30, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 30,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M23", 
+      "code": "M23",
       "name": "Grote ondiepe kalkrijke plassen"
     }
-  }, 
+  },
   {
-    "pk": 31, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 31,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M24", 
+      "code": "M24",
       "name": "Diepe kalkrijke meren"
     }
-  }, 
+  },
   {
-    "pk": 32, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 32,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M25", 
+      "code": "M25",
       "name": "Ondiepe laagveenplassen"
     }
-  }, 
+  },
   {
-    "pk": 33, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 33,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M26", 
+      "code": "M26",
       "name": "Ondiepe zwak gebufferde hoogveenplassen/vennen"
     }
-  }, 
+  },
   {
-    "pk": 34, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 34,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M27", 
+      "code": "M27",
       "name": "Matig grote ondiepe laagveenplassen"
     }
-  }, 
+  },
   {
-    "pk": 35, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 35,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M28", 
+      "code": "M28",
       "name": "Diepe laagveenmeren"
     }
-  }, 
+  },
   {
-    "pk": 36, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 36,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M29", 
+      "code": "M29",
       "name": "Matig grote diepe  laagveenmeren"
     }
-  }, 
+  },
   {
-    "pk": 37, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 37,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M30", 
+      "code": "M30",
       "name": "Zwak brakke wateren"
     }
-  }, 
+  },
   {
-    "pk": 38, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 38,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M31", 
+      "code": "M31",
       "name": "Kleine brakke tot zoute wateren"
     }
-  }, 
+  },
   {
-    "pk": 39, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 39,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "M32", 
+      "code": "M32",
       "name": "Grote brakke tot zoute meren"
     }
-  }, 
+  },
   {
-    "pk": 40, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 40,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "R1", 
+      "code": "R1",
       "name": "Droogvallende bron"
     }
-  }, 
+  },
   {
-    "pk": 41, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 41,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "R2", 
+      "code": "R2",
       "name": "Permanente bron"
     }
-  }, 
+  },
   {
-    "pk": 42, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 42,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "R3", 
+      "code": "R3",
       "name": "Droogvallende langzaam stromende bovenloop op zand"
     }
-  }, 
+  },
   {
-    "pk": 43, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 43,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "R4", 
+      "code": "R4",
       "name": "Permanente langzaam stromende bovenloop op zand"
     }
-  }, 
+  },
   {
-    "pk": 44, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 44,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "R5", 
+      "code": "R5",
       "name": "Langzaam stromende middenloop/benedenloop op zand"
     }
-  }, 
+  },
   {
-    "pk": 45, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 45,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "R6", 
+      "code": "R6",
       "name": "Langzaam stromend riviertje op zand/klei"
     }
-  }, 
+  },
   {
-    "pk": 46, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 46,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "R7", 
+      "code": "R7",
       "name": "Langzaam stromende rivier/nevengeul op zand/klei"
     }
-  }, 
+  },
   {
-    "pk": 47, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 47,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "R8", 
+      "code": "R8",
       "name": "Zoet getijdenwater (uitlopers rivier) op zand/klei"
     }
-  }, 
+  },
   {
-    "pk": 48, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 48,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "R9", 
+      "code": "R9",
       "name": "Langzaam stromende bovenloop op kalkhoudende bodem"
     }
-  }, 
+  },
   {
-    "pk": 49, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 49,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "R10", 
+      "code": "R10",
       "name": "Langzaam stromende middenloop op kalkhoudende bodem"
     }
-  }, 
+  },
   {
-    "pk": 50, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 50,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "R11", 
+      "code": "R11",
       "name": "Langzaam stromende bovenloop op veenbodem"
     }
-  }, 
+  },
   {
-    "pk": 51, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 51,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "R12", 
+      "code": "R12",
       "name": "Langzaam stromende middenloop/benedenloop op veenbodem"
     }
-  }, 
+  },
   {
-    "pk": 52, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 52,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "R13", 
+      "code": "R13",
       "name": "Snelstromende bovenloop op  zand"
     }
-  }, 
+  },
   {
-    "pk": 53, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 53,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "R14", 
+      "code": "R14",
       "name": "Snelstromende middenloop/benedenloop op zand"
     }
-  }, 
+  },
   {
-    "pk": 54, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 54,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "R15", 
+      "code": "R15",
       "name": "Snelstromend riviertje op kiezelhoudende bodem"
     }
-  }, 
+  },
   {
-    "pk": 55, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 55,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "R16", 
+      "code": "R16",
       "name": "Snelstromende rivier/nevengeul op zandbodem of grind"
     }
-  }, 
+  },
   {
-    "pk": 56, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 56,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "R17", 
+      "code": "R17",
       "name": "Snelstromende  bovenloop op kalkhoudende bodem"
     }
-  }, 
+  },
   {
-    "pk": 57, 
-    "model": "lizard_krw.krwwatertype", 
+    "pk": 57,
+    "model": "lizard_krw.krwwatertype",
     "fields": {
-      "code": "R18", 
+      "code": "R18",
       "name": "Snelstromende middenloop/benedenloop op kalkhoudende bodem"
     }
-  }, 
+  },
   {
-    "pk": 1, 
-    "model": "lizard_krw.waterbodystatus", 
+    "pk": 1,
+    "model": "lizard_krw.waterbodystatus",
     "fields": {
       "name": "Kunstmatig"
     }
-  }, 
+  },
   {
-    "pk": 1, 
-    "model": "lizard_krw.area", 
+    "pk": 1,
+    "model": "lizard_krw.area",
     "fields": {
       "name": "Noordelijke Vechtplassen (NVP)"
     }
-  }, 
+  },
   {
-    "pk": 1, 
-    "model": "lizard_krw.province", 
+    "pk": 1,
+    "model": "lizard_krw.province",
     "fields": {
       "name": "Noord Holland"
     }
-  }, 
+  },
   {
-    "pk": 2, 
-    "model": "lizard_krw.province", 
+    "pk": 2,
+    "model": "lizard_krw.province",
     "fields": {
       "name": "Utrecht"
     }
-  }, 
+  },
   {
-    "pk": 1, 
-    "model": "lizard_krw.municipality", 
+    "pk": 1,
+    "model": "lizard_krw.municipality",
     "fields": {
       "name": "Wijdemeren"
     }
-  }, 
+  },
   {
-    "pk": 1, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 1,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Amstellandboezem", 
-      "description": null, 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "amstellandboezem", 
+      "status": null,
+      "province": [],
+      "ident": "Amstellandboezem",
+      "description": null,
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "amstellandboezem",
       "name": "Amstellandboezem"
     }
-  }, 
+  },
   {
-    "pk": 2, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 2,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Botshol", 
-      "description": null, 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "botshol", 
+      "status": null,
+      "province": [],
+      "ident": "Botshol",
+      "description": null,
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "botshol",
       "name": "Botshol"
     }
-  }, 
+  },
   {
-    "pk": 10, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 10,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Gaasperplas", 
-      "description": null, 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "gaasterplas", 
+      "status": null,
+      "province": [],
+      "ident": "Gaasperplas",
+      "description": null,
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "gaasterplas",
       "name": "Gaasperplas"
     }
-  }, 
+  },
   {
-    "pk": 26, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 26,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "gebiedsbreed", 
-      "description": "verzamelbak gebiedsbreed", 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "gebiedsbreed", 
+      "status": null,
+      "province": [],
+      "ident": "gebiedsbreed",
+      "description": "verzamelbak gebiedsbreed",
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "gebiedsbreed",
       "name": "gebiedsbreed"
     }
-  }, 
+  },
   {
-    "pk": 4, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 4,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Grote Maarsseveense Plas", 
-      "description": null, 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "grote-maarsseveense-plas", 
+      "status": null,
+      "province": [],
+      "ident": "Grote Maarsseveense Plas",
+      "description": null,
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "grote-maarsseveense-plas",
       "name": "Grote Maarsseveense Plas"
     }
-  }, 
+  },
   {
-    "pk": 11, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 11,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Hollands Ankeveense plassen", 
-      "description": "Met een kleine p van plassen, deze moet overeenkomen met de shape.", 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "hollandse-ankeveense-plassen", 
+      "status": null,
+      "province": [],
+      "ident": "Hollands Ankeveense plassen",
+      "description": "Met een kleine p van plassen, deze moet overeenkomen met de shape.",
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "hollandse-ankeveense-plassen",
       "name": "Hollands Ankeveense plassen"
     }
-  }, 
+  },
   {
-    "pk": 6, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 6,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": 1, 
+      "status": 1,
       "province": [
         1
-      ], 
-      "ident": "Kortenhoefse Plassen", 
-      "description": "", 
+      ],
+      "ident": "Kortenhoefse Plassen",
+      "description": "",
       "area": [
         1
-      ], 
-      "protected_area_reason": "Natura2000/TOP-gebied verdroging Oostelijke Vechtplassen", 
-      "characteristics": "gedomineerd door wegzijging en doorspoeling Horstermeer, fosfaat-belasting daarom niet te verlagen, achterstand in onderhoud", 
+      ],
+      "protected_area_reason": "Natura2000/TOP-gebied verdroging Oostelijke Vechtplassen",
+      "characteristics": "gedomineerd door wegzijging en doorspoeling Horstermeer, fosfaat-belasting daarom niet te verlagen, achterstand in onderhoud",
       "municipality": [
         1
-      ], 
-      "current_situation_chemicals": "--", 
-      "control_parameters": "fosfaatbelasting -1 mg P/m2/dag", 
-      "water_type": 34, 
-      "code": "NL11_6_4", 
-      "slug": "kortenhoefse-plassen", 
+      ],
+      "current_situation_chemicals": "--",
+      "control_parameters": "fosfaatbelasting -1 mg P/m2/dag",
+      "water_type": 34,
+      "code": "NL11_6_4",
+      "slug": "kortenhoefse-plassen",
       "name": "Kortenhoefse Plassen"
     }
-  }, 
+  },
   {
-    "pk": 7, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 7,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Loenderveen Oost", 
-      "description": null, 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "loenderveen-oost", 
+      "status": null,
+      "province": [],
+      "ident": "Loenderveen Oost",
+      "description": null,
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "loenderveen-oost",
       "name": "Loenderveen Oost"
     }
-  }, 
+  },
   {
-    "pk": 8, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 8,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Loosdrechtse Plassen", 
-      "description": "Status\r\n:   kunstmatig\r\nType\r\n:   M30 - zwak brakke wateren\r\nBijzonderheden\r\n:   Natura2000/TOP-gebied verdroging Botshol\r\n\r\nHoofdpunten analyse\r\n:   - Succesvol herstel\r\n    - Variatie door meteorologie\r\n    - Oevervegetatie te lijden door constant peil\r\n\r\nNormoverschrijding chemie huidige situatie\r\n:   - Overige relevante verontreinigende stoffen: koper, zink\r\n    - Prioritaire stoffen totaal: cadmium, kwik", 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "loosdrechtse-plassen", 
+      "status": null,
+      "province": [],
+      "ident": "Loosdrechtse Plassen",
+      "description": "Status\r\n:   kunstmatig\r\nType\r\n:   M30 - zwak brakke wateren\r\nBijzonderheden\r\n:   Natura2000/TOP-gebied verdroging Botshol\r\n\r\nHoofdpunten analyse\r\n:   - Succesvol herstel\r\n    - Variatie door meteorologie\r\n    - Oevervegetatie te lijden door constant peil\r\n\r\nNormoverschrijding chemie huidige situatie\r\n:   - Overige relevante verontreinigende stoffen: koper, zink\r\n    - Prioritaire stoffen totaal: cadmium, kwik",
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "loosdrechtse-plassen",
       "name": "Loosdrechtse Plassen"
     }
-  }, 
+  },
   {
-    "pk": 9, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 9,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Molenpolder en Tienhovense Plassen", 
-      "description": null, 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "molenpolder-en-tienhovense-plassen", 
+      "status": null,
+      "province": [],
+      "ident": "Molenpolder en Tienhovense Plassen",
+      "description": null,
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "molenpolder-en-tienhovense-plassen",
       "name": "Molenpolder en Tienhovense Plassen"
     }
-  }, 
+  },
   {
-    "pk": 12, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 12,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Naardermeer", 
-      "description": null, 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "naardermeer", 
+      "status": null,
+      "province": [],
+      "ident": "Naardermeer",
+      "description": null,
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "naardermeer",
       "name": "Naardermeer"
     }
-  }, 
+  },
   {
-    "pk": 13, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 13,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Noorder IJplas", 
-      "description": null, 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "noorder-ijplas", 
+      "status": null,
+      "province": [],
+      "ident": "Noorder IJplas",
+      "description": null,
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "noorder-ijplas",
       "name": "Noorder IJplas"
     }
-  }, 
+  },
   {
-    "pk": 14, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 14,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Ouderkerkerplas", 
-      "description": null, 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "ouderkerkerplas", 
+      "status": null,
+      "province": [],
+      "ident": "Ouderkerkerplas",
+      "description": null,
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "ouderkerkerplas",
       "name": "Ouderkerkerplas"
     }
-  }, 
+  },
   {
-    "pk": 15, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 15,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Sloterplas", 
-      "description": null, 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "sloterplas", 
+      "status": null,
+      "province": [],
+      "ident": "Sloterplas",
+      "description": null,
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "sloterplas",
       "name": "Sloterplas"
     }
-  }, 
+  },
   {
-    "pk": 16, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 16,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Spiegelplas", 
-      "description": null, 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "spiegelplas", 
+      "status": null,
+      "province": [],
+      "ident": "Spiegelplas",
+      "description": null,
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "spiegelplas",
       "name": "Spiegelplas"
     }
-  }, 
+  },
   {
-    "pk": 17, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 17,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Ster en Zodden", 
-      "description": null, 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "ster-en-zodden", 
+      "status": null,
+      "province": [],
+      "ident": "Ster en Zodden",
+      "description": null,
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "ster-en-zodden",
       "name": "Ster en Zodden"
     }
-  }, 
+  },
   {
-    "pk": 18, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 18,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Stichtse Ankeveense Plassen", 
-      "description": null, 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "stichtse-ankeveense-plassen", 
+      "status": null,
+      "province": [],
+      "ident": "Stichtse Ankeveense Plassen",
+      "description": null,
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "stichtse-ankeveense-plassen",
       "name": "Stichtse Ankeveense Plassen"
     }
-  }, 
+  },
   {
-    "pk": 19, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 19,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Terra Nova", 
-      "description": null, 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "terra-nova", 
+      "status": null,
+      "province": [],
+      "ident": "Terra Nova",
+      "description": null,
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "terra-nova",
       "name": "Terra Nova"
     }
-  }, 
+  },
   {
-    "pk": 20, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 20,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Tussenboezem Vinkeveen a", 
-      "description": null, 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "tussenboezem-vinkeveen-a", 
+      "status": null,
+      "province": [],
+      "ident": "Tussenboezem Vinkeveen a",
+      "description": null,
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "tussenboezem-vinkeveen-a",
       "name": "Tussenboezem Vinkeveen a"
     }
-  }, 
+  },
   {
-    "pk": 21, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 21,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Tussenboezem Vinkeveen b", 
-      "description": null, 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "tussenboezem-vinkeveen-b", 
+      "status": null,
+      "province": [],
+      "ident": "Tussenboezem Vinkeveen b",
+      "description": null,
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "tussenboezem-vinkeveen-b",
       "name": "Tussenboezem Vinkeveen b"
     }
-  }, 
+  },
   {
-    "pk": 27, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 27,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Vaarten Amsterdam", 
-      "description": "", 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "vaarten-amsterdam", 
+      "status": null,
+      "province": [],
+      "ident": "Vaarten Amsterdam",
+      "description": "",
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "vaarten-amsterdam",
       "name": "Vaarten Amsterdam"
     }
-  }, 
+  },
   {
-    "pk": 33, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 33,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Vaarten Groot Mijdrecht", 
-      "description": "", 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "vaarten-groot-mijdrecht", 
+      "status": null,
+      "province": [],
+      "ident": "Vaarten Groot Mijdrecht",
+      "description": "",
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "vaarten-groot-mijdrecht",
       "name": "Vaarten Groot Mijdrecht"
     }
-  }, 
+  },
   {
-    "pk": 31, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 31,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Vaarten Ronde Hoep", 
-      "description": "", 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "vaarten-ronde-hoep", 
+      "status": null,
+      "province": [],
+      "ident": "Vaarten Ronde Hoep",
+      "description": "",
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "vaarten-ronde-hoep",
       "name": "Vaarten Ronde Hoep"
     }
-  }, 
+  },
   {
-    "pk": 29, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 29,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Vaarten Ronde Venen", 
-      "description": "", 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "vaarten-ronde-venen", 
+      "status": null,
+      "province": [],
+      "ident": "Vaarten Ronde Venen",
+      "description": "",
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "vaarten-ronde-venen",
       "name": "Vaarten Ronde Venen"
     }
-  }, 
+  },
   {
-    "pk": 28, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 28,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Vaarten Vechtstreek", 
-      "description": "", 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "vaarten-vechtstreek", 
+      "status": null,
+      "province": [],
+      "ident": "Vaarten Vechtstreek",
+      "description": "",
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "vaarten-vechtstreek",
       "name": "Vaarten Vechtstreek"
     }
-  }, 
+  },
   {
-    "pk": 32, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 32,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Vaarten Westeramstel", 
-      "description": "", 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "vaarten-westeramstel", 
+      "status": null,
+      "province": [],
+      "ident": "Vaarten Westeramstel",
+      "description": "",
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "vaarten-westeramstel",
       "name": "Vaarten Westeramstel"
     }
-  }, 
+  },
   {
-    "pk": 30, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 30,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Vaarten Zevenhoven", 
-      "description": "", 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "vaarten-zevenhoven", 
+      "status": null,
+      "province": [],
+      "ident": "Vaarten Zevenhoven",
+      "description": "",
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "vaarten-zevenhoven",
       "name": "Vaarten Zevenhoven"
     }
-  }, 
+  },
   {
-    "pk": 22, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 22,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Vecht", 
-      "description": null, 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "vecht", 
+      "status": null,
+      "province": [],
+      "ident": "Vecht",
+      "description": null,
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "vecht",
       "name": "Vecht"
     }
-  }, 
+  },
   {
-    "pk": 23, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 23,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Vinkeveense Plassen", 
-      "description": null, 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "vinkeveense-plassen", 
+      "status": null,
+      "province": [],
+      "ident": "Vinkeveense Plassen",
+      "description": null,
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "vinkeveense-plassen",
       "name": "Vinkeveense Plassen"
     }
-  }, 
+  },
   {
-    "pk": 24, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 24,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Waterleidingplas", 
-      "description": null, 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "waterleidingplas", 
+      "status": null,
+      "province": [],
+      "ident": "Waterleidingplas",
+      "description": null,
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "waterleidingplas",
       "name": "Waterleidingplas"
     }
-  }, 
+  },
   {
-    "pk": 25, 
-    "model": "lizard_krw.waterbody", 
+    "pk": 25,
+    "model": "lizard_krw.waterbody",
     "fields": {
-      "status": null, 
-      "province": [], 
-      "ident": "Wijde Blik", 
-      "description": null, 
-      "area": [], 
-      "protected_area_reason": null, 
-      "characteristics": null, 
-      "municipality": [], 
-      "current_situation_chemicals": null, 
-      "control_parameters": null, 
-      "water_type": null, 
-      "code": null, 
-      "slug": "wijdeblik", 
+      "status": null,
+      "province": [],
+      "ident": "Wijde Blik",
+      "description": null,
+      "area": [],
+      "protected_area_reason": null,
+      "characteristics": null,
+      "municipality": [],
+      "current_situation_chemicals": null,
+      "control_parameters": null,
+      "water_type": null,
+      "code": null,
+      "slug": "wijdeblik",
       "name": "Wijde Blik"
     }
-  }, 
+  },
   {
-    "pk": 5, 
-    "model": "lizard_krw.alphascore", 
+    "pk": 5,
+    "model": "lizard_krw.alphascore",
     "fields": {
-      "color": "00ff00", 
-      "max_value": 1.0, 
-      "min_value": 0.80000000000000004, 
+      "color": "00ff00",
+      "max_value": 1.0,
+      "min_value": 0.80000000000000004,
       "name": "Zeer goed"
     }
-  }, 
+  },
   {
-    "pk": 4, 
-    "model": "lizard_krw.alphascore", 
+    "pk": 4,
+    "model": "lizard_krw.alphascore",
     "fields": {
-      "color": "80ff00", 
-      "max_value": 0.80000000000000004, 
-      "min_value": 0.59999999999999998, 
+      "color": "80ff00",
+      "max_value": 0.80000000000000004,
+      "min_value": 0.59999999999999998,
       "name": "Goed"
     }
-  }, 
+  },
   {
-    "pk": 3, 
-    "model": "lizard_krw.alphascore", 
+    "pk": 3,
+    "model": "lizard_krw.alphascore",
     "fields": {
-      "color": "ffff00", 
-      "max_value": 0.59999999999999998, 
-      "min_value": 0.40000000000000002, 
+      "color": "ffff00",
+      "max_value": 0.59999999999999998,
+      "min_value": 0.40000000000000002,
       "name": "Matig"
     }
-  }, 
+  },
   {
-    "pk": 2, 
-    "model": "lizard_krw.alphascore", 
+    "pk": 2,
+    "model": "lizard_krw.alphascore",
     "fields": {
-      "color": "ff8000", 
-      "max_value": 0.40000000000000002, 
-      "min_value": 0.20000000000000001, 
+      "color": "ff8000",
+      "max_value": 0.40000000000000002,
+      "min_value": 0.20000000000000001,
       "name": "Ontoereikend"
     }
-  }, 
+  },
   {
-    "pk": 1, 
-    "model": "lizard_krw.alphascore", 
+    "pk": 1,
+    "model": "lizard_krw.alphascore",
     "fields": {
-      "color": "ff0000", 
-      "max_value": 0.20000000000000001, 
-      "min_value": 0.0, 
+      "color": "ff0000",
+      "max_value": 0.20000000000000001,
+      "min_value": 0.0,
       "name": "Slecht"
     }
-  }, 
+  },
   {
-    "pk": 1, 
-    "model": "lizard_krw.score", 
+    "pk": 1,
+    "model": "lizard_krw.score",
     "fields": {
-      "category": 1, 
-      "end_date": "2009-01-01 00:00:00", 
-      "value": 0.0, 
-      "waterbody": 6, 
-      "owner": 1, 
+      "category": 1,
+      "end_date": "2009-01-01 00:00:00",
+      "value": 0.0,
+      "waterbody": 6,
+      "owner": 1,
       "start_date": "2009-01-01 00:00:00"
     }
-  }, 
+  },
   {
-    "pk": 1, 
-    "model": "lizard_krw.goalscore", 
+    "pk": 1,
+    "model": "lizard_krw.goalscore",
     "fields": {
-      "category": 1, 
-      "end_date": "2015-01-01 00:00:00", 
-      "value": 0.5, 
-      "waterbody": 6, 
-      "owner": 1, 
+      "category": 1,
+      "end_date": "2015-01-01 00:00:00",
+      "value": 0.5,
+      "waterbody": 6,
+      "owner": 1,
       "start_date": "2015-01-01 00:00:00"
     }
-  }, 
+  },
   {
-    "pk": 1, 
-    "model": "lizard_krw.measurecategory", 
+    "pk": 1,
+    "model": "lizard_krw.measurecategory",
     "fields": {
       "name": "Beheermaatregelen"
     }
-  }, 
+  },
   {
-    "pk": 2, 
-    "model": "lizard_krw.measurecategory", 
+    "pk": 2,
+    "model": "lizard_krw.measurecategory",
     "fields": {
       "name": "Bronmaatregelen"
     }
-  }, 
+  },
   {
-    "pk": 3, 
-    "model": "lizard_krw.measurecategory", 
+    "pk": 3,
+    "model": "lizard_krw.measurecategory",
     "fields": {
       "name": "GGOR maatregelen"
     }
-  }, 
+  },
   {
-    "pk": 4, 
-    "model": "lizard_krw.measurecategory", 
+    "pk": 4,
+    "model": "lizard_krw.measurecategory",
     "fields": {
       "name": "Immissiemaatregelen"
     }
-  }, 
+  },
   {
-    "pk": 5, 
-    "model": "lizard_krw.measurecategory", 
+    "pk": 5,
+    "model": "lizard_krw.measurecategory",
     "fields": {
       "name": "Inrichtingsmaatregelen"
     }
-  }, 
+  },
   {
-    "pk": 6, 
-    "model": "lizard_krw.measurecategory", 
+    "pk": 6,
+    "model": "lizard_krw.measurecategory",
     "fields": {
       "name": "RO-maatregelen"
     }
-  }, 
+  },
   {
-    "pk": 7, 
-    "model": "lizard_krw.measurecategory", 
+    "pk": 7,
+    "model": "lizard_krw.measurecategory",
     "fields": {
       "name": "Instrumentele maatregelen"
     }
-  }, 
+  },
   {
-    "pk": 8, 
-    "model": "lizard_krw.measurecategory", 
+    "pk": 8,
+    "model": "lizard_krw.measurecategory",
     "fields": {
       "name": "WB21 maatregelen"
     }
-  }, 
+  },
   {
-    "pk": 9, 
-    "model": "lizard_krw.measurecategory", 
+    "pk": 9,
+    "model": "lizard_krw.measurecategory",
     "fields": {
       "name": "Overig"
     }
-  }, 
+  },
   {
-    "pk": 3, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 3,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "BE01", 
+      "code": "BE01",
       "description": "Beheermaatregelen uitvoeren actief visstands- of schelpdierstandsbeheer"
     }
-  }, 
+  },
   {
-    "pk": 4, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 4,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "BE02", 
+      "code": "BE02",
       "description": "Beheermaatregelen uitvoeren actief vegetatiebeheer (enten, zaaien, planten)"
     }
-  }, 
+  },
   {
-    "pk": 5, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 5,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "BE03", 
+      "code": "BE03",
       "description": "Beheermaatregelen uitvoeren op waterkwaliteit gericht onderhouds-/maaibeheer (water & natte oever)"
     }
-  }, 
+  },
   {
-    "pk": 6, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 6,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "BE04", 
+      "code": "BE04",
       "description": "Beheermaatregelen Verwijderen eutrofe bagger"
     }
-  }, 
+  },
   {
-    "pk": 7, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 7,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "BE05", 
+      "code": "BE05",
       "description": "Beheermaatregelen verwijderen vervuilde bagger (m.u.v. eutrofe bagger)"
     }
-  }, 
+  },
   {
-    "pk": 8, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 8,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "BE06", 
+      "code": "BE06",
       "description": "Beheermaatregelen aanpassen begroeiing langs water"
     }
-  }, 
+  },
   {
-    "pk": 9, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 9,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "BE07", 
+      "code": "BE07",
       "description": "Beheermaatregelen Beheren van grootschalige grondwaterverontreinigingen"
     }
-  }, 
+  },
   {
-    "pk": 10, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 10,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "BE08", 
+      "code": "BE08",
       "description": "Beheermaatregelen overige beheermaatregelen"
     }
-  }, 
+  },
   {
-    "pk": 11, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 11,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "BR01", 
+      "code": "BR01",
       "description": "Bronmaatregelen verminderen emissie nutri\u00ebnten landbouw"
     }
-  }, 
+  },
   {
-    "pk": 12, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 12,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "BR02", 
+      "code": "BR02",
       "description": "Bronmaatregelen verminderen emissie zware metalen en overige microverontreinigingen landbouw"
     }
-  }, 
+  },
   {
-    "pk": 13, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 13,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "BR03", 
+      "code": "BR03",
       "description": "Bronmaatregelen verminderen emissie gewasbeschermingsmiddelen landbouw"
     }
-  }, 
+  },
   {
-    "pk": 14, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 14,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "BR04", 
+      "code": "BR04",
       "description": "Bronmaatregelen verminderen emissie scheepvaart"
     }
-  }, 
+  },
   {
-    "pk": 15, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 15,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "BR05", 
+      "code": "BR05",
       "description": "Bronmaatregelen verminderen emissie verkeer"
     }
-  }, 
+  },
   {
-    "pk": 16, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 16,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "BR06", 
+      "code": "BR06",
       "description": "Bronmaatregelen verminderen diffuse emissie industrie"
     }
-  }, 
+  },
   {
-    "pk": 17, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 17,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "BR07", 
+      "code": "BR07",
       "description": "Bronmaatregelen saneren uitlogende oeverbescherming"
     }
-  }, 
+  },
   {
-    "pk": 18, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 18,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "BR08", 
+      "code": "BR08",
       "description": "Bronmaatregelen verminderen emissies bouwmaterialen"
     }
-  }, 
+  },
   {
-    "pk": 19, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 19,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "BR09", 
+      "code": "BR09",
       "description": "Bronmaatregelen verminderen emissie gewasbeschermingsmiddelen stad"
     }
-  }, 
+  },
   {
-    "pk": 20, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 20,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "BR10", 
+      "code": "BR10",
       "description": "Bronmaatregelen overige bronmaatregelen"
     }
-  }, 
+  },
   {
-    "pk": 21, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 21,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "GGOR", 
+      "code": "GGOR",
       "description": "Overige maatregelen GGOR maatregelen"
     }
-  }, 
+  },
   {
-    "pk": 22, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 22,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IM01", 
+      "code": "IM01",
       "description": "Immissiemaatregelen verminderen belasting RWZI \u2013 nutri\u00ebnten"
     }
-  }, 
+  },
   {
-    "pk": 23, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 23,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IM02", 
+      "code": "IM02",
       "description": "Immissiemaatregelen verminderen belasting RWZI \u2013 overige stoffen"
     }
-  }, 
+  },
   {
-    "pk": 24, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 24,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IM03", 
+      "code": "IM03",
       "description": "Immissiemaatregelen aanpakken overstorten gemengde stelsels"
     }
-  }, 
+  },
   {
-    "pk": 25, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 25,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IM04", 
+      "code": "IM04",
       "description": "Immissiemaatregelen zuiveren + afkoppelen verhard oppervlak"
     }
-  }, 
+  },
   {
-    "pk": 26, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 26,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IM05", 
+      "code": "IM05",
       "description": "Immissiemaatregelen herstellen lekke riolen"
     }
-  }, 
+  },
   {
-    "pk": 27, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 27,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IM06", 
+      "code": "IM06",
       "description": "Immissiemaatregelen opheffen ongezuiverde lozingen"
     }
-  }, 
+  },
   {
-    "pk": 28, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 28,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IM07", 
+      "code": "IM07",
       "description": "Immissiemaatregelen spuitvrije zones"
     }
-  }, 
+  },
   {
-    "pk": 29, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 29,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IM08", 
+      "code": "IM08",
       "description": "Immissiemaatregelen mestvrije zones"
     }
-  }, 
+  },
   {
-    "pk": 30, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 30,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IM09", 
+      "code": "IM09",
       "description": "Immissiemaatregelen aanleg zuiveringsmoeras bij lozings- en/of innamepunt"
     }
-  }, 
+  },
   {
-    "pk": 31, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 31,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IM10", 
+      "code": "IM10",
       "description": "Immissiemaatregelen saneren verontreinigde landbodems"
     }
-  }, 
+  },
   {
-    "pk": 32, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 32,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IM11", 
+      "code": "IM11",
       "description": "Immissiemaatregelen saneren verontreinigde landbodem en/of grondwater"
     }
-  }, 
+  },
   {
-    "pk": 33, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 33,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IM12", 
+      "code": "IM12",
       "description": "Immissiemaatregelen overige emissiereducerende maatregelen"
     }
-  }, 
+  },
   {
-    "pk": 34, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 34,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IN01", 
+      "code": "IN01",
       "description": "Inrichtingsmaatregelen vasthouden water in haarvaten van het systeem"
     }
-  }, 
+  },
   {
-    "pk": 35, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 35,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IN02", 
+      "code": "IN02",
       "description": "Inrichtingsmaatregelen omleiden/scheiden waterstromen"
     }
-  }, 
+  },
   {
-    "pk": 36, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 36,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IN03", 
+      "code": "IN03",
       "description": "Inrichtingsmaatregelen invoeren/wijzigen doorspoelen"
     }
-  }, 
+  },
   {
-    "pk": 37, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 37,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IN04", 
+      "code": "IN04",
       "description": "Inrichtingsmaatregelen verbreden (snel) stromend water/hermeanderen, NVO < 3 m"
     }
-  }, 
+  },
   {
-    "pk": 38, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 38,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IN05", 
+      "code": "IN05",
       "description": "Inrichtingsmaatregelen verbreden (snel) stromend water/hermeanderen, 3m < NVO < 10 m"
     }
-  }, 
+  },
   {
-    "pk": 39, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 39,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IN06", 
+      "code": "IN06",
       "description": "Inrichtingsmaatregelen verbreden (snel) stromend water/ hermeanderen , NVO >10 m"
     }
-  }, 
+  },
   {
-    "pk": 40, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 40,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IN07", 
+      "code": "IN07",
       "description": "Inrichtingsmaatregelen verbreden watergang/-systeem langzaam stromend of stilstaand: NVO < 3 m"
     }
-  }, 
+  },
   {
-    "pk": 41, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 41,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IN08", 
+      "code": "IN08",
       "description": "Inrichtingsmaatregelen verbreden watergang/-systeem langzaam stromend of stilstaand: 3m < NVO < 10 m"
     }
-  }, 
+  },
   {
-    "pk": 42, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 42,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IN09", 
+      "code": "IN09",
       "description": "Inrichtingsmaatregelen verbreden watergang/-systeem langzaam stromend of stilstaand: NVO >10 m "
     }
-  }, 
+  },
   {
-    "pk": 43, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 43,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IN10", 
+      "code": "IN10",
       "description": "Inrichtingsmaatregelen verbreden watergang/-systeem: aansluiten wetland of verlagen uiterwaard"
     }
-  }, 
+  },
   {
-    "pk": 44, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 44,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IN11", 
+      "code": "IN11",
       "description": "Inrichtingsmaatregelen aanleg nevengeul/herstel verbinding"
     }
-  }, 
+  },
   {
-    "pk": 45, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 45,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IN12", 
+      "code": "IN12",
       "description": "Inrichtingsmaatregelen verdiepen watergang/-systeem (overdimensioneren)"
     }
-  }, 
+  },
   {
-    "pk": 46, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 46,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IN13", 
+      "code": "IN13",
       "description": "Inrichtingsmaatregelen verondiepen watergang/-systeem"
     }
-  }, 
+  },
   {
-    "pk": 47, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 47,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IN14", 
+      "code": "IN14",
       "description": "Inrichtingsmaatregelen aanpassen streefpeil"
     }
-  }, 
+  },
   {
-    "pk": 48, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 48,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IN15", 
+      "code": "IN15",
       "description": "Inrichtingsmaatregelen Vispasseerbaar maken kunstwerken"
     }
-  }, 
+  },
   {
-    "pk": 49, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 49,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IN16", 
+      "code": "IN16",
       "description": "Inrichtingsmaatregelen verwijderen stuw"
     }
-  }, 
+  },
   {
-    "pk": 50, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 50,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IN17", 
+      "code": "IN17",
       "description": "Inrichtingsmaatregelen aanleg speciale leefgebieden voor vis"
     }
-  }, 
+  },
   {
-    "pk": 51, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 51,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IN18", 
+      "code": "IN18",
       "description": "Inrichtingsmaatregelen aanleg speciale leefgebieden flora en fauna"
     }
-  }, 
+  },
   {
-    "pk": 52, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 52,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IN19", 
+      "code": "IN19",
       "description": "Inrichtingsmaatregelen aanleg zuiveringsmoeras"
     }
-  }, 
+  },
   {
-    "pk": 53, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 53,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "IN20", 
+      "code": "IN20",
       "description": "Inrichtingsmaatregelen overige inrichtingsmaatregelen"
     }
-  }, 
+  },
   {
-    "pk": 54, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 54,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "RO01", 
+      "code": "RO01",
       "description": "RO-maatregelen wijzigen landbouwfunctie"
     }
-  }, 
+  },
   {
-    "pk": 55, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 55,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "RO02", 
+      "code": "RO02",
       "description": "RO-maatregelen beperken recreatie"
     }
-  }, 
+  },
   {
-    "pk": 56, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 56,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "RO03", 
+      "code": "RO03",
       "description": "RO-maatregelen beperken scheepvaart"
     }
-  }, 
+  },
   {
-    "pk": 57, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 57,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "RO04", 
+      "code": "RO04",
       "description": "RO-maatregelen wijzigen visserij"
     }
-  }, 
+  },
   {
-    "pk": 58, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 58,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "RO05", 
+      "code": "RO05",
       "description": "RO-maatregelen wijzigen stedelijke functie"
     }
-  }, 
+  },
   {
-    "pk": 59, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 59,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "RO06", 
+      "code": "RO06",
       "description": "RO-maatregelen mijden risicovolle functies in grondwaterbeschermingsgebieden"
     }
-  }, 
+  },
   {
-    "pk": 60, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 60,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "RO07", 
+      "code": "RO07",
       "description": "RO-maatregelen verminderen/verplaatsen van de grondwaterwinning"
     }
-  }, 
+  },
   {
-    "pk": 61, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 61,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "RO08", 
+      "code": "RO08",
       "description": "RO-maatregelen Stopzetten van kleine winningen (campings)"
     }
-  }, 
+  },
   {
-    "pk": 62, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 62,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "RO09", 
+      "code": "RO09",
       "description": "RO-maatregelen overige RO-maatregelen"
     }
-  }, 
+  },
   {
-    "pk": 70, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 70,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "S01", 
+      "code": "S01",
       "description": "Instrumentele maatregelen uitvoeren onderzoek"
     }
-  }, 
+  },
   {
-    "pk": 71, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 71,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "S02", 
+      "code": "S02",
       "description": "Instrumentele maatregelen geven van voorlichting"
     }
-  }, 
+  },
   {
-    "pk": 72, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 72,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "S03", 
+      "code": "S03",
       "description": "Instrumentele maatregelen aanpassen/introduceren (nieuwe) wetgeving"
     }
-  }, 
+  },
   {
-    "pk": 73, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 73,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "S04", 
+      "code": "S04",
       "description": "Instrumentele maatregelen opstellen nieuw plan"
     }
-  }, 
+  },
   {
-    "pk": 74, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 74,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "S05", 
+      "code": "S05",
       "description": "Instrumentele maatregelen financi\u00eble maatregelen"
     }
-  }, 
+  },
   {
-    "pk": 75, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 75,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "S06", 
+      "code": "S06",
       "description": "Instrumentele maatregelen overige instrumentele maatregelen"
     }
-  }, 
+  },
   {
-    "pk": 69, 
-    "model": "lizard_krw.measurecode", 
+    "pk": 69,
+    "model": "lizard_krw.measurecode",
     "fields": {
-      "code": "WB21", 
+      "code": "WB21",
       "description": "Overige maatregelen WB21 maatregelen"
     }
-  }, 
+  },
   {
-    "pk": 1, 
-    "model": "lizard_krw.unit", 
+    "pk": 1,
+    "model": "lizard_krw.unit",
     "fields": {
-      "description": "", 
+      "description": "",
       "sign": "ha"
     }
-  }, 
+  },
   {
-    "pk": 2, 
-    "model": "lizard_krw.unit", 
+    "pk": 2,
+    "model": "lizard_krw.unit",
     "fields": {
-      "description": "", 
+      "description": "",
       "sign": "stuks"
     }
-  }, 
+  },
   {
-    "pk": 3, 
-    "model": "lizard_krw.unit", 
+    "pk": 3,
+    "model": "lizard_krw.unit",
     "fields": {
-      "description": "", 
+      "description": "",
       "sign": "km"
     }
-  }, 
+  },
   {
-    "pk": 4, 
-    "model": "lizard_krw.unit", 
+    "pk": 4,
+    "model": "lizard_krw.unit",
     "fields": {
-      "description": "", 
+      "description": "",
       "sign": "m3"
     }
-  }, 
+  },
   {
-    "pk": 1, 
-    "model": "lizard_krw.executive", 
+    "pk": 1,
+    "model": "lizard_krw.executive",
     "fields": {
       "name": "Landbouw"
     }
-  }, 
+  },
   {
-    "pk": 2, 
-    "model": "lizard_krw.executive", 
+    "pk": 2,
+    "model": "lizard_krw.executive",
     "fields": {
       "name": "Onbekend"
     }
-  }, 
+  },
   {
-    "pk": 3, 
-    "model": "lizard_krw.executive", 
+    "pk": 3,
+    "model": "lizard_krw.executive",
     "fields": {
       "name": "Overig"
     }
-  }, 
+  },
   {
-    "pk": 4, 
-    "model": "lizard_krw.executive", 
+    "pk": 4,
+    "model": "lizard_krw.executive",
     "fields": {
       "name": "Provincie"
     }
-  }, 
+  },
   {
-    "pk": 5, 
-    "model": "lizard_krw.executive", 
+    "pk": 5,
+    "model": "lizard_krw.executive",
     "fields": {
       "name": "Rijk"
     }
-  }, 
+  },
   {
-    "pk": 6, 
-    "model": "lizard_krw.executive", 
+    "pk": 6,
+    "model": "lizard_krw.executive",
     "fields": {
       "name": "Rijkswaterstaat"
     }
-  }, 
+  },
   {
-    "pk": 7, 
-    "model": "lizard_krw.executive", 
+    "pk": 7,
+    "model": "lizard_krw.executive",
     "fields": {
       "name": "Terreinbeheerder"
     }
-  }, 
+  },
   {
-    "pk": 8, 
-    "model": "lizard_krw.executive", 
+    "pk": 8,
+    "model": "lizard_krw.executive",
     "fields": {
       "name": "Waterschap"
     }
-  }, 
+  },
   {
-    "pk": 6, 
-    "model": "lizard_krw.organization", 
+    "pk": 6,
+    "model": "lizard_krw.organization",
     "fields": {
       "name": "Gemeente"
     }
-  }, 
+  },
   {
-    "pk": 7, 
-    "model": "lizard_krw.organization", 
+    "pk": 7,
+    "model": "lizard_krw.organization",
     "fields": {
       "name": "Niet van toepassing"
     }
-  }, 
+  },
   {
-    "pk": 1, 
-    "model": "lizard_krw.organization", 
+    "pk": 1,
+    "model": "lizard_krw.organization",
     "fields": {
       "name": "Overig"
     }
-  }, 
+  },
   {
-    "pk": 2, 
-    "model": "lizard_krw.organization", 
+    "pk": 2,
+    "model": "lizard_krw.organization",
     "fields": {
       "name": "Provincie"
     }
-  }, 
+  },
   {
-    "pk": 3, 
-    "model": "lizard_krw.organization", 
+    "pk": 3,
+    "model": "lizard_krw.organization",
     "fields": {
       "name": "Rijkswaterstaat"
     }
-  }, 
+  },
   {
-    "pk": 4, 
-    "model": "lizard_krw.organization", 
+    "pk": 4,
+    "model": "lizard_krw.organization",
     "fields": {
       "name": "Terreinbeheerder"
     }
-  }, 
+  },
   {
-    "pk": 5, 
-    "model": "lizard_krw.organization", 
+    "pk": 5,
+    "model": "lizard_krw.organization",
     "fields": {
       "name": "Waterschap"
     }
-  }, 
+  },
   {
-    "pk": 1, 
-    "model": "lizard_krw.department", 
+    "pk": 1,
+    "model": "lizard_krw.department",
     "fields": {
-      "organization": null, 
+      "organization": null,
       "name": "Afdeling"
     }
-  }, 
+  },
   {
-    "pk": 7, 
-    "model": "lizard_krw.measurestatus", 
+    "pk": 7,
+    "model": "lizard_krw.measurestatus",
     "fields": {
-      "color": "ffff00", 
-      "name": "Afgerond", 
+      "color": "ffff00",
+      "name": "Afgerond",
       "value": 1.0
     }
-  }, 
+  },
   {
-    "pk": 6, 
-    "model": "lizard_krw.measurestatus", 
+    "pk": 6,
+    "model": "lizard_krw.measurestatus",
     "fields": {
-      "color": "00ff00", 
-      "name": "In Uitvoering", 
+      "color": "00ff00",
+      "name": "In Uitvoering",
       "value": 0.59999999999999998
     }
-  }, 
+  },
   {
-    "pk": 1, 
-    "model": "lizard_krw.measurestatus", 
+    "pk": 1,
+    "model": "lizard_krw.measurestatus",
     "fields": {
-      "color": "00ffff", 
-      "name": "Gepland", 
+      "color": "00ffff",
+      "name": "Gepland",
       "value": 0.40000000000000002
     }
-  }, 
+  },
   {
-    "pk": 2, 
-    "model": "lizard_krw.measurestatus", 
+    "pk": 2,
+    "model": "lizard_krw.measurestatus",
     "fields": {
-      "color": "0080ff", 
-      "name": "Begroot", 
+      "color": "0080ff",
+      "name": "Begroot",
       "value": 0.29999999999999999
     }
-  }, 
+  },
   {
-    "pk": 3, 
-    "model": "lizard_krw.measurestatus", 
+    "pk": 3,
+    "model": "lizard_krw.measurestatus",
     "fields": {
-      "color": "0000ff", 
-      "name": "Concept", 
+      "color": "0000ff",
+      "name": "Concept",
       "value": 0.20000000000000001
     }
-  }, 
+  },
   {
-    "pk": 4, 
-    "model": "lizard_krw.measurestatus", 
+    "pk": 4,
+    "model": "lizard_krw.measurestatus",
     "fields": {
-      "color": "8000ff", 
-      "name": "Nieuw", 
+      "color": "8000ff",
+      "name": "Nieuw",
       "value": 0.10000000000000001
     }
-  }, 
+  },
   {
-    "pk": 5, 
-    "model": "lizard_krw.measurestatus", 
+    "pk": 5,
+    "model": "lizard_krw.measurestatus",
     "fields": {
-      "color": "bdbdbd", 
-      "name": "Onbekend", 
+      "color": "bdbdbd",
+      "name": "Onbekend",
       "value": 0.0
     }
-  }, 
+  },
   {
-    "pk": 6, 
-    "model": "lizard_krw.measurestatusmoment", 
+    "pk": 6,
+    "model": "lizard_krw.measurestatusmoment",
     "fields": {
-      "status": 5, 
-      "datetime": "2006-01-01", 
-      "is_planning": false, 
-      "description": "", 
+      "status": 5,
+      "datetime": "2006-01-01",
+      "is_planning": false,
+      "description": "",
       "measure": 1
     }
-  }, 
+  },
   {
-    "pk": 2, 
-    "model": "lizard_krw.measurestatusmoment", 
+    "pk": 2,
+    "model": "lizard_krw.measurestatusmoment",
     "fields": {
-      "status": 7, 
-      "datetime": "2008-06-10", 
-      "is_planning": true, 
-      "description": "", 
+      "status": 7,
+      "datetime": "2008-06-10",
+      "is_planning": true,
+      "description": "",
       "measure": 4
     }
-  }, 
+  },
   {
-    "pk": 1, 
-    "model": "lizard_krw.measurestatusmoment", 
+    "pk": 1,
+    "model": "lizard_krw.measurestatusmoment",
     "fields": {
-      "status": 7, 
-      "datetime": "2009-01-25", 
-      "is_planning": false, 
-      "description": "", 
+      "status": 7,
+      "datetime": "2009-01-25",
+      "is_planning": false,
+      "description": "",
       "measure": 4
     }
-  }, 
+  },
   {
-    "pk": 5, 
-    "model": "lizard_krw.measurestatusmoment", 
+    "pk": 5,
+    "model": "lizard_krw.measurestatusmoment",
     "fields": {
-      "status": 7, 
-      "datetime": "2010-07-01", 
-      "is_planning": false, 
-      "description": "", 
+      "status": 7,
+      "datetime": "2010-07-01",
+      "is_planning": false,
+      "description": "",
       "measure": 2
     }
-  }, 
+  },
   {
-    "pk": 4, 
-    "model": "lizard_krw.measurestatusmoment", 
+    "pk": 4,
+    "model": "lizard_krw.measurestatusmoment",
     "fields": {
-      "status": 6, 
-      "datetime": "2010-08-01", 
-      "is_planning": true, 
-      "description": "", 
+      "status": 6,
+      "datetime": "2010-08-01",
+      "is_planning": true,
+      "description": "",
       "measure": 1
     }
-  }, 
+  },
   {
-    "pk": 3, 
-    "model": "lizard_krw.measurestatusmoment", 
+    "pk": 3,
+    "model": "lizard_krw.measurestatusmoment",
     "fields": {
-      "status": 6, 
-      "datetime": "2010-09-01", 
-      "is_planning": false, 
-      "description": "", 
+      "status": 6,
+      "datetime": "2010-09-01",
+      "is_planning": false,
+      "description": "",
       "measure": 1
     }
-  }, 
+  },
   {
-    "pk": 1, 
-    "model": "lizard_krw.urgency", 
+    "pk": 1,
+    "model": "lizard_krw.urgency",
     "fields": {
-      "name": "autonoom", 
+      "name": "autonoom",
       "value": 0.0
     }
-  }, 
+  },
   {
-    "pk": 1, 
-    "model": "lizard_krw.measurecollection", 
+    "pk": 1,
+    "model": "lizard_krw.measurecollection",
     "fields": {
-      "need_co_funding": false, 
-      "name": "Alles", 
-      "estimated_costs_total": null, 
-      "area": [], 
-      "responsible_department": 1, 
-      "waterbody": 6, 
-      "urgency": 1, 
-      "estimated_costs_internal": null, 
-      "shortname": "Alles", 
+      "need_co_funding": false,
+      "name": "Alles",
+      "area": [],
+      "responsible_department": 1,
+      "waterbody": 6,
+      "urgency": 1,
+      "shortname": "Alles",
       "responsible_organization": 1
     }
-  }, 
+  },
   {
-    "pk": 2, 
-    "model": "lizard_krw.measurecollection", 
+    "pk": 2,
+    "model": "lizard_krw.measurecollection",
     "fields": {
-      "need_co_funding": false, 
-      "name": "Pakket2", 
-      "estimated_costs_total": null, 
-      "area": [], 
-      "responsible_department": 1, 
-      "waterbody": 6, 
-      "urgency": 1, 
-      "estimated_costs_internal": null, 
-      "shortname": "Pakket2", 
+      "need_co_funding": false,
+      "name": "Pakket2",
+      "area": [],
+      "responsible_department": 1,
+      "waterbody": 6,
+      "urgency": 1,
+      "shortname": "Pakket2",
       "responsible_organization": 2
     }
-  }, 
+  },
   {
-    "pk": 1, 
-    "model": "lizard_krw.measure", 
+    "pk": 1,
+    "model": "lizard_krw.measure",
     "fields": {
-      "category": 9, 
-      "total_costs": null, 
-      "code": 3, 
-      "aggregation_type": 1, 
-      "parent": null, 
-      "is_indicator": true, 
-      "description": "", 
-      "executive": 2, 
-      "period": null, 
-      "value": 0.0, 
-      "measure_collection": 2, 
-      "waterbody": 6, 
-      "unit": 2, 
-      "exploitation_costs": null, 
-      "owner": 1, 
-      "investment_costs": null, 
-      "identity": "", 
+      "category": 9,
+      "total_costs": null,
+      "code": 3,
+      "aggregation_type": 1,
+      "parent": null,
+      "is_indicator": true,
+      "description": "",
+      "executive": 2,
+      "period": null,
+      "value": 0.0,
+      "measure_collection": 2,
+      "waterbody": 6,
+      "unit": 2,
+      "exploitation_costs": null,
+      "owner": 1,
+      "investment_costs": null,
+      "identity": "",
       "name": "Test"
     }
-  }, 
+  },
   {
-    "pk": 2, 
-    "model": "lizard_krw.measure", 
+    "pk": 2,
+    "model": "lizard_krw.measure",
     "fields": {
-      "category": 9, 
-      "total_costs": null, 
-      "code": 3, 
-      "aggregation_type": 1, 
-      "parent": null, 
-      "is_indicator": true, 
-      "description": "", 
-      "executive": 2, 
-      "period": null, 
-      "value": 0.0, 
-      "measure_collection": 2, 
-      "waterbody": 6, 
-      "unit": 1, 
-      "exploitation_costs": null, 
-      "owner": 1, 
-      "investment_costs": null, 
-      "identity": "", 
+      "category": 9,
+      "total_costs": null,
+      "code": 3,
+      "aggregation_type": 1,
+      "parent": null,
+      "is_indicator": true,
+      "description": "",
+      "executive": 2,
+      "period": null,
+      "value": 0.0,
+      "measure_collection": 2,
+      "waterbody": 6,
+      "unit": 1,
+      "exploitation_costs": null,
+      "owner": 1,
+      "investment_costs": null,
+      "identity": "",
       "name": "Test2"
     }
-  }, 
+  },
   {
-    "pk": 3, 
-    "model": "lizard_krw.measure", 
+    "pk": 3,
+    "model": "lizard_krw.measure",
     "fields": {
-      "category": 9, 
-      "total_costs": null, 
-      "code": 3, 
-      "aggregation_type": 1, 
-      "parent": null, 
-      "is_indicator": true, 
-      "description": "", 
-      "executive": 3, 
-      "period": null, 
-      "value": 0.0, 
-      "measure_collection": 1, 
-      "waterbody": 6, 
-      "unit": 1, 
-      "exploitation_costs": null, 
-      "owner": 1, 
-      "investment_costs": null, 
-      "identity": "", 
+      "category": 9,
+      "total_costs": null,
+      "code": 3,
+      "aggregation_type": 1,
+      "parent": null,
+      "is_indicator": true,
+      "description": "",
+      "executive": 3,
+      "period": null,
+      "value": 0.0,
+      "measure_collection": 1,
+      "waterbody": 6,
+      "unit": 1,
+      "exploitation_costs": null,
+      "owner": 1,
+      "investment_costs": null,
+      "identity": "",
       "name": "Test3"
     }
-  }, 
+  },
   {
-    "pk": 4, 
-    "model": "lizard_krw.measure", 
+    "pk": 4,
+    "model": "lizard_krw.measure",
     "fields": {
-      "category": 9, 
-      "total_costs": null, 
-      "code": 3, 
-      "aggregation_type": 1, 
-      "parent": null, 
-      "is_indicator": true, 
-      "description": "", 
-      "executive": 2, 
-      "period": null, 
-      "value": 1.0, 
-      "measure_collection": 1, 
-      "waterbody": 6, 
-      "unit": 1, 
-      "exploitation_costs": null, 
-      "owner": 1, 
-      "investment_costs": null, 
-      "identity": "", 
+      "category": 9,
+      "total_costs": null,
+      "code": 3,
+      "aggregation_type": 1,
+      "parent": null,
+      "is_indicator": true,
+      "description": "",
+      "executive": 2,
+      "period": null,
+      "value": 1.0,
+      "measure_collection": 1,
+      "waterbody": 6,
+      "unit": 1,
+      "exploitation_costs": null,
+      "owner": 1,
+      "investment_costs": null,
+      "identity": "",
       "name": "Test4"
     }
   }
