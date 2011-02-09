@@ -149,6 +149,7 @@ def krw_score_graph(request, waterbody_slug):
     categories = [SCORE_CATEGORY_FYTO, SCORE_CATEGORY_FLORA,
                   SCORE_CATEGORY_FAUNA, SCORE_CATEGORY_VIS]
     for category in categories:
+        print display_colors[category]
         krw_graph.axes.broken_barh(display_score[category],
                                    display_positions[category],
                                    facecolors=display_colors[category],
@@ -528,15 +529,15 @@ def krw_scores(request, waterbody_slug,
     Displays big table with krw scores for a specific waterbody.
     """
     waterbody = WaterBody.objects.get(slug=waterbody_slug)
-    scores = Score.objects.filter(waterbody=waterbody)
-    goalscores = GoalScore.objects.filter(waterbody=waterbody)
 
     scores_list = []  # Must contain list of {scores, name, goalscore}
 
     for category in [SCORE_CATEGORY_FYTO, SCORE_CATEGORY_FLORA,
                      SCORE_CATEGORY_FAUNA, SCORE_CATEGORY_VIS]:
-        scores = scores.filter(category=category)
-        goalscores = goalscores.filter(category=category)
+        scores = Score.objects.filter(
+            waterbody=waterbody, category=category)
+        goalscores = GoalScore.objects.filter(
+            waterbody=waterbody, category=category)
         category_name = SCORE_CATEGORIES[category]
         scores_list.append({'scores': scores,
                            'goalscores': goalscores,

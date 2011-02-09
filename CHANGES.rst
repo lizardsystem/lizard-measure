@@ -5,7 +5,7 @@ Changelog of lizard-krw
 1.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fixed bug with krw scores overview.
 
 
 1.0 (2011-02-08)

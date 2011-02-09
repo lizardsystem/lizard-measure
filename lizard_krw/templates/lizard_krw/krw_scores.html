@@ -49,6 +49,7 @@
 
   {% for scores_item in scores_list %}
     <h3>{{ scores_item.name }}</h3>
+    Doelscore(s):
     <ul>
       {% for goalscore in scores_item.goalscores %}
       <li>{{ goalscore.start_date|date:"Y-m-d" }}: {{ goalscore.alpha_score }}</li>
