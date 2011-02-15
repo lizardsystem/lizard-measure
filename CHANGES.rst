@@ -2,8 +2,8 @@ Changelog of lizard-krw
 ===================================================
 
 
-1.1 (unreleased)
-----------------
+1.0.2 (2011-02-15)
+------------------
 
 - Moved krw.png icon to app_icons subdir.
 
