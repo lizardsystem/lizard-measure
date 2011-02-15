@@ -149,7 +149,6 @@ def krw_score_graph(request, waterbody_slug):
     categories = [SCORE_CATEGORY_FYTO, SCORE_CATEGORY_FLORA,
                   SCORE_CATEGORY_FAUNA, SCORE_CATEGORY_VIS]
     for category in categories:
-        print display_colors[category]
         krw_graph.axes.broken_barh(display_score[category],
                                    display_positions[category],
                                    facecolors=display_colors[category],
