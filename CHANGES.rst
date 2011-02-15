@@ -5,6 +5,8 @@ Changelog of lizard-krw
 1.1 (unreleased)
 ----------------
 
+- Moved krw.png icon to app_icons subdir.
+
 - Fixed bug with krw scores overview.
 
 
