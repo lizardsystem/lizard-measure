@@ -2,7 +2,7 @@ Changelog of lizard-krw
 ===================================================
 
 
-1.0.3 (unreleased)
+1.0.3 (2011-03-10)
 ------------------
 
 - Changed shape_id to shape_slug in tiny_map (removes hardcoding your
