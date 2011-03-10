@@ -77,11 +77,12 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
             self.waterbody_slug = self.layer_arguments['waterbody_slug']
         else:
             self.waterbody_slug = None
-        if 'shape_id' in self.layer_arguments:
-            self.shape_id = self.layer_arguments['shape_id']
-            self.shape = Shape.objects.get(pk=self.shape_id)
+        if 'shape_slug' in self.layer_arguments:
+            self.shape_slug = self.layer_arguments['shape_slug']
+            self.shape = Shape.objects.get(slug=self.shape_slug)
             self.shape_filename = str(self.shape.shp_file.file.name)
         else:
+            # Default shape
             self.shape_filename = pkg_resources.resource_filename(
                 'lizard_map',
                 'test_shapefiles/KRWwaterlichamen_merge.shp')

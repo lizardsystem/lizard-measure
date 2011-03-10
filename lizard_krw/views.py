@@ -288,8 +288,8 @@ def krw_measure_graph(request,
 
 
 # TODO: cache should be different for IE...
-@cache_page(24 * 60 * 60)
-def tiny_map(request, waterbody_slug=None, shape_id=None,
+#@cache_page(24 * 60 * 60)
+def tiny_map(request, waterbody_slug=None, shape_slug=None,
              bbox=(523838.00391791, 6818214.5267836,
                    575010.91942212, 6869720.7532931)):
     """Return PNG of area map. Code based on lizard_map.views:wms"""
@@ -304,8 +304,8 @@ def tiny_map(request, waterbody_slug=None, shape_id=None,
     layer_arguments = {
         'layer': 'background',
         'waterbody_slug': waterbody_slug}
-    if shape_id is not None:
-        layer_arguments.update({'shape_id': shape_id})
+    if shape_slug is not None:
+        layer_arguments.update({'shape_slug': shape_slug})
     workspace_item_adapter = WorkspaceItemAdapterKrw(
         None,
         layer_arguments=layer_arguments)

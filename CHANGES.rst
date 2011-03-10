@@ -5,7 +5,8 @@ Changelog of lizard-krw
 1.0.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Changed shape_id to shape_slug in tiny_map (removes hardcoding your
+  shape_id in urls.py).
 
 
 1.0.2 (2011-02-15)
