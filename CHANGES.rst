@@ -5,7 +5,7 @@ Changelog of lizard-krw
 1.0.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Updated views for using lizard-map 1.60.
 
 
 1.0.3 (2011-03-10)
