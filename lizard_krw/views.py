@@ -387,7 +387,7 @@ def krw_browser(request, template='lizard_krw/krw-browser.html',
 
     """
     if crumbs_prepend is not None:
-        crumbs = crumbs_prepend
+        crumbs = list(crumbs_prepend)
     else:
         crumbs = [{'name': 'home', 'url': '/'}]
     crumbs.append({'name': 'krw gegevens',
