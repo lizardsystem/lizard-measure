@@ -5,6 +5,8 @@ Changelog of lizard-krw
 1.0.4 (unreleased)
 ------------------
 
+- Updated views with date popup.
+
 - Updated views for using lizard-map 1.60.
 
 - Deleted action-icon ".ss_calendar_view_day" and date_popup from:

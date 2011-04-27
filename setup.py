@@ -14,7 +14,7 @@ install_requires = [
     'Django',
     'django-staticfiles',
     'django-extensions',
-    'lizard-map >= 1.60',
+    'lizard-map >= 1.71',
     'lizard-ui',
     'lizard-fewsunblobbed',
     'south',
