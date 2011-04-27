@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.views.decorators.cache import cache_page
+# from django.views.decorators.cache import cache_page
 from matplotlib.dates import date2num
 from matplotlib.lines import Line2D
 import Image
@@ -31,10 +31,8 @@ from lizard_krw.models import WaterBody
 from lizard_fewsunblobbed.models import Timeserie
 from lizard_map import coordinates
 from lizard_map.adapter import Graph
-from lizard_map.daterange import DateRangeForm
 from lizard_map.daterange import current_start_end_dates
 from lizard_map.models import Workspace
-from lizard_map.workspace import WorkspaceManager
 
 
 HOMEPAGE_KEY = 1  # Primary key of the Workspace for rendering the homepage.
@@ -343,8 +341,6 @@ def waterbody_summary(request,
                         indicators[:2]]
     unused_indicators = [indicator for indicator in
                          indicators[2:]]
-    date_range_form = DateRangeForm(
-        current_start_end_dates(request, for_form=True))
     crumbs = [CRUMB_HOMEPAGE,
               {'name': water_body.name,
                'url': water_body.get_absolute_url()},]
@@ -355,7 +351,6 @@ def waterbody_summary(request,
          'indicators': indicators,
          'shown_indicators': shown_indicators,
          'unused_indicators': unused_indicators,
-         'date_range_form': date_range_form,
          'crumbs': crumbs},
         context_instance=RequestContext(request))
 
@@ -465,9 +460,6 @@ def measure_detail(request, measure_id,
                    template='lizard_krw/measure.html'):
     measure = get_object_or_404(Measure, pk=measure_id)
 
-    date_range_form = DateRangeForm(
-        current_start_end_dates(request, for_form=True))
-
     crumbs = [CRUMB_HOMEPAGE,
               {'name': measure.waterbody.name,
                'url': measure.waterbody.get_absolute_url()},
@@ -481,7 +473,6 @@ def measure_detail(request, measure_id,
     return render_to_response(
         template,
         {'measure': measure,
-         'date_range_form': date_range_form,
          'crumbs': crumbs
          },
         context_instance=RequestContext(request))
@@ -490,8 +481,6 @@ def measure_detail(request, measure_id,
 def krw_waterbody_measures(request, waterbody_slug,
                            template='lizard_krw/waterbody_measures.html'):
     waterbody = get_object_or_404(WaterBody, slug=waterbody_slug)
-    date_range_form = DateRangeForm(
-        current_start_end_dates(request, for_form=True))
     # Obsolete: use MeasureCollections instead
     # get measures without parent: main measures
     main_measures = waterbody.measure_set.filter(parent=None)
@@ -508,7 +497,6 @@ def krw_waterbody_measures(request, waterbody_slug,
     return render_to_response(
         template,
         {'waterbody': waterbody,
-         'date_range_form': date_range_form,
          'main_measures': main_measures,
          'measure_collections': measure_collections,
          'crumbs': crumbs
