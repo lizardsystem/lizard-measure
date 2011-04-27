@@ -357,7 +357,21 @@ def waterbody_summary(request,
 
 def select_area(request, template='lizard_krw/select_area.html',
                 homepage_key=HOMEPAGE_KEY):
-    water_bodies = WaterBody.objects.all()
+    """
+    Select area for waterbody summary.
+    """
+    water_bodies = WaterBody.objects.exclude(indicators=None)
+    show_water_bodies = []
+    for water_body in water_bodies:
+        show_body = False
+        for indicator in water_body.indicators.all():
+            ts = Timeserie.objects.get(pk=indicator.timeserie_id)
+            if ts.has_data:
+                show_body = True
+                continue
+        if show_body:
+            show_water_bodies.append(water_body)
+
     special_homepage_workspace = get_object_or_404(
         Workspace, pk=homepage_key)
 
