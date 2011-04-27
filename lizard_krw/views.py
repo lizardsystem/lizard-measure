@@ -255,7 +255,7 @@ def krw_measure_graph(request,
 
     start_date, end_date = current_start_end_dates(request)
     # one cannot realize things in the future, so do not visualize
-    end_date_realized = min(end_date, datetime.datetime.now().date())
+    end_date_realized = min(end_date, datetime.datetime.now())
     width = request.GET.get('width', 1000)
     height = request.GET.get('height', 400)
     krw_graph = Graph(start_date, end_date, width, height)
