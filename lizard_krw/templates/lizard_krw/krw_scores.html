@@ -22,12 +22,8 @@
 </div>
 <div class="sidebarbox sidebarbox-stretched">
   <h2>
-    Info
-    <span class="ss_sprite ss_calendar_view_day sidebarbox-action-icon popup-trigger"
-          rel="#summary-datepicker">&nbsp;</span>
   </h2>
   <div>
-    {% date_popup %}
     <div>
       <p>Bovenaan wordt een afbeelding getoond voor de krw scores van waterlichaam {{ waterbody.name }}.</p>
 
@@ -37,6 +33,20 @@
 </div>
 {% endblock %}
 
+{% block above-content %}
+{{ block.super }}
+<ul class="map-actions">
+  {% if date_range_form %}
+  <li>
+    <a id="summary-datepicker-a"
+       href="#"
+       class="ss_sprite ss_calendar_view_day action-icon popup-trigger"
+       rel="#summary-datepicker"
+       title= "van {{ date_start_period|date:"d-m-Y" }} tot {{ date_end_period|date:"d-m-Y" }} "></a>
+  </li>
+  {% endif %}
+  {% date_popup %}
+{% endblock above-content %}
 
 {% block content %}
 <div id="textual">

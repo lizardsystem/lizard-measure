@@ -6,7 +6,15 @@ Changelog of lizard-krw
 ------------------
 
 - Updated views for using lizard-map 1.60.
-
+- Deleted action-icon ".ss_calendar_view_day" and date_popup from:
+  /templates/lizard_krw/water_body_summary.html
+  /templates/lizard_krw/measure_collection.html
+  /templates/lizard_krw/waterbody_measures.html
+  /templates/lizard_krw/krw_scores.html
+  /templates/lizard_krw/measure.html
+- Added Action-icon ".ss_calendar_view_day" and date_popup to:
+  /templates/lizard_map/lizardgis.html
+  /templates/lizard_krw/krw_scores.html
 
 1.0.3 (2011-03-10)
 ------------------
