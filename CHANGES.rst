@@ -2,8 +2,8 @@ Changelog of lizard-krw
 ===================================================
 
 
-1.0.4 (unreleased)
-------------------
+1.1 (2011-04-27)
+----------------
 
 - Updated views with date popup.
 
