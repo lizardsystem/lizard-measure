@@ -89,26 +89,21 @@
 
       {% if shown_indicators %}
       <dt>Indicatoren</dt>
-      <dd>
         <ul>
         {% for indicator in shown_indicators %}
         <li>{{ indicator.timeserie.name }}{% if indicator.target_value %} richtwaarde: {{ indicator.target_value }}{% endif %}{% if indicator.boundary_value %} grenswaarde: {{ indicator.boundary_value }}{% endif %}</li>
         {% endfor %}
         </ul>
-      </dd>
       {% endif %}
 
       {% if unused_indicators %}
       <dt>Niet-getoonde indicatoren</dt>
-      <dd>
         <ul>
         {% for indicator in shown_indicators %}
         <li>{{ indicator.timeserie.name }}{% if indicator.target_value %} richtwaarde: {{ indicator.target_value }}{% endif %}{% if indicator.boundary_value %} grenswaarde: {{ indicator.boundary_value }}{% endif %}</li>
         {% endfor %}
         </ul>
-      </dd>
       {% endif %}
-
     </dl>
   </div>
 </div>

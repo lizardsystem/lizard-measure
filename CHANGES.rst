@@ -5,7 +5,7 @@ Changelog of lizard-krw
 1.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Changed lay-out of indicators of waterbodies.
 
 
 1.1 (2011-04-27)
