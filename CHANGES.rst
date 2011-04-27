@@ -7,7 +7,7 @@ Changelog of lizard-krw
 
 - Changed lay-out of indicators of waterbodies.
 
-- Fixed error by graph., changed date to datetime in views krw_measure_graph()
+- Fixed error by graph., changed date to datetime in views krw_measure_graph().
 
 
 1.1 (2011-04-27)
