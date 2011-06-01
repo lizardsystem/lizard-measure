@@ -79,7 +79,7 @@ def indicator_graph(request,
 
     dates = []
     values = []
-    for data in timeserie.timeseriedata.all():
+    for data in timeserie.timeseriedata.all().order_by("tsd_time"):
         dates.append(data.tsd_time)
         values.append(data.tsd_value)
     krw_graph.axes.plot(dates, values,

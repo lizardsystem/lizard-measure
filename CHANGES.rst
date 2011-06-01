@@ -5,7 +5,9 @@ Changelog of lizard-krw
 1.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fixed the problem that the graphs seemed tilted (ticket 2763). The problem
+  was caused by time series data from the FEWS unblobbed database that is not
+  ordered in time (where it was ordered in the past).
 
 
 1.2 (2011-04-27)
