@@ -2,7 +2,7 @@ Changelog of lizard-krw
 ===================================================
 
 
-1.3 (unreleased)
+1.3 (2011-09-14)
 ----------------
 
 - Fixed the problem that the graphs seemed tilted (ticket 2763). The problem
