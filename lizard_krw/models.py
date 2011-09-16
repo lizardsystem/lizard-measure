@@ -46,6 +46,11 @@ class KRWWaterType(models.Model):
 class WaterBodyStatus(models.Model):
     """Waterbody status
     """
+    class Meta:
+        verbose_name = _("Waterlichaam status")
+        verbose_name_plural = _("Waterlichaam statussen")
+        ordering = ("name",)
+
     name = models.CharField(max_length=80)
 
     def __unicode__(self):
@@ -80,8 +85,8 @@ class WaterBody(models.Model):
     """Specific area for which we want to know KRW scores"""
 
     class Meta:
-        verbose_name = _("Waterbody")
-        verbose_name_plural = _("Waterbodies")
+        verbose_name = _("Waterlichaam")
+        verbose_name_plural = _("Waterlichamen")
         ordering = ("name",)
 
     name = models.CharField(max_length=80)
