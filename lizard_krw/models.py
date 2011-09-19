@@ -36,6 +36,10 @@ class KRWWaterType(models.Model):
     """
     TypeKRWTypologie, zie Aquo standaard domein
     """
+    class Meta:
+        verbose_name = _("KRW water type")
+        verbose_name_plural = _("KRW water types")
+
     name = models.CharField(max_length=80)
     code = models.CharField(max_length=8)
 
@@ -46,6 +50,10 @@ class KRWWaterType(models.Model):
 class WaterBodyStatus(models.Model):
     """Waterbody status
     """
+    class Meta:
+        verbose_name = _("Waterbody status")
+        verbose_name_plural = _("Waterbody statuses")
+
     name = models.CharField(max_length=80)
 
     def __unicode__(self):
@@ -54,6 +62,10 @@ class WaterBodyStatus(models.Model):
 
 class Area(models.Model):
     """Deelgebied"""
+    class Meta:
+        verbose_name = _("Area")
+        verbose_name_plural = _("Areas")
+
     name = models.CharField(max_length=200)
 
     def __unicode__(self):
@@ -62,6 +74,10 @@ class Area(models.Model):
 
 class Province(models.Model):
     """Provincie"""
+    class Meta:
+        verbose_name = _("Province")
+        verbose_name_plural = _("Provinces")
+
     name = models.CharField(max_length=200)
 
     def __unicode__(self):
@@ -70,6 +86,10 @@ class Province(models.Model):
 
 class Municipality(models.Model):
     """Gemeente"""
+    class Meta:
+        verbose_name = _("Municipality")
+        verbose_name_plural = _("Municipalities")
+
     name = models.CharField(max_length=200)
 
     def __unicode__(self):
@@ -389,6 +409,8 @@ class Department(models.Model):
     organization = models.ForeignKey(Organization, blank=True, null=True)
 
     class Meta:
+        verbose_name = _("Department")
+        verbose_name_plural = _("Departments")
         ordering = ('name', )
 
     def __unicode__(self):
@@ -496,7 +518,6 @@ class Urgency(models.Model):
 
 class MeasureCollection(models.Model):
     """KRW maatregelpakket."""
-
     name = models.CharField(max_length=200)
     shortname = models.CharField(max_length=40)
 
@@ -517,6 +538,8 @@ class MeasureCollection(models.Model):
     need_co_funding = models.BooleanField(default=False)
 
     class Meta:
+        verbose_name = _("KRW measure collection")
+        verbose_name_plural = _("KRW measure collections")
         ordering = ('name', )
 
     def __unicode__(self):

@@ -1,0 +1,214 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-09-19 07:28-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#: models.py:40
+msgid "KRW water type"
+msgstr "KRW watertype"
+
+#: models.py:41
+msgid "KRW water types"
+msgstr "KRW watertypes"
+
+#: models.py:54
+msgid "Waterbody status"
+msgstr "Waterlichaam status"
+
+#: models.py:55
+msgid "Waterbody statuses"
+msgstr "Waterlichaam statussen"
+
+#: models.py:66
+msgid "Area"
+msgstr "Deelgebied"
+
+#: models.py:67
+msgid "Areas"
+msgstr "Deelgebieden"
+
+#: models.py:78
+msgid "Province"
+msgstr "Provincie"
+
+#: models.py:79
+msgid "Provinces"
+msgstr "Provincies"
+
+#: models.py:90
+msgid "Municipality"
+msgstr "Gemeente"
+
+#: models.py:91
+msgid "Municipalities"
+msgstr "Gemeentes"
+
+#: models.py:103
+msgid "Waterbody"
+msgstr "Waterlichaam"
+
+#: models.py:104
+msgid "Waterbodies"
+msgstr "Waterlichamen"
+
+#: models.py:159
+msgid "Single indicator"
+msgstr "Losse indicator"
+
+#: models.py:160
+msgid "Single indicators"
+msgstr "Losse indicatoren"
+
+#: models.py:243
+msgid "Score"
+msgstr "Score"
+
+#: models.py:244
+msgid "Scores"
+msgstr "Scores"
+
+#: models.py:281
+msgid "Goal Score"
+msgstr "Doel score"
+
+#: models.py:282
+msgid "Goal Scores"
+msgstr "Doel scores"
+
+#: models.py:308
+msgid "Measure category"
+msgstr "Maatregel categorie"
+
+#: models.py:309
+msgid "Measure categories"
+msgstr "Maatregel categorieën"
+
+#: models.py:324
+msgid "Measure code"
+msgstr "Maatregel code"
+
+#: models.py:325
+msgid "Measure codes"
+msgstr "Maatregel codes"
+
+#: models.py:341
+msgid "Unit"
+msgstr "Eenheid"
+
+#: models.py:342
+msgid "Units"
+msgstr "Eenheden"
+
+#: models.py:354
+msgid "Executive"
+msgstr ""
+
+#: models.py:355
+msgid "Executives"
+msgstr ""
+
+#: models.py:368
+msgid "Executive part"
+msgstr ""
+
+#: models.py:369
+msgid "Executive parts"
+msgstr ""
+
+#: models.py:382
+msgid "Organization"
+msgstr "Organizatie"
+
+#: models.py:383
+msgid "Organizations"
+msgstr "Organisaties"
+
+#: models.py:396
+msgid "Organization Part"
+msgstr "Organisatiedeel"
+
+#: models.py:397
+msgid "Organization Parts"
+msgstr "Organisatiedelen"
+
+#: models.py:412
+msgid "Department"
+msgstr "Afdeling"
+
+#: models.py:413
+msgid "Departments"
+msgstr "Afdelingen"
+
+#: models.py:426
+msgid "Funding organization"
+msgstr "Financieringsorganisatie"
+
+#: models.py:427
+msgid "Funding organizations"
+msgstr "Financieringsorganisaties"
+
+#: models.py:454
+msgid "Measure status"
+msgstr "Maatregel status"
+
+#: models.py:455
+msgid "Measure statuses"
+msgstr "Maatregel statussen"
+
+#: models.py:483
+msgid "Measure status moment"
+msgstr "Maatergel status moment"
+
+#: models.py:484
+msgid "Measure status moments"
+msgstr "Maatregel status momenten"
+
+#: models.py:500
+msgid "Measure period"
+msgstr "Maatregel periode"
+
+#: models.py:501
+msgid "Measure periods"
+msgstr "Maatregel periodes"
+
+#: models.py:541
+msgid "KRW measure collection"
+msgstr "KRW maatregelenpakket"
+
+#: models.py:542
+msgid "KRW measure collections"
+msgstr "KRW maatregelenpakketten"
+
+#: models.py:644
+msgid "Min"
+msgstr "Min"
+
+#: models.py:645
+msgid "Max"
+msgstr "Max"
+
+#: models.py:646
+msgid "Avg"
+msgstr "Gemiddeld"
+
+#: models.py:714
+msgid "Measure"
+msgstr "Maatregel"
+
+#: models.py:715
+msgid "Measures"
+msgstr "Maatregelen"
