@@ -16,7 +16,6 @@ install_requires = [
     'django-extensions',
     'lizard-map >= 1.71',
     'lizard-ui',
-    'lizard-fewsunblobbed',
     'south',
     'django-nose',
     'django-treebeard',
@@ -25,9 +24,9 @@ install_requires = [
 tests_require = [
     ]
 
-setup(name='lizard-krw',
+setup(name='lizard-measure',
       version=version,
-      description="Kaderrichtlijn Water (KRW)",
+      description="Maatregelen",
       long_description=long_description,
       # Get strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=['Programming Language :: Python',
@@ -38,7 +37,7 @@ setup(name='lizard-krw',
       author_email='jack.ha@nelen-schuurmans.nl',
       url='',
       license='GPL',
-      packages=['lizard_krw'],
+      packages=['lizard_measure'],
       include_package_data=True,
       zip_safe=False,
       install_requires=install_requires,
@@ -46,9 +45,6 @@ setup(name='lizard-krw',
       extras_require = {'test': tests_require},
       entry_points={
           'console_scripts': [
-            ],
-          'lizard_map.adapter_class': [
-            'adapter_krw = lizard_krw.layers:WorkspaceItemAdapterKrw',
             ],
           },
       )
