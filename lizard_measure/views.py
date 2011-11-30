@@ -8,9 +8,9 @@ from django.template import RequestContext
 # from django.views.decorators.cache import cache_page
 import mapnik
 
-from lizard_krw.models import Measure
-from lizard_krw.models import MeasureCollection
-from lizard_krw.models import WaterBody
+from lizard_measure.models import Measure
+from lizard_measure.models import MeasureCollection
+from lizard_measure.models import WaterBody
 from lizard_map import coordinates
 from lizard_map.models import Workspace
 
