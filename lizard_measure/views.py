@@ -12,41 +12,40 @@ from lizard_measure.models import Measure
 from lizard_measure.models import MeasureCollection
 from lizard_measure.models import WaterBody
 from lizard_map import coordinates
-from lizard_map.models import Workspace
 
 
 HOMEPAGE_KEY = 1  # Primary key of the Workspace for rendering the homepage.
 CRUMB_HOMEPAGE = {'name': 'home', 'url': '/'}
 
 
-def waterbody_shapefile_search(request):
-    """Return url to redirect to if a waterbody is found.
+# def waterbody_shapefile_search(request):
+#     """Return url to redirect to if a waterbody is found.
 
-    Only works with adapter lizard_shape.
-    """
-    google_x = float(request.GET.get('x'))
-    google_y = float(request.GET.get('y'))
+#     Only works with adapter lizard_shape.
+#     """
+#     google_x = float(request.GET.get('x'))
+#     google_y = float(request.GET.get('y'))
 
-    # Set up a basic map as only map can search...
-    mapnik_map = mapnik.Map(400, 400)
-    mapnik_map.srs = coordinates.GOOGLE
+#     # Set up a basic map as only map can search...
+#     mapnik_map = mapnik.Map(400, 400)
+#     mapnik_map.srs = coordinates.GOOGLE
 
-    workspace = Workspace.objects.get(name="Homepage")
-    # The following adapter should be available in the fixture.
-    adapter = workspace.workspace_items.all()[0].adapter
+#     workspace = Workspace.objects.get(name="Homepage")
+#     # The following adapter should be available in the fixture.
+#     adapter = workspace.workspace_items.all()[0].adapter
 
-    search_results = adapter.search(google_x, google_y)
+#     search_results = adapter.search(google_x, google_y)
 
-    # Return url of first found object.
-    for search_result in search_results:
-        #name_in_shapefile = search_result['name']
-        id_in_shapefile = search_result['identifier']['id']
-        water_body = WaterBody.objects.get(ident=id_in_shapefile)
-        return HttpResponse(water_body.get_absolute_url())
+#     # Return url of first found object.
+#     for search_result in search_results:
+#         #name_in_shapefile = search_result['name']
+#         id_in_shapefile = search_result['identifier']['id']
+#         water_body = WaterBody.objects.get(ident=id_in_shapefile)
+#         return HttpResponse(water_body.get_absolute_url())
 
-    # Nothing found? Return an empty response and the javascript popup handler
-    # will fire.
-    return HttpResponse('')
+#     # Nothing found? Return an empty response and the javascript popup handler
+#     # will fire.
+#     return HttpResponse('')
 
 
 def measure_collection(request, measure_collection_id,

@@ -4,6 +4,9 @@ from django.conf import settings
 from django.contrib import admin
 
 
+API_URL_NAME = 'lizard_measure_api_root'
+
+
 admin.autodiscover()
 
 urlpatterns = patterns(
@@ -45,6 +48,8 @@ urlpatterns = patterns(
      'lizard_measure.views.krw_waterbody_measures',
      {},
      "lizard_measure.krw_waterbody_measures"),
+    (r'^api/',
+     include('lizard_measure.api.urls')),
     # # Map for summary view
     # (r'^summary/(?P<waterbody_slug>.*)/tiny_map/$',
     #  'lizard_measure.views.tiny_map',

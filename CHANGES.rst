@@ -1,11 +1,19 @@
-Changelog of lizard-krw
+Changelog of lizard-measure
 ===================================================
 
 
 1.4 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Renamed from lizard-krw to lizard-measure.
+
+- Removed krw scores models and views.
+
+- Added api for measures.
+
+- Started new migrations. If you were using the lizard-krw, then you
+  can rename the tables from prefix lizard_krw to lizard_measure and
+  take it from there.
 
 
 1.3 (2011-09-14)
