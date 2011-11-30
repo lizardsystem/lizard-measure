@@ -5,15 +5,17 @@ Changelog of lizard-measure
 1.4 (unreleased)
 ----------------
 
+TODO: WaterBody -> lizard-area
+
 - Renamed from lizard-krw to lizard-measure.
 
-- Removed krw scores models and views.
+- Removed krw scores models, views and dependencies.
 
 - Added api for measures.
 
 - Started new migrations. If you were using the lizard-krw, then you
-  can rename the tables from prefix lizard_krw to lizard_measure and
-  take it from there.
+  can migrate to the newest migration, then rename the tables from
+  prefix lizard_krw to lizard_measure and take it from there.
 
 
 1.3 (2011-09-14)
