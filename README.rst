@@ -4,11 +4,23 @@ lizard-krw
 Introduction
 ------------
 
-Krw summary screen: 2 indicators, krw scores panel and krw measures.
+Store and visualize measures.
+
+
+Features
+--------
+
+Measures in areas are stored and their status is tracked.
+
+Measures can be imported from KRW portaal.
+
+Data is accessible using the REST API.
 
 
 Usage
 -----
+
+*TO BE UPDATED*
 
 - Add lizard_krw to setup.py
 

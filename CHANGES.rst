@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.4 (unreleased)
 ----------------
 
-TODO: WaterBody -> lizard-area
+TODO: WaterBody -> lizard-area????
 
 - Renamed from lizard-krw to lizard-measure.
 
