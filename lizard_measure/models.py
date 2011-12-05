@@ -12,6 +12,9 @@ from treebeard.al_tree import AL_Node  # Adjacent list implementation
 from lizard_map.models import ColorField
 from lizard_map.utility import short_string
 
+from lizard_geo.models import GeoObject
+
+
 logger = logging.getLogger(__name__)
 
 
@@ -79,7 +82,7 @@ class Municipality(models.Model):
         return u'%s' % self.name
 
 
-class WaterBody(models.Model):
+class WaterBody(GeoObject):
     """Specific area for which we want to know KRW scores"""
 
     class Meta:
@@ -89,9 +92,9 @@ class WaterBody(models.Model):
 
     name = models.CharField(max_length=80)
     slug = models.SlugField(help_text=u"Name used for URL.")
-    ident = models.CharField(
-        max_length=80,
-        help_text=u"The ID corresponding to the shapefile ID.")
+    # ident = models.CharField(
+    #     max_length=80,
+    #     help_text=u"The ID corresponding to the shapefile ID.")
     description = models.TextField(null=True, blank=True,
                                    help_text="extra info, not displayed")
 
@@ -545,6 +548,12 @@ class Measure(AL_Node):
 
     status = models.ManyToManyField(MeasureStatus,
                                     through='MeasureStatusMoment')
+
+    read_only = models.BooleanField(
+        default=False,
+        help_text=('Wanneer een maatregel read-only is, is hij geimporteerd '
+                   'en dient hij niet met de hand gewijzigd te worden'))
+
 
     class Meta:
         verbose_name = _("Measure")

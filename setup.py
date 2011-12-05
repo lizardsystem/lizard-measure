@@ -17,6 +17,7 @@ install_requires = [
     'lizard-area',
     'lizard-map >= 1.71',
     'lizard-ui',
+    'lxml',
     'south',
     'django-nose',
     'django-treebeard',
