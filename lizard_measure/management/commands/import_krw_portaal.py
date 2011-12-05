@@ -17,6 +17,7 @@ from lizard_measure.models import Executive
 from lizard_measure.models import MeasurePeriod
 from lizard_measure.models import MeasureStatus
 from lizard_measure.models import WaterBody
+from lizard_measure.models import Unit
 
 from lizard_geo.models import GeoObjectGroup
 
@@ -72,9 +73,12 @@ def import_maatregelen(filename):
         try:
             measure = Measure.objects.get(identity=record_data['matident'])
         except Measure.DoesNotExist:
-            measure = Measure(identity=record_data['matident'])
-        waterbody = WaterBody.objects.get(ident=record_data['gafident'])
-        category = Category.objects.all()[0]  # Don't know...
+            measure = Measure(identity=record_data['matident'][:80])
+        # gafident has 'NL' added to it.
+        # Sometimes multiple occurences are present.
+        waterbody = WaterBody.objects.filter(
+            ident=record_data['gafident'][2:])[0]
+        category = MeasureCategory.objects.all()[0]  # Don't know...
         code, code_created = MeasureCode.objects.get_or_create(
             code=record_data['matcode'])
         if code_created:
@@ -88,11 +92,12 @@ def import_maatregelen(filename):
         if executive_created:
             print 'Warning: executive %s created, check manually' % executive
         measure.waterbody = waterbody
-        measure.name = record_data['matnaam']
-        measure.description = record_data['toelichting']
+        measure.name = record_data['matnaam'][:200]
+        measure.description = (record_data['toelichting'][:200]
+                               if record_data['toelichting'] else '')
         measure.category = category
         measure.code = code
-        measure.value = record_data['matomv']
+        measure.value = record_data['matomv']  # Floatfield??
         measure.unit = unit
         measure.executive = executive
         measure.save()
@@ -114,7 +119,7 @@ class Command(BaseCommand):
 
         user = User.objects.get(pk=1)
 
-        import_waterbodies(os.path.join(import_path, 'Gaf15.xml'), user)
-        import_waterbodies(os.path.join(import_path, 'gaf45.xml'), user)
-        import_waterbodies(os.path.join(import_path, 'gaf90.xml'), user)
+        # import_waterbodies(os.path.join(import_path, 'Gaf15.xml'), user)
+        # import_waterbodies(os.path.join(import_path, 'gaf45.xml'), user)
+        # import_waterbodies(os.path.join(import_path, 'gaf90.xml'), user)
         import_maatregelen(os.path.join(import_path, 'maatregelen.xml'))
