@@ -16,6 +16,9 @@ sdist
 develop-eggs
 .installed.cfg
 
+# Emacs backup files
+*~
+
 # Installer logs
 pip-log.txt
 
@@ -33,3 +36,12 @@ src
 
 # Ignore generated apache config files
 etc/*.apache.conf
+
+# Others
+.DS_Store
+.idea/
+buildout.cfg
+
+# These files are likely to contain passwords
+vss/localsettings.py
+vss/localproductionsettings.py

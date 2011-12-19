@@ -119,7 +119,8 @@ class Command(BaseCommand):
 
         user = User.objects.get(pk=1)
 
-        # import_waterbodies(os.path.join(import_path, 'Gaf15.xml'), user)
-        # import_waterbodies(os.path.join(import_path, 'gaf45.xml'), user)
-        # import_waterbodies(os.path.join(import_path, 'gaf90.xml'), user)
+        # First three could be commented after first import.
+        import_waterbodies(os.path.join(import_path, 'Gaf15.xml'), user)
+        import_waterbodies(os.path.join(import_path, 'gaf45.xml'), user)
+        import_waterbodies(os.path.join(import_path, 'gaf90.xml'), user)
         import_maatregelen(os.path.join(import_path, 'maatregelen.xml'))
