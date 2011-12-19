@@ -757,3 +757,62 @@ class Measure(AL_Node):
             for funding_organization in funding_organizations:
                 result += funding_organization.cost
         return result
+
+# Compatibility models
+class SingleIndicator(models.Model):
+    """KRW indicator for a water body
+
+    Points at a timeseries that must be displayed.
+
+    """
+
+    class Meta:
+        verbose_name = _("Single indicator")
+        verbose_name_plural = _("Single indicators")
+
+    timeserie_id = models.IntegerField(
+        help_text=u"ID of the timeserie that must be shown.")
+    target_value = models.FloatField(
+        help_text=u"Optimal value.",
+        blank=True,
+        null=True)
+    boundary_value = models.FloatField(
+        help_text=u"Maximum allowed value.",
+        blank=True,
+        null=True)
+    y_min = models.FloatField(
+        help_text=u"Lowest value on y axis.",
+        blank=True,
+        null=True)
+    y_max = models.FloatField(
+        help_text=u"Highest value on y axis.",
+        blank=True,
+        null=True)
+    water_body = models.ForeignKey(
+        WaterBody,
+        related_name='indicators',
+        help_text=u"Water body for which we're a graph.")
+
+    def __unicode__(self):
+        return u"%s for %s" % (self.timeserie.name, self.water_body)
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('lizard_krw.indicator_graph',
+                (),
+                {'area': str(self.water_body.slug),
+                 'id': str(self.id)})
+
+    @property
+    def timeserie(self):
+        """Return Timeserie object pointed to by timeserie_id.
+
+        Note that we cannot link to it directly with a foreign key as it is in
+        a separate database.  Defining a foreign key would let postgres/oracle
+        emit consistency-check errors as it cannot guarantee consistency.
+
+        """
+        return Timeserie.objects.get(pk=self.timeserie_id)
+
+
+
