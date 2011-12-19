@@ -759,6 +759,21 @@ class Measure(AL_Node):
         return result
 
 # Compatibility models
+
+# Krw score categories.
+SCORE_CATEGORY_FYTO = 1
+SCORE_CATEGORY_FLORA = 2
+SCORE_CATEGORY_FAUNA = 3
+SCORE_CATEGORY_VIS = 4
+
+SCORE_CATEGORIES = {
+    SCORE_CATEGORY_FYTO: u'Fytoplankton',
+    SCORE_CATEGORY_FLORA: u'Overige waterflora',
+    SCORE_CATEGORY_FAUNA: u'Macrofauna',
+    SCORE_CATEGORY_VIS: u'Vis'}
+
+SCORE_CATEGORY_CHOICES = SCORE_CATEGORIES.items()
+
 class SingleIndicator(models.Model):
     """KRW indicator for a water body
 
@@ -815,4 +830,106 @@ class SingleIndicator(models.Model):
         return Timeserie.objects.get(pk=self.timeserie_id)
 
 
+class AlphaScore(models.Model):
+    """Alphanumeric scores. This is the translation from a numeric
+    score value to a name and a color."""
 
+    min_value = models.FloatField(default=0.0)
+    max_value = models.FloatField(default=1.0)
+    name = models.CharField(max_length=200)
+    color = ColorField(default='808080')
+    # color = models.ForeignKey('Color', default=1)
+
+    class Meta:
+        ordering = ['-min_value', ]
+
+    def __unicode__(self):
+        return self.name
+
+
+#krw scores
+class Score(models.Model):
+    """krw score
+
+    Based on existing scores, the numeric value
+    can be translated to an alpha score as follows:
+
+    value < 0.2          slecht
+    0.2 <= value < 0.4   ontoereikend
+    0.4 <= value < 0.6   matig
+    0.6 <= value < 0.8   goed
+    value >= 0.8         zeer goed
+    """
+
+    # degene die het heeft ingevoerd
+    owner = models.ForeignKey(User)
+
+    class Meta:
+        verbose_name = _("Score")
+        verbose_name_plural = _("Scores")
+        ordering = ('start_date', 'waterbody', 'category')
+
+    waterbody = models.ForeignKey(WaterBody)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    category = models.IntegerField(choices=SCORE_CATEGORY_CHOICES)
+    # alpha_score = models.ForeignKey(AlphaScore)
+    value = models.FloatField()
+
+    def __unicode__(self):
+        return '%s - %s - %s (%.2f)' % (
+            self.start_date, self.waterbody,
+            SCORE_CATEGORIES[self.category],
+            self.value)
+
+    @property
+    def alpha_score(self):
+        """Returns corresponding alpha score."""
+        return AlphaScore.objects.get(
+            min_value__lte=self.value,
+            max_value__gt=self.value)
+
+
+class GoalScore(models.Model):
+    """krw goal score, it has nothing to do with the FIFA worldcup"""
+
+    owner = models.ForeignKey(User)
+
+    waterbody = models.ForeignKey(WaterBody)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    category = models.IntegerField(choices=SCORE_CATEGORY_CHOICES)
+    #alpha_score = models.ForeignKey(AlphaScore, default=None)
+    value = models.FloatField()
+
+    class Meta:
+        verbose_name = _("Goal Score")
+        verbose_name_plural = _("Goal Scores")
+        ordering = ('start_date', 'waterbody', 'category')
+
+    def __unicode__(self):
+        return '%s - %s - %s - %s' % (
+            self.start_date, self.waterbody,
+            SCORE_CATEGORIES[self.category], self.alpha_score)
+
+    @property
+    def alpha_score(self):
+        """Returns corresponding alpha score."""
+        return AlphaScore.objects.get(
+            min_value__lte=self.value,
+            max_value__gt=self.value)
+
+        
+class XMLImportMeetobject(models.Model):
+    """
+    Maps WaterBody instances to XMLImports' water_body
+    """
+    name = models.CharField(
+        max_length=255,
+        help_text=u"Matches 'meetobject' from XML importfile with waterbody.")
+    waterbodies = models.ManyToManyField('WaterBody')
+
+    def __unicode__(self):
+        waterbodies = [str(waterbody) for waterbody in self.waterbodies.all()]
+        waterbodies_display = ', '.join(waterbodies)
+        return '%s -> %s' % (self.name, waterbodies_display)
