@@ -5,7 +5,8 @@ Changelog of lizard-measure
 1.4 (unreleased)
 ----------------
 
-TODO: WaterBody -> lizard-area????
+- Migrations and models.py are in a state that a specific fixture from krw-waternet
+  can be loaded
 
 - Renamed from lizard-krw to lizard-measure.
 
