@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.4.2 (unreleased)
+1.4.2 (2011-12-27)
 ------------------
 
 - Renamed remaining txt-files to rst
