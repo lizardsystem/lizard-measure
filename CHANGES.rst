@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.4.1 (unreleased)
+1.4.1 (2011-12-27)
 ------------------
 
 - Renamed TODO from txt to rst
