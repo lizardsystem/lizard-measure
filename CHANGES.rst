@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.4 (unreleased)
+1.4 (2011-12-27)
 ----------------
 
 - Migrations and models.py are in a state that a specific fixture from krw-waternet
