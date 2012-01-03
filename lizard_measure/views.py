@@ -9,7 +9,6 @@ from django.template import RequestContext
 import mapnik
 
 from lizard_measure.models import Measure
-from lizard_measure.models import MeasureCollection
 from lizard_measure.models import WaterBody
 from lizard_map import coordinates
 
@@ -46,35 +45,6 @@ CRUMB_HOMEPAGE = {'name': 'home', 'url': '/'}
 #     # Nothing found? Return an empty response and the javascript popup handler
 #     # will fire.
 #     return HttpResponse('')
-
-
-def measure_collection(request, measure_collection_id,
-                       template='lizard_krw/measure_collection.html',
-                       crumbs_prepend=None):
-    measure_collection = MeasureCollection.objects.get(
-        pk=measure_collection_id)
-    if crumbs_prepend:
-        crumbs = list(crumbs_prepend)
-    else:
-        crumbs = [CRUMB_HOMEPAGE]
-    crumbs.extend(
-        [{'name': measure_collection.waterbody.name,
-          'url': measure_collection.waterbody.get_absolute_url()},
-         {'name': 'Maatregelen',
-          'url': reverse(
-                    'lizard_krw.krw_waterbody_measures',
-                    kwargs={'waterbody_slug':
-                            measure_collection.waterbody.slug})},
-         {'name': measure_collection.name,
-          'url': reverse(
-                    'lizard_krw.measure_collection',
-                    kwargs={'measure_collection_id':
-                            measure_collection_id})}, ])
-    return render_to_response(
-        template,
-        {'measure_collection': measure_collection,
-         'crumbs': crumbs},
-        context_instance=RequestContext(request))
 
 
 def measure_detail(request, measure_id,

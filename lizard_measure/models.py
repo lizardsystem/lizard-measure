@@ -14,6 +14,8 @@ from lizard_map.utility import short_string
 
 from lizard_geo.models import GeoObject
 
+from lizard_area.models import Area
+
 
 logger = logging.getLogger(__name__)
 
@@ -46,18 +48,6 @@ class WaterBodyStatus(models.Model):
         return u'%s' % self.name
 
 
-class Area(models.Model):
-    """Deelgebied"""
-    class Meta:
-        verbose_name = _("Area")
-        verbose_name_plural = _("Areas")
-
-    name = models.CharField(max_length=200)
-
-    def __unicode__(self):
-        return u'%s' % self.name
-
-
 class Province(models.Model):
     """Provincie"""
     class Meta:
@@ -82,7 +72,7 @@ class Municipality(models.Model):
         return u'%s' % self.name
 
 
-class WaterBody(GeoObject):
+class WaterBody(models.Model):
     """Specific area for which we want to know KRW scores"""
 
     class Meta:
@@ -90,11 +80,13 @@ class WaterBody(GeoObject):
         verbose_name_plural = _("Waterbodies")
         ordering = ("name",)
 
+    area = models.ForeignKey(Area, null=True, blank=True)
+
     name = models.CharField(max_length=80)
     slug = models.SlugField(help_text=u"Name used for URL.")
-    # ident = models.CharField(
-    #     max_length=80,
-    #     help_text=u"The ID corresponding to the shapefile ID.")
+    ident = models.CharField(
+        max_length=80,
+        help_text=u"The ID corresponding to the shapefile ID.")
     description = models.TextField(null=True, blank=True,
                                    help_text="extra info, not displayed")
 
@@ -108,8 +100,6 @@ class WaterBody(GeoObject):
         null=True, blank=True, help_text="beschermd gebied vanwege")
 
     code = models.CharField(max_length=80, null=True, blank=True)
-    area = models.ManyToManyField(
-        Area, null=True, blank=True, help_text="deelgebied")
     province = models.ManyToManyField(
         Province, null=True, blank=True, help_text="provincie")
     municipality = models.ManyToManyField(
@@ -135,8 +125,6 @@ class WaterBody(GeoObject):
 
 
 # Measures
-
-
 class MeasureCategory(models.Model):
     """Measure Category. i.e. Beheermaatregelen
     """
@@ -151,37 +139,50 @@ class MeasureCategory(models.Model):
         return u'%s' % (self.name)
 
 
-class MeasureCode(models.Model):
-    """Measure Code. i.e. BE01 Beheermaatregelen uitvoeren actief
-    visstands- of schelpdierstandsbeheer
-    """
-
-    code = models.CharField(max_length=80)
-    description = models.TextField()
-
-    class Meta:
-        verbose_name = _("Measure code")
-        verbose_name_plural = _("Measure codes")
-        ordering = ('code', )
-
-    def __unicode__(self):
-        return u'%s - %s' % (self.code, self.description)
-
-
 class Unit(models.Model):
     """eenheid uit aquo standaard
     http://www.idsw.nl/Aquo/uitwisselmodellen/index.htm?goto=6:192
     """
 
-    sign = models.CharField(max_length=20)
+    unit = models.CharField(max_length=20)
     description = models.TextField(blank=True, null=True)
+    valid = models.NullBooleanField(default=False)
+
 
     class Meta:
         verbose_name = _("Unit")
         verbose_name_plural = _("Units")
 
     def __unicode__(self):
-        return u'%s' % self.sign
+        return u'%s' % self.unit
+
+
+class MeasureType(models.Model):
+    """
+    Measure Type. i.e. BE01 Beheermaatregelen uitvoeren actief
+    visstands- of schelpdierstandsbeheer
+    """
+
+    code = models.CharField(max_length=80)
+    description = models.TextField()
+
+    # Future may require a separate MeasureCodeGroup model for this
+    group = models.ForeignKey(MeasureCategory, null=True, blank=True)
+
+    # Other fields from KRW import
+    units = models.ManyToManyField(Unit)
+    klass = models.CharField(max_length=256, null=True, blank=True)
+    subcategory = models.CharField(max_length=256, null=True, blank=True)
+    harmonisation = models.CharField(max_length=256, null=True, blank=True)
+    combined_name = models.CharField(max_length=256, null=True, blank=True)
+
+    class Meta:
+        verbose_name = _("Measure type")
+        verbose_name_plural = _("Measure types")
+        ordering = ('code', )
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.code, self.description)
 
 
 class Executive(models.Model):
@@ -196,19 +197,6 @@ class Executive(models.Model):
     def __unicode__(self):
         return u'%s' % self.name
 
-
-class ExecutivePart(models.Model):
-    """Specialisering Uitvoerder_Initiatiefnemer.
-    """
-    name = models.CharField(max_length=200)
-    executive = models.ForeignKey(Executive)
-
-    class Meta:
-        verbose_name = _("Executive part")
-        verbose_name_plural = _("Executive parts")
-
-    def __unicode__(self):
-        return u'%s (%s)' % (self.name, self.executive)
 
 
 class Organization(models.Model):
@@ -226,39 +214,9 @@ class Organization(models.Model):
         return u'%s' % self.name
 
 
-class OrganizationPart(models.Model):
-    """Which part of the organization?"""
-    name = models.CharField(max_length=200)
-    organization = models.ForeignKey(Organization)
-
-    class Meta:
-        verbose_name = _("Organization Part")
-        verbose_name_plural = _("Organization Parts")
-        ordering = ('name', )
-
-    def __unicode__(self):
-        return u'%s (%s)' % (self.name, self.organization)
-
-
-class Department(models.Model):
-    """Department of an organization
-    """
-
-    name = models.CharField(max_length=200)
-    organization = models.ForeignKey(Organization, blank=True, null=True)
-
-    class Meta:
-        verbose_name = _("Department")
-        verbose_name_plural = _("Departments")
-        ordering = ('name', )
-
-    def __unicode__(self):
-        return u'%s' % self.name
-
-
 class FundingOrganization(models.Model):
     """
-
+    Links Organizations and measures adding cost info.
     """
 
     class Meta:
@@ -266,9 +224,11 @@ class FundingOrganization(models.Model):
         verbose_name_plural = _("Funding organizations")
 
     cost = models.FloatField()  # in euro's
+    percentage = models.FloatField()
     organization = models.ForeignKey(Organization)
-    organization_part = models.ForeignKey(
-        OrganizationPart, blank=True, null=True)
+    # vvv To be removed permanently
+    #organization_part = models.ForeignKey(
+    #    OrganizationPart, blank=True, null=True)
     measure = models.ForeignKey('Measure')
 
     def __unicode__(self):
@@ -343,140 +303,12 @@ class MeasurePeriod(models.Model):
         return '%d - %d' % (self.start_date.year, self.end_date.year)
 
 
-class Urgency(models.Model):
-    """Urgency. Can be ordered using numeric value."""
-    name = models.CharField(max_length=200)
-    value = models.FloatField()
-
-    class Meta:
-        ordering = ('-value',)
-
-    def __unicode__(self):
-        return self.name
-
-
-class MeasureCollection(models.Model):
-    """KRW maatregelpakket."""
-    name = models.CharField(max_length=200)
-    shortname = models.CharField(max_length=40)
-
-    waterbody = models.ForeignKey(
-        WaterBody,
-        help_text="Bij welk waterlichaam hoort dit maatregelpakket?")
-    area = models.ManyToManyField(
-        Area, null=True, blank=True, help_text="deelgebied")
-
-    urgency = models.ForeignKey(Urgency)
-    responsible_organization = models.ForeignKey(
-        Organization,
-        help_text="Verantwoordelijke organisatie")
-    responsible_department = models.ForeignKey(
-        Department,
-        help_text="Verantwoordelijke interne afdeling")
-
-    need_co_funding = models.BooleanField(default=False)
-
-    class Meta:
-        verbose_name = _("KRW measure collection")
-        verbose_name_plural = _("KRW measure collections")
-        ordering = ('name', )
-
-    def __unicode__(self):
-        return u'%s - %s' % (self.waterbody, self.name)
-
-    def get_absolute_url(self):
-        return reverse('lizard_krw.measure_collection',
-                       kwargs={'measure_collection_id': self.pk})
-
-    def status_moment(self, dt=datetime.datetime.now(), is_planning=False):
-        """Returns status_moment for a measure collection. Or None if
-        one of the measures does not have a status.
-
-        For each measure, fetch current status moment. Then return the
-        minimum, if any.
-        """
-        measure_status_moments = [
-            measure.status_moment(
-                dt=dt, is_planning=is_planning)
-            for measure in self.measure_set.all()]
-        if None in measure_status_moments:
-            return None
-
-        return min(measure_status_moments, key=lambda msm: msm.status.value)
-
-    def status_moment_planned(self):
-        """For use in templates"""
-        return self.status_moment(is_planning=True)
-
-    def measure_status_moments(self, end_date=None, is_planning=False):
-        """Calculates list of measure_status_moments, aggregated from
-        measures using "minimum"."""
-        result = []
-        # msm_dates = MeasureStatusMoment.objects.filter(
-        #     measure__measure_collection=self, is_planning=is_planning)
-        # if end_date is not None:
-        #     msm_dates = msm_dates.filter(datetime__lte=end_date)
-
-        msm_dates = []
-        for measure in self.measure_set.all():
-            msm_dates.extend(measure.measure_status_moments(
-                    end_date=end_date, is_planning=is_planning))
-
-        for msm_date in msm_dates:
-            status_moment = self.status_moment(
-                dt=msm_date.datetime, is_planning=is_planning)
-            #remove None's: the datetimes where some of the measures
-            #statuses are defined
-            if status_moment is not None:
-                status_moment.datetime = msm_date.datetime
-                result.append(status_moment)
-        result = filter(None, result)
-        result = sorted(result, key=lambda m: m.datetime)
-
-        return result
-
-    def costs_sum(self):
-        """Returns sum of total costs of measures."""
-        costs = 0.0
-        for measure in self.measure_set.all():
-            costs += measure.costs_sum()
-        return costs
-
-    def investment_costs_sum(self):
-        costs = 0.0
-        for measure in self.measure_set.all():
-            costs += measure.investment_costs_sum()
-        return costs
-
-    def exploitation_costs_sum(self):
-        costs = 0.0
-        for measure in self.measure_set.all():
-            costs += measure.exploitation_costs_sum()
-        return costs
-
-    def funding_organization_cost_sum(self):
-        costs = 0.0
-        for measure in self.measure_set.all():
-            costs += measure.funding_organization_cost_sum()
-        return costs
-
-
-class Measure(AL_Node):
+class Measure(models.Model):
     """
     KRW maatregel,
 
     For drawing the measure graph, we only need the fields:
     name, start_date, end_date, status
-
-    OBSOLETE:
-    - aggregation_type
-    - parent/child relation
-    - waterbody
-    - is_indicator
-
-    TODO:
-    - refactor status_moment to remove parent/child calculations.
-
     """
 
     AGGREGATION_TYPE_CHOICES = (
@@ -488,41 +320,62 @@ class Measure(AL_Node):
     AGGREGATION_TYPE_MAX = 2
     AGGREGATION_TYPE_AVG = 3
 
-    owner = models.ForeignKey(User, blank=True, null=True)
+    SOURCE_CHOICES = (
+        (1, 'KRW-portaal'),
+        (2, 'VSS-2010'),
+        (3, 'Handmatig'),
+    )
 
-    # a measure can be splitted in a tree form
-    parent = models.ForeignKey('Measure', blank=True, null=True)
-    node_order_by = ['name']
+    SOURCE_KRW_PORTAAL = 1
+    SOURCE_VSS_2010 = 2
+    SOURCE_MANUAL = 3
 
-    measure_collection = models.ForeignKey(
-        'MeasureCollection', blank=True, null=True,
-        help_text="Bij welk maatregelenpakket hoort deze maatregel?")
+    parent = models.ForeignKey('self', blank=True, null=True)
+
+    ident = models.CharField(
+        max_length=64, unique=True, blank=True, null=True,
+    )
+
+    is_KRW_measure = models.NullBooleanField()
+
+    # XY, geometry?
+
+    measure_type = models.ForeignKey(
+        MeasureType,
+        help_text="SGBP code",
+    )
+
+    title = models.CharField(max_length=256, null=True, blank=True)
+
+    # Beleidsdoel?
+
+    period = models.ForeignKey(MeasurePeriod, blank=True, null=True)
+
+    # Fields related to import
+    import_source = models.CharField(
+        max_length=16, editable=False, default=SOURCE_MANUAL
+    )
+    datetime_in_source = models.DateTimeField(blank=True, null=True)
+    import_raw = models.TextField(blank=True, null=True)
 
     # aggregation is used to 'summarize' the statuses from child measures
     # and its own status (they are equal in value, normally one would not give
     # status to main measure if it has child measures)
     # affects function current_status_moment
-    aggregation_type = models.IntegerField(choices=AGGREGATION_TYPE_CHOICES,
-                                           default=AGGREGATION_TYPE_MIN)
+    aggregation_type = models.IntegerField(
+        choices=AGGREGATION_TYPE_CHOICES,
+        default=AGGREGATION_TYPE_MIN,
+    )
 
-    is_indicator = models.BooleanField(default=False)
 
-    waterbody = models.ForeignKey(
+    waterbody = models.ManyToManyField(
         WaterBody,
-        help_text="Bij welk waterlichaam hoort deze maatregel?")
+        help_text="Bij welk waterlichaam hoort deze maatregel?",
+    )
 
-    name = models.CharField(max_length=200)
-    identity = models.CharField(
-        blank=True, null=True, max_length=80,
-        help_text="Maatregelidentiteit indien aanwezig")
-    description = models.CharField(max_length=200, blank=True, null=True)
+    description = models.CharField(max_length=512, blank=True, null=True)
 
-    category = models.ForeignKey(
-        MeasureCategory,
-        help_text="Hoofdcategorie")
-    code = models.ForeignKey(
-        MeasureCode,
-        help_text="SGBP code")
+    category = models.ManyToManyField(MeasureCategory)
 
     value = models.FloatField(
         help_text="Omvang van maatregel, inhoud afhankelijk van eenheid")
@@ -530,13 +383,14 @@ class Measure(AL_Node):
         Unit,
         help_text="Eenheid behorende bij omvang van maatregel")
 
+    responsible_organization = models.ForeignKey(
+        Organization,
+        help_text="Verantwoordelijke organisatie")
+
     executive = models.ForeignKey(
         Executive,
         help_text="Initiatiefnemer/uitvoerder")
-    executive_part = models.ForeignKey(
-        ExecutivePart,
-        help_text="Uitvoerder meer specifiek",
-        blank=True, null=True)
+
     total_costs = models.IntegerField(
         null=True, blank=True, help_text="Totale kosten in euro's")
     investment_costs = models.IntegerField(
@@ -544,7 +398,6 @@ class Measure(AL_Node):
     exploitation_costs = models.IntegerField(
         null=True, blank=True, help_text="Exploitatiekosten in euro's")
 
-    period = models.ForeignKey(MeasurePeriod, null=True, blank=True)
 
     status = models.ManyToManyField(MeasureStatus,
                                     through='MeasureStatusMoment')
@@ -554,11 +407,13 @@ class Measure(AL_Node):
         help_text=('Wanneer een maatregel read-only is, is hij geimporteerd '
                    'en dient hij niet met de hand gewijzigd te worden'))
 
+    # Is this different from is_KRW_measure?
+    is_indicator = models.BooleanField(default=False)
+    owner = models.ForeignKey(User, blank=True, null=True)
 
     class Meta:
         verbose_name = _("Measure")
         verbose_name_plural = _("Measures")
-        ordering = ('waterbody', 'name', )
 
     def __unicode__(self):
         return u'%s: %s' % (self.waterbody.name, self.name)
