@@ -3,11 +3,14 @@
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
+from django.utils import simplejson
 from django.template import defaultfilters
 from django.template.defaultfilters import slugify
 from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.auth.models import User
 from lxml import etree
+
+import datetime
 import os
 
 from lizard_area.models import Area
@@ -102,17 +105,78 @@ def import_waterbodies(filename, user, data_administrator):
 
 def import_maatregelen(filename):
     print 'Import maatregelen %s...' % filename
-    for record in _records(filename):
+    for rec in _records(filename):
 
-        # KRW matident => Measure.ident
-        measure = Measure()
-        measure.ident = record['matident']
+        measure_type, measure_type_created = MeasureType.objects.get_or_create(
+            code=rec['matcode'],
+        )
 
-        measure.is_KRW_measure = True
+        unit, unit_created = Unit.objects.get_or_create(
+            unit=rec['mateenh'],
+        )
 
-        import_source = Measure.SOURCE_KRW_PORTAAL
+        try:
+            measure_status.MeasureStatus.objects.get(name=rec['toestand'])
+        except MeasureStatus.DoesNotExist:
+            measure_status_kwargs = {
+                'name': rec['toestand'],
+                'color': 'gray'
 
-        # XY, geometry?
+        )
+        if measure_status_created
+
+
+        datetime_in_source = datetime.datetime.strptime(
+            rec['datum'],
+            '%Y-%m-%d %H:%M:%S.%f',
+        )
+
+        import_raw_json = simplejson.dumps(
+            rec.items(),
+            indent=4,
+        )
+
+        measure_kwargs = {
+            # KRW matident => Measure.ident
+            'ident': rec['matident'],
+            'is_KRW_measure': True,
+            # XY, geometry?
+            'measure_type': measure_type,
+            'title': rec['matnaam'],
+            'period': None,
+            'import_source': Measure.SOURCE_KRW_PORTAAL,
+            'datetime_in_source': datetime_in_source,
+            'import_raw': import_raw_json,
+            'aggregation_type': Measure.AGGREGATION_TYPE_MIN,
+            'waterbody': None,
+            'description' = rec['toelichting'],
+            'value' = rec['matomv'],
+            'unit' = unit,
+            'investment_costs' = rec['investkosten'],
+            'expoitation_costs' = rec['exploitkosten'],
+
+
+        measure = Measure(**measure_kwargs)
+        measure.save()
+
+        # Add some categories
+        category_columns = [
+            'wb21',
+            'thema',
+            'n2000',
+            'n2000naam',
+            'gwb',
+            'gwbnaam',
+        ]
+        for c in category_columns:
+            cat_obj = MeasureCategory.objects.get_or_create(name=rec(c))
+            measure.categories.add(cat_obj)
+
+
+
+    
+
+
 
         
 
@@ -153,27 +217,27 @@ def import_maatregelen(filename):
         measure.save()
 
 
-def import_measure_codes(filename):
-    for r in _records(filename):
+def import_measure_types(filename):
+    for rec in _records(filename):
         
         group = MeasureCategory.objects.get_or_create(
-            name=r['hoofdcategorie'],
+            name=rec['hoofdcategorie'],
         )[0]
 
         measure_type_kwargs = {
-            'code': r['code'],
-            'description': r['samengestelde_naam'],
+            'code': rec['code'],
+            'description': rec['samengestelde_naam'],
             'group': group,  # Hoofdcategorie
-            'klass': r['klasse'],
-            'subcategory': r['subcategorie'],
-            'harmonisation': r['harmonisatie'],
-            'combined_name': r['samengestelde_naam'],
+            'klass': rec['klasse'],
+            'subcategory': rec['subcategorie'],
+            'harmonisation': rec['harmonisatie'],
+            'combined_name': rec['samengestelde_naam'],
         }
-        measure_type = MeasureType(*measure_type_kwargs)
-        #measure_type.save()
+        measure_type = MeasureType(**measure_type_kwargs)
+        measure_type.save()
         
         # Add the units
-        units = r['eenheid'].split(', ')
+        units = rec['eenheid'].split(', ')
         for u_str in units:
             unit_obj = Unit.objects.get_or_create(unit=u_str)[0]
             measure_type.units.add(unit_obj)
@@ -185,13 +249,12 @@ class Command(BaseCommand):
 
     @transaction.commit_on_success
     def handle(self, *args, **options):
-        print 'Import KRW portaal'
         if args:
             rel_path = args[0]
         else:
             rel_path = 'import_krw_portaal'
         import_path = os.path.join(settings.BUILDOUT_DIR, rel_path)
-        print import_path
+        print 'Importing KRW portaal xml files from %s.' % import_path
 
         user = User.objects.get(pk=1)
 
@@ -220,13 +283,13 @@ class Command(BaseCommand):
 #           data_administrator=hhnk_administrator,
 #       )
         
-        # Maatregelcodes (SGBP)
-        import_measure_codes(
-            filename=os.path.join(
-                import_path,
-                'maatregelstandaard.xml',
-            ),
-        )
+        # Maatregeltypes (SGBP)
+#       import_measure_types(
+#           filename=os.path.join(
+#               import_path,
+#               'maatregelstandaard.xml',
+#           ),
+#       )
 
         # Import measures
-#       import_maatregelen(os.path.join(import_path, 'maatregelen.xml'))
+        import_maatregelen(os.path.join(import_path, 'maatregelen.xml'))

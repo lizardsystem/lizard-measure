@@ -5,7 +5,7 @@ from lizard_measure.models import FundingOrganization
 from lizard_measure.models import KRWWaterType
 from lizard_measure.models import Measure
 from lizard_measure.models import MeasureCategory
-from lizard_measure.models import MeasureCode
+from lizard_measure.models import MeasureType
 from lizard_measure.models import MeasureStatus
 from lizard_measure.models import MeasureStatusMoment
 from lizard_measure.models import Municipality
@@ -43,7 +43,7 @@ admin.site.register(FundingOrganization)
 admin.site.register(KRWWaterType)
 admin.site.register(Measure, MeasureAdmin)
 admin.site.register(MeasureCategory)
-admin.site.register(MeasureCode)
+admin.site.register(MeasureType)
 admin.site.register(MeasureStatus, MeasureStatusAdmin)
 admin.site.register(MeasureStatusMoment)
 admin.site.register(Municipality)

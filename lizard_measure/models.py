@@ -130,6 +130,7 @@ class MeasureCategory(models.Model):
     """
 
     name = models.CharField(max_length=200)
+    valid = models.NullBooleanField(default=None)
 
     class Meta:
         verbose_name = _("Measure category")
@@ -146,7 +147,7 @@ class Unit(models.Model):
 
     unit = models.CharField(max_length=20)
     description = models.TextField(blank=True, null=True)
-    valid = models.NullBooleanField(default=False)
+    valid = models.NullBooleanField(default=None)
 
 
     class Meta:
@@ -163,7 +164,7 @@ class MeasureType(models.Model):
     visstands- of schelpdierstandsbeheer
     """
 
-    code = models.CharField(max_length=80)
+    code = models.CharField(max_length=80, unique=True)
     description = models.TextField()
 
     # Future may require a separate MeasureCodeGroup model for this
@@ -248,6 +249,7 @@ class MeasureStatus(models.Model):
         help_text="Color is rrggbb")
     # Value is 1.0 for up and running, 0 for nothing. Used for ordering.
     value = models.FloatField(default=0.0)
+    valid = models.NullBooleanField(default=None)
 
     class Meta:
         verbose_name = _("Measure status")
@@ -293,6 +295,7 @@ class MeasurePeriod(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     description = models.TextField(null=True, blank=True)
+    valid = models.NullBooleanField(default=None)
 
     class Meta:
         ordering = ('start_date', 'end_date', )
@@ -367,7 +370,6 @@ class Measure(models.Model):
         default=AGGREGATION_TYPE_MIN,
     )
 
-
     waterbody = models.ManyToManyField(
         WaterBody,
         help_text="Bij welk waterlichaam hoort deze maatregel?",
@@ -375,7 +377,7 @@ class Measure(models.Model):
 
     description = models.CharField(max_length=512, blank=True, null=True)
 
-    category = models.ManyToManyField(MeasureCategory)
+    categories = models.ManyToManyField(MeasureCategory)
 
     value = models.FloatField(
         help_text="Omvang van maatregel, inhoud afhankelijk van eenheid")
