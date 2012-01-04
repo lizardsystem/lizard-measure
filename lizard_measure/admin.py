@@ -1,6 +1,5 @@
 from django.contrib import admin
 
-from lizard_measure.models import Executive
 from lizard_measure.models import FundingOrganization
 from lizard_measure.models import KRWWaterType
 from lizard_measure.models import Measure
@@ -33,6 +32,7 @@ class MeasureAdmin(admin.ModelAdmin):
     inlines = [
         MeasureStatusMomentInline, FundingOrganizationInline,
         ]
+    filter_horizontal = ['categories', ]
 
 
 class MeasureStatusAdmin(admin.ModelAdmin):

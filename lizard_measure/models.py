@@ -186,20 +186,6 @@ class MeasureType(models.Model):
         return u'%s - %s' % (self.code, self.description)
 
 
-class Executive(models.Model):
-    """Uitvoerder_Initiatiefnemer. i.e. Landbouw, Provincie
-    """
-    name = models.CharField(max_length=200)
-
-    class Meta:
-        verbose_name = _("Executive")
-        verbose_name_plural = _("Executives")
-
-    def __unicode__(self):
-        return u'%s' % self.name
-
-
-
 class Organization(models.Model):
     """Companies that occur in Measures: Funding Organizations
     """
@@ -224,12 +210,8 @@ class FundingOrganization(models.Model):
         verbose_name = _("Funding organization")
         verbose_name_plural = _("Funding organizations")
 
-    cost = models.FloatField()  # in euro's
     percentage = models.FloatField()
     organization = models.ForeignKey(Organization)
-    # vvv To be removed permanently
-    #organization_part = models.ForeignKey(
-    #    OrganizationPart, blank=True, null=True)
     measure = models.ForeignKey('Measure')
 
     def __unicode__(self):
@@ -267,7 +249,7 @@ class MeasureStatusMoment(models.Model):
 
     measure = models.ForeignKey('Measure')
     status = models.ForeignKey(MeasureStatus)
-    datetime = models.DateField()
+    date = models.DateField(null=True, blank=True)
     is_planning = models.BooleanField(default=False)
     description = models.TextField(
         blank=True, null=True,
@@ -283,10 +265,10 @@ class MeasureStatusMoment(models.Model):
     class Meta:
         verbose_name = _("Measure status moment")
         verbose_name_plural = _("Measure status moments")
-        ordering = ("datetime", )
+        ordering = ("date", )
 
     def __unicode__(self):
-        return u'%s %s %s' % (self.measure, self.status, self.datetime)
+        return u'%s %s %s' % (self.measure, self.status, self.date)
 
 
 class MeasurePeriod(models.Model):
@@ -385,12 +367,29 @@ class Measure(models.Model):
         Unit,
         help_text="Eenheid behorende bij omvang van maatregel")
 
-    responsible_organization = models.ForeignKey(
+    initiator = models.ForeignKey(
         Organization,
-        help_text="Verantwoordelijke organisatie")
+        null=True,
+        blank=True,
+        help_text='Initiatiefnemer',
+        related_name = 'initiator_measure_set'
+    )
 
     executive = models.ForeignKey(
-        Executive,
+        Organization,
+        null=True,
+        blank=True,
+        help_text='Uitvoerder',
+        related_name = 'executive_measure_set'
+    )
+
+    responsible_department = models.CharField(
+        max_length=256,
+        help_text='Verantwoordelijke afdeling binnen initiatiefnemer',
+    )
+
+    executive = models.ForeignKey(
+        Organization,
         help_text="Initiatiefnemer/uitvoerder")
 
     total_costs = models.IntegerField(
@@ -418,7 +417,7 @@ class Measure(models.Model):
         verbose_name_plural = _("Measures")
 
     def __unicode__(self):
-        return u'%s: %s' % (self.waterbody.name, self.name)
+        return self.title
 
     @property
     def shortname(self):

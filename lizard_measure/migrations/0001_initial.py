@@ -75,6 +75,7 @@ class Migration(SchemaMigration):
         db.create_table('lizard_measure_measurecategory', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('valid', self.gf('django.db.models.fields.NullBooleanField')(default=None, null=True, blank=True)),
         ))
         db.send_create_signal('lizard_measure', ['MeasureCategory'])
 
@@ -83,14 +84,14 @@ class Migration(SchemaMigration):
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('unit', self.gf('django.db.models.fields.CharField')(max_length=20)),
             ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('valid', self.gf('django.db.models.fields.NullBooleanField')(default=False, null=True, blank=True)),
+            ('valid', self.gf('django.db.models.fields.NullBooleanField')(default=None, null=True, blank=True)),
         ))
         db.send_create_signal('lizard_measure', ['Unit'])
 
         # Adding model 'MeasureType'
         db.create_table('lizard_measure_measuretype', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('code', self.gf('django.db.models.fields.CharField')(max_length=80)),
+            ('code', self.gf('django.db.models.fields.CharField')(unique=True, max_length=80)),
             ('description', self.gf('django.db.models.fields.TextField')()),
             ('group', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.MeasureCategory'], null=True, blank=True)),
             ('klass', self.gf('django.db.models.fields.CharField')(max_length=256, null=True, blank=True)),
@@ -108,13 +109,6 @@ class Migration(SchemaMigration):
         ))
         db.create_unique('lizard_measure_measuretype_units', ['measuretype_id', 'unit_id'])
 
-        # Adding model 'Executive'
-        db.create_table('lizard_measure_executive', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=200)),
-        ))
-        db.send_create_signal('lizard_measure', ['Executive'])
-
         # Adding model 'Organization'
         db.create_table('lizard_measure_organization', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -125,7 +119,6 @@ class Migration(SchemaMigration):
         # Adding model 'FundingOrganization'
         db.create_table('lizard_measure_fundingorganization', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('cost', self.gf('django.db.models.fields.FloatField')()),
             ('percentage', self.gf('django.db.models.fields.FloatField')()),
             ('organization', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.Organization'])),
             ('measure', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.Measure'])),
@@ -138,6 +131,7 @@ class Migration(SchemaMigration):
             ('name', self.gf('django.db.models.fields.CharField')(max_length=200)),
             ('color', self.gf('lizard_map.models.ColorField')(max_length=8)),
             ('value', self.gf('django.db.models.fields.FloatField')(default=0.0)),
+            ('valid', self.gf('django.db.models.fields.NullBooleanField')(default=None, null=True, blank=True)),
         ))
         db.send_create_signal('lizard_measure', ['MeasureStatus'])
 
@@ -146,7 +140,7 @@ class Migration(SchemaMigration):
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('measure', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.Measure'])),
             ('status', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.MeasureStatus'])),
-            ('datetime', self.gf('django.db.models.fields.DateField')()),
+            ('date', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
             ('is_planning', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('investment_expenditure', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
@@ -160,6 +154,7 @@ class Migration(SchemaMigration):
             ('start_date', self.gf('django.db.models.fields.DateField')()),
             ('end_date', self.gf('django.db.models.fields.DateField')()),
             ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('valid', self.gf('django.db.models.fields.NullBooleanField')(default=None, null=True, blank=True)),
         ))
         db.send_create_signal('lizard_measure', ['MeasurePeriod'])
 
@@ -179,8 +174,9 @@ class Migration(SchemaMigration):
             ('description', self.gf('django.db.models.fields.CharField')(max_length=512, null=True, blank=True)),
             ('value', self.gf('django.db.models.fields.FloatField')()),
             ('unit', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.Unit'])),
-            ('responsible_organization', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.Organization'])),
-            ('executive', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.Executive'])),
+            ('initiator', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='initiator_measure_set', null=True, to=orm['lizard_measure.Organization'])),
+            ('responsible_department', self.gf('django.db.models.fields.CharField')(max_length=256)),
+            ('executive', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.Organization'])),
             ('total_costs', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('investment_costs', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('exploitation_costs', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
@@ -198,13 +194,13 @@ class Migration(SchemaMigration):
         ))
         db.create_unique('lizard_measure_measure_waterbody', ['measure_id', 'waterbody_id'])
 
-        # Adding M2M table for field category on 'Measure'
-        db.create_table('lizard_measure_measure_category', (
+        # Adding M2M table for field categories on 'Measure'
+        db.create_table('lizard_measure_measure_categories', (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
             ('measure', models.ForeignKey(orm['lizard_measure.measure'], null=False)),
             ('measurecategory', models.ForeignKey(orm['lizard_measure.measurecategory'], null=False))
         ))
-        db.create_unique('lizard_measure_measure_category', ['measure_id', 'measurecategory_id'])
+        db.create_unique('lizard_measure_measure_categories', ['measure_id', 'measurecategory_id'])
 
 
     def backwards(self, orm):
@@ -242,9 +238,6 @@ class Migration(SchemaMigration):
         # Removing M2M table for field units on 'MeasureType'
         db.delete_table('lizard_measure_measuretype_units')
 
-        # Deleting model 'Executive'
-        db.delete_table('lizard_measure_executive')
-
         # Deleting model 'Organization'
         db.delete_table('lizard_measure_organization')
 
@@ -266,8 +259,8 @@ class Migration(SchemaMigration):
         # Removing M2M table for field waterbody on 'Measure'
         db.delete_table('lizard_measure_measure_waterbody')
 
-        # Removing M2M table for field category on 'Measure'
-        db.delete_table('lizard_measure_measure_category')
+        # Removing M2M table for field categories on 'Measure'
+        db.delete_table('lizard_measure_measure_categories')
 
 
     models = {
@@ -342,14 +335,8 @@ class Migration(SchemaMigration):
             'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '50', 'db_index': 'True'}),
             'source_log': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
         },
-        'lizard_measure.executive': {
-            'Meta': {'object_name': 'Executive'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'})
-        },
         'lizard_measure.fundingorganization': {
             'Meta': {'object_name': 'FundingOrganization'},
-            'cost': ('django.db.models.fields.FloatField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'measure': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.Measure']"}),
             'organization': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.Organization']"}),
@@ -364,15 +351,16 @@ class Migration(SchemaMigration):
         'lizard_measure.measure': {
             'Meta': {'object_name': 'Measure'},
             'aggregation_type': ('django.db.models.fields.IntegerField', [], {'default': '1'}),
-            'category': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['lizard_measure.MeasureCategory']", 'symmetrical': 'False'}),
+            'categories': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['lizard_measure.MeasureCategory']", 'symmetrical': 'False'}),
             'datetime_in_source': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.CharField', [], {'max_length': '512', 'null': 'True', 'blank': 'True'}),
-            'executive': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.Executive']"}),
+            'executive': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.Organization']"}),
             'exploitation_costs': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'ident': ('django.db.models.fields.CharField', [], {'max_length': '64', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             'import_raw': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'import_source': ('django.db.models.fields.CharField', [], {'default': '3', 'max_length': '16'}),
+            'initiator': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'initiator_measure_set'", 'null': 'True', 'to': "orm['lizard_measure.Organization']"}),
             'investment_costs': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'is_KRW_measure': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
             'is_indicator': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -381,7 +369,7 @@ class Migration(SchemaMigration):
             'parent': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.Measure']", 'null': 'True', 'blank': 'True'}),
             'period': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.MeasurePeriod']", 'null': 'True', 'blank': 'True'}),
             'read_only': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'responsible_organization': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.Organization']"}),
+            'responsible_department': ('django.db.models.fields.CharField', [], {'max_length': '256'}),
             'status': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['lizard_measure.MeasureStatus']", 'through': "orm['lizard_measure.MeasureStatusMoment']", 'symmetrical': 'False'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '256', 'null': 'True', 'blank': 'True'}),
             'total_costs': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
@@ -392,25 +380,28 @@ class Migration(SchemaMigration):
         'lizard_measure.measurecategory': {
             'Meta': {'object_name': 'MeasureCategory'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
+            'valid': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'})
         },
         'lizard_measure.measureperiod': {
             'Meta': {'ordering': "('start_date', 'end_date')", 'object_name': 'MeasurePeriod'},
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'end_date': ('django.db.models.fields.DateField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'start_date': ('django.db.models.fields.DateField', [], {})
+            'start_date': ('django.db.models.fields.DateField', [], {}),
+            'valid': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'})
         },
         'lizard_measure.measurestatus': {
             'Meta': {'ordering': "('-value',)", 'object_name': 'MeasureStatus'},
             'color': ('lizard_map.models.ColorField', [], {'max_length': '8'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
+            'valid': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
             'value': ('django.db.models.fields.FloatField', [], {'default': '0.0'})
         },
         'lizard_measure.measurestatusmoment': {
-            'Meta': {'ordering': "('datetime',)", 'object_name': 'MeasureStatusMoment'},
-            'datetime': ('django.db.models.fields.DateField', [], {}),
+            'Meta': {'ordering': "('date',)", 'object_name': 'MeasureStatusMoment'},
+            'date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'exploitation_expenditure': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -421,7 +412,7 @@ class Migration(SchemaMigration):
         },
         'lizard_measure.measuretype': {
             'Meta': {'ordering': "('code',)", 'object_name': 'MeasureType'},
-            'code': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
+            'code': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
             'combined_name': ('django.db.models.fields.CharField', [], {'max_length': '256', 'null': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.TextField', [], {}),
             'group': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.MeasureCategory']", 'null': 'True', 'blank': 'True'}),
@@ -451,7 +442,7 @@ class Migration(SchemaMigration):
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'unit': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'valid': ('django.db.models.fields.NullBooleanField', [], {'default': 'False', 'null': 'True', 'blank': 'True'})
+            'valid': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'})
         },
         'lizard_measure.waterbody': {
             'Meta': {'ordering': "('name',)", 'object_name': 'WaterBody'},

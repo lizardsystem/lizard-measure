@@ -20,10 +20,12 @@ from lizard_area.models import DataAdministrator
 from lizard_measure.models import Measure
 from lizard_measure.models import MeasureCategory
 from lizard_measure.models import MeasureType
-from lizard_measure.models import Executive
 from lizard_measure.models import MeasurePeriod
 from lizard_measure.models import MeasureStatus
+from lizard_measure.models import MeasureStatusMoment
 from lizard_measure.models import WaterBody
+from lizard_measure.models import Organization
+from lizard_measure.models import FundingOrganization
 from lizard_measure.models import Unit
 
 from lizard_geo.models import GeoObjectGroup
@@ -36,6 +38,7 @@ def _records(xml_filename):
     Each yielded record is a dict with columnnames as keys
     """
     # Parse xml and find records
+    print 'Parsing %s' % xml_filename
     tree = etree.parse(xml_filename)
     root = tree.getroot()
     record_elements = root.find('records')
@@ -46,6 +49,20 @@ def _records(xml_filename):
         record = dict([(column.get('name'), column.text)
                        for column in record_element])
         yield record
+
+def _get_or_create(model, get_kwargs, extra_kwargs={}):
+    """
+    Return object, created_boolean
+    """
+    try:
+        return model.objects.get(**get_kwargs), False
+    except model.DoesNotExist:
+        create_kwargs = get_kwargs
+        create_kwargs.update(extra_kwargs)
+        obj = model(**create_kwargs)
+        obj.save()
+        return obj, True
+
 
 def import_waterbodies(filename, user, data_administrator):
     print 'Import waterbodies %s...' % filename
@@ -103,8 +120,7 @@ def import_waterbodies(filename, user, data_administrator):
         wb.save()
 
 
-def import_maatregelen(filename):
-    print 'Import maatregelen %s...' % filename
+def import_measures(filename):
     for rec in _records(filename):
 
         measure_type, measure_type_created = MeasureType.objects.get_or_create(
@@ -115,15 +131,10 @@ def import_maatregelen(filename):
             unit=rec['mateenh'],
         )
 
-        try:
-            measure_status.MeasureStatus.objects.get(name=rec['toestand'])
-        except MeasureStatus.DoesNotExist:
-            measure_status_kwargs = {
-                'name': rec['toestand'],
-                'color': 'gray'
-
+        executive, executive_created = _get_or_create(
+            model=Organization,
+            get_kwargs={'name': rec['uitvoerder']},
         )
-        if measure_status_created
 
 
         datetime_in_source = datetime.datetime.strptime(
@@ -148,13 +159,14 @@ def import_maatregelen(filename):
             'datetime_in_source': datetime_in_source,
             'import_raw': import_raw_json,
             'aggregation_type': Measure.AGGREGATION_TYPE_MIN,
-            'waterbody': None,
-            'description' = rec['toelichting'],
-            'value' = rec['matomv'],
-            'unit' = unit,
-            'investment_costs' = rec['investkosten'],
-            'expoitation_costs' = rec['exploitkosten'],
-
+            'description': rec['toelichting'],
+            'value': rec['matomv'],
+            'unit': unit,
+            'investment_costs': rec['investkosten'],
+            'exploitation_costs': rec['exploitkosten'],
+            'initiator': None,
+            'executive': executive,
+        }
 
         measure = Measure(**measure_kwargs)
         measure.save()
@@ -169,52 +181,44 @@ def import_maatregelen(filename):
             'gwbnaam',
         ]
         for c in category_columns:
-            cat_obj = MeasureCategory.objects.get_or_create(name=rec(c))
-            measure.categories.add(cat_obj)
+            if rec[c] is None:
+                continue
+            category, category_created = _get_or_create(
+                model=MeasureCategory,
+                get_kwargs={'name': rec[c]},
+            )
+            measure.categories.add(category)
 
+        # Add a measurestatusmoment for the status at import
+        measure_status, measure_status_created = _get_or_create(
+            model=MeasureStatus,
+            get_kwargs={'name': rec['maatregelstatus']},
+            extra_kwargs={'color': 'gray'},
+        )
+        measure_status_date = datetime.date(year=2010, month=1, day=1)
+        measure_status_moment = MeasureStatusMoment(
+            measure=measure,
+            status=measure_status,
+            date=measure_status_date,
+            description='Import KRW portaal',
+        )
+        measure_status_moment.save()
 
-
-    
-
-
-
-        
-
-
-
-        
-
-
-
-
-
-        # gafident has 'NL' added to it.
-        # Sometimes multiple occurences are present.
-        waterbody = WaterBody.objects.filter(
-            ident=record['gafident'][2:])[0]
-        category = MeasureCategory.objects.all()[0]  # Don't know...
-        code, code_created = MeasureCode.objects.get_or_create(
-            code=record['matcode'])
-        if code_created:
-            print 'Warning: code %s created, check manually' % code
-        unit, unit_created = Unit.objects.get_or_create(
-            sign=record['mateenh'])
-        if unit_created:
-            print 'Warning: unit %s created, check manually' % unit
-        executive, executive_created = Executive.objects.get_or_create(
-            name=record['uitvoerder'])
-        if executive_created:
-            print 'Warning: executive %s created, check manually' % executive
-        measure.waterbody = waterbody
-        measure.name = record['matnaam'][:200]
-        measure.description = (record['toelichting'][:200]
-                               if record['toelichting'] else '')
-        measure.category = category
-        measure.code = code
-        measure.value = record['matomv']  # Floatfield??
-        measure.unit = unit
-        measure.executive = executive
-        measure.save()
+        # Add fundingorganizations
+        for n in ['1', '2', '3']:
+            if rec['kostenpercent' + n] == '0':
+                continue
+            cost_carrier = rec['kostendrager' + n]
+            cost_percentage =  float(rec['kostenpercent' + n])
+            organization, organization_created = _get_or_create(
+                model=Organization,
+                get_kwargs={'name': cost_carrier},
+            )
+            funding_organization = FundingOrganization(
+                percentage=cost_percentage,
+                organization=organization,
+                measure=measure,
+            )
 
 
 def import_measure_types(filename):
@@ -242,6 +246,27 @@ def import_measure_types(filename):
             unit_obj = Unit.objects.get_or_create(unit=u_str)[0]
             measure_type.units.add(unit_obj)
 
+
+def import_KRW_lookup(filename):
+    for rec in _records(filename):
+        # Insert 'uitvoerders'
+        if rec['domein'] == 'Uitvoerder':
+            organization, organization_created = _get_or_create(
+                model=Organization,
+                get_kwargs={'name': rec['description']},
+            )
+            if not Organization.objects.filter(
+                    name=rec['description'],
+                ).exists():
+                Organization(name=rec['description']).save()
+        # Insert 'matstatus'
+        if rec['domein'] == 'Matstatus':
+            measure_status, measure_status_created = _get_or_create(
+                model=MeasureStatus,
+                get_kwargs={'name': rec['description']},
+                extra_kwargs={'color': 'gray'},
+            )
+        
 
 class Command(BaseCommand):
     args = ''
@@ -282,14 +307,18 @@ class Command(BaseCommand):
 #           user=user,
 #           data_administrator=hhnk_administrator,
 #       )
+
+        # Import Lookups
+        import_KRW_lookup(os.path.join(import_path, 'KRW_lookup.xml'))
         
         # Maatregeltypes (SGBP)
-#       import_measure_types(
-#           filename=os.path.join(
-#               import_path,
-#               'maatregelstandaard.xml',
-#           ),
-#       )
+        import_measure_types(
+            filename=os.path.join(
+                import_path,
+                'maatregelstandaard.xml',
+            ),
+        )
 
         # Import measures
-        import_maatregelen(os.path.join(import_path, 'maatregelen.xml'))
+        import_measures(os.path.join(import_path, 'maatregelen.xml'))
+
