@@ -1,4 +1,5 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
+# -*- coding: utf-8 -*-
 import datetime
 import logging
 
@@ -123,6 +124,50 @@ class WaterBody(models.Model):
                 (),
                 {'area': str(self.slug)})
 
+# OWM
+class OWMStatus(models.Model):
+    """
+    OWMStatus
+    """
+    code = models.CharField(
+        max_length=32,
+        unique=True,
+    )
+    description = models.CharField(
+        max_length=256,
+        blank=True,
+        null=True,
+    )
+
+    class Meta:
+        verbose_name = _('OWM Status')
+        verbose_name_plural = _('OWM Statusen')
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.code, self.description)
+
+
+class OWMType(models.Model):
+    """
+    OWMType
+    """
+    code = models.CharField(
+        max_length=32,
+        unique=True,
+    )
+    description = models.CharField(
+        max_length=256,
+        blank=True,
+        null=True,
+    )
+
+    class Meta:
+        verbose_name = _('OWM Type')
+        verbose_name_plural = _('OWM Types')
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.code, self.description)
+
 
 # Measures
 class MeasureCategory(models.Model):
@@ -215,8 +260,8 @@ class FundingOrganization(models.Model):
     measure = models.ForeignKey('Measure')
 
     def __unicode__(self):
-        return u'%s: %s (EUR %f,-)' % (
-            self.organization, self.measure, self.cost)
+        return u'%s: %s (%.0f %%)' % (
+            self.organization, self.measure, self.percentage)
 
 
 class MeasureStatus(models.Model):
@@ -318,30 +363,58 @@ class Measure(models.Model):
     parent = models.ForeignKey('self', blank=True, null=True)
 
     ident = models.CharField(
-        max_length=64, unique=True, blank=True, null=True,
+        max_length=64,
+        unique=True,
+        blank=True,
+        null=True,
+        verbose_name='Unieke code',
     )
 
-    is_KRW_measure = models.NullBooleanField()
+    is_KRW_measure = models.NullBooleanField(
+        verbose_name='Indicatie KRW maatregel',
+    )
 
     # XY, geometry?
 
     measure_type = models.ForeignKey(
         MeasureType,
         help_text="SGBP code",
+        verbose_name='Maatregeltype',
     )
 
-    title = models.CharField(max_length=256, null=True, blank=True)
+    title = models.CharField(
+        max_length=256,
+        null=True,
+        blank=True,
+        verbose_name='Titel',
+    )
 
     # Beleidsdoel?
 
-    period = models.ForeignKey(MeasurePeriod, blank=True, null=True)
+    period = models.ForeignKey(
+        MeasurePeriod,
+        blank=True,
+        null=True,
+        verbose_name='Tijdvak',
+    )
 
     # Fields related to import
     import_source = models.CharField(
-        max_length=16, editable=False, default=SOURCE_MANUAL
+        max_length=16,
+        editable=False,
+        default=SOURCE_MANUAL,
+        verbose_name='Import bron',
     )
-    datetime_in_source = models.DateTimeField(blank=True, null=True)
-    import_raw = models.TextField(blank=True, null=True)
+    datetime_in_source = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name='Oorspronkelijke datum in bron',
+    )
+    import_raw = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name='Volledige import data',
+    )
 
     # aggregation is used to 'summarize' the statuses from child measures
     # and its own status (they are equal in value, normally one would not give
@@ -355,17 +428,36 @@ class Measure(models.Model):
     waterbody = models.ManyToManyField(
         WaterBody,
         help_text="Bij welk waterlichaam hoort deze maatregel?",
+        verbose_name='Waterlichaam',
     )
 
-    description = models.CharField(max_length=512, blank=True, null=True)
+    area = models.ManyToManyField(
+        Area,
+        help_text='Bij welke aan- afvoergebieden hoort deze maatregel',
+        verbose_name='Aan- afvoergebied',
+    )
 
-    categories = models.ManyToManyField(MeasureCategory)
+    description = models.CharField(
+        max_length=512,
+        blank=True,
+        null=True,
+        verbose_name='Omschrijving',
+    )
+
+    categories = models.ManyToManyField(
+        MeasureCategory,
+        verbose_name=u'Categorieën',
+    )
 
     value = models.FloatField(
-        help_text="Omvang van maatregel, inhoud afhankelijk van eenheid")
+        help_text="Omvang van maatregel, inhoud afhankelijk van eenheid",
+        verbose_name='Omvang van maatregel.',
+    )
     unit = models.ForeignKey(
         Unit,
-        help_text="Eenheid behorende bij omvang van maatregel")
+        help_text="Eenheid behorende bij omvang van maatregel",
+        verbose_name='Eenheid',
+    )
 
     initiator = models.ForeignKey(
         Organization,
@@ -380,28 +472,41 @@ class Measure(models.Model):
         null=True,
         blank=True,
         help_text='Uitvoerder',
+        verbose_name='Uitvoerder',
         related_name = 'executive_measure_set'
     )
 
     responsible_department = models.CharField(
         max_length=256,
+        verbose_name='Verantwoordelijke afdeling',
         help_text='Verantwoordelijke afdeling binnen initiatiefnemer',
     )
 
-    executive = models.ForeignKey(
-        Organization,
-        help_text="Initiatiefnemer/uitvoerder")
-
     total_costs = models.IntegerField(
-        null=True, blank=True, help_text="Totale kosten in euro's")
+        null=True,
+        blank=True,
+        verbose_name='Totale kosten',
+        help_text="Totale kosten in euro's"
+    )
     investment_costs = models.IntegerField(
-        null=True, blank=True, help_text="Investeringskosten in euro's")
+        null=True,
+        blank=True,
+        verbose_name='Investeringskosten',
+        help_text="Investeringskosten in euro's"
+    )
     exploitation_costs = models.IntegerField(
-        null=True, blank=True, help_text="Exploitatiekosten in euro's")
+        null=True,
+        blank=True,
+        verbose_name='Exploitatiekosten',
+        help_text="Exploitatiekosten in euro's"
+    )
 
 
-    status = models.ManyToManyField(MeasureStatus,
-                                    through='MeasureStatusMoment')
+    status = models.ManyToManyField(
+        MeasureStatus,
+        through='MeasureStatusMoment',
+        verbose_name='Status',
+    )
 
     read_only = models.BooleanField(
         default=False,
@@ -410,7 +515,6 @@ class Measure(models.Model):
 
     # Is this different from is_KRW_measure?
     is_indicator = models.BooleanField(default=False)
-    owner = models.ForeignKey(User, blank=True, null=True)
 
     class Meta:
         verbose_name = _("Measure")

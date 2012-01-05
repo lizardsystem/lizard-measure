@@ -27,6 +27,8 @@ from lizard_measure.models import WaterBody
 from lizard_measure.models import Organization
 from lizard_measure.models import FundingOrganization
 from lizard_measure.models import Unit
+from lizard_measure.models import OWMStatus
+from lizard_measure.models import OWMType
 
 from lizard_geo.models import GeoObjectGroup
 
@@ -62,6 +64,13 @@ def _get_or_create(model, get_kwargs, extra_kwargs={}):
         obj = model(**create_kwargs)
         obj.save()
         return obj, True
+
+
+def _dates_from_xml(description):
+    start_year, end_year = [int(y) for y in description.split('-')]
+    start_date = datetime.date(year=start_year, month=1, day=1)
+    end_date = datetime.date(year=end_year, month=1, day=1)
+    return start_date, end_date
 
 
 def import_waterbodies(filename, user, data_administrator):
@@ -131,10 +140,12 @@ def import_measures(filename):
             unit=rec['mateenh'],
         )
 
-        executive, executive_created = _get_or_create(
-            model=Organization,
-            get_kwargs={'name': rec['uitvoerder']},
-        )
+#       executive, executive_created = _get_or_create(
+#           model=Organization,
+#           get_kwargs={'name': rec['uitvoerder']},
+#       )
+
+        executive = Organization.objects.get(name=rec['uitvoerder'])
 
 
         datetime_in_source = datetime.datetime.strptime(
@@ -143,9 +154,14 @@ def import_measures(filename):
         )
 
         import_raw_json = simplejson.dumps(
-            rec.items(),
+            rec,
             indent=4,
         )
+
+        if rec['tijdvak'] == 'onbekend':
+            period = None
+        else:
+            period = MeasurePeriod.objects.get(description=rec['tijdvak'])
 
         measure_kwargs = {
             # KRW matident => Measure.ident
@@ -154,7 +170,7 @@ def import_measures(filename):
             # XY, geometry?
             'measure_type': measure_type,
             'title': rec['matnaam'],
-            'period': None,
+            'period': period,
             'import_source': Measure.SOURCE_KRW_PORTAAL,
             'datetime_in_source': datetime_in_source,
             'import_raw': import_raw_json,
@@ -210,15 +226,13 @@ def import_measures(filename):
                 continue
             cost_carrier = rec['kostendrager' + n]
             cost_percentage =  float(rec['kostenpercent' + n])
-            organization, organization_created = _get_or_create(
-                model=Organization,
-                get_kwargs={'name': cost_carrier},
-            )
+            organization = Organization.objects.get(name=cost_carrier)            
             funding_organization = FundingOrganization(
                 percentage=cost_percentage,
                 organization=organization,
                 measure=measure,
             )
+            funding_organization.save()
 
 
 def import_measure_types(filename):
@@ -248,23 +262,44 @@ def import_measure_types(filename):
 
 
 def import_KRW_lookup(filename):
+    """
+    Import various domains into seperate lizard_measure models
+    """
     for rec in _records(filename):
         # Insert 'uitvoerders'
-        if rec['domein'] == 'Uitvoerder':
+        if rec['domein'] == 'uitvoerder':
             organization, organization_created = _get_or_create(
                 model=Organization,
                 get_kwargs={'name': rec['description']},
             )
-            if not Organization.objects.filter(
-                    name=rec['description'],
-                ).exists():
-                Organization(name=rec['description']).save()
         # Insert 'matstatus'
         if rec['domein'] == 'Matstatus':
             measure_status, measure_status_created = _get_or_create(
                 model=MeasureStatus,
                 get_kwargs={'name': rec['description']},
                 extra_kwargs={'color': 'gray'},
+            )
+        # Insert 'tijdvak'
+        if rec['domein'] == 'tijdvak' and not rec['description'] == 'onbekend':
+            start_date, end_date = _dates_from_xml(rec['description'])
+            measure_period, measure_period_created = _get_or_create(
+                model=MeasurePeriod,
+                get_kwargs = {'start_date': start_date, 'end_date': end_date},
+                extra_kwargs = {'description': rec['description']},
+            )
+        # Insert 'owmstat'
+        if rec['domein'] == 'owmstat':
+            owm_stat, owm_stat_created = _get_or_create(
+                model=OWMStatus,
+                get_kwargs={'code': rec['code']},
+                extra_kwargs={'description': rec['description']},
+            )
+        # Insert 'owmtype'
+        if rec['domein'] == 'owmtype':
+            owm_type, owm_type_created = _get_or_create(
+                model=OWMType,
+                get_kwargs={'code': rec['code']},
+                extra_kwargs={'description': rec['description']},
             )
         
 
