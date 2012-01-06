@@ -8,8 +8,6 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
-from treebeard.al_tree import AL_Node  # Adjacent list implementation
-
 from lizard_map.models import ColorField
 from lizard_map.utility import short_string
 
@@ -19,34 +17,6 @@ from lizard_area.models import Area
 
 
 logger = logging.getLogger(__name__)
-
-
-class KRWWaterType(models.Model):
-    """
-    TypeKRWTypologie, zie Aquo standaard domein
-    """
-    class Meta:
-        verbose_name = _("KRW water type")
-        verbose_name_plural = _("KRW water types")
-
-    name = models.CharField(max_length=80)
-    code = models.CharField(max_length=8)
-
-    def __unicode__(self):
-        return u'%s - %s' % (self.code, self.name)
-
-
-class WaterBodyStatus(models.Model):
-    """Waterbody status
-    """
-    class Meta:
-        verbose_name = _("Waterbody status")
-        verbose_name_plural = _("Waterbody statuses")
-
-    name = models.CharField(max_length=80)
-
-    def __unicode__(self):
-        return u'%s' % self.name
 
 
 class Province(models.Model):
@@ -73,58 +43,6 @@ class Municipality(models.Model):
         return u'%s' % self.name
 
 
-class WaterBody(models.Model):
-    """Specific area for which we want to know KRW scores"""
-
-    class Meta:
-        verbose_name = _("Waterbody")
-        verbose_name_plural = _("Waterbodies")
-        ordering = ("name",)
-
-    area = models.ForeignKey(Area, null=True, blank=True)
-
-    name = models.CharField(max_length=80)
-    slug = models.SlugField(help_text=u"Name used for URL.")
-    ident = models.CharField(
-        max_length=80,
-        help_text=u"The ID corresponding to the shapefile ID.")
-    description = models.TextField(null=True, blank=True,
-                                   help_text="extra info, not displayed")
-
-    # Infoscreen. All fields are optional.
-    status = models.ForeignKey(
-        WaterBodyStatus, null=True, blank=True, help_text="status")
-    water_type = models.ForeignKey(
-        KRWWaterType, null=True, blank=True, help_text="krw water type")
-
-    protected_area_reason = models.TextField(
-        null=True, blank=True, help_text="beschermd gebied vanwege")
-
-    code = models.CharField(max_length=80, null=True, blank=True)
-    province = models.ManyToManyField(
-        Province, null=True, blank=True, help_text="provincie")
-    municipality = models.ManyToManyField(
-        Municipality, null=True, blank=True, help_text="gemeente")
-
-    characteristics = models.TextField(
-        null=True, blank=True, help_text="karakteristiek")
-    current_situation_chemicals = models.TextField(
-        null=True, blank=True,
-        help_text="Normoverschrijding chemie huidige situatie")
-    control_parameters = models.TextField(
-        null=True, blank=True,
-        help_text="stuurparameters")
-
-    def __unicode__(self):
-        return u'%s' % (self.name)
-
-    @models.permalink
-    def get_absolute_url(self):
-        return ('lizard_krw.waterbody',
-                (),
-                {'area': str(self.slug)})
-
-# OWM
 class OWMStatus(models.Model):
     """
     OWMStatus
@@ -167,6 +85,23 @@ class OWMType(models.Model):
 
     def __unicode__(self):
         return u'%s - %s' % (self.code, self.description)
+
+
+
+
+class WaterBody(models.Model):
+    """Specific area for which we want to know KRW scores"""
+
+    class Meta:
+        verbose_name = _("Waterbody")
+        verbose_name_plural = _("Waterbodies")
+
+    area = models.ForeignKey(Area, null=True, blank=True)
+    owm_status = models.ForeignKey(OWMStatus, null=True, blank=True)
+    owm_type = models.ForeignKey(OWMType, null=True, blank=True)
+
+    def __unicode__(self):
+        return u'%s' % (self.area.name)
 
 
 # Measures
@@ -425,13 +360,13 @@ class Measure(models.Model):
         default=AGGREGATION_TYPE_MIN,
     )
 
-    waterbody = models.ManyToManyField(
+    waterbodies = models.ManyToManyField(
         WaterBody,
         help_text="Bij welk waterlichaam hoort deze maatregel?",
         verbose_name='Waterlichaam',
     )
 
-    area = models.ManyToManyField(
+    areas = models.ManyToManyField(
         Area,
         help_text='Bij welke aan- afvoergebieden hoort deze maatregel',
         verbose_name='Aan- afvoergebied',

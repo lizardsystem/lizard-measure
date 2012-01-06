@@ -1,7 +1,6 @@
 from django.contrib import admin
 
 from lizard_measure.models import FundingOrganization
-from lizard_measure.models import KRWWaterType
 from lizard_measure.models import Measure
 from lizard_measure.models import MeasurePeriod
 from lizard_measure.models import MeasureCategory
@@ -13,7 +12,6 @@ from lizard_measure.models import Organization
 from lizard_measure.models import Province
 from lizard_measure.models import Unit
 from lizard_measure.models import WaterBody
-from lizard_measure.models import WaterBodyStatus
 from lizard_measure.models import OWMStatus
 from lizard_measure.models import OWMType
 
@@ -31,7 +29,10 @@ class MeasureInline(admin.TabularInline):
 
 
 class MeasureAdmin(admin.ModelAdmin):
-    list_filter = ['waterbody', ]
+    list_filter = [
+        'waterbodies',
+        'areas',
+    ]
     readonly_fields = [
         'datetime_in_source',
         'import_raw',
@@ -39,7 +40,11 @@ class MeasureAdmin(admin.ModelAdmin):
     inlines = [
         MeasureStatusMomentInline, FundingOrganizationInline,
         ]
-    filter_horizontal = ['categories', ]
+    filter_horizontal = [
+        'categories',
+        'waterbodies',
+        'areas',
+    ]
 
 
 class MeasureStatusAdmin(admin.ModelAdmin):
@@ -51,7 +56,6 @@ class MeasureTypeAdmin(admin.ModelAdmin):
 
 
 admin.site.register(FundingOrganization)
-admin.site.register(KRWWaterType)
 admin.site.register(Measure, MeasureAdmin)
 admin.site.register(MeasurePeriod)
 admin.site.register(MeasureCategory)
@@ -63,6 +67,5 @@ admin.site.register(Organization)
 admin.site.register(Province)
 admin.site.register(Unit)
 admin.site.register(WaterBody)
-admin.site.register(WaterBodyStatus)
 admin.site.register(OWMStatus)
 admin.site.register(OWMType)

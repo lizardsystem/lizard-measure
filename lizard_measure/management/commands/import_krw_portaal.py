@@ -74,7 +74,6 @@ def _dates_from_xml(description):
 
 
 def import_waterbodies(filename, user, data_administrator):
-    print 'Import waterbodies %s...' % filename
     geo_object_group_name = ('measure::waterbody::%s' %
                              os.path.basename(filename))
     try:
@@ -87,27 +86,26 @@ def import_waterbodies(filename, user, data_administrator):
         pass
 
     # Create geoobject group
-    print 'Creating new geo object group...'
-    print geo_object_group_name
     geo_object_group = GeoObjectGroup(
-        name=geo_object_group_name[:128],
-        slug=slugify(geo_object_group_name)[:50],
-        created_by=user)
+        name=geo_object_group_name,
+        slug=slugify(os.path.basename(filename).split('.')[-2]),
+        created_by=user,
+    )
     geo_object_group.save()
 
-    for record in _records(filename):
+    for rec in _records(filename):
 
         # Create Area
         area = Area(
             # Fields from GeoObject
-            ident=record['gafident'],
-            geometry=GEOSGeometry(record['wkb_geometry']),
+            ident=rec['owmident'].strip(),
+            geometry=GEOSGeometry('POINT(0 0)'),  # Dummy geometry, to get from shape
             geo_object_group=geo_object_group,
 
             # Fields from Communique
-            name=record['gafnaam'],
+            name=rec['owmnaam'].strip(),
             code=None,
-            description=record['gafomsch'],
+            description=None,
 
             # Fields from Area
             parent=None,
@@ -119,12 +117,12 @@ def import_waterbodies(filename, user, data_administrator):
         area.save()
 
         # Create WaterBody
+        owm_status = OWMStatus.objects.get(code=rec['owmstat'].strip())
+        owm_type = OWMType.objects.get(code=rec['owmtype'].strip())
         wb = WaterBody(
             area=area,
-            name=record['gafnaam'],
-            slug=slugify(record['gafnaam']),
-            ident=record['gafident'],
-            description=record['gafomsch'],
+            owm_status=owm_status,
+            owm_type=owm_type,
         )
         wb.save()
 
@@ -186,6 +184,25 @@ def import_measures(filename):
 
         measure = Measure(**measure_kwargs)
         measure.save()
+
+        # Add waterbodies
+        # They can be None, or single, or comma separated
+        print rec['locatie']
+        if rec['locatie'] is None:
+            locations = []
+        else:
+            locations = rec['locatie'].split(', ')
+        for area_ident in locations:
+            if area_ident.startswith('NL'):
+                corrected_area_ident = area_ident
+            else:
+                corrected_area_ident = 'NL' + area_ident
+            print corrected_area_ident
+            waterbody = WaterBody.objects.get(
+                area__ident=corrected_area_ident,
+            )
+            waterbody.save()
+            measure.waterbodies.add(waterbody)
 
         # Add some categories
         category_columns = [
@@ -318,30 +335,6 @@ class Command(BaseCommand):
 
         user = User.objects.get(pk=1)
 
-        # Rijnland WaterBodies
-#       rijnland_administrator = DataAdministrator.objects.get(
-#           name='Rijnland',
-#       )
-#       import_waterbodies(
-#           filename=os.path.join(import_path, 'Gaf15.xml'),
-#           user=user,
-#           data_administrator=rijnland_administrator,
-#       )
-#       import_waterbodies(
-#           filename=os.path.join(import_path, 'gaf45.xml'),
-#           user=user,
-#           data_administrator=rijnland_administrator,
-#       )
-        
-        # HHNK WaterBodies
-#       hhnk_administrator = DataAdministrator.objects.get(
-#           name='HHNK',
-#       )
-#       import_waterbodies(
-#           filename=os.path.join(import_path, 'gaf90.xml'),
-#           user=user,
-#           data_administrator=hhnk_administrator,
-#       )
 
         # Import Lookups
         import_KRW_lookup(os.path.join(import_path, 'KRW_lookup.xml'))
@@ -354,6 +347,20 @@ class Command(BaseCommand):
             ),
         )
 
+        # Waterbodies
+        owm_sources = [
+            ('HHNK','owmhhnk.xml'),
+            ('Waternet','OWMwaternet.xml'),
+            ('Rijnland','owmrijnland.xml'),
+        ]
+
+        for admin_name, xml_file in owm_sources:
+            administrator = DataAdministrator.objects.get(name=admin_name)
+            import_waterbodies(
+                filename=os.path.join(import_path, xml_file),
+                user=user,
+                data_administrator=administrator,
+            )
+
         # Import measures
         import_measures(os.path.join(import_path, 'maatregelen.xml'))
-
