@@ -87,8 +87,6 @@ class OWMType(models.Model):
         return u'%s - %s' % (self.code, self.description)
 
 
-
-
 class WaterBody(models.Model):
     """Specific area for which we want to know KRW scores"""
 
@@ -102,6 +100,58 @@ class WaterBody(models.Model):
 
     def __unicode__(self):
         return u'%s' % (self.area.name)
+
+
+class MeasuringRod(models.Model):
+    """
+    Presently only a stub to hold MeasuringRod objects. Maatlat
+    """
+    id = models.IntegerField(
+        primary_key=True
+    )
+
+
+class Score(models.Model):
+    """
+    Scores / GoalScore
+    """
+    measuring_rod = models.ForeignKey(MeasuringRod)
+    area = models.ForeignKey(Area, null=True, blank=True)
+    ascending = models.NullBooleanField(
+        help_text='True if higher is better',
+    )
+    limit_bad_insufficient = models.FloatField(
+        null=True,
+        blank=True,
+        help_text='grens van slecht naar ontoereikend',
+    )
+    limit_insufficient_moderate = models.FloatField(
+        null=True,
+        blank=True,
+        help_text='grens van ontoereikend naar matig',
+    )
+    target_2015 = models.FloatField(null=True, blank=True)
+    target_2027 = models.FloatField(null=True, blank=True)
+    gep = models.FloatField(null=True, blank=True)
+    
+
+class SteeringParameter(models.Model):
+    """
+    Err...
+    """
+    area = models.ForeignKey(Area)  # Need to make this generic?
+                                    # May also point to WaterBody...
+
+    fews_parameter = models.CharField(max_length=256)
+    #fews_timeseries = models.ManyToManyField(TimeSeries)
+    target_minimum = models.FloatField(
+        blank=True,
+        null=True,
+    )
+    target_maximum = models.FloatField(
+        blank=True,
+        null=True,
+    )
 
 
 # Measures
@@ -266,6 +316,10 @@ class MeasurePeriod(models.Model):
 
     def __unicode__(self):
         return '%d - %d' % (self.start_date.year, self.end_date.year)
+
+
+    
+
 
 
 class Measure(models.Model):
@@ -436,11 +490,16 @@ class Measure(models.Model):
         help_text="Exploitatiekosten in euro's"
     )
 
+    funding_organizations = models.ManyToManyField(
+        Organization,
+        through='FundingOrganization',
+        verbose_name='Financieringsorganisaties',
+    )
 
-    status = models.ManyToManyField(
+    status_moments = models.ManyToManyField(
         MeasureStatus,
         through='MeasureStatusMoment',
-        verbose_name='Status',
+        verbose_name='Statusmomenten',
     )
 
     read_only = models.BooleanField(
@@ -652,3 +711,7 @@ class Measure(models.Model):
             for funding_organization in funding_organizations:
                 result += funding_organization.cost
         return result
+
+
+
+

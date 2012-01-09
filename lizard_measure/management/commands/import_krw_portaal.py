@@ -17,18 +17,20 @@ from lizard_area.models import Area
 from lizard_area.models import DataAdministrator
 
 
+from lizard_measure.models import OWMStatus
+from lizard_measure.models import OWMType
+from lizard_measure.models import WaterBody
+from lizard_measure.models import Organization
+from lizard_measure.models import Unit
+from lizard_measure.models import MeasuringRod
+from lizard_measure.models import Score
 from lizard_measure.models import Measure
 from lizard_measure.models import MeasureCategory
 from lizard_measure.models import MeasureType
 from lizard_measure.models import MeasurePeriod
 from lizard_measure.models import MeasureStatus
 from lizard_measure.models import MeasureStatusMoment
-from lizard_measure.models import WaterBody
-from lizard_measure.models import Organization
 from lizard_measure.models import FundingOrganization
-from lizard_measure.models import Unit
-from lizard_measure.models import OWMStatus
-from lizard_measure.models import OWMType
 
 from lizard_geo.models import GeoObjectGroup
 
@@ -52,6 +54,7 @@ def _records(xml_filename):
                        for column in record_element])
         yield record
 
+
 def _get_or_create(model, get_kwargs, extra_kwargs={}):
     """
     Return object, created_boolean
@@ -66,11 +69,106 @@ def _get_or_create(model, get_kwargs, extra_kwargs={}):
         return obj, True
 
 
+def _to_float_or_none(xml_str):
+    """
+    Return float from str, replacing ',' by '.'.
+
+    Return None if xml_str is None or unintelligible.
+    """
+    if xml_str is None:
+        return None
+    else:
+        try:
+            return float(xml_str.replace(',', '.'))
+        except ValueError:
+            return None
+
+
+def _ascending_or_none(first, second):
+    """
+    Return first < second, or None if one or both arguments is None
+    """
+    if first is None or second is None:
+        return None
+    return first < second
+
+
 def _dates_from_xml(description):
     start_year, end_year = [int(y) for y in description.split('-')]
     start_date = datetime.date(year=start_year, month=1, day=1)
     end_date = datetime.date(year=end_year, month=1, day=1)
     return start_date, end_date
+
+
+def import_KRW_lookup(filename):
+    """
+    Import various domains into seperate lizard_measure models
+    """
+    for rec in _records(filename):
+        # Insert 'uitvoerders'
+        if rec['domein'] == 'uitvoerder':
+            organization, organization_created = _get_or_create(
+                model=Organization,
+                get_kwargs={'name': rec['description']},
+            )
+        # Insert 'matstatus'
+        if rec['domein'] == 'Matstatus':
+            measure_status, measure_status_created = _get_or_create(
+                model=MeasureStatus,
+                get_kwargs={'name': rec['description']},
+                extra_kwargs={'color': 'gray'},
+            )
+        # Insert 'tijdvak'
+        if rec['domein'] == 'tijdvak' and not rec['description'] == 'onbekend':
+            start_date, end_date = _dates_from_xml(rec['description'])
+            measure_period, measure_period_created = _get_or_create(
+                model=MeasurePeriod,
+                get_kwargs = {'start_date': start_date, 'end_date': end_date},
+                extra_kwargs = {'description': rec['description']},
+            )
+        # Insert 'owmstat'
+        if rec['domein'] == 'owmstat':
+            owm_stat, owm_stat_created = _get_or_create(
+                model=OWMStatus,
+                get_kwargs={'code': rec['code']},
+                extra_kwargs={'description': rec['description']},
+            )
+        # Insert 'owmtype'
+        if rec['domein'] == 'owmtype':
+            owm_type, owm_type_created = _get_or_create(
+                model=OWMType,
+                get_kwargs={'code': rec['code']},
+                extra_kwargs={'description': rec['description']},
+            )
+
+
+def import_measure_types(filename):
+    for rec in _records(filename):
+        
+        group = MeasureCategory.objects.get_or_create(
+            name=rec['hoofdcategorie'],
+        )[0]
+
+        extra_kwargs = {
+            'description': rec['samengestelde_naam'],
+            'group': group,  # Hoofdcategorie
+            'klass': rec['klasse'],
+            'subcategory': rec['subcategorie'],
+            'harmonisation': rec['harmonisatie'],
+            'combined_name': rec['samengestelde_naam'],
+        }
+
+        measure_type, measure_type_created = _get_or_create(
+            model=MeasureType,
+            get_kwargs={'code': rec['code']},
+            extra_kwargs=extra_kwargs,
+        )
+        
+        # Add the units
+        units = rec['eenheid'].split(', ')
+        for u_str in units:
+            unit_obj = Unit.objects.get_or_create(unit=u_str)[0]
+            measure_type.units.add(unit_obj)
 
 
 def import_waterbodies(filename, user, data_administrator):
@@ -95,36 +193,88 @@ def import_waterbodies(filename, user, data_administrator):
 
     for rec in _records(filename):
 
-        # Create Area
-        area = Area(
-            # Fields from GeoObject
-            ident=rec['owmident'].strip(),
-            geometry=GEOSGeometry('POINT(0 0)'),  # Dummy geometry, to get from shape
-            geo_object_group=geo_object_group,
 
-            # Fields from Communique
-            name=rec['owmnaam'].strip(),
-            code=None,
-            description=None,
+        # Get or create Area
+        ident = rec['owmident'].strip()
+        geometry = GEOSGeometry('POINT(0 0)')  # Dummy geometry
 
-            # Fields from Area
-            parent=None,
-            data_administrator=data_administrator,
-            area_class = Area.AREA_CLASS_KRW_WATERLICHAAM,
+        # Fields from Communique
+        name = rec['owmnaam'].strip()
+        code = None
+        description = ''  # Check this one. I thought there was a description.
+
+        # Fields from Area
+        parent = None
+        data_administrator=data_administrator
+        area_class = Area.AREA_CLASS_KRW_WATERLICHAAM,
+        area, area_created = _get_or_create(
+            model=Area,
+            get_kwargs={'ident': ident},
+            extra_kwargs={
+                'geometry': geometry,
+                'geo_object_group': geo_object_group,
+                'name': name,
+                'code': code,
+                'description': description,
+                'parent': parent,
+                'data_administrator': data_administrator,
+                'area_class': Area.AREA_CLASS_KRW_WATERLICHAAM,
+            },
         )
-        if not area.description:
-            area.description = ''
-        area.save()
 
         # Create WaterBody
+
         owm_status = OWMStatus.objects.get(code=rec['owmstat'].strip())
         owm_type = OWMType.objects.get(code=rec['owmtype'].strip())
-        wb = WaterBody(
-            area=area,
-            owm_status=owm_status,
-            owm_type=owm_type,
+        waterbody, waterbody_created = _get_or_create(
+            model=WaterBody,
+            get_kwargs={'area': area},
+            extra_kwargs={
+                'owm_status': owm_status,
+                'owm_type': owm_type,
+            },
         )
-        wb.save()
+
+
+def import_measuring_rods(filename):
+    for rec in _records(filename):
+        measuring_rod, measuring_rod_created = _get_or_create(
+            model=MeasuringRod,
+            get_kwargs={'id': rec['id']},
+        )
+
+
+def import_scores(filename):
+    for rec in _records(filename):
+        measuring_rod = MeasuringRod.objects.get(id=rec['maatlat'])
+        area = Area.objects.get(ident=rec['owmident'])
+        limit_bad_insufficient = _to_float_or_none(rec['ontoereikend'])
+        limit_insufficient_moderate = _to_float_or_none(rec['matig'])
+        ascending = _ascending_or_none(
+            limit_bad_insufficient,
+            limit_insufficient_moderate,
+        )
+        target_2015 = _to_float_or_none(rec['doel2015'])
+        target_2027 = _to_float_or_none(rec['doel2027'])
+        gep = _to_float_or_none(rec['gep'])
+
+        #  Note that I assume that area and measuring_rod together
+        #  uniquely define the score.
+        score, score_created = _get_or_create(
+            model=Score,
+            get_kwargs={
+                'measuring_rod': measuring_rod,
+                'area': area,
+            },
+            extra_kwargs={
+                'limit_bad_insufficient': limit_bad_insufficient,
+                'limit_insufficient_moderate': limit_insufficient_moderate,
+                'ascending': ascending,
+                'target_2015': target_2015,
+                'target_2027': target_2027,
+                'gep': gep,
+            },
+        )
 
 
 def import_measures(filename):
@@ -206,12 +356,12 @@ def import_measures(filename):
 
         # Add some categories
         category_columns = [
-            'wb21',
-            'thema',
-            'n2000',
-            'n2000naam',
-            'gwb',
-            'gwbnaam',
+            'wb21',  # 0 or 1, mostly 0, relates to thema?
+            'thema',  # mostly null
+            'n2000',  # 0 or 1
+            'n2000naam',  # Some names, mostly null
+            'gwb',  # 0 or 1
+            'gwbnaam', # Some names, mostly null
         ]
         for c in category_columns:
             if rec[c] is None:
@@ -242,7 +392,7 @@ def import_measures(filename):
             if rec['kostenpercent' + n] == '0':
                 continue
             cost_carrier = rec['kostendrager' + n]
-            cost_percentage =  float(rec['kostenpercent' + n])
+            cost_percentage = _to_float_or_none(rec['kostenpercent' + n])
             organization = Organization.objects.get(name=cost_carrier)            
             funding_organization = FundingOrganization(
                 percentage=cost_percentage,
@@ -250,74 +400,6 @@ def import_measures(filename):
                 measure=measure,
             )
             funding_organization.save()
-
-
-def import_measure_types(filename):
-    for rec in _records(filename):
-        
-        group = MeasureCategory.objects.get_or_create(
-            name=rec['hoofdcategorie'],
-        )[0]
-
-        measure_type_kwargs = {
-            'code': rec['code'],
-            'description': rec['samengestelde_naam'],
-            'group': group,  # Hoofdcategorie
-            'klass': rec['klasse'],
-            'subcategory': rec['subcategorie'],
-            'harmonisation': rec['harmonisatie'],
-            'combined_name': rec['samengestelde_naam'],
-        }
-        measure_type = MeasureType(**measure_type_kwargs)
-        measure_type.save()
-        
-        # Add the units
-        units = rec['eenheid'].split(', ')
-        for u_str in units:
-            unit_obj = Unit.objects.get_or_create(unit=u_str)[0]
-            measure_type.units.add(unit_obj)
-
-
-def import_KRW_lookup(filename):
-    """
-    Import various domains into seperate lizard_measure models
-    """
-    for rec in _records(filename):
-        # Insert 'uitvoerders'
-        if rec['domein'] == 'uitvoerder':
-            organization, organization_created = _get_or_create(
-                model=Organization,
-                get_kwargs={'name': rec['description']},
-            )
-        # Insert 'matstatus'
-        if rec['domein'] == 'Matstatus':
-            measure_status, measure_status_created = _get_or_create(
-                model=MeasureStatus,
-                get_kwargs={'name': rec['description']},
-                extra_kwargs={'color': 'gray'},
-            )
-        # Insert 'tijdvak'
-        if rec['domein'] == 'tijdvak' and not rec['description'] == 'onbekend':
-            start_date, end_date = _dates_from_xml(rec['description'])
-            measure_period, measure_period_created = _get_or_create(
-                model=MeasurePeriod,
-                get_kwargs = {'start_date': start_date, 'end_date': end_date},
-                extra_kwargs = {'description': rec['description']},
-            )
-        # Insert 'owmstat'
-        if rec['domein'] == 'owmstat':
-            owm_stat, owm_stat_created = _get_or_create(
-                model=OWMStatus,
-                get_kwargs={'code': rec['code']},
-                extra_kwargs={'description': rec['description']},
-            )
-        # Insert 'owmtype'
-        if rec['domein'] == 'owmtype':
-            owm_type, owm_type_created = _get_or_create(
-                model=OWMType,
-                get_kwargs={'code': rec['code']},
-                extra_kwargs={'description': rec['description']},
-            )
         
 
 class Command(BaseCommand):
@@ -334,7 +416,6 @@ class Command(BaseCommand):
         print 'Importing KRW portaal xml files from %s.' % import_path
 
         user = User.objects.get(pk=1)
-
 
         # Import Lookups
         import_KRW_lookup(os.path.join(import_path, 'KRW_lookup.xml'))
@@ -360,6 +441,22 @@ class Command(BaseCommand):
                 filename=os.path.join(import_path, xml_file),
                 user=user,
                 data_administrator=administrator,
+            )
+
+        # Import measuring_rods
+        import_measuring_rods(os.path.join(import_path, 'maatlatten.xml'))
+
+        # Import scores
+        Score.objects.all().delete()
+        score_sources = [
+            'doelenhhnk.xml',
+            'doelenrijnland.xml',
+            'doelenwaternet.xml',
+        ]
+
+        for xml_file in score_sources:
+            import_scores(
+                filename=os.path.join(import_path, xml_file),
             )
 
         # Import measures

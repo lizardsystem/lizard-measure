@@ -14,6 +14,9 @@ from lizard_measure.models import Unit
 from lizard_measure.models import WaterBody
 from lizard_measure.models import OWMStatus
 from lizard_measure.models import OWMType
+from lizard_measure.models import Score
+from lizard_measure.models import MeasuringRod
+
 
 
 class MeasureStatusMomentInline(admin.TabularInline):
@@ -69,3 +72,5 @@ admin.site.register(Unit)
 admin.site.register(WaterBody)
 admin.site.register(OWMStatus)
 admin.site.register(OWMType)
+admin.site.register(Score)
+admin.site.register(MeasuringRod)

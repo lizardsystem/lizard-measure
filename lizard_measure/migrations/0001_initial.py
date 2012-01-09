@@ -47,6 +47,36 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal('lizard_measure', ['WaterBody'])
 
+        # Adding model 'MeasuringRod'
+        db.create_table('lizard_measure_measuringrod', (
+            ('id', self.gf('django.db.models.fields.IntegerField')(primary_key=True)),
+        ))
+        db.send_create_signal('lizard_measure', ['MeasuringRod'])
+
+        # Adding model 'Score'
+        db.create_table('lizard_measure_score', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('measuring_rod', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.MeasuringRod'])),
+            ('area', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_area.Area'], null=True, blank=True)),
+            ('ascending', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True)),
+            ('limit_bad_insufficient', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
+            ('limit_insufficient_moderate', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
+            ('target_2015', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
+            ('target_2027', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
+            ('gep', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
+        ))
+        db.send_create_signal('lizard_measure', ['Score'])
+
+        # Adding model 'SteeringParameter'
+        db.create_table('lizard_measure_steeringparameter', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('area', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_area.Area'])),
+            ('fews_parameter', self.gf('django.db.models.fields.CharField')(max_length=256)),
+            ('target_minimum', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
+            ('target_maximum', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
+        ))
+        db.send_create_signal('lizard_measure', ['SteeringParameter'])
+
         # Adding model 'MeasureCategory'
         db.create_table('lizard_measure_measurecategory', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -203,6 +233,15 @@ class Migration(SchemaMigration):
         # Deleting model 'WaterBody'
         db.delete_table('lizard_measure_waterbody')
 
+        # Deleting model 'MeasuringRod'
+        db.delete_table('lizard_measure_measuringrod')
+
+        # Deleting model 'Score'
+        db.delete_table('lizard_measure_score')
+
+        # Deleting model 'SteeringParameter'
+        db.delete_table('lizard_measure_steeringparameter')
+
         # Deleting model 'MeasureCategory'
         db.delete_table('lizard_measure_measurecategory')
 
@@ -331,6 +370,7 @@ class Migration(SchemaMigration):
             'description': ('django.db.models.fields.CharField', [], {'max_length': '512', 'null': 'True', 'blank': 'True'}),
             'executive': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'executive_measure_set'", 'null': 'True', 'to': "orm['lizard_measure.Organization']"}),
             'exploitation_costs': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'funding_organizations': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['lizard_measure.Organization']", 'through': "orm['lizard_measure.FundingOrganization']", 'symmetrical': 'False'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'ident': ('django.db.models.fields.CharField', [], {'max_length': '64', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             'import_raw': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
@@ -344,7 +384,7 @@ class Migration(SchemaMigration):
             'period': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.MeasurePeriod']", 'null': 'True', 'blank': 'True'}),
             'read_only': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'responsible_department': ('django.db.models.fields.CharField', [], {'max_length': '256'}),
-            'status': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['lizard_measure.MeasureStatus']", 'through': "orm['lizard_measure.MeasureStatusMoment']", 'symmetrical': 'False'}),
+            'status_moments': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['lizard_measure.MeasureStatus']", 'through': "orm['lizard_measure.MeasureStatusMoment']", 'symmetrical': 'False'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '256', 'null': 'True', 'blank': 'True'}),
             'total_costs': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'unit': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.Unit']"}),
@@ -396,6 +436,10 @@ class Migration(SchemaMigration):
             'subcategory': ('django.db.models.fields.CharField', [], {'max_length': '256', 'null': 'True', 'blank': 'True'}),
             'units': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['lizard_measure.Unit']", 'symmetrical': 'False'})
         },
+        'lizard_measure.measuringrod': {
+            'Meta': {'object_name': 'MeasuringRod'},
+            'id': ('django.db.models.fields.IntegerField', [], {'primary_key': 'True'})
+        },
         'lizard_measure.municipality': {
             'Meta': {'object_name': 'Municipality'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -422,6 +466,26 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Province'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '200'})
+        },
+        'lizard_measure.score': {
+            'Meta': {'object_name': 'Score'},
+            'area': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_area.Area']", 'null': 'True', 'blank': 'True'}),
+            'ascending': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
+            'gep': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'limit_bad_insufficient': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
+            'limit_insufficient_moderate': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
+            'measuring_rod': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.MeasuringRod']"}),
+            'target_2015': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
+            'target_2027': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'})
+        },
+        'lizard_measure.steeringparameter': {
+            'Meta': {'object_name': 'SteeringParameter'},
+            'area': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_area.Area']"}),
+            'fews_parameter': ('django.db.models.fields.CharField', [], {'max_length': '256'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'target_maximum': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
+            'target_minimum': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'})
         },
         'lizard_measure.unit': {
             'Meta': {'object_name': 'Unit'},
