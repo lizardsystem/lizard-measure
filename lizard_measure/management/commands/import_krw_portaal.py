@@ -1,3 +1,4 @@
+# (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
 # -*- coding: utf-8 -*-
 
 from django.conf import settings
@@ -17,9 +18,10 @@ from lizard_area.models import Area
 from lizard_area.models import DataAdministrator
 
 
-from lizard_measure.models import OWMStatus
-from lizard_measure.models import OWMType
+from lizard_measure.models import KRWStatus
+from lizard_measure.models import KRWWatertype
 from lizard_measure.models import WaterBody
+from lizard_measure.models import OrganizationType
 from lizard_measure.models import Organization
 from lizard_measure.models import Unit
 from lizard_measure.models import MeasuringRod
@@ -93,6 +95,16 @@ def _ascending_or_none(first, second):
     return first < second
 
 
+def _area_or_none(area_ident):
+    """
+    Return Area object or None if it is not present.
+    """
+    try:
+        return Area.objects.get(ident=area_ident)
+    except Area.DoesNotExist:
+        return None
+
+
 def _dates_from_xml(description):
     start_year, end_year = [int(y) for y in description.split('-')]
     start_date = datetime.date(year=start_year, month=1, day=1)
@@ -104,12 +116,20 @@ def import_KRW_lookup(filename):
     """
     Import various domains into seperate lizard_measure models
     """
+    organization_type, organization_type_created = _get_or_create(
+        model=OrganizationType,
+        get_kwargs={'name': 'Geïmporteerd uit KRW-portaal'}
+    )
     for rec in _records(filename):
         # Insert 'uitvoerders'
         if rec['domein'] == 'uitvoerder':
             organization, organization_created = _get_or_create(
                 model=Organization,
                 get_kwargs={'name': rec['description']},
+                extra_kwargs={
+                    'organization_type': organization_type,
+                    'source': Organization.SOURCE_KRW_PORTAL,
+                }
             )
         # Insert 'matstatus'
         if rec['domein'] == 'Matstatus':
@@ -129,14 +149,14 @@ def import_KRW_lookup(filename):
         # Insert 'owmstat'
         if rec['domein'] == 'owmstat':
             owm_stat, owm_stat_created = _get_or_create(
-                model=OWMStatus,
+                model=KRWStatus,
                 get_kwargs={'code': rec['code']},
                 extra_kwargs={'description': rec['description']},
             )
         # Insert 'owmtype'
         if rec['domein'] == 'owmtype':
             owm_type, owm_type_created = _get_or_create(
-                model=OWMType,
+                model=KRWWatertype,
                 get_kwargs={'code': rec['code']},
                 extra_kwargs={'description': rec['description']},
             )
@@ -172,68 +192,74 @@ def import_measure_types(filename):
 
 
 def import_waterbodies(filename, user, data_administrator):
-    geo_object_group_name = ('measure::waterbody::%s' %
-                             os.path.basename(filename))
-    try:
-        print 'Finding existing geo object group...'
-        geo_object_group = GeoObjectGroup.objects.get(
-            name=geo_object_group_name)
-        print 'Deleting existing geo object group...'
-        geo_object_group.delete()
-    except GeoObjectGroup.DoesNotExist:
-        pass
+#   geo_object_group_name = ('measure::waterbody::%s' %
+#                            os.path.basename(filename))
+#   try:
+#       print 'Finding existing geo object group...'
+#       geo_object_group = GeoObjectGroup.objects.get(
+#           name=geo_object_group_name)
+#       print 'Deleting existing geo object group...'
+#       geo_object_group.delete()
+#   except GeoObjectGroup.DoesNotExist:
+#       pass
 
     # Create geoobject group
-    geo_object_group = GeoObjectGroup(
-        name=geo_object_group_name,
-        slug=slugify(os.path.basename(filename).split('.')[-2]),
-        created_by=user,
-    )
-    geo_object_group.save()
+#   geo_object_group = GeoObjectGroup(
+#       name=geo_object_group_name,
+#       slug=slugify(os.path.basename(filename).split('.')[-2]),
+#       created_by=user,
+#   )
+#   geo_object_group.save()
 
     for rec in _records(filename):
 
-
         # Get or create Area
-        ident = rec['owmident'].strip()
-        geometry = GEOSGeometry('POINT(0 0)')  # Dummy geometry
+#       ident = rec['owmident'].strip()
+#       geometry = GEOSGeometry('POINT(0 0)')  # Dummy geometry
 
-        # Fields from Communique
-        name = rec['owmnaam'].strip()
-        code = None
-        description = ''  # Check this one. I thought there was a description.
+#       # Fields from Communique
+#       name = rec['owmnaam'].strip()
+#       code = None
+#       description = ''  # Check this one. I thought there was a description.
 
-        # Fields from Area
-        parent = None
-        data_administrator=data_administrator
-        area_class = Area.AREA_CLASS_KRW_WATERLICHAAM,
-        area, area_created = _get_or_create(
-            model=Area,
-            get_kwargs={'ident': ident},
-            extra_kwargs={
-                'geometry': geometry,
-                'geo_object_group': geo_object_group,
-                'name': name,
-                'code': code,
-                'description': description,
-                'parent': parent,
-                'data_administrator': data_administrator,
-                'area_class': Area.AREA_CLASS_KRW_WATERLICHAAM,
-            },
-        )
+#       # Fields from Area
+#       parent = None
+#       data_administrator=data_administrator
+#       area_class = Area.AREA_CLASS_KRW_WATERLICHAAM,
+#       area, area_created = _get_or_create(
+#           model=Area,
+#           get_kwargs={'ident': ident},
+#           extra_kwargs={
+#               'geometry': geometry,
+#               'geo_object_group': geo_object_group,
+#               'name': name,
+#               'code': code,
+#               'description': description,
+#               'parent': parent,
+#               'data_administrator': data_administrator,
+#               'area_class': Area.AREA_CLASS_KRW_WATERLICHAAM,
+#           },
+#       )
+
+        # Try to get Area
+        area_ident = rec['owmident'].strip()
+        area = _area_or_none(area_ident)
 
         # Create WaterBody
-
-        owm_status = OWMStatus.objects.get(code=rec['owmstat'].strip())
-        owm_type = OWMType.objects.get(code=rec['owmtype'].strip())
+        krw_status = KRWStatus.objects.get(code=rec['owmstat'].strip())
+        krw_watertype = KRWWatertype.objects.get(code=rec['owmtype'].strip())
         waterbody, waterbody_created = _get_or_create(
             model=WaterBody,
-            get_kwargs={'area': area},
+            get_kwargs={'area_ident': area_ident},
             extra_kwargs={
-                'owm_status': owm_status,
-                'owm_type': owm_type,
+                'area': area,
+                'krw_status': krw_status,
+                'krw_watertype': krw_watertype,
             },
         )
+        if waterbody_created:
+            print waterbody.area_ident
+
 
 
 def import_measuring_rods(filename):
@@ -241,13 +267,23 @@ def import_measuring_rods(filename):
         measuring_rod, measuring_rod_created = _get_or_create(
             model=MeasuringRod,
             get_kwargs={'id': rec['id']},
+            extra_kwargs={
+                'group': rec['groep'],
+                'measuring_rod': rec['maatlat'],
+                'sub_measuring_rod': rec['deelmaatlat'],
+                'unit': rec['eenheid'],
+                'sign': rec['teken'],
+            }
         )
 
 
 def import_scores(filename):
     for rec in _records(filename):
+        # Try to get Area
+        area_ident = rec['owmident'].strip()
+        area = _area_or_none(area_ident)
+
         measuring_rod = MeasuringRod.objects.get(id=rec['maatlat'])
-        area = Area.objects.get(ident=rec['owmident'])
         limit_bad_insufficient = _to_float_or_none(rec['ontoereikend'])
         limit_insufficient_moderate = _to_float_or_none(rec['matig'])
         ascending = _ascending_or_none(
@@ -264,9 +300,10 @@ def import_scores(filename):
             model=Score,
             get_kwargs={
                 'measuring_rod': measuring_rod,
-                'area': area,
+                'area_ident': area_ident,
             },
             extra_kwargs={
+                'area': area,
                 'limit_bad_insufficient': limit_bad_insufficient,
                 'limit_insufficient_moderate': limit_insufficient_moderate,
                 'ascending': ascending,
@@ -293,8 +330,8 @@ def import_measures(filename):
 #           get_kwargs={'name': rec['uitvoerder']},
 #       )
 
-        executive = Organization.objects.get(name=rec['uitvoerder'])
-
+        # vvv Decided from examination of screenshots from KRW portal
+        initiator = Organization.objects.get(name=rec['uitvoerder'])
 
         datetime_in_source = datetime.datetime.strptime(
             rec['datum'],
@@ -328,8 +365,9 @@ def import_measures(filename):
             'unit': unit,
             'investment_costs': rec['investkosten'],
             'exploitation_costs': rec['exploitkosten'],
-            'initiator': None,
-            'executive': executive,
+            'executive': None,
+            'initiator': initiator,
+                                   
         }
 
         measure = Measure(**measure_kwargs)
@@ -349,7 +387,7 @@ def import_measures(filename):
                 corrected_area_ident = 'NL' + area_ident
             print corrected_area_ident
             waterbody = WaterBody.objects.get(
-                area__ident=corrected_area_ident,
+                area_ident=corrected_area_ident,
             )
             waterbody.save()
             measure.waterbodies.add(waterbody)

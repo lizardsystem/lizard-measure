@@ -19,33 +19,11 @@ from lizard_area.models import Area
 logger = logging.getLogger(__name__)
 
 
-class Province(models.Model):
-    """Provincie"""
-    class Meta:
-        verbose_name = _("Province")
-        verbose_name_plural = _("Provinces")
-
-    name = models.CharField(max_length=200)
-
-    def __unicode__(self):
-        return u'%s' % self.name
-
-
-class Municipality(models.Model):
-    """Gemeente"""
-    class Meta:
-        verbose_name = _("Municipality")
-        verbose_name_plural = _("Municipalities")
-
-    name = models.CharField(max_length=200)
-
-    def __unicode__(self):
-        return u'%s' % self.name
-
-
-class OWMStatus(models.Model):
+class KRWStatus(models.Model):
     """
-    OWMStatus
+    Status of KRW Waterbody.
+
+    This model must be synchronized with the Aquo domain table 'KRWStatus'.
     """
     code = models.CharField(
         max_length=32,
@@ -58,16 +36,18 @@ class OWMStatus(models.Model):
     )
 
     class Meta:
-        verbose_name = _('OWM Status')
-        verbose_name_plural = _('OWM Statusen')
+        verbose_name = _('KRW Status')
+        verbose_name_plural = _('KRW Statuses')
 
     def __unicode__(self):
         return u'%s - %s' % (self.code, self.description)
 
 
-class OWMType(models.Model):
+class KRWWatertype(models.Model):
     """
-    OWMType
+    Type of KRW Watertype.
+    
+    This model must be synchronized with the Aquo domain table 'KRWWatertype'.
     """
     code = models.CharField(
         max_length=32,
@@ -80,8 +60,8 @@ class OWMType(models.Model):
     )
 
     class Meta:
-        verbose_name = _('OWM Type')
-        verbose_name_plural = _('OWM Types')
+        verbose_name = _('KRW Watertype')
+        verbose_name_plural = _('KRW Watertypes')
 
     def __unicode__(self):
         return u'%s - %s' % (self.code, self.description)
@@ -95,19 +75,63 @@ class WaterBody(models.Model):
         verbose_name_plural = _("Waterbodies")
 
     area = models.ForeignKey(Area, null=True, blank=True)
-    owm_status = models.ForeignKey(OWMStatus, null=True, blank=True)
-    owm_type = models.ForeignKey(OWMType, null=True, blank=True)
+    area_ident = models.CharField(
+        max_length=32,
+        null=True,
+        blank=True,
+        help_text=_(
+            'Area ident for the case the real Area cannot be imported yet'
+        ),
+    )
+    krw_status = models.ForeignKey(KRWStatus, null=True, blank=True)
+    krw_watertype = models.ForeignKey(KRWWatertype, null=True, blank=True)
 
     def __unicode__(self):
-        return u'%s' % (self.area.name)
+        if self.area is None:
+            return 'area_ident: %s (No geometry)' % self.area_ident
+        else:
+            return u'%s' % (self.area.name)
 
 
 class MeasuringRod(models.Model):
     """
-    Presently only a stub to hold MeasuringRod objects. Maatlat
+    Presently only a stub to hold MeasuringRod objects.
+
+    This model must be synchronized with the Aquo domain table
+    'KRWKwaliteitselement'.
     """
     id = models.IntegerField(
         primary_key=True
+    )
+
+    group = models.CharField(
+        max_length=128,
+        null=True,
+        blank=True,
+    )
+
+    measuring_rod = models.CharField(
+        max_length=128,
+        null=True,
+        blank=True,
+    )
+
+    sub_measuring_rod = models.CharField(
+        max_length=128,
+        null=True,
+        blank=True,
+    )
+
+    unit = models.CharField(
+        max_length=128,
+        null=True,
+        blank=True,
+    )
+
+    sign = models.CharField(
+        max_length=128,
+        null=True,
+        blank=True,
     )
 
 
@@ -117,8 +141,16 @@ class Score(models.Model):
     """
     measuring_rod = models.ForeignKey(MeasuringRod)
     area = models.ForeignKey(Area, null=True, blank=True)
+    area_ident = models.CharField(
+        max_length=32,
+        null=True,
+        blank=True,
+        help_text=_(
+            'Area ident for the case the real Area cannot be imported yet'
+        ),
+    )
     ascending = models.NullBooleanField(
-        help_text='True if higher is better',
+        help_text=_('True if higher is better'),
     )
     limit_bad_insufficient = models.FloatField(
         null=True,
@@ -133,6 +165,13 @@ class Score(models.Model):
     target_2015 = models.FloatField(null=True, blank=True)
     target_2027 = models.FloatField(null=True, blank=True)
     gep = models.FloatField(null=True, blank=True)
+
+    def __unicode__(self):
+        return '%s - %s: %s' % (
+            self.area.name,
+            self.measuring_rod.measuring_rod,
+            self.measuring_rod.sub_measuring_rod,
+        )
     
 
 class SteeringParameter(models.Model):
@@ -171,7 +210,9 @@ class MeasureCategory(models.Model):
 
 
 class Unit(models.Model):
-    """eenheid uit aquo standaard
+    """Units for measures
+
+    This model must be synchronized with the Aquo domain table 'Eenheid'.
     http://www.idsw.nl/Aquo/uitwisselmodellen/index.htm?goto=6:192
     """
 
@@ -190,8 +231,10 @@ class Unit(models.Model):
 
 class MeasureType(models.Model):
     """
-    Measure Type. i.e. BE01 Beheermaatregelen uitvoeren actief
-    visstands- of schelpdierstandsbeheer
+    Aquo type of measure
+
+    This model must be synchronized with the Aquo domain table
+    'KRWMeasuretype'.
     """
 
     code = models.CharField(max_length=80, unique=True)
@@ -216,11 +259,69 @@ class MeasureType(models.Model):
         return u'%s - %s' % (self.code, self.description)
 
 
-class Organization(models.Model):
-    """Companies that occur in Measures: Funding Organizations
+class OrganizationType(models.Model):
+    """
+    OrganizationType.
     """
 
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=64)
+
+    class Meta:
+        verbose_name = _("Organization type")
+        verbose_name_plural = _("Organization types")
+
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
+
+class Organization(models.Model):
+    """
+    Organizations related to measures.
+
+    Used in Measures and FundingOrganizations.
+
+    This model must be synchronized with the Aquo domain tables
+    'Waterbeheerder' and 'Meetinstantie'.
+
+    Furthermore, it should contain municipalities, for the time being synchronized from
+    'www.cbs.nl/nl-NL/menu/methoden/classificaties/overzicht/gemeentelijke-indeling/2011/default.htm',
+    awaiting an Aquo domain table.
+
+    And there are some other entries as described in
+    'http://wikixl.nl/wiki/krwvss/index.php/Beheer_eigen_organisaties',
+    loaded from a fixture.
+    """
+
+    SOURCE_CHOICES = (
+        (1, _("Aquo domain table 'Waterbeheerder'")),
+        (2, _("Aquo domain table 'Meetinstantie'")),
+        (3, _("CBS Municipality")),
+        (4, _("Other")),
+    )
+
+    SOURCE_AQUO_WATERMANAGER = 1
+    SOURCE_AQUO_MEASUREMENT_AUTHORITY = 2
+    SOURCE_CBS_MUNICIPALITY = 3
+    SOURCE_KRW_PORTAL = 4
+    SOURCE_OTHER = 5
+
+    name = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+    )
+    organization_type = models.ForeignKey(
+        OrganizationType,
+        null=True,
+        blank=True,
+    )
+
+    source = models.IntegerField(
+        choices=SOURCE_CHOICES,
+        default=SOURCE_OTHER,
+    )
+
+    valid = models.NullBooleanField(default=None)
 
     class Meta:
         verbose_name = _("Organization")
@@ -251,7 +352,7 @@ class FundingOrganization(models.Model):
 
 class MeasureStatus(models.Model):
     """
-    Status van een (deel)maatregel
+    The status of a measure
     """
 
     name = models.CharField(max_length=200)
@@ -318,10 +419,6 @@ class MeasurePeriod(models.Model):
         return '%d - %d' % (self.start_date.year, self.end_date.year)
 
 
-    
-
-
-
 class Measure(models.Model):
     """
     KRW maatregel,
@@ -356,14 +453,14 @@ class Measure(models.Model):
         unique=True,
         blank=True,
         null=True,
-        verbose_name='Unieke code',
+        verbose_name=_('Unique code'),
     )
 
     is_KRW_measure = models.NullBooleanField(
-        verbose_name='Indicatie KRW maatregel',
+        verbose_name=_('Is a KRW measure'),
     )
 
-    # XY, geometry?
+    # XY, geometry?:
 
     measure_type = models.ForeignKey(
         MeasureType,
@@ -392,12 +489,12 @@ class Measure(models.Model):
         max_length=16,
         editable=False,
         default=SOURCE_MANUAL,
-        verbose_name='Import bron',
+        verbose_name='Import source',
     )
     datetime_in_source = models.DateTimeField(
         blank=True,
         null=True,
-        verbose_name='Oorspronkelijke datum in bron',
+        verbose_name='Original date in source',
     )
     import_raw = models.TextField(
         blank=True,
@@ -452,7 +549,7 @@ class Measure(models.Model):
         Organization,
         null=True,
         blank=True,
-        help_text='Initiatiefnemer',
+        verbose_name=_('Initiator of this measure'),
         related_name = 'initiator_measure_set'
     )
 
@@ -460,8 +557,7 @@ class Measure(models.Model):
         Organization,
         null=True,
         blank=True,
-        help_text='Uitvoerder',
-        verbose_name='Uitvoerder',
+        verbose_name=_('Executive of this measure'),
         related_name = 'executive_measure_set'
     )
 
