@@ -8,129 +8,150 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         
-        # Adding model 'KRWStatus'
-        db.create_table('lizard_measure_krwstatus', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('code', self.gf('django.db.models.fields.CharField')(unique=True, max_length=32)),
-            ('description', self.gf('django.db.models.fields.CharField')(max_length=256, null=True, blank=True)),
-        ))
-        db.send_create_signal('lizard_measure', ['KRWStatus'])
-
-        # Adding model 'KRWWatertype'
+        # Adding model 'KRWWaterType'
         db.create_table('lizard_measure_krwwatertype', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('code', self.gf('django.db.models.fields.CharField')(unique=True, max_length=32)),
-            ('description', self.gf('django.db.models.fields.CharField')(max_length=256, null=True, blank=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=80)),
+            ('code', self.gf('django.db.models.fields.CharField')(max_length=8)),
         ))
-        db.send_create_signal('lizard_measure', ['KRWWatertype'])
+        db.send_create_signal('lizard_measure', ['KRWWaterType'])
+
+        # Adding model 'WaterBodyStatus'
+        db.create_table('lizard_measure_waterbodystatus', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=80)),
+        ))
+        db.send_create_signal('lizard_measure', ['WaterBodyStatus'])
+
+        # Adding model 'Area'
+        db.create_table('lizard_measure_area', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=200)),
+        ))
+        db.send_create_signal('lizard_measure', ['Area'])
+
+        # Adding model 'Province'
+        db.create_table('lizard_measure_province', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=200)),
+        ))
+        db.send_create_signal('lizard_measure', ['Province'])
+
+        # Adding model 'Municipality'
+        db.create_table('lizard_measure_municipality', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=200)),
+        ))
+        db.send_create_signal('lizard_measure', ['Municipality'])
 
         # Adding model 'WaterBody'
         db.create_table('lizard_measure_waterbody', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('area', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_area.Area'], null=True, blank=True)),
-            ('area_ident', self.gf('django.db.models.fields.CharField')(max_length=32, null=True, blank=True)),
-            ('krw_status', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.KRWStatus'], null=True, blank=True)),
-            ('krw_watertype', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.KRWWatertype'], null=True, blank=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=80)),
+            ('slug', self.gf('django.db.models.fields.SlugField')(max_length=50, db_index=True)),
+            ('ident', self.gf('django.db.models.fields.CharField')(max_length=80)),
+            ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('status', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.WaterBodyStatus'], null=True, blank=True)),
+            ('water_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.KRWWaterType'], null=True, blank=True)),
+            ('protected_area_reason', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('code', self.gf('django.db.models.fields.CharField')(max_length=80, null=True, blank=True)),
+            ('characteristics', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('current_situation_chemicals', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('control_parameters', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
         ))
         db.send_create_signal('lizard_measure', ['WaterBody'])
 
-        # Adding model 'MeasuringRod'
-        db.create_table('lizard_measure_measuringrod', (
-            ('id', self.gf('django.db.models.fields.IntegerField')(primary_key=True)),
-            ('group', self.gf('django.db.models.fields.CharField')(max_length=128, null=True, blank=True)),
-            ('measuring_rod', self.gf('django.db.models.fields.CharField')(max_length=128, null=True, blank=True)),
-            ('sub_measuring_rod', self.gf('django.db.models.fields.CharField')(max_length=128, null=True, blank=True)),
-            ('unit', self.gf('django.db.models.fields.CharField')(max_length=128, null=True, blank=True)),
-            ('sign', self.gf('django.db.models.fields.CharField')(max_length=128, null=True, blank=True)),
+        # Adding M2M table for field area on 'WaterBody'
+        db.create_table('lizard_measure_waterbody_area', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('waterbody', models.ForeignKey(orm['lizard_measure.waterbody'], null=False)),
+            ('area', models.ForeignKey(orm['lizard_measure.area'], null=False))
         ))
-        db.send_create_signal('lizard_measure', ['MeasuringRod'])
+        db.create_unique('lizard_measure_waterbody_area', ['waterbody_id', 'area_id'])
 
-        # Adding model 'Score'
-        db.create_table('lizard_measure_score', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('measuring_rod', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.MeasuringRod'])),
-            ('area', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_area.Area'], null=True, blank=True)),
-            ('area_ident', self.gf('django.db.models.fields.CharField')(max_length=32, null=True, blank=True)),
-            ('mep', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
-            ('gep', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
-            ('limit_insufficient_moderate', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
-            ('limit_bad_insufficient', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
-            ('ascending', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True)),
-            ('target_2015', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
-            ('target_2027', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
+        # Adding M2M table for field province on 'WaterBody'
+        db.create_table('lizard_measure_waterbody_province', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('waterbody', models.ForeignKey(orm['lizard_measure.waterbody'], null=False)),
+            ('province', models.ForeignKey(orm['lizard_measure.province'], null=False))
         ))
-        db.send_create_signal('lizard_measure', ['Score'])
+        db.create_unique('lizard_measure_waterbody_province', ['waterbody_id', 'province_id'])
 
-        # Adding model 'SteeringParameter'
-        db.create_table('lizard_measure_steeringparameter', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('area', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_area.Area'])),
-            ('fews_parameter', self.gf('django.db.models.fields.CharField')(max_length=256)),
-            ('target_minimum', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
-            ('target_maximum', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
+        # Adding M2M table for field municipality on 'WaterBody'
+        db.create_table('lizard_measure_waterbody_municipality', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('waterbody', models.ForeignKey(orm['lizard_measure.waterbody'], null=False)),
+            ('municipality', models.ForeignKey(orm['lizard_measure.municipality'], null=False))
         ))
-        db.send_create_signal('lizard_measure', ['SteeringParameter'])
+        db.create_unique('lizard_measure_waterbody_municipality', ['waterbody_id', 'municipality_id'])
 
         # Adding model 'MeasureCategory'
         db.create_table('lizard_measure_measurecategory', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=200)),
-            ('valid', self.gf('django.db.models.fields.NullBooleanField')(default=None, null=True, blank=True)),
         ))
         db.send_create_signal('lizard_measure', ['MeasureCategory'])
+
+        # Adding model 'MeasureCode'
+        db.create_table('lizard_measure_measurecode', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('code', self.gf('django.db.models.fields.CharField')(max_length=80)),
+            ('description', self.gf('django.db.models.fields.TextField')()),
+        ))
+        db.send_create_signal('lizard_measure', ['MeasureCode'])
 
         # Adding model 'Unit'
         db.create_table('lizard_measure_unit', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('unit', self.gf('django.db.models.fields.CharField')(max_length=20)),
+            ('sign', self.gf('django.db.models.fields.CharField')(max_length=20)),
             ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('valid', self.gf('django.db.models.fields.NullBooleanField')(default=None, null=True, blank=True)),
         ))
         db.send_create_signal('lizard_measure', ['Unit'])
 
-        # Adding model 'MeasureType'
-        db.create_table('lizard_measure_measuretype', (
+        # Adding model 'Executive'
+        db.create_table('lizard_measure_executive', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('code', self.gf('django.db.models.fields.CharField')(unique=True, max_length=80)),
-            ('description', self.gf('django.db.models.fields.TextField')()),
-            ('group', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.MeasureCategory'], null=True, blank=True)),
-            ('klass', self.gf('django.db.models.fields.CharField')(max_length=256, null=True, blank=True)),
-            ('subcategory', self.gf('django.db.models.fields.CharField')(max_length=256, null=True, blank=True)),
-            ('harmonisation', self.gf('django.db.models.fields.CharField')(max_length=256, null=True, blank=True)),
-            ('combined_name', self.gf('django.db.models.fields.CharField')(max_length=256, null=True, blank=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=200)),
         ))
-        db.send_create_signal('lizard_measure', ['MeasureType'])
+        db.send_create_signal('lizard_measure', ['Executive'])
 
-        # Adding M2M table for field units on 'MeasureType'
-        db.create_table('lizard_measure_measuretype_units', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('measuretype', models.ForeignKey(orm['lizard_measure.measuretype'], null=False)),
-            ('unit', models.ForeignKey(orm['lizard_measure.unit'], null=False))
-        ))
-        db.create_unique('lizard_measure_measuretype_units', ['measuretype_id', 'unit_id'])
-
-        # Adding model 'OrganizationType'
-        db.create_table('lizard_measure_organizationtype', (
+        # Adding model 'ExecutivePart'
+        db.create_table('lizard_measure_executivepart', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=64)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('executive', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.Executive'])),
         ))
-        db.send_create_signal('lizard_measure', ['OrganizationType'])
+        db.send_create_signal('lizard_measure', ['ExecutivePart'])
 
         # Adding model 'Organization'
         db.create_table('lizard_measure_organization', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, blank=True)),
-            ('organization_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.OrganizationType'], null=True, blank=True)),
-            ('source', self.gf('django.db.models.fields.IntegerField')(default=5)),
-            ('valid', self.gf('django.db.models.fields.NullBooleanField')(default=None, null=True, blank=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=200)),
         ))
         db.send_create_signal('lizard_measure', ['Organization'])
+
+        # Adding model 'OrganizationPart'
+        db.create_table('lizard_measure_organizationpart', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('organization', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.Organization'])),
+        ))
+        db.send_create_signal('lizard_measure', ['OrganizationPart'])
+
+        # Adding model 'Department'
+        db.create_table('lizard_measure_department', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('organization', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.Organization'], null=True, blank=True)),
+        ))
+        db.send_create_signal('lizard_measure', ['Department'])
 
         # Adding model 'FundingOrganization'
         db.create_table('lizard_measure_fundingorganization', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('percentage', self.gf('django.db.models.fields.FloatField')()),
+            ('cost', self.gf('django.db.models.fields.FloatField')()),
             ('organization', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.Organization'])),
+            ('organization_part', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.OrganizationPart'], null=True, blank=True)),
             ('measure', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.Measure'])),
         ))
         db.send_create_signal('lizard_measure', ['FundingOrganization'])
@@ -141,7 +162,6 @@ class Migration(SchemaMigration):
             ('name', self.gf('django.db.models.fields.CharField')(max_length=200)),
             ('color', self.gf('lizard_map.models.ColorField')(max_length=8)),
             ('value', self.gf('django.db.models.fields.FloatField')(default=0.0)),
-            ('valid', self.gf('django.db.models.fields.NullBooleanField')(default=None, null=True, blank=True)),
         ))
         db.send_create_signal('lizard_measure', ['MeasureStatus'])
 
@@ -150,7 +170,7 @@ class Migration(SchemaMigration):
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('measure', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.Measure'])),
             ('status', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.MeasureStatus'])),
-            ('date', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
+            ('datetime', self.gf('django.db.models.fields.DateField')()),
             ('is_planning', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('investment_expenditure', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
@@ -164,100 +184,116 @@ class Migration(SchemaMigration):
             ('start_date', self.gf('django.db.models.fields.DateField')()),
             ('end_date', self.gf('django.db.models.fields.DateField')()),
             ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('valid', self.gf('django.db.models.fields.NullBooleanField')(default=None, null=True, blank=True)),
         ))
         db.send_create_signal('lizard_measure', ['MeasurePeriod'])
+
+        # Adding model 'Urgency'
+        db.create_table('lizard_measure_urgency', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('value', self.gf('django.db.models.fields.FloatField')()),
+        ))
+        db.send_create_signal('lizard_measure', ['Urgency'])
+
+        # Adding model 'MeasureCollection'
+        db.create_table('lizard_measure_measurecollection', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('shortname', self.gf('django.db.models.fields.CharField')(max_length=40)),
+            ('waterbody', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.WaterBody'])),
+            ('urgency', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.Urgency'])),
+            ('responsible_organization', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.Organization'])),
+            ('responsible_department', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.Department'])),
+            ('need_co_funding', self.gf('django.db.models.fields.BooleanField')(default=False)),
+        ))
+        db.send_create_signal('lizard_measure', ['MeasureCollection'])
+
+        # Adding M2M table for field area on 'MeasureCollection'
+        db.create_table('lizard_measure_measurecollection_area', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('measurecollection', models.ForeignKey(orm['lizard_measure.measurecollection'], null=False)),
+            ('area', models.ForeignKey(orm['lizard_measure.area'], null=False))
+        ))
+        db.create_unique('lizard_measure_measurecollection_area', ['measurecollection_id', 'area_id'])
 
         # Adding model 'Measure'
         db.create_table('lizard_measure_measure', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('owner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], null=True, blank=True)),
             ('parent', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.Measure'], null=True, blank=True)),
-            ('ident', self.gf('django.db.models.fields.CharField')(max_length=64, unique=True, null=True, blank=True)),
-            ('is_KRW_measure', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True)),
-            ('geometry', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_geo.GeoObject'], null=True, blank=True)),
-            ('measure_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.MeasureType'])),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=256, null=True, blank=True)),
-            ('period', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.MeasurePeriod'], null=True, blank=True)),
-            ('import_source', self.gf('django.db.models.fields.CharField')(default=3, max_length=16)),
-            ('datetime_in_source', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
-            ('import_raw', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('measure_collection', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.MeasureCollection'], null=True, blank=True)),
             ('aggregation_type', self.gf('django.db.models.fields.IntegerField')(default=1)),
-            ('description', self.gf('django.db.models.fields.CharField')(max_length=512, null=True, blank=True)),
+            ('is_indicator', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('waterbody', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.WaterBody'])),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('identity', self.gf('django.db.models.fields.CharField')(max_length=80, null=True, blank=True)),
+            ('description', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, blank=True)),
+            ('category', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.MeasureCategory'])),
+            ('code', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.MeasureCode'])),
             ('value', self.gf('django.db.models.fields.FloatField')()),
             ('unit', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.Unit'])),
-            ('initiator', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='initiator_measure_set', null=True, to=orm['lizard_measure.Organization'])),
-            ('executive', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='executive_measure_set', null=True, to=orm['lizard_measure.Organization'])),
-            ('responsible_department', self.gf('django.db.models.fields.CharField')(max_length=256)),
+            ('executive', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.Executive'])),
+            ('executive_part', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.ExecutivePart'], null=True, blank=True)),
             ('total_costs', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('investment_costs', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('exploitation_costs', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
-            ('read_only', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('is_indicator', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('period', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.MeasurePeriod'], null=True, blank=True)),
         ))
         db.send_create_signal('lizard_measure', ['Measure'])
-
-        # Adding M2M table for field waterbodies on 'Measure'
-        db.create_table('lizard_measure_measure_waterbodies', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('measure', models.ForeignKey(orm['lizard_measure.measure'], null=False)),
-            ('waterbody', models.ForeignKey(orm['lizard_measure.waterbody'], null=False))
-        ))
-        db.create_unique('lizard_measure_measure_waterbodies', ['measure_id', 'waterbody_id'])
-
-        # Adding M2M table for field areas on 'Measure'
-        db.create_table('lizard_measure_measure_areas', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('measure', models.ForeignKey(orm['lizard_measure.measure'], null=False)),
-            ('area', models.ForeignKey(orm['lizard_area.area'], null=False))
-        ))
-        db.create_unique('lizard_measure_measure_areas', ['measure_id', 'area_id'])
-
-        # Adding M2M table for field categories on 'Measure'
-        db.create_table('lizard_measure_measure_categories', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('measure', models.ForeignKey(orm['lizard_measure.measure'], null=False)),
-            ('measurecategory', models.ForeignKey(orm['lizard_measure.measurecategory'], null=False))
-        ))
-        db.create_unique('lizard_measure_measure_categories', ['measure_id', 'measurecategory_id'])
 
 
     def backwards(self, orm):
         
-        # Deleting model 'KRWStatus'
-        db.delete_table('lizard_measure_krwstatus')
-
-        # Deleting model 'KRWWatertype'
+        # Deleting model 'KRWWaterType'
         db.delete_table('lizard_measure_krwwatertype')
+
+        # Deleting model 'WaterBodyStatus'
+        db.delete_table('lizard_measure_waterbodystatus')
+
+        # Deleting model 'Area'
+        db.delete_table('lizard_measure_area')
+
+        # Deleting model 'Province'
+        db.delete_table('lizard_measure_province')
+
+        # Deleting model 'Municipality'
+        db.delete_table('lizard_measure_municipality')
 
         # Deleting model 'WaterBody'
         db.delete_table('lizard_measure_waterbody')
 
-        # Deleting model 'MeasuringRod'
-        db.delete_table('lizard_measure_measuringrod')
+        # Removing M2M table for field area on 'WaterBody'
+        db.delete_table('lizard_measure_waterbody_area')
 
-        # Deleting model 'Score'
-        db.delete_table('lizard_measure_score')
+        # Removing M2M table for field province on 'WaterBody'
+        db.delete_table('lizard_measure_waterbody_province')
 
-        # Deleting model 'SteeringParameter'
-        db.delete_table('lizard_measure_steeringparameter')
+        # Removing M2M table for field municipality on 'WaterBody'
+        db.delete_table('lizard_measure_waterbody_municipality')
 
         # Deleting model 'MeasureCategory'
         db.delete_table('lizard_measure_measurecategory')
 
+        # Deleting model 'MeasureCode'
+        db.delete_table('lizard_measure_measurecode')
+
         # Deleting model 'Unit'
         db.delete_table('lizard_measure_unit')
 
-        # Deleting model 'MeasureType'
-        db.delete_table('lizard_measure_measuretype')
+        # Deleting model 'Executive'
+        db.delete_table('lizard_measure_executive')
 
-        # Removing M2M table for field units on 'MeasureType'
-        db.delete_table('lizard_measure_measuretype_units')
-
-        # Deleting model 'OrganizationType'
-        db.delete_table('lizard_measure_organizationtype')
+        # Deleting model 'ExecutivePart'
+        db.delete_table('lizard_measure_executivepart')
 
         # Deleting model 'Organization'
         db.delete_table('lizard_measure_organization')
+
+        # Deleting model 'OrganizationPart'
+        db.delete_table('lizard_measure_organizationpart')
+
+        # Deleting model 'Department'
+        db.delete_table('lizard_measure_department')
 
         # Deleting model 'FundingOrganization'
         db.delete_table('lizard_measure_fundingorganization')
@@ -271,17 +307,17 @@ class Migration(SchemaMigration):
         # Deleting model 'MeasurePeriod'
         db.delete_table('lizard_measure_measureperiod')
 
+        # Deleting model 'Urgency'
+        db.delete_table('lizard_measure_urgency')
+
+        # Deleting model 'MeasureCollection'
+        db.delete_table('lizard_measure_measurecollection')
+
+        # Removing M2M table for field area on 'MeasureCollection'
+        db.delete_table('lizard_measure_measurecollection_area')
+
         # Deleting model 'Measure'
         db.delete_table('lizard_measure_measure')
-
-        # Removing M2M table for field waterbodies on 'Measure'
-        db.delete_table('lizard_measure_measure_waterbodies')
-
-        # Removing M2M table for field areas on 'Measure'
-        db.delete_table('lizard_measure_measure_areas')
-
-        # Removing M2M table for field categories on 'Measure'
-        db.delete_table('lizard_measure_measure_categories')
 
 
     models = {
@@ -321,116 +357,106 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        'lizard_area.area': {
-            'Meta': {'ordering': "('name',)", 'object_name': 'Area', '_ormbases': ['lizard_area.Communique']},
-            'area_class': ('django.db.models.fields.IntegerField', [], {'default': '1'}),
-            'communique_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['lizard_area.Communique']", 'unique': 'True', 'primary_key': 'True'}),
-            'data_administrator': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_area.DataAdministrator']"}),
-            'parent': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_area.Area']", 'null': 'True', 'blank': 'True'})
-        },
-        'lizard_area.communique': {
-            'Meta': {'object_name': 'Communique', '_ormbases': ['lizard_geo.GeoObject']},
-            'code': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {'default': "''"}),
-            'geoobject_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['lizard_geo.GeoObject']", 'unique': 'True', 'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '128'})
-        },
-        'lizard_area.dataadministrator': {
-            'Meta': {'object_name': 'DataAdministrator'},
+        'lizard_measure.area': {
+            'Meta': {'object_name': 'Area'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'})
         },
-        'lizard_geo.geoobject': {
-            'Meta': {'object_name': 'GeoObject'},
-            'geo_object_group': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_geo.GeoObjectGroup']"}),
-            'geometry': ('django.contrib.gis.db.models.fields.GeometryField', [], {}),
+        'lizard_measure.department': {
+            'Meta': {'ordering': "('name',)", 'object_name': 'Department'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'ident': ('django.db.models.fields.CharField', [], {'max_length': '80'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
+            'organization': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.Organization']", 'null': 'True', 'blank': 'True'})
         },
-        'lizard_geo.geoobjectgroup': {
-            'Meta': {'object_name': 'GeoObjectGroup'},
-            'created_by': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
+        'lizard_measure.executive': {
+            'Meta': {'object_name': 'Executive'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'last_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '50', 'db_index': 'True'}),
-            'source_log': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'})
+        },
+        'lizard_measure.executivepart': {
+            'Meta': {'object_name': 'ExecutivePart'},
+            'executive': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.Executive']"}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'})
         },
         'lizard_measure.fundingorganization': {
             'Meta': {'object_name': 'FundingOrganization'},
+            'cost': ('django.db.models.fields.FloatField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'measure': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.Measure']"}),
             'organization': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.Organization']"}),
-            'percentage': ('django.db.models.fields.FloatField', [], {})
-        },
-        'lizard_measure.krwstatus': {
-            'Meta': {'object_name': 'KRWStatus'},
-            'code': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '32'}),
-            'description': ('django.db.models.fields.CharField', [], {'max_length': '256', 'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
+            'organization_part': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.OrganizationPart']", 'null': 'True', 'blank': 'True'})
         },
         'lizard_measure.krwwatertype': {
-            'Meta': {'object_name': 'KRWWatertype'},
-            'code': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '32'}),
-            'description': ('django.db.models.fields.CharField', [], {'max_length': '256', 'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
+            'Meta': {'object_name': 'KRWWaterType'},
+            'code': ('django.db.models.fields.CharField', [], {'max_length': '8'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '80'})
         },
         'lizard_measure.measure': {
-            'Meta': {'object_name': 'Measure'},
+            'Meta': {'ordering': "('waterbody', 'name')", 'object_name': 'Measure'},
             'aggregation_type': ('django.db.models.fields.IntegerField', [], {'default': '1'}),
-            'areas': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'area_measure_set'", 'symmetrical': 'False', 'to': "orm['lizard_area.Area']"}),
-            'categories': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['lizard_measure.MeasureCategory']", 'symmetrical': 'False'}),
-            'datetime_in_source': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.CharField', [], {'max_length': '512', 'null': 'True', 'blank': 'True'}),
-            'executive': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'executive_measure_set'", 'null': 'True', 'to': "orm['lizard_measure.Organization']"}),
+            'category': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.MeasureCategory']"}),
+            'code': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.MeasureCode']"}),
+            'description': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
+            'executive': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.Executive']"}),
+            'executive_part': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.ExecutivePart']", 'null': 'True', 'blank': 'True'}),
             'exploitation_costs': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'funding_organizations': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['lizard_measure.Organization']", 'through': "orm['lizard_measure.FundingOrganization']", 'symmetrical': 'False'}),
-            'geometry': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_geo.GeoObject']", 'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'ident': ('django.db.models.fields.CharField', [], {'max_length': '64', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
-            'import_raw': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'import_source': ('django.db.models.fields.CharField', [], {'default': '3', 'max_length': '16'}),
-            'initiator': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'initiator_measure_set'", 'null': 'True', 'to': "orm['lizard_measure.Organization']"}),
+            'identity': ('django.db.models.fields.CharField', [], {'max_length': '80', 'null': 'True', 'blank': 'True'}),
             'investment_costs': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'is_KRW_measure': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
             'is_indicator': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'measure_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.MeasureType']"}),
+            'measure_collection': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.MeasureCollection']", 'null': 'True', 'blank': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
+            'owner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'null': 'True', 'blank': 'True'}),
             'parent': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.Measure']", 'null': 'True', 'blank': 'True'}),
             'period': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.MeasurePeriod']", 'null': 'True', 'blank': 'True'}),
-            'read_only': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'responsible_department': ('django.db.models.fields.CharField', [], {'max_length': '256'}),
-            'status_moments': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['lizard_measure.MeasureStatus']", 'through': "orm['lizard_measure.MeasureStatusMoment']", 'symmetrical': 'False'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '256', 'null': 'True', 'blank': 'True'}),
+            'status': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['lizard_measure.MeasureStatus']", 'through': "orm['lizard_measure.MeasureStatusMoment']", 'symmetrical': 'False'}),
             'total_costs': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'unit': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.Unit']"}),
             'value': ('django.db.models.fields.FloatField', [], {}),
-            'waterbodies': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['lizard_measure.WaterBody']", 'symmetrical': 'False'})
+            'waterbody': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.WaterBody']"})
         },
         'lizard_measure.measurecategory': {
             'Meta': {'object_name': 'MeasureCategory'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'})
+        },
+        'lizard_measure.measurecode': {
+            'Meta': {'ordering': "('code',)", 'object_name': 'MeasureCode'},
+            'code': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
+            'description': ('django.db.models.fields.TextField', [], {}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
+        },
+        'lizard_measure.measurecollection': {
+            'Meta': {'ordering': "('name',)", 'object_name': 'MeasureCollection'},
+            'area': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['lizard_measure.Area']", 'null': 'True', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'valid': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'})
+            'need_co_funding': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'responsible_department': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.Department']"}),
+            'responsible_organization': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.Organization']"}),
+            'shortname': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
+            'urgency': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.Urgency']"}),
+            'waterbody': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.WaterBody']"})
         },
         'lizard_measure.measureperiod': {
             'Meta': {'ordering': "('start_date', 'end_date')", 'object_name': 'MeasurePeriod'},
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'end_date': ('django.db.models.fields.DateField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'start_date': ('django.db.models.fields.DateField', [], {}),
-            'valid': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'})
+            'start_date': ('django.db.models.fields.DateField', [], {})
         },
         'lizard_measure.measurestatus': {
             'Meta': {'ordering': "('-value',)", 'object_name': 'MeasureStatus'},
             'color': ('lizard_map.models.ColorField', [], {'max_length': '8'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'valid': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
             'value': ('django.db.models.fields.FloatField', [], {'default': '0.0'})
         },
         'lizard_measure.measurestatusmoment': {
-            'Meta': {'ordering': "('date',)", 'object_name': 'MeasureStatusMoment'},
-            'date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'Meta': {'ordering': "('datetime',)", 'object_name': 'MeasureStatusMoment'},
+            'datetime': ('django.db.models.fields.DateField', [], {}),
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'exploitation_expenditure': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -439,76 +465,61 @@ class Migration(SchemaMigration):
             'measure': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.Measure']"}),
             'status': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.MeasureStatus']"})
         },
-        'lizard_measure.measuretype': {
-            'Meta': {'ordering': "('code',)", 'object_name': 'MeasureType'},
-            'code': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
-            'combined_name': ('django.db.models.fields.CharField', [], {'max_length': '256', 'null': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {}),
-            'group': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.MeasureCategory']", 'null': 'True', 'blank': 'True'}),
-            'harmonisation': ('django.db.models.fields.CharField', [], {'max_length': '256', 'null': 'True', 'blank': 'True'}),
+        'lizard_measure.municipality': {
+            'Meta': {'object_name': 'Municipality'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'klass': ('django.db.models.fields.CharField', [], {'max_length': '256', 'null': 'True', 'blank': 'True'}),
-            'subcategory': ('django.db.models.fields.CharField', [], {'max_length': '256', 'null': 'True', 'blank': 'True'}),
-            'units': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['lizard_measure.Unit']", 'symmetrical': 'False'})
-        },
-        'lizard_measure.measuringrod': {
-            'Meta': {'object_name': 'MeasuringRod'},
-            'group': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.IntegerField', [], {'primary_key': 'True'}),
-            'measuring_rod': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True', 'blank': 'True'}),
-            'sign': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True', 'blank': 'True'}),
-            'sub_measuring_rod': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True', 'blank': 'True'}),
-            'unit': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True', 'blank': 'True'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'})
         },
         'lizard_measure.organization': {
             'Meta': {'ordering': "('name',)", 'object_name': 'Organization'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'organization_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.OrganizationType']", 'null': 'True', 'blank': 'True'}),
-            'source': ('django.db.models.fields.IntegerField', [], {'default': '5'}),
-            'valid': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'})
         },
-        'lizard_measure.organizationtype': {
-            'Meta': {'object_name': 'OrganizationType'},
+        'lizard_measure.organizationpart': {
+            'Meta': {'ordering': "('name',)", 'object_name': 'OrganizationPart'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '64'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
+            'organization': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.Organization']"})
         },
-        'lizard_measure.score': {
-            'Meta': {'object_name': 'Score'},
-            'area': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_area.Area']", 'null': 'True', 'blank': 'True'}),
-            'area_ident': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True', 'blank': 'True'}),
-            'ascending': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
-            'gep': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
+        'lizard_measure.province': {
+            'Meta': {'object_name': 'Province'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'limit_bad_insufficient': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
-            'limit_insufficient_moderate': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
-            'measuring_rod': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.MeasuringRod']"}),
-            'mep': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
-            'target_2015': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
-            'target_2027': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'})
-        },
-        'lizard_measure.steeringparameter': {
-            'Meta': {'object_name': 'SteeringParameter'},
-            'area': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_area.Area']"}),
-            'fews_parameter': ('django.db.models.fields.CharField', [], {'max_length': '256'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'target_maximum': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
-            'target_minimum': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'})
         },
         'lizard_measure.unit': {
             'Meta': {'object_name': 'Unit'},
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'unit': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'valid': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'})
+            'sign': ('django.db.models.fields.CharField', [], {'max_length': '20'})
+        },
+        'lizard_measure.urgency': {
+            'Meta': {'ordering': "('-value',)", 'object_name': 'Urgency'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
+            'value': ('django.db.models.fields.FloatField', [], {})
         },
         'lizard_measure.waterbody': {
-            'Meta': {'object_name': 'WaterBody'},
-            'area': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_area.Area']", 'null': 'True', 'blank': 'True'}),
-            'area_ident': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True', 'blank': 'True'}),
+            'Meta': {'ordering': "('name',)", 'object_name': 'WaterBody'},
+            'area': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['lizard_measure.Area']", 'null': 'True', 'blank': 'True'}),
+            'characteristics': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'code': ('django.db.models.fields.CharField', [], {'max_length': '80', 'null': 'True', 'blank': 'True'}),
+            'control_parameters': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'current_situation_chemicals': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'krw_status': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.KRWStatus']", 'null': 'True', 'blank': 'True'}),
-            'krw_watertype': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.KRWWatertype']", 'null': 'True', 'blank': 'True'})
+            'ident': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
+            'municipality': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['lizard_measure.Municipality']", 'null': 'True', 'blank': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
+            'protected_area_reason': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'province': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['lizard_measure.Province']", 'null': 'True', 'blank': 'True'}),
+            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '50', 'db_index': 'True'}),
+            'status': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.WaterBodyStatus']", 'null': 'True', 'blank': 'True'}),
+            'water_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.KRWWaterType']", 'null': 'True', 'blank': 'True'})
+        },
+        'lizard_measure.waterbodystatus': {
+            'Meta': {'object_name': 'WaterBodyStatus'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '80'})
         }
     }
 

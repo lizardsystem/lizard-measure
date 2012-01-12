@@ -94,3 +94,7 @@ versions), add them as an "svn external" in the ``local_checkouts/`` directory
 and add them to the ``develop =`` list in buildout.cfg.
 
 Tests can always be run with ``bin/test`` or ``bin\test.exe``.
+
+Note that since version 1.5 a lot has changed. Therefore, migrations 4 and
+5 throw all tables away from previous migrations and versions and build
+the entire new table set. All data present migrating to 1.5 will be lost.

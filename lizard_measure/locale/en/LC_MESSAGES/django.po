@@ -1,0 +1,238 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-01-11 05:32-0600\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: models.py:39
+msgid "KRW Status"
+msgstr ""
+
+#: models.py:40
+msgid "KRW Statuses"
+msgstr ""
+
+#: models.py:63
+msgid "KRW Watertype"
+msgstr ""
+
+#: models.py:64
+msgid "KRW Watertypes"
+msgstr ""
+
+#: models.py:74
+msgid "Waterbody"
+msgstr ""
+
+#: models.py:75
+msgid "Waterbodies"
+msgstr ""
+
+#: models.py:83 models.py:152
+msgid "Area ident for the case the real Area cannot be imported yet"
+msgstr ""
+
+#: models.py:160
+msgid "Insufficient-moderate limit"
+msgstr ""
+
+#: models.py:161
+msgid "limit from insufficient to moderate"
+msgstr ""
+
+#: models.py:166
+msgid "Bad-insufficient limit"
+msgstr ""
+
+#: models.py:167
+msgid "limit from bad to insufficient"
+msgstr ""
+
+#: models.py:171
+msgid "True if higher is better"
+msgstr ""
+
+#: models.py:217
+msgid "Measure category"
+msgstr ""
+
+#: models.py:218
+msgid "Measure categories"
+msgstr ""
+
+#: models.py:237
+msgid "Unit"
+msgstr ""
+
+#: models.py:238
+msgid "Units"
+msgstr ""
+
+#: models.py:266
+msgid "Measure type"
+msgstr ""
+
+#: models.py:267
+msgid "Measure types"
+msgstr ""
+
+#: models.py:282
+msgid "Organization type"
+msgstr ""
+
+#: models.py:283
+msgid "Organization types"
+msgstr ""
+
+#: models.py:308
+msgid "Aquo domain table 'Waterbeheerder'"
+msgstr ""
+
+#: models.py:309
+msgid "Aquo domain table 'Meetinstantie'"
+msgstr ""
+
+#: models.py:310
+msgid "CBS Municipality"
+msgstr ""
+
+#: models.py:311
+msgid "Other"
+msgstr ""
+
+#: models.py:339
+msgid "Organization"
+msgstr ""
+
+#: models.py:340
+msgid "Organizations"
+msgstr ""
+
+#: models.py:353
+msgid "Funding organization"
+msgstr ""
+
+#: models.py:354
+msgid "Funding organizations"
+msgstr ""
+
+#: models.py:380
+msgid "Measure status"
+msgstr ""
+
+#: models.py:381
+msgid "Measure statuses"
+msgstr ""
+
+#: models.py:399
+msgid "Description of statusupdate. Recommended."
+msgstr ""
+
+#: models.py:405
+msgid "Expenditure for investment"
+msgstr ""
+
+#: models.py:410
+msgid "Expenditure for expoitation"
+msgstr ""
+
+#: models.py:414
+msgid "Measure status moment"
+msgstr ""
+
+#: models.py:415
+msgid "Measure status moments"
+msgstr ""
+
+#: models.py:432
+msgid "Measure period"
+msgstr ""
+
+#: models.py:433
+msgid "Measure periods"
+msgstr ""
+
+#: models.py:448
+msgid "Min"
+msgstr ""
+
+#: models.py:449
+msgid "Max"
+msgstr ""
+
+#: models.py:450
+msgid "Avg"
+msgstr ""
+
+#: models.py:473
+msgid "Unique code"
+msgstr ""
+
+#: models.py:477
+msgid "Is a KRW measure"
+msgstr ""
+
+#: models.py:513
+msgid "Source of imported data"
+msgstr ""
+
+#: models.py:518
+msgid "Original date of imported data"
+msgstr ""
+
+#: models.py:523
+msgid "Full raw imported data"
+msgstr ""
+
+#: models.py:537
+msgid "Which waterbodies does this measure belong to?"
+msgstr ""
+
+#: models.py:538
+msgid "Waterlichaam"
+msgstr ""
+
+#: models.py:544
+msgid "Which areas does this measure belong to?"
+msgstr ""
+
+#: models.py:545
+msgid "Area"
+msgstr ""
+
+#: models.py:552
+msgid "Description"
+msgstr ""
+
+#: models.py:557
+msgid "Categories"
+msgstr ""
+
+#: models.py:574
+msgid "Initiator of this measure"
+msgstr ""
+
+#: models.py:582
+msgid "Executive of this measure"
+msgstr ""
+
+#: models.py:632
+msgid "Measure"
+msgstr ""
+
+#: models.py:633
+msgid "Measures"
+msgstr ""

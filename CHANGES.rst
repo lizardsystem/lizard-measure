@@ -5,7 +5,11 @@ Changelog of lizard-measure
 1.4.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- This release marks a big change migrating the app from the krw-waternet
+  structure into the new krw-portaal-ready structure. Note that migrations
+  4 and 5 throw all tables away from previous migrations and versions and
+  build an entire new table set. All data present migrating to 1.5 will
+  be lost.
 
 
 1.4.2 (2011-12-27)
