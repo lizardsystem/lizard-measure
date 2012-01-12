@@ -4,7 +4,7 @@ DATABASE_ENGINE = 'sqlite3'
 DATABASE_NAME = 'test.db'
 SITE_ID = 1
 INSTALLED_APPS = [
-    'lizard_krw',
+    'lizard_measure',
     'lizard_map',
     'lizard_ui',
     'south',

@@ -1,5 +1,6 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import include
+from django.conf.urls.defaults import patterns
 from django.conf import settings
 from django.contrib import admin
 

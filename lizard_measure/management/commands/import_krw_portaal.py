@@ -2,12 +2,10 @@
 # -*- coding: utf-8 -*-
 
 from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import simplejson
-from django.template import defaultfilters
-from django.template.defaultfilters import slugify
-from django.contrib.gis.geos import GEOSGeometry
+# from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.auth.models import User
 from lxml import etree
 
@@ -34,8 +32,6 @@ from lizard_measure.models import MeasureStatus
 from lizard_measure.models import MeasureStatusMoment
 from lizard_measure.models import FundingOrganization
 
-from lizard_geo.models import GeoObjectGroup
-
 
 def _records(xml_filename):
     """
@@ -49,7 +45,7 @@ def _records(xml_filename):
     root = tree.getroot()
     record_elements = root.find('records')
     for record_element in record_elements:
-        
+
         # Create record object
         record = dict([(column.get('name'), column.text)
                        for column in record_element])
@@ -142,8 +138,8 @@ def import_KRW_lookup(filename):
             start_date, end_date = _dates_from_xml(rec['description'])
             measure_period, measure_period_created = _get_or_create(
                 model=MeasurePeriod,
-                get_kwargs = {'start_date': start_date, 'end_date': end_date},
-                extra_kwargs = {'description': rec['description']},
+                get_kwargs={'start_date': start_date, 'end_date': end_date},
+                extra_kwargs={'description': rec['description']},
             )
         # Insert 'owmstat'
         if rec['domein'] == 'owmstat':
@@ -163,7 +159,7 @@ def import_KRW_lookup(filename):
 
 def import_measure_types(filename):
     for rec in _records(filename):
-        
+
         group = MeasureCategory.objects.get_or_create(
             name=rec['hoofdcategorie'],
         )[0]
@@ -182,7 +178,7 @@ def import_measure_types(filename):
             get_kwargs={'code': rec['code']},
             extra_kwargs=extra_kwargs,
         )
-        
+
         # Add the units
         units = rec['eenheid'].split(', ')
         for u_str in units:
@@ -293,7 +289,7 @@ def import_scores(filename):
         gep = _to_float_or_none(rec['gep'])
         limit_bad_insufficient = _to_float_or_none(rec['ontoereikend'])
         limit_insufficient_moderate = _to_float_or_none(rec['matig'])
-        
+
         ascending = _ascending_or_none(
             limit_bad_insufficient,
             limit_insufficient_moderate,
@@ -376,7 +372,7 @@ def import_measures(filename):
             'exploitation_costs': rec['exploitkosten'],
             'executive': None,
             'initiator': initiator,
-                                   
+
         }
 
         measure = Measure(**measure_kwargs)
@@ -440,14 +436,14 @@ def import_measures(filename):
                 continue
             cost_carrier = rec['kostendrager' + n]
             cost_percentage = _to_float_or_none(rec['kostenpercent' + n])
-            organization = Organization.objects.get(name=cost_carrier)            
+            organization = Organization.objects.get(name=cost_carrier)
             funding_organization = FundingOrganization(
                 percentage=cost_percentage,
                 organization=organization,
                 measure=measure,
             )
             funding_organization.save()
-        
+
 
 class Command(BaseCommand):
     args = ''
@@ -466,7 +462,7 @@ class Command(BaseCommand):
 
         # Import Lookups
         import_KRW_lookup(os.path.join(import_path, 'KRW_lookup.xml'))
-        
+
         # Maatregeltypes (SGBP)
         import_measure_types(
             filename=os.path.join(
@@ -477,9 +473,9 @@ class Command(BaseCommand):
 
         # Waterbodies
         owm_sources = [
-            ('HHNK','owmhhnk.xml'),
-            ('Waternet','OWMwaternet.xml'),
-            ('Rijnland','owmrijnland.xml'),
+            ('HHNK', 'owmhhnk.xml'),
+            ('Waternet', 'OWMwaternet.xml'),
+            ('Rijnland', 'owmrijnland.xml'),
         ]
 
         for admin_name, xml_file in owm_sources:

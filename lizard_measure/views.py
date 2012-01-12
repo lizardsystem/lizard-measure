@@ -1,16 +1,13 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
 
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 # from django.views.decorators.cache import cache_page
-import mapnik
 
 from lizard_measure.models import Measure
 from lizard_measure.models import WaterBody
-from lizard_map import coordinates
 
 
 HOMEPAGE_KEY = 1  # Primary key of the Workspace for rendering the homepage.
@@ -42,7 +39,8 @@ CRUMB_HOMEPAGE = {'name': 'home', 'url': '/'}
 #         water_body = WaterBody.objects.get(ident=id_in_shapefile)
 #         return HttpResponse(water_body.get_absolute_url())
 
-#     # Nothing found? Return an empty response and the javascript popup handler
+#     # Nothing found? Return an empty response and the
+#     # javascript popup handler
 #     # will fire.
 #     return HttpResponse('')
 

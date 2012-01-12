@@ -13,7 +13,7 @@ Features
 Measures in areas are stored and their status is tracked.
 
 Measures can be imported from KRW portaal.
-- Waterbodies are imported from gafxx.xml files.
+- Waterbodies are not imported, but linked to areas via owmxxx.xml files.
 - Measures are imported from maatregelen.xml
 
 Data is accessible using the REST API.

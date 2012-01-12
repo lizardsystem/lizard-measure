@@ -18,7 +18,6 @@ from lizard_krw.models import SCORE_CATEGORY_VIS
 from lizard_krw.models import AlphaScore
 from lizard_krw.models import Measure
 from lizard_krw.models import MeasureStatus
-from lizard_krw.models import MeasureStatusMoment
 from lizard_krw.models import Score
 from lizard_krw.models import WaterBody
 

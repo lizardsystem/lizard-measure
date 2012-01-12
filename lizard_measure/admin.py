@@ -16,7 +16,6 @@ from lizard_measure.models import Score
 from lizard_measure.models import MeasuringRod
 
 
-
 class MeasureStatusMomentInline(admin.TabularInline):
     model = MeasureStatusMoment
 

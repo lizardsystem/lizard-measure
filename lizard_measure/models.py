@@ -4,7 +4,6 @@ import datetime
 import logging
 
 from django.db import models
-from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
@@ -30,6 +29,7 @@ class KRWStatus(models.Model):
         unique=True,
     )
     description = models.CharField(
+        verbose_name=_('Description'),
         max_length=256,
         blank=True,
         null=True,
@@ -46,7 +46,7 @@ class KRWStatus(models.Model):
 class KRWWatertype(models.Model):
     """
     Type of KRW Watertype.
-    
+
     This model must be synchronized with the Aquo domain table 'KRWWatertype'.
     """
     code = models.CharField(
@@ -100,6 +100,11 @@ class MeasuringRod(models.Model):
     This model must be synchronized with the Aquo domain table
     'KRWKwaliteitselement'.
     """
+
+    class Meta:
+        verbose_name = _("Maatlat")
+        verbose_name_plural = _("Maatlatten")
+
     id = models.IntegerField(
         primary_key=True
     )
@@ -180,11 +185,11 @@ class Score(models.Model):
         else:
             area = self.area.name
         return '%s - %s: %s' % (
-            self.area,
+            area,
             self.measuring_rod.measuring_rod,
             self.measuring_rod.sub_measuring_rod,
         )
-    
+
 
 class SteeringParameter(models.Model):
     """
@@ -232,7 +237,6 @@ class Unit(models.Model):
     description = models.TextField(blank=True, null=True)
     valid = models.NullBooleanField(default=None)
 
-
     class Meta:
         verbose_name = _("Unit")
         verbose_name_plural = _("Units")
@@ -249,23 +253,48 @@ class MeasureType(models.Model):
     'KRWMeasuretype'.
     """
 
+    class Meta:
+        verbose_name = _("Measure type")
+        verbose_name_plural = _("Measure types")
+        ordering = ('code', )
+
     code = models.CharField(max_length=80, unique=True)
-    description = models.TextField()
+    description = models.TextField(
+        verbose_name=_('Description'),
+    )
 
     # Future may require a separate MeasureCodeGroup model for this
     group = models.ForeignKey(MeasureCategory, null=True, blank=True)
 
     # Other fields from KRW import
-    units = models.ManyToManyField(Unit)
-    klass = models.CharField(max_length=256, null=True, blank=True)
-    subcategory = models.CharField(max_length=256, null=True, blank=True)
-    harmonisation = models.CharField(max_length=256, null=True, blank=True)
-    combined_name = models.CharField(max_length=256, null=True, blank=True)
-
-    class Meta:
-        verbose_name = _("Measure type")
-        verbose_name_plural = _("Measure types")
-        ordering = ('code', )
+    units = models.ManyToManyField(
+        Unit,
+        verbose_name=_('Units'),
+    )
+    klass = models.CharField(
+        max_length=256,
+        null=True,
+        blank=True,
+        verbose_name=_('Class'),
+    )
+    subcategory = models.CharField(
+        max_length=256,
+        null=True,
+        blank=True,
+        verbose_name=_('Subcategory'),
+    )
+    harmonisation = models.CharField(
+        max_length=256,
+        null=True,
+        blank=True,
+        verbose_name=_('Harmonisation'),
+    )
+    combined_name = models.CharField(
+        max_length=256,
+        null=True,
+        blank=True,
+        verbose_name=_('Combined Name'),
+    )
 
     def __unicode__(self):
         return u'%s - %s' % (self.code, self.description)
@@ -295,8 +324,10 @@ class Organization(models.Model):
     This model must be synchronized with the Aquo domain tables
     'Waterbeheerder' and 'Meetinstantie'.
 
-    Furthermore, it should contain municipalities, for the time being synchronized from
-    'www.cbs.nl/nl-NL/menu/methoden/classificaties/overzicht/gemeentelijke-indeling/2011/default.htm',
+    Furthermore, it should contain municipalities, for the time being
+    synchronized from
+    'www.cbs.nl/nl-NL/menu/methoden/classificaties/
+     overzicht/gemeentelijke-indeling/2011/default.htm',
     awaiting an Aquo domain table.
 
     And there are some other entries as described in
@@ -367,14 +398,25 @@ class MeasureStatus(models.Model):
     The status of a measure
     """
 
-    name = models.CharField(max_length=200)
+    name = models.CharField(
+        max_length=200,
+        verbose_name=_('Status'),
+    )
     # Color is matplotlib style, i.e. '0.75', 'red', '#eeff00'.
     color = ColorField(
         max_length=20,
-        help_text="Color is rrggbb")
+        help_text=_('Color is rrggbb'),
+        verbose_name=_('Color'),
+    )
     # Value is 1.0 for up and running, 0 for nothing. Used for ordering.
-    value = models.FloatField(default=0.0)
-    valid = models.NullBooleanField(default=None)
+    value = models.FloatField(
+        default=0.0,
+        verbose_name=_('Numeric value'),
+    )
+    valid = models.NullBooleanField(
+        default=None,
+        verbose_name=_('Valid'),
+    )
 
     class Meta:
         verbose_name = _("Measure status")
@@ -407,7 +449,7 @@ class MeasureStatusMoment(models.Model):
     exploitation_expenditure = models.IntegerField(
         blank=True,
         null=True,
-        help_text=_("Expenditure for expoitation"),
+        help_text=_("Expenditure for exploitation"),
     )
 
     class Meta:
@@ -425,7 +467,10 @@ class MeasurePeriod(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     description = models.TextField(null=True, blank=True)
-    valid = models.NullBooleanField(default=None)
+    valid = models.NullBooleanField(
+        default=None,
+        verbose_name=_('Valid'),
+    )
 
     class Meta:
         ordering = ('start_date', 'end_date', )
@@ -535,7 +580,7 @@ class Measure(models.Model):
     waterbodies = models.ManyToManyField(
         WaterBody,
         help_text=_('Which waterbodies does this measure belong to?'),
-        verbose_name=_('Waterlichaam'),
+        verbose_name=_('Waterbody'),
     )
 
     areas = models.ManyToManyField(
@@ -572,7 +617,7 @@ class Measure(models.Model):
         null=True,
         blank=True,
         verbose_name=_('Initiator of this measure'),
-        related_name = 'initiator_measure_set'
+        related_name='initiator_measure_set',
     )
 
     executive = models.ForeignKey(
@@ -580,7 +625,7 @@ class Measure(models.Model):
         null=True,
         blank=True,
         verbose_name=_('Executive of this measure'),
-        related_name = 'executive_measure_set'
+        related_name='executive_measure_set',
     )
 
     responsible_department = models.CharField(
@@ -829,7 +874,3 @@ class Measure(models.Model):
             for funding_organization in funding_organizations:
                 result += funding_organization.cost
         return result
-
-
-
-

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-11 05:32-0600\n"
+"POT-Creation-Date: 2012-01-12 06:16-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,26 +18,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
+#: models.py:32 models.py:263 models.py:597
+msgid "Description"
+msgstr "Omschrijving"
+
 #: models.py:39
 msgid "KRW Status"
 msgstr ""
 
 #: models.py:40
-#, fuzzy
 msgid "KRW Statuses"
 msgstr "Waterlichaam statussen"
 
 #: models.py:63
-#, fuzzy
 msgid "KRW Watertype"
 msgstr "KRW watertype"
 
 #: models.py:64
-#, fuzzy
 msgid "KRW Watertypes"
 msgstr "KRW watertypes"
 
-#: models.py:74
+#: models.py:74 models.py:583
 msgid "Waterbody"
 msgstr "Waterlichaam"
 
@@ -45,259 +46,238 @@ msgstr "Waterlichaam"
 msgid "Waterbodies"
 msgstr "Waterlichamen"
 
-#: models.py:83 models.py:152
+#: models.py:83 models.py:157
 msgid "Area ident for the case the real Area cannot be imported yet"
 msgstr ""
 
-#: models.py:160
+#: models.py:105
+msgid "Maatlat"
+msgstr ""
+
+#: models.py:106
+msgid "Maatlatten"
+msgstr ""
+
+#: models.py:165
 msgid "Insufficient-moderate limit"
 msgstr "Grens ontoereikend-matig"
 
-#: models.py:161
+#: models.py:166
 msgid "limit from insufficient to moderate"
 msgstr "Grenswaarde tussen ontoereikend en matig"
 
-#: models.py:166
+#: models.py:171
 msgid "Bad-insufficient limit"
 msgstr "Grens slecht-ontoereikend"
 
-#: models.py:167
+#: models.py:172
 msgid "limit from bad to insufficient"
 msgstr "Grenswaarde tussen slecht en ontoereikend"
 
-#: models.py:171
+#: models.py:176
 msgid "True if higher is better"
 msgstr "Waar als een grotere waarde ook een betere waarde is"
 
-#: models.py:217
+#: models.py:222
 msgid "Measure category"
 msgstr "Maatregel categorie"
 
-#: models.py:218
+#: models.py:223
 msgid "Measure categories"
 msgstr "Maatregel categorieën"
 
-#: models.py:237
+#: models.py:241
 msgid "Unit"
 msgstr "Eenheid"
 
-#: models.py:238
+#: models.py:242 models.py:272
 msgid "Units"
 msgstr "Eenheden"
 
-#: models.py:266
-#, fuzzy
+#: models.py:257
 msgid "Measure type"
-msgstr "Maatregel periode"
+msgstr "Maatregeltype"
 
-#: models.py:267
-#, fuzzy
+#: models.py:258
 msgid "Measure types"
-msgstr "Maatregel periodes"
+msgstr "Maatregeltypes"
 
-#: models.py:282
-#, fuzzy
+#: models.py:278
+msgid "Class"
+msgstr ""
+
+#: models.py:284
+msgid "Subcategory"
+msgstr "Maatregelcategorie"
+
+#: models.py:290
+msgid "Harmonisation"
+msgstr "Organisatie"
+
+#: models.py:296
+msgid "Combined Name"
+msgstr "Samengestelde naam"
+
+#: models.py:311
 msgid "Organization type"
-msgstr "Organizatie"
+msgstr "Organisatietype"
 
-#: models.py:283
-#, fuzzy
+#: models.py:312
 msgid "Organization types"
-msgstr "Organisaties"
+msgstr "Organisatietypes"
 
-#: models.py:308
+#: models.py:339
 msgid "Aquo domain table 'Waterbeheerder'"
-msgstr ""
+msgstr "Aquo domein tabel 'Waterbeheerder'"
 
-#: models.py:309
+#: models.py:340
 msgid "Aquo domain table 'Meetinstantie'"
-msgstr ""
+msgstr "Aquo domein tabel 'Meetinstantie'"
 
-#: models.py:310
-#, fuzzy
+#: models.py:341
 msgid "CBS Municipality"
 msgstr "Gemeente"
 
-#: models.py:311
+#: models.py:342
 msgid "Other"
-msgstr ""
+msgstr "Overig"
 
-#: models.py:339
+#: models.py:370
+#, fuzzy
 msgid "Organization"
-msgstr "Organizatie"
+msgstr "Organisatietype"
 
-#: models.py:340
+#: models.py:371
+#, fuzzy
 msgid "Organizations"
-msgstr "Organisaties"
+msgstr "Organisatietypes"
 
-#: models.py:353
+#: models.py:384
 msgid "Funding organization"
 msgstr "Financieringsorganisatie"
 
-#: models.py:354
+#: models.py:385
 msgid "Funding organizations"
 msgstr "Financieringsorganisaties"
 
-#: models.py:380
+#: models.py:403
+msgid "Status"
+msgstr "Status"
+
+#: models.py:408
+msgid "Color is rrggbb"
+msgstr "Kleur is rrggbb"
+
+#: models.py:409
+msgid "Color"
+msgstr "Kleur"
+
+#: models.py:414
+msgid "Numeric value"
+msgstr "Numerieke waarde"
+
+#: models.py:418 models.py:472
+msgid "Valid"
+msgstr "Geldig"
+
+#: models.py:422
 msgid "Measure status"
 msgstr "Maatregel status"
 
-#: models.py:381
+#: models.py:423
 msgid "Measure statuses"
 msgstr "Maatregel statussen"
 
-#: models.py:399
+#: models.py:441
 msgid "Description of statusupdate. Recommended."
-msgstr ""
+msgstr "Omschrijving van de statusupdate. Aanbevolen."
 
-#: models.py:405
+#: models.py:447
 msgid "Expenditure for investment"
-msgstr ""
+msgstr "Investeringsuitgaven"
 
-#: models.py:410
-msgid "Expenditure for expoitation"
-msgstr ""
+#: models.py:452
+msgid "Expenditure for exploitation"
+msgstr "Exploitatie-uitgaven"
 
-#: models.py:414
+#: models.py:456
 msgid "Measure status moment"
 msgstr "Maatergel status moment"
 
-#: models.py:415
+#: models.py:457
 msgid "Measure status moments"
 msgstr "Maatregel status momenten"
 
-#: models.py:432
+#: models.py:477
 msgid "Measure period"
 msgstr "Maatregel periode"
 
-#: models.py:433
+#: models.py:478
 msgid "Measure periods"
 msgstr "Maatregel periodes"
 
-#: models.py:448
+#: models.py:493
 msgid "Min"
 msgstr "Min"
 
-#: models.py:449
+#: models.py:494
 msgid "Max"
 msgstr "Max"
 
-#: models.py:450
+#: models.py:495
 msgid "Avg"
 msgstr "Gemiddeld"
 
-#: models.py:473
+#: models.py:518
 #, fuzzy
 msgid "Unique code"
 msgstr "Maatregel code"
 
-#: models.py:477
+#: models.py:522
 msgid "Is a KRW measure"
-msgstr ""
+msgstr "Is een KRW maatregel"
 
-#: models.py:513
+#: models.py:558
 msgid "Source of imported data"
-msgstr ""
+msgstr "Bron van de geïmporteerde data"
 
-#: models.py:518
+#: models.py:563
 msgid "Original date of imported data"
-msgstr ""
+msgstr "Oorspronkelijke datum van de geïmporteerde data"
 
-#: models.py:523
+#: models.py:568
 msgid "Full raw imported data"
-msgstr ""
+msgstr "Volledige weergave van geïmporteerde data"
 
-#: models.py:537
+#: models.py:582
 msgid "Which waterbodies does this measure belong to?"
-msgstr ""
+msgstr "Bij welke waterlichamen hoort deze maatregel?"
 
-#: models.py:538
-msgid "Waterlichaam"
-msgstr ""
-
-#: models.py:544
+#: models.py:589
 msgid "Which areas does this measure belong to?"
-msgstr ""
+msgstr "Bij welke deelgebieden hoort deze maatregel?"
 
-#: models.py:545
+#: models.py:590
 msgid "Area"
 msgstr "Deelgebied"
 
-#: models.py:552
-msgid "Description"
-msgstr ""
-
-#: models.py:557
+#: models.py:602
 #, fuzzy
 msgid "Categories"
-msgstr "Maatregel categorieën"
+msgstr "Categoriën"
 
-#: models.py:574
+#: models.py:619
 msgid "Initiator of this measure"
-msgstr ""
+msgstr "Initiatiefnemer van deze maatregel"
 
-#: models.py:582
+#: models.py:627
 msgid "Executive of this measure"
-msgstr ""
+msgstr "Uitvoerder van deze maatregel"
 
-#: models.py:632
+#: models.py:677
 msgid "Measure"
 msgstr "Maatregel"
 
-#: models.py:633
+#: models.py:678
 msgid "Measures"
 msgstr "Maatregelen"
-
-#~ msgid "Waterbody status"
-#~ msgstr "Waterlichaam status"
-
-#~ msgid "Areas"
-#~ msgstr "Deelgebieden"
-
-#~ msgid "Province"
-#~ msgstr "Provincie"
-
-#~ msgid "Provinces"
-#~ msgstr "Provincies"
-
-#~ msgid "Municipalities"
-#~ msgstr "Gemeentes"
-
-#~ msgid "Single indicator"
-#~ msgstr "Losse indicator"
-
-#~ msgid "Single indicators"
-#~ msgstr "Losse indicatoren"
-
-#~ msgid "Score"
-#~ msgstr "Score"
-
-#~ msgid "Scores"
-#~ msgstr "Scores"
-
-#~ msgid "Goal Score"
-#~ msgstr "Doel score"
-
-#~ msgid "Goal Scores"
-#~ msgstr "Doel scores"
-
-#~ msgid "Measure codes"
-#~ msgstr "Maatregel codes"
-
-#~ msgid "Organization Part"
-#~ msgstr "Organisatiedeel"
-
-#~ msgid "Organization Parts"
-#~ msgstr "Organisatiedelen"
-
-#~ msgid "Department"
-#~ msgstr "Afdeling"
-
-#~ msgid "Departments"
-#~ msgstr "Afdelingen"
-
-#~ msgid "KRW measure collection"
-#~ msgstr "KRW maatregelenpakket"
-
-#~ msgid "KRW measure collections"
-#~ msgstr "KRW maatregelenpakketten"
