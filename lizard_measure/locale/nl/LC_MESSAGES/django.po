@@ -8,207 +8,296 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-19 07:28-0500\n"
+"POT-Creation-Date: 2012-01-11 05:32-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
+#: models.py:39
+msgid "KRW Status"
+msgstr ""
+
 #: models.py:40
-msgid "KRW water type"
-msgstr "KRW watertype"
-
-#: models.py:41
-msgid "KRW water types"
-msgstr "KRW watertypes"
-
-#: models.py:54
-msgid "Waterbody status"
-msgstr "Waterlichaam status"
-
-#: models.py:55
-msgid "Waterbody statuses"
+#, fuzzy
+msgid "KRW Statuses"
 msgstr "Waterlichaam statussen"
 
-#: models.py:66
-msgid "Area"
-msgstr "Deelgebied"
+#: models.py:63
+#, fuzzy
+msgid "KRW Watertype"
+msgstr "KRW watertype"
 
-#: models.py:67
-msgid "Areas"
-msgstr "Deelgebieden"
+#: models.py:64
+#, fuzzy
+msgid "KRW Watertypes"
+msgstr "KRW watertypes"
 
-#: models.py:78
-msgid "Province"
-msgstr "Provincie"
-
-#: models.py:79
-msgid "Provinces"
-msgstr "Provincies"
-
-#: models.py:90
-msgid "Municipality"
-msgstr "Gemeente"
-
-#: models.py:91
-msgid "Municipalities"
-msgstr "Gemeentes"
-
-#: models.py:103
+#: models.py:74
 msgid "Waterbody"
 msgstr "Waterlichaam"
 
-#: models.py:104
+#: models.py:75
 msgid "Waterbodies"
 msgstr "Waterlichamen"
 
-#: models.py:159
-msgid "Single indicator"
-msgstr "Losse indicator"
+#: models.py:83 models.py:152
+msgid "Area ident for the case the real Area cannot be imported yet"
+msgstr ""
 
 #: models.py:160
-msgid "Single indicators"
-msgstr "Losse indicatoren"
+msgid "Insufficient-moderate limit"
+msgstr "Grens ontoereikend-matig"
 
-#: models.py:243
-msgid "Score"
-msgstr "Score"
+#: models.py:161
+msgid "limit from insufficient to moderate"
+msgstr "Grenswaarde tussen ontoereikend en matig"
 
-#: models.py:244
-msgid "Scores"
-msgstr "Scores"
+#: models.py:166
+msgid "Bad-insufficient limit"
+msgstr "Grens slecht-ontoereikend"
 
-#: models.py:281
-msgid "Goal Score"
-msgstr "Doel score"
+#: models.py:167
+msgid "limit from bad to insufficient"
+msgstr "Grenswaarde tussen slecht en ontoereikend"
 
-#: models.py:282
-msgid "Goal Scores"
-msgstr "Doel scores"
+#: models.py:171
+msgid "True if higher is better"
+msgstr "Waar als een grotere waarde ook een betere waarde is"
 
-#: models.py:308
+#: models.py:217
 msgid "Measure category"
 msgstr "Maatregel categorie"
 
-#: models.py:309
+#: models.py:218
 msgid "Measure categories"
 msgstr "Maatregel categorieën"
 
-#: models.py:324
-msgid "Measure code"
-msgstr "Maatregel code"
-
-#: models.py:325
-msgid "Measure codes"
-msgstr "Maatregel codes"
-
-#: models.py:341
+#: models.py:237
 msgid "Unit"
 msgstr "Eenheid"
 
-#: models.py:342
+#: models.py:238
 msgid "Units"
 msgstr "Eenheden"
 
-#: models.py:354
-msgid "Executive"
+#: models.py:266
+#, fuzzy
+msgid "Measure type"
+msgstr "Maatregel periode"
+
+#: models.py:267
+#, fuzzy
+msgid "Measure types"
+msgstr "Maatregel periodes"
+
+#: models.py:282
+#, fuzzy
+msgid "Organization type"
+msgstr "Organizatie"
+
+#: models.py:283
+#, fuzzy
+msgid "Organization types"
+msgstr "Organisaties"
+
+#: models.py:308
+msgid "Aquo domain table 'Waterbeheerder'"
 msgstr ""
 
-#: models.py:355
-msgid "Executives"
+#: models.py:309
+msgid "Aquo domain table 'Meetinstantie'"
 msgstr ""
 
-#: models.py:368
-msgid "Executive part"
+#: models.py:310
+#, fuzzy
+msgid "CBS Municipality"
+msgstr "Gemeente"
+
+#: models.py:311
+msgid "Other"
 msgstr ""
 
-#: models.py:369
-msgid "Executive parts"
-msgstr ""
-
-#: models.py:382
+#: models.py:339
 msgid "Organization"
 msgstr "Organizatie"
 
-#: models.py:383
+#: models.py:340
 msgid "Organizations"
 msgstr "Organisaties"
 
-#: models.py:396
-msgid "Organization Part"
-msgstr "Organisatiedeel"
-
-#: models.py:397
-msgid "Organization Parts"
-msgstr "Organisatiedelen"
-
-#: models.py:412
-msgid "Department"
-msgstr "Afdeling"
-
-#: models.py:413
-msgid "Departments"
-msgstr "Afdelingen"
-
-#: models.py:426
+#: models.py:353
 msgid "Funding organization"
 msgstr "Financieringsorganisatie"
 
-#: models.py:427
+#: models.py:354
 msgid "Funding organizations"
 msgstr "Financieringsorganisaties"
 
-#: models.py:454
+#: models.py:380
 msgid "Measure status"
 msgstr "Maatregel status"
 
-#: models.py:455
+#: models.py:381
 msgid "Measure statuses"
 msgstr "Maatregel statussen"
 
-#: models.py:483
+#: models.py:399
+msgid "Description of statusupdate. Recommended."
+msgstr ""
+
+#: models.py:405
+msgid "Expenditure for investment"
+msgstr ""
+
+#: models.py:410
+msgid "Expenditure for expoitation"
+msgstr ""
+
+#: models.py:414
 msgid "Measure status moment"
 msgstr "Maatergel status moment"
 
-#: models.py:484
+#: models.py:415
 msgid "Measure status moments"
 msgstr "Maatregel status momenten"
 
-#: models.py:500
+#: models.py:432
 msgid "Measure period"
 msgstr "Maatregel periode"
 
-#: models.py:501
+#: models.py:433
 msgid "Measure periods"
 msgstr "Maatregel periodes"
 
-#: models.py:541
-msgid "KRW measure collection"
-msgstr "KRW maatregelenpakket"
-
-#: models.py:542
-msgid "KRW measure collections"
-msgstr "KRW maatregelenpakketten"
-
-#: models.py:644
+#: models.py:448
 msgid "Min"
 msgstr "Min"
 
-#: models.py:645
+#: models.py:449
 msgid "Max"
 msgstr "Max"
 
-#: models.py:646
+#: models.py:450
 msgid "Avg"
 msgstr "Gemiddeld"
 
-#: models.py:714
+#: models.py:473
+#, fuzzy
+msgid "Unique code"
+msgstr "Maatregel code"
+
+#: models.py:477
+msgid "Is a KRW measure"
+msgstr ""
+
+#: models.py:513
+msgid "Source of imported data"
+msgstr ""
+
+#: models.py:518
+msgid "Original date of imported data"
+msgstr ""
+
+#: models.py:523
+msgid "Full raw imported data"
+msgstr ""
+
+#: models.py:537
+msgid "Which waterbodies does this measure belong to?"
+msgstr ""
+
+#: models.py:538
+msgid "Waterlichaam"
+msgstr ""
+
+#: models.py:544
+msgid "Which areas does this measure belong to?"
+msgstr ""
+
+#: models.py:545
+msgid "Area"
+msgstr "Deelgebied"
+
+#: models.py:552
+msgid "Description"
+msgstr ""
+
+#: models.py:557
+#, fuzzy
+msgid "Categories"
+msgstr "Maatregel categorieën"
+
+#: models.py:574
+msgid "Initiator of this measure"
+msgstr ""
+
+#: models.py:582
+msgid "Executive of this measure"
+msgstr ""
+
+#: models.py:632
 msgid "Measure"
 msgstr "Maatregel"
 
-#: models.py:715
+#: models.py:633
 msgid "Measures"
 msgstr "Maatregelen"
+
+#~ msgid "Waterbody status"
+#~ msgstr "Waterlichaam status"
+
+#~ msgid "Areas"
+#~ msgstr "Deelgebieden"
+
+#~ msgid "Province"
+#~ msgstr "Provincie"
+
+#~ msgid "Provinces"
+#~ msgstr "Provincies"
+
+#~ msgid "Municipalities"
+#~ msgstr "Gemeentes"
+
+#~ msgid "Single indicator"
+#~ msgstr "Losse indicator"
+
+#~ msgid "Single indicators"
+#~ msgstr "Losse indicatoren"
+
+#~ msgid "Score"
+#~ msgstr "Score"
+
+#~ msgid "Scores"
+#~ msgstr "Scores"
+
+#~ msgid "Goal Score"
+#~ msgstr "Doel score"
+
+#~ msgid "Goal Scores"
+#~ msgstr "Doel scores"
+
+#~ msgid "Measure codes"
+#~ msgstr "Maatregel codes"
+
+#~ msgid "Organization Part"
+#~ msgstr "Organisatiedeel"
+
+#~ msgid "Organization Parts"
+#~ msgstr "Organisatiedelen"
+
+#~ msgid "Department"
+#~ msgstr "Afdeling"
+
+#~ msgid "Departments"
+#~ msgstr "Afdelingen"
+
+#~ msgid "KRW measure collection"
+#~ msgstr "KRW maatregelenpakket"
+
+#~ msgid "KRW measure collections"
+#~ msgstr "KRW maatregelenpakketten"

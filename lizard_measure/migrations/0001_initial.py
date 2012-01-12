@@ -51,12 +51,13 @@ class Migration(SchemaMigration):
             ('measuring_rod', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.MeasuringRod'])),
             ('area', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_area.Area'], null=True, blank=True)),
             ('area_ident', self.gf('django.db.models.fields.CharField')(max_length=32, null=True, blank=True)),
-            ('ascending', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True)),
-            ('limit_bad_insufficient', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
+            ('mep', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
+            ('gep', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
             ('limit_insufficient_moderate', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
+            ('limit_bad_insufficient', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
+            ('ascending', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True)),
             ('target_2015', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
             ('target_2027', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
-            ('gep', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
         ))
         db.send_create_signal('lizard_measure', ['Score'])
 
@@ -173,6 +174,7 @@ class Migration(SchemaMigration):
             ('parent', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.Measure'], null=True, blank=True)),
             ('ident', self.gf('django.db.models.fields.CharField')(max_length=64, unique=True, null=True, blank=True)),
             ('is_KRW_measure', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True)),
+            ('geometry', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_geo.GeoObject'], null=True, blank=True)),
             ('measure_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.MeasureType'])),
             ('title', self.gf('django.db.models.fields.CharField')(max_length=256, null=True, blank=True)),
             ('period', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.MeasurePeriod'], null=True, blank=True)),
@@ -376,13 +378,14 @@ class Migration(SchemaMigration):
         'lizard_measure.measure': {
             'Meta': {'object_name': 'Measure'},
             'aggregation_type': ('django.db.models.fields.IntegerField', [], {'default': '1'}),
-            'areas': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['lizard_area.Area']", 'symmetrical': 'False'}),
+            'areas': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'area_measure_set'", 'symmetrical': 'False', 'to': "orm['lizard_area.Area']"}),
             'categories': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['lizard_measure.MeasureCategory']", 'symmetrical': 'False'}),
             'datetime_in_source': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.CharField', [], {'max_length': '512', 'null': 'True', 'blank': 'True'}),
             'executive': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'executive_measure_set'", 'null': 'True', 'to': "orm['lizard_measure.Organization']"}),
             'exploitation_costs': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'funding_organizations': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['lizard_measure.Organization']", 'through': "orm['lizard_measure.FundingOrganization']", 'symmetrical': 'False'}),
+            'geometry': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_geo.GeoObject']", 'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'ident': ('django.db.models.fields.CharField', [], {'max_length': '64', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             'import_raw': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
@@ -480,6 +483,7 @@ class Migration(SchemaMigration):
             'limit_bad_insufficient': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'limit_insufficient_moderate': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'measuring_rod': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['lizard_measure.MeasuringRod']"}),
+            'mep': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'target_2015': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'target_2027': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'})
         },

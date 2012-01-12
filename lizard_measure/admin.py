@@ -60,8 +60,11 @@ class ScoreAdmin(admin.ModelAdmin):
     list_display = [
         'measuring_rod',
         'area',
-        'limit_bad_insufficient',
+        'mep',
+        'gep',
         'limit_insufficient_moderate',
+        'limit_bad_insufficient',
+        'ascending'
     ]
 
 

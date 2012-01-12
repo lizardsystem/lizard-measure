@@ -134,6 +134,9 @@ class MeasuringRod(models.Model):
         blank=True,
     )
 
+    def __unicode__(self):
+        return self.measuring_rod
+
 
 class Score(models.Model):
     """
@@ -149,26 +152,35 @@ class Score(models.Model):
             'Area ident for the case the real Area cannot be imported yet'
         ),
     )
-    ascending = models.NullBooleanField(
-        help_text=_('True if higher is better'),
+    mep = models.FloatField(null=True, blank=True)
+    gep = models.FloatField(null=True, blank=True)
+    limit_insufficient_moderate = models.FloatField(
+        null=True,
+        blank=True,
+        verbose_name=_('Insufficient-moderate limit'),
+        help_text=_('limit from insufficient to moderate',)
     )
     limit_bad_insufficient = models.FloatField(
         null=True,
         blank=True,
-        help_text='grens van slecht naar ontoereikend',
+        verbose_name=_('Bad-insufficient limit'),
+        help_text=_('limit from bad to insufficient'),
     )
-    limit_insufficient_moderate = models.FloatField(
-        null=True,
-        blank=True,
-        help_text='grens van ontoereikend naar matig',
+
+    ascending = models.NullBooleanField(
+        help_text=_('True if higher is better'),
     )
+
     target_2015 = models.FloatField(null=True, blank=True)
     target_2027 = models.FloatField(null=True, blank=True)
-    gep = models.FloatField(null=True, blank=True)
 
     def __unicode__(self):
+        if self.area is None:
+            area = self.area_ident
+        else:
+            area = self.area.name
         return '%s - %s: %s' % (
-            self.area.name,
+            self.area,
             self.measuring_rod.measuring_rod,
             self.measuring_rod.sub_measuring_rod,
         )
@@ -384,14 +396,19 @@ class MeasureStatusMoment(models.Model):
     is_planning = models.BooleanField(default=False)
     description = models.TextField(
         blank=True, null=True,
-        help_text="Beschrijving statusupdate. Aangeraden om dit in te vullen")
+        help_text=_('Description of statusupdate. Recommended.')
+    )
 
     investment_expenditure = models.IntegerField(
-        blank=True, null=True,
-        help_text="Gemaakte investeringskosten")
+        blank=True,
+        null=True,
+        help_text=_("Expenditure for investment"),
+    )
     exploitation_expenditure = models.IntegerField(
-        blank=True, null=True,
-        help_text="Gemaakte exploitatiekosten")
+        blank=True,
+        null=True,
+        help_text=_("Expenditure for expoitation"),
+    )
 
     class Meta:
         verbose_name = _("Measure status moment")
@@ -460,7 +477,11 @@ class Measure(models.Model):
         verbose_name=_('Is a KRW measure'),
     )
 
-    # XY, geometry?:
+    geometry = models.ForeignKey(
+        GeoObject,
+        null=True,
+        blank=True,
+    )
 
     measure_type = models.ForeignKey(
         MeasureType,
@@ -489,17 +510,17 @@ class Measure(models.Model):
         max_length=16,
         editable=False,
         default=SOURCE_MANUAL,
-        verbose_name='Import source',
+        verbose_name=_('Source of imported data'),
     )
     datetime_in_source = models.DateTimeField(
         blank=True,
         null=True,
-        verbose_name='Original date in source',
+        verbose_name=_('Original date of imported data'),
     )
     import_raw = models.TextField(
         blank=True,
         null=True,
-        verbose_name='Volledige import data',
+        verbose_name=_('Full raw imported data'),
     )
 
     # aggregation is used to 'summarize' the statuses from child measures
@@ -513,26 +534,27 @@ class Measure(models.Model):
 
     waterbodies = models.ManyToManyField(
         WaterBody,
-        help_text="Bij welk waterlichaam hoort deze maatregel?",
-        verbose_name='Waterlichaam',
+        help_text=_('Which waterbodies does this measure belong to?'),
+        verbose_name=_('Waterlichaam'),
     )
 
     areas = models.ManyToManyField(
         Area,
-        help_text='Bij welke aan- afvoergebieden hoort deze maatregel',
-        verbose_name='Aan- afvoergebied',
+        related_name='area_measure_set',
+        help_text=_('Which areas does this measure belong to?'),
+        verbose_name=_('Area'),
     )
 
     description = models.CharField(
         max_length=512,
         blank=True,
         null=True,
-        verbose_name='Omschrijving',
+        verbose_name=_('Description'),
     )
 
     categories = models.ManyToManyField(
         MeasureCategory,
-        verbose_name=u'Categorieën',
+        verbose_name=_('Categories'),
     )
 
     value = models.FloatField(

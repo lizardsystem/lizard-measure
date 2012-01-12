@@ -48,7 +48,6 @@ def _records(xml_filename):
     tree = etree.parse(xml_filename)
     root = tree.getroot()
     record_elements = root.find('records')
-
     for record_element in record_elements:
         
         # Create record object
@@ -257,13 +256,14 @@ def import_waterbodies(filename, user, data_administrator):
                 'krw_watertype': krw_watertype,
             },
         )
-        if waterbody_created:
-            print waterbody.area_ident
-
 
 
 def import_measuring_rods(filename):
     for rec in _records(filename):
+        # Only import EKR-scores
+        if not (rec['eenheid'] == 'EKR' and rec['deelmaatlat'] == 'Totaal'):
+            continue
+
         measuring_rod, measuring_rod_created = _get_or_create(
             model=MeasuringRod,
             get_kwargs={'id': rec['id']},
@@ -279,20 +279,28 @@ def import_measuring_rods(filename):
 
 def import_scores(filename):
     for rec in _records(filename):
+
+        # Only import if MeasuringRod is imported
+        if not MeasuringRod.objects.filter(id=rec['maatlat']).exists():
+            continue
+
         # Try to get Area
         area_ident = rec['owmident'].strip()
         area = _area_or_none(area_ident)
 
         measuring_rod = MeasuringRod.objects.get(id=rec['maatlat'])
+        mep = _to_float_or_none(rec['mep'])
+        gep = _to_float_or_none(rec['gep'])
         limit_bad_insufficient = _to_float_or_none(rec['ontoereikend'])
         limit_insufficient_moderate = _to_float_or_none(rec['matig'])
+        
         ascending = _ascending_or_none(
             limit_bad_insufficient,
             limit_insufficient_moderate,
         )
+
         target_2015 = _to_float_or_none(rec['doel2015'])
         target_2027 = _to_float_or_none(rec['doel2027'])
-        gep = _to_float_or_none(rec['gep'])
 
         #  Note that I assume that area and measuring_rod together
         #  uniquely define the score.
@@ -304,12 +312,13 @@ def import_scores(filename):
             },
             extra_kwargs={
                 'area': area,
-                'limit_bad_insufficient': limit_bad_insufficient,
+                'mep': mep,
+                'gep': gep,
                 'limit_insufficient_moderate': limit_insufficient_moderate,
+                'limit_bad_insufficient': limit_bad_insufficient,
                 'ascending': ascending,
                 'target_2015': target_2015,
                 'target_2027': target_2027,
-                'gep': gep,
             },
         )
 
@@ -352,7 +361,7 @@ def import_measures(filename):
             # KRW matident => Measure.ident
             'ident': rec['matident'],
             'is_KRW_measure': True,
-            # XY, geometry?
+            'geometry': None,
             'measure_type': measure_type,
             'title': rec['matnaam'],
             'period': period,
@@ -375,7 +384,6 @@ def import_measures(filename):
 
         # Add waterbodies
         # They can be None, or single, or comma separated
-        print rec['locatie']
         if rec['locatie'] is None:
             locations = []
         else:
@@ -385,7 +393,6 @@ def import_measures(filename):
                 corrected_area_ident = area_ident
             else:
                 corrected_area_ident = 'NL' + area_ident
-            print corrected_area_ident
             waterbody = WaterBody.objects.get(
                 area_ident=corrected_area_ident,
             )
@@ -393,20 +400,22 @@ def import_measures(filename):
             measure.waterbodies.add(waterbody)
 
         # Add some categories
-        category_columns = [
-            'wb21',  # 0 or 1, mostly 0, relates to thema?
-            'thema',  # mostly null
-            'n2000',  # 0 or 1
-            'n2000naam',  # Some names, mostly null
-            'gwb',  # 0 or 1
-            'gwbnaam', # Some names, mostly null
+        boolean_categories = [
+            'wb21',
+            'n2000',
+            'gwb',
         ]
-        for c in category_columns:
-            if rec[c] is None:
-                continue
+        for c in boolean_categories:
+            if rec[c] == 1:
+                category, category_created = _get_or_create(
+                    model=MeasureCategory,
+                    get_kwargs={'naam': c},
+                )
+                measure.categories.add(category)
+        if rec['thema'] is not None:
             category, category_created = _get_or_create(
                 model=MeasureCategory,
-                get_kwargs={'name': rec[c]},
+                get_kwargs={'name': rec['thema']},
             )
             measure.categories.add(category)
 
@@ -481,7 +490,7 @@ class Command(BaseCommand):
                 data_administrator=administrator,
             )
 
-        # Import measuring_rods
+        # Import MeasuringRods
         import_measuring_rods(os.path.join(import_path, 'maatlatten.xml'))
 
         # Import scores
