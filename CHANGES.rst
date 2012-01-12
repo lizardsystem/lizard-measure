@@ -2,8 +2,8 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.4.3 (unreleased)
-------------------
+1.5 (2012-01-12)
+----------------
 
 - This release marks a big change migrating the app from the krw-waternet
   structure into the new krw-portaal-ready structure. Note that migrations
