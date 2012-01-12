@@ -11,6 +11,9 @@ Changelog of lizard-measure
   build an entire new table set. All data present migrating to 1.5 will
   be lost.
 
+- Models, admin and KRW-portal import script have been revamped to
+  accomodate KRW-portal data and meet VSS specifications.
+
 
 1.4.2 (2011-12-27)
 ------------------
