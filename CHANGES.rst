@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.5.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Forgot to pull first. Quick re-release.
 
 
 1.5.4 (2012-01-13)
