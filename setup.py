@@ -19,6 +19,7 @@ install_requires = [
     'lizard-ui',
     'lxml',
     'south',
+    'suds',
     'django-nose',
     'django-treebeard',
     ],

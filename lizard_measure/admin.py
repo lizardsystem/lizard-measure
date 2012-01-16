@@ -76,6 +76,18 @@ class MeasuringRodAdmin(admin.ModelAdmin):
         'sign',
     ]
 
+
+class UnitAdmin(admin.ModelAdmin):
+    list_display = [
+        'code',
+        'description',
+        'dimension',
+        'conversion_factor',
+        'group',
+        'valid',
+    ]
+
+
 admin.site.register(FundingOrganization)
 admin.site.register(Measure, MeasureAdmin)
 admin.site.register(MeasurePeriod)
@@ -84,7 +96,7 @@ admin.site.register(MeasureType, MeasureTypeAdmin)
 admin.site.register(MeasureStatus, MeasureStatusAdmin)
 admin.site.register(MeasureStatusMoment)
 admin.site.register(Organization)
-admin.site.register(Unit)
+admin.site.register(Unit, UnitAdmin)
 admin.site.register(WaterBody)
 admin.site.register(KRWStatus)
 admin.site.register(KRWWatertype)

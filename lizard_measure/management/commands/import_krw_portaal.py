@@ -182,7 +182,7 @@ def import_measure_types(filename):
         # Add the units
         units = rec['eenheid'].split(', ')
         for u_str in units:
-            unit_obj = Unit.objects.get_or_create(unit=u_str)[0]
+            unit_obj = Unit.objects.get_or_create(code=u_str)[0]
             measure_type.units.add(unit_obj)
 
 
@@ -327,7 +327,7 @@ def import_measures(filename):
         )
 
         unit, unit_created = Unit.objects.get_or_create(
-            unit=rec['mateenh'],
+            code=rec['mateenh'],
         )
 
 #       executive, executive_created = _get_or_create(

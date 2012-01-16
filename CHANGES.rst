@@ -5,7 +5,11 @@ Changelog of lizard-measure
 1.5.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Adds synchronization code to synchronize with aquo domain tables
+
+- Configures the Unit model to work with the code
+
+- Adds bin/django sync_aquo management command to run all synchronizations
 
 
 1.5 (2012-01-12)

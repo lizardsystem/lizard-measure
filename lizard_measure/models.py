@@ -14,8 +14,42 @@ from lizard_geo.models import GeoObject
 
 from lizard_area.models import Area
 
+from lizard_measure.synchronisation import execute_sync
+
 
 logger = logging.getLogger(__name__)
+
+
+class SyncInfo(object):
+    """
+    Hold information about how to sync a model to the Aquo domain table.
+
+    The match_field (on the model) is used to match records from the
+    aquo. The mapper relates aquofieldnames to modelfieldnames.
+    """
+    def __init__(self, mapper, sync_field, source_table, source='Aquo'):
+        self.mapper = mapper
+        self.sync_field = sync_field
+        self.source_table = source_table
+        self.source = source
+
+
+class SyncableMixin(object):
+    """
+    Provides a sync method to the model
+    """
+    @classmethod
+    def get_sync_info(self, *args, **kwargs):
+        raise NotImplementedError(
+            'Define a classmethod get_sync_info on the model'
+        )
+
+    @classmethod
+    def synchronize(cls, invalidate=True):
+        """
+        Synchronize accoding to sync_info found on model.
+        """
+        execute_sync(model=cls, invalidate=invalidate)
 
 
 class KRWStatus(models.Model):
@@ -226,15 +260,43 @@ class MeasureCategory(models.Model):
         return u'%s' % (self.name)
 
 
-class Unit(models.Model):
+class Unit(models.Model, SyncableMixin):
     """Units for measures
 
     This model must be synchronized with the Aquo domain table 'Eenheid'.
     http://www.idsw.nl/Aquo/uitwisselmodellen/index.htm?goto=6:192
     """
 
-    unit = models.CharField(max_length=20)
-    description = models.TextField(blank=True, null=True)
+    code = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        unique=True,
+        verbose_name=_("Code")
+    )
+    description = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name=_("Description")
+    )
+    dimension = models.CharField(
+        max_length=32,
+        null=True,
+        blank=True,
+        verbose_name=_("Dimension")
+    )
+    conversion_factor = models.FloatField(
+        blank=True,
+        null=True,
+        verbose_name=_("Conversion factor")
+    )
+    group=models.CharField(
+        max_length=128,
+        null=True,
+        blank=True,
+        verbose_name=_("Group")
+    )
+
     valid = models.NullBooleanField(default=None)
 
     class Meta:
@@ -242,7 +304,21 @@ class Unit(models.Model):
         verbose_name_plural = _("Units")
 
     def __unicode__(self):
-        return u'%s' % self.unit
+        return u'%s' % self.code
+
+    @classmethod
+    def get_sync_info(cls):
+        return SyncInfo(
+            mapper={
+                'Code': 'code',
+                'Omschrijving': 'description',
+                'Dimensie': 'dimension',
+                'Omrekenfactor': 'conversion_factor',
+                'Groep': 'group',
+            },
+            sync_field='code',
+            source_table='Eenheid',
+        )
 
 
 class MeasureType(models.Model):
