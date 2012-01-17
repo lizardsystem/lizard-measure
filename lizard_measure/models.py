@@ -14,42 +14,12 @@ from lizard_geo.models import GeoObject
 
 from lizard_area.models import Area
 
-from lizard_measure.synchronisation import execute_sync
+from lizard_measure.synchronisation import SyncField
+from lizard_measure.synchronisation import SyncSource
+from lizard_measure.synchronisation import Synchronizer
 
 
 logger = logging.getLogger(__name__)
-
-
-class SyncInfo(object):
-    """
-    Hold information about how to sync a model to the Aquo domain table.
-
-    The match_field (on the model) is used to match records from the
-    aquo. The mapper relates aquofieldnames to modelfieldnames.
-    """
-    def __init__(self, mapper, sync_field, source_table, source='Aquo'):
-        self.mapper = mapper
-        self.sync_field = sync_field
-        self.source_table = source_table
-        self.source = source
-
-
-class SyncableMixin(object):
-    """
-    Provides a sync method to the model
-    """
-    @classmethod
-    def get_sync_info(self, *args, **kwargs):
-        raise NotImplementedError(
-            'Define a classmethod get_sync_info on the model'
-        )
-
-    @classmethod
-    def synchronize(cls, invalidate=True):
-        """
-        Synchronize accoding to sync_info found on model.
-        """
-        execute_sync(model=cls, invalidate=invalidate)
 
 
 class KRWStatus(models.Model):
@@ -68,6 +38,10 @@ class KRWStatus(models.Model):
         blank=True,
         null=True,
     )
+    valid = models.NullBooleanField(
+        default=None,
+        verbose_name=_('Valid'),
+    )
 
     class Meta:
         verbose_name = _('KRW Status')
@@ -76,6 +50,16 @@ class KRWStatus(models.Model):
     def __unicode__(self):
         return u'%s - %s' % (self.code, self.description)
 
+    @classmethod
+    def get_sync_info(cls):
+        return SyncInfo(
+            mapper={
+                'Code': 'code',
+                'Omschrijving': 'description',
+            },
+            sync_field='code',
+            source_table='KRWStatus',
+        )
 
 class KRWWatertype(models.Model):
     """
@@ -91,6 +75,17 @@ class KRWWatertype(models.Model):
         max_length=256,
         blank=True,
         null=True,
+        verbose_name=_('Description'),
+    )
+    group = models.CharField(
+        max_length=64,
+        blank=True,
+        null=True,
+        verbose_name=_('Group'),
+    )
+    valid = models.NullBooleanField(
+        default=None,
+        verbose_name=_('Valid'),
     )
 
     class Meta:
@@ -99,6 +94,18 @@ class KRWWatertype(models.Model):
 
     def __unicode__(self):
         return u'%s - %s' % (self.code, self.description)
+
+    @classmethod
+    def get_sync_info(cls):
+        return SyncInfo(
+            mapper={
+                'Code': 'code',
+                'Omschrijving': 'description',
+                'Groep': 'group',
+            },
+            sync_field='code',
+            source_table='KRWWatertype',
+        )
 
 
 class WaterBody(models.Model):
@@ -250,7 +257,10 @@ class MeasureCategory(models.Model):
     """
 
     name = models.CharField(max_length=200)
-    valid = models.NullBooleanField(default=None)
+    valid = models.NullBooleanField(
+        default=None,
+        verbose_name=_('Valid'),
+    )
 
     class Meta:
         verbose_name = _("Measure category")
@@ -260,7 +270,7 @@ class MeasureCategory(models.Model):
         return u'%s' % (self.name)
 
 
-class Unit(models.Model, SyncableMixin):
+class Unit(models.Model):
     """Units for measures
 
     This model must be synchronized with the Aquo domain table 'Eenheid'.
@@ -297,7 +307,10 @@ class Unit(models.Model, SyncableMixin):
         verbose_name=_("Group")
     )
 
-    valid = models.NullBooleanField(default=None)
+    valid = models.NullBooleanField(
+        default=None,
+        verbose_name=_('Valid'),
+    )
 
     class Meta:
         verbose_name = _("Unit")
@@ -307,18 +320,23 @@ class Unit(models.Model, SyncableMixin):
         return u'%s' % self.code
 
     @classmethod
-    def get_sync_info(cls):
-        return SyncInfo(
-            mapper={
-                'Code': 'code',
-                'Omschrijving': 'description',
-                'Dimensie': 'dimension',
-                'Omrekenfactor': 'conversion_factor',
-                'Groep': 'group',
-            },
-            sync_field='code',
-            source_table='Eenheid',
-        )
+    def get_synchronizer(cls):
+        """
+        Return a synchronizer object.
+        """
+        sync_fields=[
+            SyncField(source='Code', destination='code', match=True),
+            SyncField(source='Omschrijving', destination='description'),
+            SyncField(source='Dimensie', destination='dimension'),
+            SyncField(source='Omrekenfactor', destination='conversion_factor'),
+            SyncField(source='Groep', destination='group'),
+        ]
+
+        sync_sources = [
+            SyncSource(source_table='Eenheid', sync_fields=sync_fields)
+        ]
+
+        return Synchronizer(model=cls, sources=sources)
 
 
 class MeasureType(models.Model):
@@ -326,7 +344,7 @@ class MeasureType(models.Model):
     Aquo type of measure
 
     This model must be synchronized with the Aquo domain table
-    'KRWMeasuretype'.
+    'KRWMaatregeltype'.
     """
 
     class Meta:
@@ -334,13 +352,20 @@ class MeasureType(models.Model):
         verbose_name_plural = _("Measure types")
         ordering = ('code', )
 
-    code = models.CharField(max_length=80, unique=True)
+    code = models.CharField(
+        max_length=80,
+        unique=True,
+        verbose_name=_('Code'),
+    )
     description = models.TextField(
         verbose_name=_('Description'),
     )
-
-    # Future may require a separate MeasureCodeGroup model for this
-    group = models.ForeignKey(MeasureCategory, null=True, blank=True)
+    group=models.CharField(
+        max_length=128,
+        null=True,
+        blank=True,
+        verbose_name=_("Group")
+    )
 
     # Other fields from KRW import
     units = models.ManyToManyField(
@@ -371,9 +396,25 @@ class MeasureType(models.Model):
         blank=True,
         verbose_name=_('Combined Name'),
     )
+    valid = models.NullBooleanField(
+        default=None,
+        verbose_name=_('Valid'),
+    )
 
     def __unicode__(self):
         return u'%s - %s' % (self.code, self.description)
+
+    @classmethod
+    def get_sync_info(cls):
+        return SyncInfo(
+            mapper={
+                'Code': 'code',
+                'Omschrijving': 'description',
+                'Groep': 'group',
+            },
+            sync_field='code',
+            source_table='KRWMaatregeltype',
+        )
 
 
 class OrganizationType(models.Model):
@@ -415,7 +456,8 @@ class Organization(models.Model):
         (1, _("Aquo domain table 'Waterbeheerder'")),
         (2, _("Aquo domain table 'Meetinstantie'")),
         (3, _("CBS Municipality")),
-        (4, _("Other")),
+        (4, _("KRW portal")),
+        (5, _("Other")),
     )
 
     SOURCE_AQUO_WATERMANAGER = 1
@@ -424,28 +466,38 @@ class Organization(models.Model):
     SOURCE_KRW_PORTAL = 4
     SOURCE_OTHER = 5
 
-    name = models.CharField(
-        max_length=200,
+    code = models.IntegerField(
+        verbose_name=_('Code'),
         null=True,
         blank=True,
     )
-    organization_type = models.ForeignKey(
-        OrganizationType,
+    description = models.CharField(
+        verbose_name=_('Description'),
+        max_length=256,
+        blank=True,
+        null=True,
+    )
+    group=models.CharField(
+        max_length=128,
         null=True,
         blank=True,
+        verbose_name=_("Group")
     )
-
     source = models.IntegerField(
         choices=SOURCE_CHOICES,
         default=SOURCE_OTHER,
     )
 
-    valid = models.NullBooleanField(default=None)
+    valid = models.NullBooleanField(
+        default=None,
+        verbose_name=_('Valid'),
+    )
 
     class Meta:
         verbose_name = _("Organization")
         verbose_name_plural = _("Organizations")
-        ordering = ('name', )
+        unique_together = ('source', 'code')
+        ordering = ('description', )
 
     def __unicode__(self):
         return u'%s' % self.name

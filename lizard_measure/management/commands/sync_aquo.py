@@ -5,6 +5,9 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from lizard_measure.models import Unit
+from lizard_measure.models import KRWStatus
+from lizard_measure.models import KRWWatertype
+from lizard_measure.models import MeasureType
 
 class Command(BaseCommand):
     args = ''
@@ -12,4 +15,10 @@ class Command(BaseCommand):
 
     @transaction.commit_on_success
     def handle(self, *args, **options):
-        Unit.synchronize(invalidate=True)
+        Unit.get_synchronizer().synchronize()
+        #KRWStatus.synchronize()
+        #KRWWatertype.synchronize()
+        #MeasureType.synchronize()
+
+
+
