@@ -324,7 +324,7 @@ class Unit(models.Model):
         """
         Return a synchronizer object.
         """
-        sync_fields=[
+        fields=[
             SyncField(source='Code', destination='code', match=True),
             SyncField(source='Omschrijving', destination='description'),
             SyncField(source='Dimensie', destination='dimension'),
@@ -332,9 +332,11 @@ class Unit(models.Model):
             SyncField(source='Groep', destination='group'),
         ]
 
-        sync_sources = [
-            SyncSource(source_table='Eenheid', sync_fields=sync_fields)
-        ]
+        sources = [SyncSource(
+                            model=cls,
+                            source_table='Eenheid',
+                            fields=fields,
+                        )]
 
         return Synchronizer(model=cls, sources=sources)
 

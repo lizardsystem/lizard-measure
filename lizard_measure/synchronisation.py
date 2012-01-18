@@ -27,7 +27,10 @@ logger = logging.getLogger(__name__)
 
 class SyncField(object):
     """ 
-    Describe the relation between a source and a destination field
+    Describe the relation between a source and a destination field.
+
+    If a field is static, it is used to identify a subset of objects
+    to invalidate if not synced.
     """
     def __init__(self, source, destination, static=False, match=False):
         self.source = source
@@ -42,22 +45,117 @@ class SyncSource(object):
     """
     def __init__(self,
                  model,
-                 sync_fields,
+                 fields,
                  source_table,
                  source_type='Aquo'):
         self.model = model
         self.source_type = source_type
-        self.sync_fields = sync_fields
+        self.fields = fields
         self.source_table = source_table
         self.data = None  # To be filled by synchronizer
 
-    @property
-    def match_fields(self):
-        return [sf.destination for sf in self.sync_fields if sf.match]
+    def _to_float_or_none(self, xml_str):
+        """
+        Return float from str, replacing ',' by '.'.
+
+        Return None if xml_str is None or unintelligible.
+        """
+        if xml_str is None:
+            return None
+        else:
+            try:
+                return float(xml_str.replace(',', '.'))
+            except ValueError:
+                return None
+
+    def _to_integer_or_none(self, xml_str):
+        """
+        Return integer from str.
+
+        Return None if xml_str is None or unintelligible.
+        """
+        if xml_str is None:
+            return None
+        else:
+            try:
+                return int(xml_str)
+            except ValueError:
+                return None
+
+    def _convert(self, value, field):
+        """
+        Return converted value suitable for field
+        """
+        if isinstance(self.model._meta.get_field(field),
+                      models.FloatField):
+            return self._to_float_or_none(value)
+        if isinstance(self.model._meta.get_field(field),
+                      models.IntegerField):
+            return self._to_integer_or_none(value)
+        else:
+            return value
+
+    def object_kwargs(self):
+        """
+        Return generator of (filter_kwargs, update_kwargs, create_kwargs)
+
+        To be used filter, create and update statements. These
+        keyword arguments are prepared using the data from the source
+        record. Prerequisite is that self.data is already filled.
+        """
+        for record in self.data:
+
+            filter_kwargs = {}
+            update_kwargs = {}
+            create_kwargs = {}
+
+            for field in self.fields:
+                key = field.destination
+
+                # Imported value or static value?
+                if field.static:
+                    value = field.source
+                else:
+                    value = self._convert(
+                        value=record[field.source],
+                        field=field.destination,
+                    )
+
+                # Add to the right kwargs
+                create_kwargs[key] = value
+                if field.match:
+                    filter_kwargs[key] = value
+                else:
+                    update_kwargs[key] = value
+
+            yield filter_kwargs, update_kwargs, create_kwargs
+
+    def source_kwargs(self):
+        """
+        Return kwargs to use in filter statement to exclude objects that
+        are not synchronized using this source. Currently uses fields
+        with static=True for this.
+        """
+        return dict([(f.destination, f.source)
+                     for f in self.fields
+                     if f.static])
+
+    def compare_kwargs(self, object):
+        """
+        Return keyword arguments for an existing object.
+        
+        Useful for comparing with generated keyword arguments to see if
+        an object was actually synced.
+        """
+        result = {}
+        for field in self.fields:
+            result[field.destination] = getattr(object, field.destination)
+
+        return result
 
 class Synchronizer(object):
     """
-    Container for all synchronization methods and functions
+    Performs actual synchronization
     """
     
     AQUO_URL = 'http://domeintabellen-idsw-ws.rws.nl/DomainTableWS.svc?wsdl'
@@ -68,7 +166,7 @@ class Synchronizer(object):
         self.invalidate = invalidate
 
 
-    def get_aquo_xml(self, table, page_size=0, start_page=0, check_date=None):
+    def _load_aquo_xml(self, table, page_size=0, start_page=0, check_date=None):
         """
         Return soap xml for aquo domain table
 
@@ -97,7 +195,7 @@ class Synchronizer(object):
         return xml
 
 
-    def _get_name_spaces(root, default_namespace='d'):
+    def _get_name_spaces(self, root, default_namespace='d'):
         """
         Iterate tree and return all namespaces.
 
@@ -113,7 +211,9 @@ class Synchronizer(object):
         namespaces['d'] = namespaces[None]
         del namespaces[None]
 
-    def _check_aquo_statistics(root, namespaces):
+        return namespaces
+
+    def _check_aquo_statistics(self, root, namespaces):
         """
         Return True if amount of retrieved datarows matches total amount
         of datarows.
@@ -138,16 +238,11 @@ class Synchronizer(object):
         """
         Return aquo data as list of dicts.
         """
-        logger.debug('Getting data for aquo table %s' % domain_table)
-        logger.debug('get')
-        xml = get_aquo_xml(table)
-        logger.debug('parse')
+        logger.debug('Getting data for aquo table %s' % table)
+        xml = self._load_aquo_xml(table)
         root = etree.fromstring(xml)
-        logger.debug('nsmap')
-        namespaces = _get_name_spaces(root)
-        logger.debug('check')
-        _check_aquo_statistics(root, namespaces)
-        logger.debug('pythonize')
+        namespaces = self._get_name_spaces(root=root)
+        self._check_aquo_statistics(root=root, namespaces=namespaces)
 
         # Iterate over the datarows and store each row as dict
         result = []
@@ -166,76 +261,28 @@ class Synchronizer(object):
                 field_value = field.find('a:Data', namespaces=namespaces).text
                 result_row[field_key] = field_value
                 
-        result.append(result_row)
+            result.append(result_row)
 
-        
+        return result
 
-    def _to_float_or_none(self, xml_str):
+    def synchronize_objects(self, source):
         """
-        Return float from str, replacing ',' by '.'.
-
-        Return None if xml_str is None or unintelligible.
-        """
-        if xml_str is None:
-            return None
-        else:
-            try:
-                return float(xml_str.replace(',', '.'))
-            except ValueError:
-                return None
-
-    def _defaults_and_get_kwargs(self, source, record):
-        """
-        Return get_kwargs, defaults for use in get_or_create.
-
-        Prepares the mapping between data and model, doing necessary
-        conversion and filling in static values, where configured
-        according to source.fields
-        """
-        match_fields = source.match_fields
-
-        for sf in self.sync_fields:
-            key = sf.destination
-
-            # Imported value or static value?
-            if sf.static:
-                value = sf.source
-            else:
-                value = record[sf.source]
-
-            # Need some conversions?
-            if isinstance(self.model._meta.get_field(sf.destination),
-                          models.FloatField):
-                value = self._to_float_or_none(value)
-
-            # Match field or not?
-            if key in match_fields:
-                get_kwargs[key] = value
-            else:
-                defaults[key] = value
-
-            defaults.valid = True
-
-        return get_kwargs, defaults
-
-    def sync_objects(self, source):
-        """
-        Get and update, or create a model object from record
+        Filter and update, or create model objects from source data
         """
         logger.debug('Updating database...')
 
-        for record in data:
-            get_kwargs, defaults = self.defaults_and_get_kwargs(
-                source,
-                record,
-            )
+        source.synced = []
 
-            obj, created = self.model.get_or_create(defaults=defaults,
-                                                    **get_kwargs)
+        for f_kwargs, u_kwargs, c_kwargs in source.object_kwargs():
 
-            if not created:
-                for k, v in defaults:
-                    setattr(obj, k, v)
+            n = self.model.objects.filter(
+                **f_kwargs).update(valid=True, **u_kwargs)
+            if n > 1:
+                logger.warn('Synced multiple items from a single source record!')
+            elif n == 0:
+                self.model.objects.create(valid=True, **c_kwargs)
+
+            source.synced.append(c_kwargs)
 
     def synchronize_source(self, source):
         """
@@ -246,25 +293,22 @@ class Synchronizer(object):
         else:
             raise NotImplementedError('Unknown source type')
 
-        self.sync_objects(source)
+        self.synchronize_objects(source)
+        self.invalidate_objects(source)
 
-
-    def synchronize(self, invalidate=True):
-        """
-        Synchronize model from all sources
-        """
-
-        self.unsynced_objects = self.model.objects.all()
-
-        for source in self.sources:
-            synchronize_source(source)
-            
-        if self.invalidate:
-            synchronizer.invalidate()
-
-
-    def invalidate_out_of_sync(cls, data):
+    def invalidate_objects(self, source):
         """
         Set objects to invalid that were not synced.
         """
         logger.debug('Invalidating out of sync objects...')
+        for obj in source.model.objects.filter(**source.source_kwargs()):
+            if not source.compare_kwargs(obj) in source.synced:
+                obj.valid = False
+                obj.save()
+        
+    def synchronize(self, invalidate=True):
+        """
+        Synchronize model from all sources
+        """
+        for source in self.sources:
+            self.synchronize_source(source)
