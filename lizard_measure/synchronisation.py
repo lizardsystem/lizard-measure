@@ -160,10 +160,8 @@ class Synchronizer(object):
     
     AQUO_URL = 'http://domeintabellen-idsw-ws.rws.nl/DomainTableWS.svc?wsdl'
 
-    def __init__(self, model, sources, invalidate=True):
-        self.model = model
+    def __init__(self, sources):
         self.sources = sources
-        self.invalidate = invalidate
 
 
     def _load_aquo_xml(self, table, page_size=0, start_page=0, check_date=None):
@@ -238,7 +236,7 @@ class Synchronizer(object):
         """
         Return aquo data as list of dicts.
         """
-        logger.debug('Getting data for aquo table %s' % table)
+        logger.debug('Getting data for aquo table %s...' % table)
         xml = self._load_aquo_xml(table)
         root = etree.fromstring(xml)
         namespaces = self._get_name_spaces(root=root)
@@ -275,12 +273,12 @@ class Synchronizer(object):
 
         for f_kwargs, u_kwargs, c_kwargs in source.object_kwargs():
 
-            n = self.model.objects.filter(
+            n = source.model.objects.filter(
                 **f_kwargs).update(valid=True, **u_kwargs)
             if n > 1:
                 logger.warn('Synced multiple items from a single source record!')
             elif n == 0:
-                self.model.objects.create(valid=True, **c_kwargs)
+                source.model.objects.create(valid=True, **c_kwargs)
 
             source.synced.append(c_kwargs)
 

@@ -51,15 +51,23 @@ class KRWStatus(models.Model):
         return u'%s - %s' % (self.code, self.description)
 
     @classmethod
-    def get_sync_info(cls):
-        return SyncInfo(
-            mapper={
-                'Code': 'code',
-                'Omschrijving': 'description',
-            },
-            sync_field='code',
-            source_table='KRWStatus',
-        )
+    def get_synchronizer(cls):
+        """
+        Return a configured synchronizer object, tuned for this model.
+        """
+        fields=[
+            SyncField(source='Code', destination='code', match=True),
+            SyncField(source='Omschrijving', destination='description'),
+        ]
+
+        sources = [SyncSource(
+                            model=cls,
+                            source_table='KRWStatus',
+                            fields=fields,
+                        )]
+
+        return Synchronizer(sources=sources)
+
 
 class KRWWatertype(models.Model):
     """
@@ -96,16 +104,23 @@ class KRWWatertype(models.Model):
         return u'%s - %s' % (self.code, self.description)
 
     @classmethod
-    def get_sync_info(cls):
-        return SyncInfo(
-            mapper={
-                'Code': 'code',
-                'Omschrijving': 'description',
-                'Groep': 'group',
-            },
-            sync_field='code',
-            source_table='KRWWatertype',
-        )
+    def get_synchronizer(cls):
+        """
+        Return a configured synchronizer object, tuned for this model.
+        """
+        fields=[
+            SyncField(source='Code', destination='code', match=True),
+            SyncField(source='Omschrijving', destination='description'),
+            SyncField(source='Groep', destination='group'),
+        ]
+
+        sources = [SyncSource(
+                            model=cls,
+                            source_table='KRWWatertype',
+                            fields=fields,
+                        )]
+
+        return Synchronizer(sources=sources)
 
 
 class WaterBody(models.Model):
@@ -322,7 +337,7 @@ class Unit(models.Model):
     @classmethod
     def get_synchronizer(cls):
         """
-        Return a synchronizer object.
+        Return a configured synchronizer object, tuned for this model.
         """
         fields=[
             SyncField(source='Code', destination='code', match=True),
@@ -338,7 +353,7 @@ class Unit(models.Model):
                             fields=fields,
                         )]
 
-        return Synchronizer(model=cls, sources=sources)
+        return Synchronizer(sources=sources)
 
 
 class MeasureType(models.Model):
@@ -407,16 +422,23 @@ class MeasureType(models.Model):
         return u'%s - %s' % (self.code, self.description)
 
     @classmethod
-    def get_sync_info(cls):
-        return SyncInfo(
-            mapper={
-                'Code': 'code',
-                'Omschrijving': 'description',
-                'Groep': 'group',
-            },
-            sync_field='code',
-            source_table='KRWMaatregeltype',
-        )
+    def get_synchronizer(cls):
+        """
+        Return a configured synchronizer object, tuned for this model.
+        """
+        fields=[
+            SyncField(source='Code', destination='code', match=True),
+            SyncField(source='Omschrijving', destination='description'),
+            SyncField(source='Groep', destination='group'),
+        ]
+
+        sources = [SyncSource(
+                            model=cls,
+                            source_table='KRWMaatregeltype',
+                            fields=fields,
+                        )]
+
+        return Synchronizer(sources=sources)
 
 
 class OrganizationType(models.Model):

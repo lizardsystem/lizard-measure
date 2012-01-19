@@ -16,9 +16,9 @@ class Command(BaseCommand):
     @transaction.commit_on_success
     def handle(self, *args, **options):
         Unit.get_synchronizer().synchronize()
-        #KRWStatus.synchronize()
-        #KRWWatertype.synchronize()
-        #MeasureType.synchronize()
+        KRWStatus.get_synchronizer().synchronize()
+        KRWWatertype.get_synchronizer().synchronize()
+        MeasureType.get_synchronizer().synchronize()
 
 
 
