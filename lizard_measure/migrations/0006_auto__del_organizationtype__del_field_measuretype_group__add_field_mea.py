@@ -11,16 +11,11 @@ class Migration(SchemaMigration):
         # Deleting model 'OrganizationType'
         db.delete_table('lizard_measure_organizationtype')
 
+        # Deleting field 'MeasureType.group'
+        db.delete_column('lizard_measure_measuretype', 'group_id')
+
         # Adding field 'MeasureType.valid'
         db.add_column('lizard_measure_measuretype', 'valid', self.gf('django.db.models.fields.NullBooleanField')(default=None, null=True, blank=True), keep_default=False)
-
-        # Renaming column for 'MeasureType.group' to match new field type.
-        db.rename_column('lizard_measure_measuretype', 'group_id', 'group')
-        # Changing field 'MeasureType.group'
-        db.alter_column('lizard_measure_measuretype', 'group', self.gf('django.db.models.fields.CharField')(max_length=128, null=True))
-
-        # Removing index on 'MeasureType', fields ['group']
-        db.delete_index('lizard_measure_measuretype', ['group_id'])
 
         # Adding field 'KRWWatertype.group'
         db.add_column('lizard_measure_krwwatertype', 'group', self.gf('django.db.models.fields.CharField')(max_length=64, null=True, blank=True), keep_default=False)
@@ -39,9 +34,6 @@ class Migration(SchemaMigration):
 
         # Adding field 'Organization.description'
         db.add_column('lizard_measure_organization', 'description', self.gf('django.db.models.fields.CharField')(max_length=256, null=True, blank=True), keep_default=False)
-
-        # Adding field 'Organization.group'
-        db.add_column('lizard_measure_organization', 'group', self.gf('django.db.models.fields.CharField')(max_length=128, null=True, blank=True), keep_default=False)
 
         # Adding unique constraint on 'Organization', fields ['source', 'code']
         db.create_unique('lizard_measure_organization', ['source', 'code'])
@@ -70,9 +62,6 @@ class Migration(SchemaMigration):
         # Removing unique constraint on 'Organization', fields ['source', 'code']
         db.delete_unique('lizard_measure_organization', ['source', 'code'])
 
-        # Adding index on 'MeasureType', fields ['group']
-        db.create_index('lizard_measure_measuretype', ['group_id'])
-
         # Adding model 'OrganizationType'
         db.create_table('lizard_measure_organizationtype', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -80,13 +69,11 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal('lizard_measure', ['OrganizationType'])
 
+        # Adding field 'MeasureType.group'
+        db.add_column('lizard_measure_measuretype', 'group', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.MeasureCategory'], null=True, blank=True), keep_default=False)
+
         # Deleting field 'MeasureType.valid'
         db.delete_column('lizard_measure_measuretype', 'valid')
-
-        # Renaming column for 'MeasureType.group' to match new field type.
-        db.rename_column('lizard_measure_measuretype', 'group', 'group_id')
-        # Changing field 'MeasureType.group'
-        db.alter_column('lizard_measure_measuretype', 'group_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lizard_measure.MeasureCategory'], null=True))
 
         # Deleting field 'KRWWatertype.group'
         db.delete_column('lizard_measure_krwwatertype', 'group')
@@ -105,9 +92,6 @@ class Migration(SchemaMigration):
 
         # Deleting field 'Organization.description'
         db.delete_column('lizard_measure_organization', 'description')
-
-        # Deleting field 'Organization.group'
-        db.delete_column('lizard_measure_organization', 'group')
 
         # Deleting field 'KRWStatus.valid'
         db.delete_column('lizard_measure_krwstatus', 'valid')
@@ -291,7 +275,6 @@ class Migration(SchemaMigration):
             'code': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
             'combined_name': ('django.db.models.fields.CharField', [], {'max_length': '256', 'null': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.TextField', [], {}),
-            'group': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True', 'blank': 'True'}),
             'harmonisation': ('django.db.models.fields.CharField', [], {'max_length': '256', 'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'klass': ('django.db.models.fields.CharField', [], {'max_length': '256', 'null': 'True', 'blank': 'True'}),
@@ -312,7 +295,6 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "('description',)", 'unique_together': "(('source', 'code'),)", 'object_name': 'Organization'},
             'code': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.CharField', [], {'max_length': '256', 'null': 'True', 'blank': 'True'}),
-            'group': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'source': ('django.db.models.fields.IntegerField', [], {'default': '5'}),
             'valid': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'})
