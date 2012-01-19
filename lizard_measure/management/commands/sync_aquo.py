@@ -10,6 +10,7 @@ from lizard_measure.models import KRWWatertype
 from lizard_measure.models import MeasureType
 from lizard_measure.models import Organization
 
+
 class Command(BaseCommand):
     args = ''
     help = 'Synchronize domaintables to aquo standards'
@@ -21,6 +22,3 @@ class Command(BaseCommand):
         KRWWatertype.get_synchronizer().synchronize()
         MeasureType.get_synchronizer().synchronize()
         Organization.get_synchronizer().synchronize()
-
-
-

@@ -1,32 +1,41 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
 # -*- coding: utf-8 -*-
 """
-Enable synchronisation of models from aquo domaintables. A few prerequisites on the model:
-- Model should inherit from SyncableMixin
+Enable synchronisation of models from aquo domaintables. A few
+prerequisites on the model:
 - Model should define a NullBooleanField named 'valid'
-- Model should define a classmethod 'get_sync_config' that looks like this:
+- Model should define a classmethod 'get_synchronizer'
+  that returns a configured Synchronizer object, for example:
 
-TODO.
+    @classmethod
+    def get_synchronizer(cls):
+        fields = [
+            SyncField(source='Code', destination='code', match=True),
+            SyncField(source='Omschrijving', destination='description'),
+        ]
 
+        sources = [SyncSource(
+                            model=cls,
+                            source_table='KRWStatus',
+                            fields=fields,
+                        )]
+
+        return Synchronizer(sources=sources)
 """
-from django.core.management.base import BaseCommand
-from django.db import transaction
 from django.db import models
 
-from lizard_measure.utils import get_or_create
 from suds.client import Client
 from lxml import etree
 
 import datetime
 import logging
-import pprint
 
 logging.getLogger('suds').setLevel(logging.INFO)
 logger = logging.getLogger(__name__)
 
 
 class SyncField(object):
-    """ 
+    """
     Describe the relation between a source and a destination field.
 
     If a field is static, it is used to identify a subset of objects
@@ -143,7 +152,7 @@ class SyncSource(object):
     def compare_kwargs(self, object):
         """
         Return keyword arguments for an existing object.
-        
+
         Useful for comparing with generated keyword arguments to see if
         an object was actually synced.
         """
@@ -153,18 +162,22 @@ class SyncSource(object):
 
         return result
 
+
 class Synchronizer(object):
     """
     Performs actual synchronization
     """
-    
+
     AQUO_URL = 'http://domeintabellen-idsw-ws.rws.nl/DomainTableWS.svc?wsdl'
 
     def __init__(self, sources):
         self.sources = sources
 
-
-    def _load_aquo_xml(self, table, page_size=0, start_page=0, check_date=None):
+    def _load_aquo_xml(self,
+                       table,
+                       page_size=0,
+                       start_page=0,
+                       check_date=None):
         """
         Return soap xml for aquo domain table
 
@@ -173,25 +186,25 @@ class Synchronizer(object):
         """
         client = Client(self.AQUO_URL)
 
-        # Because the suds client fails to tokenize (pythonize) the returned xml
-        # Correctly, we need to do it manually via lxml / etree. The following option
-        # Instructs suds just to return the xml without tokenizing.
+        # Because the suds client fails to tokenize (pythonize) the
+        # returned xml Correctly, we need to do it manually via lxml /
+        # etree. The following option Instructs suds just to return the
+        # xml without tokenizing.
         client.set_options(retxml=True)
 
         request = client.factory.create('ns1:GetDomainTableRequest')
-        
+
         request.DomaintableName = table
         request.PageSize = page_size
         request.StartPage = start_page
         if check_date is None:
             check_date = datetime.datetime.today()
         request.CheckDate = check_date
-        
+
         xml_and_headers = client.service.GetDomainTable(request=request)
         xml = xml_and_headers.splitlines()[-2]
 
         return xml
-
 
     def _get_name_spaces(self, root, default_namespace='d'):
         """
@@ -258,7 +271,7 @@ class Synchronizer(object):
                 field_key = field.find('a:Name', namespaces=namespaces).text
                 field_value = field.find('a:Data', namespaces=namespaces).text
                 result_row[field_key] = field_value
-                
+
             result.append(result_row)
 
         return result
@@ -276,7 +289,8 @@ class Synchronizer(object):
             n = source.model.objects.filter(
                 **f_kwargs).update(valid=True, **u_kwargs)
             if n > 1:
-                logger.warn('Synced multiple items from a single source record!')
+                logger.warn('Synced multiple items from '
+                    'a single source record!')
             elif n == 0:
                 source.model.objects.create(valid=True, **c_kwargs)
 
@@ -286,7 +300,7 @@ class Synchronizer(object):
         """
         Synchronize model from a single source
         """
-        if source.source_type=='Aquo':
+        if source.source_type == 'Aquo':
             source.data = self.load_aquo_data(source.source_table)
         else:
             raise NotImplementedError('Unknown source type')
@@ -303,7 +317,7 @@ class Synchronizer(object):
             if not source.compare_kwargs(obj) in source.synced:
                 obj.valid = False
                 obj.save()
-        
+
     def synchronize(self, invalidate=True):
         """
         Synchronize model from all sources

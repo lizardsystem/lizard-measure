@@ -55,7 +55,7 @@ class KRWStatus(models.Model):
         """
         Return a configured synchronizer object, tuned for this model.
         """
-        fields=[
+        fields = [
             SyncField(source='Code', destination='code', match=True),
             SyncField(source='Omschrijving', destination='description'),
         ]
@@ -108,7 +108,7 @@ class KRWWatertype(models.Model):
         """
         Return a configured synchronizer object, tuned for this model.
         """
-        fields=[
+        fields = [
             SyncField(source='Code', destination='code', match=True),
             SyncField(source='Omschrijving', destination='description'),
             SyncField(source='Groep', destination='group'),
@@ -315,7 +315,7 @@ class Unit(models.Model):
         null=True,
         verbose_name=_("Conversion factor")
     )
-    group=models.CharField(
+    group = models.CharField(
         max_length=128,
         null=True,
         blank=True,
@@ -339,7 +339,7 @@ class Unit(models.Model):
         """
         Return a configured synchronizer object, tuned for this model.
         """
-        fields=[
+        fields = [
             SyncField(source='Code', destination='code', match=True),
             SyncField(source='Omschrijving', destination='description'),
             SyncField(source='Dimensie', destination='dimension'),
@@ -377,7 +377,7 @@ class MeasureType(models.Model):
     description = models.TextField(
         verbose_name=_('Description'),
     )
-    group=models.CharField(
+    group = models.CharField(
         max_length=128,
         null=True,
         blank=True,
@@ -426,7 +426,7 @@ class MeasureType(models.Model):
         """
         Return a configured synchronizer object, tuned for this model.
         """
-        fields=[
+        fields = [
             SyncField(source='Code', destination='code', match=True),
             SyncField(source='Omschrijving', destination='description'),
             SyncField(source='Groep', destination='group'),
@@ -486,7 +486,7 @@ class Organization(models.Model):
         blank=True,
         null=True,
     )
-    group=models.CharField(
+    group = models.CharField(
         max_length=128,
         null=True,
         blank=True,

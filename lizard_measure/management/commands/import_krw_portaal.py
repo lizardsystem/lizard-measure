@@ -53,7 +53,11 @@ def _records(xml_filename):
 
 def _get_or_create(model, get_kwargs, extra_kwargs={}):
     """
-    Return object, created_boolean
+    Return object, created_boolean.
+
+    TODO: Get rid of this method, since django's get_or_create
+    does just the same. You need to specify the 'extra_kwargs'
+    as a keyword argument 'defaults'...
     """
     try:
         return model.objects.get(**get_kwargs), False
