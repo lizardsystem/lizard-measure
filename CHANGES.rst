@@ -7,7 +7,7 @@ Changelog of lizard-measure
 
 - Adds synchronization code to synchronize with aquo domain tables
 
-- Configures the Unit model to work with the code
+- Configures involved models to work with the synchronization code
 
 - Adds bin/django sync_aquo management command to run all synchronizations
 
