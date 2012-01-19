@@ -141,6 +141,13 @@ def import_KRW_lookup(filename):
                 get_kwargs={'start_date': start_date, 'end_date': end_date},
                 extra_kwargs={'description': rec['description']},
             )
+        # Insert 'owmstat'
+        if rec['domein'] == 'owmstat':
+            owm_stat, owm_stat_created = _get_or_create(
+                model=KRWStatus,
+                get_kwargs={'code': rec['code']},
+                extra_kwargs={'description': rec['description']},
+            )
         # Insert 'owmtype'
         if rec['domein'] == 'owmtype':
             owm_type, owm_type_created = _get_or_create(
