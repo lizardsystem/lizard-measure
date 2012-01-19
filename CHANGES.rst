@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.5.1 (unreleased)
+1.5.1 (2012-01-19)
 ------------------
 
 - Adds synchronization code to synchronize with aquo domain tables
