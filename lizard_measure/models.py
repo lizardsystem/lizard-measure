@@ -441,21 +441,6 @@ class MeasureType(models.Model):
         return Synchronizer(sources=sources)
 
 
-class OrganizationType(models.Model):
-    """
-    OrganizationType.
-    """
-
-    name = models.CharField(max_length=64)
-
-    class Meta:
-        verbose_name = _("Organization type")
-        verbose_name_plural = _("Organization types")
-
-    def __unicode__(self):
-        return u'%s' % (self.name)
-
-
 class Organization(models.Model):
     """
     Organizations related to measures.
@@ -524,7 +509,39 @@ class Organization(models.Model):
         ordering = ('description', )
 
     def __unicode__(self):
-        return u'%s' % self.name
+        return u'%s' % self.description
+
+    @classmethod
+    def get_synchronizer(cls):
+        """
+        Return a configured synchronizer object, tuned for this model.
+        """
+        watermanager_fields = [
+            SyncField(source='Code', destination='code', match=True),
+            SyncField(source='Omschrijving', destination='description'),
+            SyncField(source='Groep', destination='group'),
+            SyncField(source=1, destination='source', static=True, match=True),
+        ]
+        watermanager_source = SyncSource(
+            model=cls,
+            source_table='Waterbeheerder',
+            fields=watermanager_fields,
+        )
+
+        measuring_authority_fields = [
+            SyncField(source='Code', destination='code', match=True),
+            SyncField(source='Omschrijving', destination='description'),
+            SyncField(source='Groep', destination='group'),
+            SyncField(source=2, destination='source', static=True, match=True),
+        ]
+        measuring_authority_source = SyncSource(
+            model=cls,
+            source_table='Meetinstantie',
+            fields=measuring_authority_fields,
+        )
+
+        return Synchronizer(sources=[watermanager_source,
+                                     measuring_authority_source])
 
 
 class FundingOrganization(models.Model):

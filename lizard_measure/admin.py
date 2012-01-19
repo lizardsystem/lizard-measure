@@ -53,6 +53,7 @@ class MeasureStatusAdmin(admin.ModelAdmin):
 
 class MeasureTypeAdmin(admin.ModelAdmin):
     filter_horizontal = ['units']
+    list_display_links = ['description']
     list_display = [
         'code',
         'description',
@@ -88,6 +89,7 @@ class MeasuringRodAdmin(admin.ModelAdmin):
 
 
 class UnitAdmin(admin.ModelAdmin):
+    list_display_links = ['description']
     list_display = [
         'code',
         'description',
@@ -99,6 +101,7 @@ class UnitAdmin(admin.ModelAdmin):
 
 
 class KRWStatusAdmin(admin.ModelAdmin):
+    list_display_links = ['description']
     list_display = [
         'code',
         'description',
@@ -107,10 +110,22 @@ class KRWStatusAdmin(admin.ModelAdmin):
 
 
 class KRWWatertypeAdmin(admin.ModelAdmin):
+    list_display_links = ['description']
     list_display = [
         'code',
         'description',
         'group',
+        'valid',
+    ]
+
+
+class OrganizationAdmin(admin.ModelAdmin):
+    list_display_links = ['description']
+    list_display = [
+        'code',
+        'description',
+        'group',
+        'source',
         'valid',
     ]
 
@@ -122,7 +137,7 @@ admin.site.register(MeasureCategory)
 admin.site.register(MeasureType, MeasureTypeAdmin)
 admin.site.register(MeasureStatus, MeasureStatusAdmin)
 admin.site.register(MeasureStatusMoment)
-admin.site.register(Organization)
+admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Unit, UnitAdmin)
 admin.site.register(WaterBody)
 admin.site.register(KRWStatus, KRWStatusAdmin)

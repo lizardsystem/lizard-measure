@@ -19,7 +19,6 @@ from lizard_area.models import DataAdministrator
 from lizard_measure.models import KRWStatus
 from lizard_measure.models import KRWWatertype
 from lizard_measure.models import WaterBody
-from lizard_measure.models import OrganizationType
 from lizard_measure.models import Organization
 from lizard_measure.models import Unit
 from lizard_measure.models import MeasuringRod
@@ -111,18 +110,13 @@ def import_KRW_lookup(filename):
     """
     Import various domains into seperate lizard_measure models
     """
-    organization_type, organization_type_created = _get_or_create(
-        model=OrganizationType,
-        get_kwargs={'name': 'Geïmporteerd uit KRW-portaal'}
-    )
     for rec in _records(filename):
         # Insert 'uitvoerders'
         if rec['domein'] == 'uitvoerder':
             organization, organization_created = _get_or_create(
                 model=Organization,
-                get_kwargs={'name': rec['description']},
+                get_kwargs={'description': rec['description']},
                 extra_kwargs={
-                    'organization_type': organization_type,
                     'source': Organization.SOURCE_KRW_PORTAL,
                 }
             )
@@ -330,13 +324,8 @@ def import_measures(filename):
             code=rec['mateenh'],
         )
 
-#       executive, executive_created = _get_or_create(
-#           model=Organization,
-#           get_kwargs={'name': rec['uitvoerder']},
-#       )
-
         # vvv Decided from examination of screenshots from KRW portal
-        initiator = Organization.objects.get(name=rec['uitvoerder'])
+        initiator = Organization.objects.get(description=rec['uitvoerder'])
 
         datetime_in_source = datetime.datetime.strptime(
             rec['datum'],
@@ -436,7 +425,7 @@ def import_measures(filename):
                 continue
             cost_carrier = rec['kostendrager' + n]
             cost_percentage = _to_float_or_none(rec['kostenpercent' + n])
-            organization = Organization.objects.get(name=cost_carrier)
+            organization = Organization.objects.get(description=cost_carrier)
             funding_organization = FundingOrganization(
                 percentage=cost_percentage,
                 organization=organization,
