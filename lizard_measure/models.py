@@ -720,12 +720,13 @@ class Measure(models.Model):
     )
 
     # Fields related to import
-    import_source = models.CharField(
-        max_length=16,
+    import_source = models.IntegerField(
         editable=False,
+        choices=SOURCE_CHOICES,
         default=SOURCE_MANUAL,
         verbose_name=_('Source of imported data'),
     )
+
     datetime_in_source = models.DateTimeField(
         blank=True,
         null=True,

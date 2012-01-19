@@ -5,7 +5,11 @@ Changelog of lizard-measure
 1.5.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Changes type of import_source field to IntegerField
+
+- Adds choices to import_source field of Measures
+
+- Adds a dummy test for buildbot
 
 
 1.5.1 (2012-01-19)

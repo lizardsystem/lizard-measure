@@ -29,21 +29,18 @@ class MeasureInline(admin.TabularInline):
 
 
 class MeasureAdmin(admin.ModelAdmin):
-    list_filter = [
+    filter_horizontal = [
         'waterbodies',
         'areas',
+        'categories',
     ]
     readonly_fields = [
         'datetime_in_source',
         'import_raw',
+        'import_source',
     ]
     inlines = [
         MeasureStatusMomentInline, FundingOrganizationInline,
-        ]
-    filter_horizontal = [
-        'categories',
-        'waterbodies',
-        'areas',
     ]
 
 

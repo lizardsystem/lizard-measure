@@ -4,4 +4,6 @@ from django.test import TestCase
 
 
 class ModelTest(TestCase):
-    pass
+
+    def test(self):
+        self.assertTrue(True)
