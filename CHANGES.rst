@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.5.2 (unreleased)
+1.5.2 (2012-01-19)
 ------------------
 
 - Changes type of import_source field to IntegerField
