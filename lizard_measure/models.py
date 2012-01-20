@@ -246,6 +246,10 @@ class Score(models.Model):
             self.measuring_rod.sub_measuring_rod,
         )
 
+    class Meta:
+        verbose_name = _("Steering parameter")
+        verbose_name_plural = _("Steering parameters")
+
 
 class SteeringParameter(models.Model):
     """
@@ -264,6 +268,10 @@ class SteeringParameter(models.Model):
         blank=True,
         null=True,
     )
+
+    class Meta:
+        verbose_name = _("Steering parameter")
+        verbose_name_plural = _("Steering parameters")
 
 
 # Measures
