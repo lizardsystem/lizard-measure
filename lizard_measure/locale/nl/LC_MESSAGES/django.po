@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-20 03:54-0600\n"
+"POT-Creation-Date: 2012-01-20 04:17-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -88,11 +88,19 @@ msgstr "Grenswaarde tussen slecht en ontoereikend"
 msgid "True if higher is better"
 msgstr "Waar als een grotere waarde ook een betere waarde is"
 
-#: models.py:250 models.py:273
+#: models.py:250
+msgid "Score"
+msgstr "Score"
+
+#: models.py:251
+msgid "Scores"
+msgstr "Scores"
+
+#: models.py:273
 msgid "Steering parameter"
 msgstr "Stuurparameter"
 
-#: models.py:251 models.py:274
+#: models.py:274
 msgid "Steering parameters"
 msgstr "Stuurparameters"
 

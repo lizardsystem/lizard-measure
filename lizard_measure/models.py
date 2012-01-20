@@ -247,8 +247,8 @@ class Score(models.Model):
         )
 
     class Meta:
-        verbose_name = _("Steering parameter")
-        verbose_name_plural = _("Steering parameters")
+        verbose_name = _("Score")
+        verbose_name_plural = _("Scores")
 
 
 class SteeringParameter(models.Model):
