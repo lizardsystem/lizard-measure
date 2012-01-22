@@ -29,21 +29,18 @@ class MeasureInline(admin.TabularInline):
 
 
 class MeasureAdmin(admin.ModelAdmin):
-    list_filter = [
+    filter_horizontal = [
         'waterbodies',
         'areas',
+        'categories',
     ]
     readonly_fields = [
         'datetime_in_source',
         'import_raw',
+        'import_source',
     ]
     inlines = [
         MeasureStatusMomentInline, FundingOrganizationInline,
-        ]
-    filter_horizontal = [
-        'categories',
-        'waterbodies',
-        'areas',
     ]
 
 
@@ -52,7 +49,18 @@ class MeasureStatusAdmin(admin.ModelAdmin):
 
 
 class MeasureTypeAdmin(admin.ModelAdmin):
-    filter_horizontal = ['units', ]
+    filter_horizontal = ['units']
+    list_display_links = ['description']
+    list_display = [
+        'code',
+        'description',
+        'group',
+        'klass',
+        'subcategory',
+        'harmonisation',
+        'combined_name',
+        'valid',
+    ]
 
 
 class ScoreAdmin(admin.ModelAdmin):
@@ -76,6 +84,49 @@ class MeasuringRodAdmin(admin.ModelAdmin):
         'sign',
     ]
 
+
+class UnitAdmin(admin.ModelAdmin):
+    list_display_links = ['description']
+    list_display = [
+        'code',
+        'description',
+        'dimension',
+        'conversion_factor',
+        'group',
+        'valid',
+    ]
+
+
+class KRWStatusAdmin(admin.ModelAdmin):
+    list_display_links = ['description']
+    list_display = [
+        'code',
+        'description',
+        'valid',
+    ]
+
+
+class KRWWatertypeAdmin(admin.ModelAdmin):
+    list_display_links = ['description']
+    list_display = [
+        'code',
+        'description',
+        'group',
+        'valid',
+    ]
+
+
+class OrganizationAdmin(admin.ModelAdmin):
+    list_display_links = ['description']
+    list_display = [
+        'code',
+        'description',
+        'group',
+        'source',
+        'valid',
+    ]
+
+
 admin.site.register(FundingOrganization)
 admin.site.register(Measure, MeasureAdmin)
 admin.site.register(MeasurePeriod)
@@ -83,10 +134,10 @@ admin.site.register(MeasureCategory)
 admin.site.register(MeasureType, MeasureTypeAdmin)
 admin.site.register(MeasureStatus, MeasureStatusAdmin)
 admin.site.register(MeasureStatusMoment)
-admin.site.register(Organization)
-admin.site.register(Unit)
+admin.site.register(Organization, OrganizationAdmin)
+admin.site.register(Unit, UnitAdmin)
 admin.site.register(WaterBody)
-admin.site.register(KRWStatus)
-admin.site.register(KRWWatertype)
+admin.site.register(KRWStatus, KRWStatusAdmin)
+admin.site.register(KRWWatertype, KRWWatertypeAdmin)
 admin.site.register(Score, ScoreAdmin)
 admin.site.register(MeasuringRod, MeasuringRodAdmin)

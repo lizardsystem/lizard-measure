@@ -1,13 +1,27 @@
+import os
+from lizard_ui.settingshelper import setup_logging
+
+# SETTINGS_DIR allows media paths and so to be relative to this settings file
+# instead of hardcoded to c:\only\on\my\computer.
+SETTINGS_DIR = os.path.dirname(os.path.realpath(__file__))
+
+# BUILDOUT_DIR is for access to the "surrounding" buildout, for instance for
+# BUILDOUT_DIR/var/static files to give django-staticfiles a proper place
+# to place all collected static files.
+BUILDOUT_DIR = os.path.abspath(os.path.join(SETTINGS_DIR, '..'))
+
+LOGGING = setup_logging(BUILDOUT_DIR)
+
 DEBUG = True
 TEMPLATE_DEBUG = True
 DATABASE_ENGINE = 'sqlite3'
 DATABASE_NAME = 'test.db'
 SITE_ID = 1
 INSTALLED_APPS = [
+    'south',
     'lizard_measure',
     'lizard_map',
     'lizard_ui',
-    'south',
     'django_extensions',
     'staticfiles',
     'compressor',
@@ -18,7 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.sites',
     ]
-ROOT_URLCONF = 'lizard_krw.urls'
+ROOT_URLCONF = 'lizard_measure.urls'
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
@@ -38,6 +52,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 try:
     # Import local settings that aren't stored in svn.
-    from lizard_krw.local_testsettings import *
+    from lizard_measure.local_testsettings import *
 except ImportError:
     pass

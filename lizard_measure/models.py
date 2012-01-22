@@ -14,6 +14,10 @@ from lizard_geo.models import GeoObject
 
 from lizard_area.models import Area
 
+from lizard_measure.synchronisation import SyncField
+from lizard_measure.synchronisation import SyncSource
+from lizard_measure.synchronisation import Synchronizer
+
 
 logger = logging.getLogger(__name__)
 
@@ -34,6 +38,10 @@ class KRWStatus(models.Model):
         blank=True,
         null=True,
     )
+    valid = models.NullBooleanField(
+        default=None,
+        verbose_name=_('Valid'),
+    )
 
     class Meta:
         verbose_name = _('KRW Status')
@@ -41,6 +49,24 @@ class KRWStatus(models.Model):
 
     def __unicode__(self):
         return u'%s - %s' % (self.code, self.description)
+
+    @classmethod
+    def get_synchronizer(cls):
+        """
+        Return a configured synchronizer object, tuned for this model.
+        """
+        fields = [
+            SyncField(source='Code', destination='code', match=True),
+            SyncField(source='Omschrijving', destination='description'),
+        ]
+
+        sources = [SyncSource(
+                            model=cls,
+                            source_table='KRWStatus',
+                            fields=fields,
+                        )]
+
+        return Synchronizer(sources=sources)
 
 
 class KRWWatertype(models.Model):
@@ -57,6 +83,17 @@ class KRWWatertype(models.Model):
         max_length=256,
         blank=True,
         null=True,
+        verbose_name=_('Description'),
+    )
+    group = models.CharField(
+        max_length=64,
+        blank=True,
+        null=True,
+        verbose_name=_('Group'),
+    )
+    valid = models.NullBooleanField(
+        default=None,
+        verbose_name=_('Valid'),
     )
 
     class Meta:
@@ -65,6 +102,25 @@ class KRWWatertype(models.Model):
 
     def __unicode__(self):
         return u'%s - %s' % (self.code, self.description)
+
+    @classmethod
+    def get_synchronizer(cls):
+        """
+        Return a configured synchronizer object, tuned for this model.
+        """
+        fields = [
+            SyncField(source='Code', destination='code', match=True),
+            SyncField(source='Omschrijving', destination='description'),
+            SyncField(source='Groep', destination='group'),
+        ]
+
+        sources = [SyncSource(
+                            model=cls,
+                            source_table='KRWWatertype',
+                            fields=fields,
+                        )]
+
+        return Synchronizer(sources=sources)
 
 
 class WaterBody(models.Model):
@@ -190,6 +246,10 @@ class Score(models.Model):
             self.measuring_rod.sub_measuring_rod,
         )
 
+    class Meta:
+        verbose_name = _("Score")
+        verbose_name_plural = _("Scores")
+
 
 class SteeringParameter(models.Model):
     """
@@ -209,6 +269,10 @@ class SteeringParameter(models.Model):
         null=True,
     )
 
+    class Meta:
+        verbose_name = _("Steering parameter")
+        verbose_name_plural = _("Steering parameters")
+
 
 # Measures
 class MeasureCategory(models.Model):
@@ -216,7 +280,10 @@ class MeasureCategory(models.Model):
     """
 
     name = models.CharField(max_length=200)
-    valid = models.NullBooleanField(default=None)
+    valid = models.NullBooleanField(
+        default=None,
+        verbose_name=_('Valid'),
+    )
 
     class Meta:
         verbose_name = _("Measure category")
@@ -233,16 +300,68 @@ class Unit(models.Model):
     http://www.idsw.nl/Aquo/uitwisselmodellen/index.htm?goto=6:192
     """
 
-    unit = models.CharField(max_length=20)
-    description = models.TextField(blank=True, null=True)
-    valid = models.NullBooleanField(default=None)
+    code = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        unique=True,
+        verbose_name=_("Code")
+    )
+    description = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name=_("Description")
+    )
+    dimension = models.CharField(
+        max_length=32,
+        null=True,
+        blank=True,
+        verbose_name=_("Dimension")
+    )
+    conversion_factor = models.FloatField(
+        blank=True,
+        null=True,
+        verbose_name=_("Conversion factor")
+    )
+    group = models.CharField(
+        max_length=128,
+        null=True,
+        blank=True,
+        verbose_name=_("Group")
+    )
+
+    valid = models.NullBooleanField(
+        default=None,
+        verbose_name=_('Valid'),
+    )
 
     class Meta:
         verbose_name = _("Unit")
         verbose_name_plural = _("Units")
 
     def __unicode__(self):
-        return u'%s' % self.unit
+        return u'%s' % self.code
+
+    @classmethod
+    def get_synchronizer(cls):
+        """
+        Return a configured synchronizer object, tuned for this model.
+        """
+        fields = [
+            SyncField(source='Code', destination='code', match=True),
+            SyncField(source='Omschrijving', destination='description'),
+            SyncField(source='Dimensie', destination='dimension'),
+            SyncField(source='Omrekenfactor', destination='conversion_factor'),
+            SyncField(source='Groep', destination='group'),
+        ]
+
+        sources = [SyncSource(
+                            model=cls,
+                            source_table='Eenheid',
+                            fields=fields,
+                        )]
+
+        return Synchronizer(sources=sources)
 
 
 class MeasureType(models.Model):
@@ -250,7 +369,7 @@ class MeasureType(models.Model):
     Aquo type of measure
 
     This model must be synchronized with the Aquo domain table
-    'KRWMeasuretype'.
+    'KRWMaatregeltype'.
     """
 
     class Meta:
@@ -258,13 +377,20 @@ class MeasureType(models.Model):
         verbose_name_plural = _("Measure types")
         ordering = ('code', )
 
-    code = models.CharField(max_length=80, unique=True)
+    code = models.CharField(
+        max_length=80,
+        unique=True,
+        verbose_name=_('Code'),
+    )
     description = models.TextField(
         verbose_name=_('Description'),
     )
-
-    # Future may require a separate MeasureCodeGroup model for this
-    group = models.ForeignKey(MeasureCategory, null=True, blank=True)
+    group = models.CharField(
+        max_length=128,
+        null=True,
+        blank=True,
+        verbose_name=_("Group")
+    )
 
     # Other fields from KRW import
     units = models.ManyToManyField(
@@ -295,24 +421,32 @@ class MeasureType(models.Model):
         blank=True,
         verbose_name=_('Combined Name'),
     )
+    valid = models.NullBooleanField(
+        default=None,
+        verbose_name=_('Valid'),
+    )
 
     def __unicode__(self):
         return u'%s - %s' % (self.code, self.description)
 
+    @classmethod
+    def get_synchronizer(cls):
+        """
+        Return a configured synchronizer object, tuned for this model.
+        """
+        fields = [
+            SyncField(source='Code', destination='code', match=True),
+            SyncField(source='Omschrijving', destination='description'),
+            SyncField(source='Groep', destination='group'),
+        ]
 
-class OrganizationType(models.Model):
-    """
-    OrganizationType.
-    """
+        sources = [SyncSource(
+                            model=cls,
+                            source_table='KRWMaatregeltype',
+                            fields=fields,
+                        )]
 
-    name = models.CharField(max_length=64)
-
-    class Meta:
-        verbose_name = _("Organization type")
-        verbose_name_plural = _("Organization types")
-
-    def __unicode__(self):
-        return u'%s' % (self.name)
+        return Synchronizer(sources=sources)
 
 
 class Organization(models.Model):
@@ -339,7 +473,8 @@ class Organization(models.Model):
         (1, _("Aquo domain table 'Waterbeheerder'")),
         (2, _("Aquo domain table 'Meetinstantie'")),
         (3, _("CBS Municipality")),
-        (4, _("Other")),
+        (4, _("KRW portal")),
+        (5, _("Other")),
     )
 
     SOURCE_AQUO_WATERMANAGER = 1
@@ -348,31 +483,73 @@ class Organization(models.Model):
     SOURCE_KRW_PORTAL = 4
     SOURCE_OTHER = 5
 
-    name = models.CharField(
-        max_length=200,
+    code = models.IntegerField(
+        verbose_name=_('Code'),
         null=True,
         blank=True,
     )
-    organization_type = models.ForeignKey(
-        OrganizationType,
+    description = models.CharField(
+        verbose_name=_('Description'),
+        max_length=256,
+        blank=True,
+        null=True,
+    )
+    group = models.CharField(
+        max_length=128,
         null=True,
         blank=True,
+        verbose_name=_("Group")
     )
-
     source = models.IntegerField(
         choices=SOURCE_CHOICES,
         default=SOURCE_OTHER,
     )
 
-    valid = models.NullBooleanField(default=None)
+    valid = models.NullBooleanField(
+        default=None,
+        verbose_name=_('Valid'),
+    )
 
     class Meta:
         verbose_name = _("Organization")
         verbose_name_plural = _("Organizations")
-        ordering = ('name', )
+        unique_together = ('source', 'code')
+        ordering = ('description', )
 
     def __unicode__(self):
-        return u'%s' % self.name
+        return u'%s' % self.description
+
+    @classmethod
+    def get_synchronizer(cls):
+        """
+        Return a configured synchronizer object, tuned for this model.
+        """
+        watermanager_fields = [
+            SyncField(source='Code', destination='code', match=True),
+            SyncField(source='Omschrijving', destination='description'),
+            SyncField(source='Groep', destination='group'),
+            SyncField(source=1, destination='source', static=True, match=True),
+        ]
+        watermanager_source = SyncSource(
+            model=cls,
+            source_table='Waterbeheerder',
+            fields=watermanager_fields,
+        )
+
+        measuring_authority_fields = [
+            SyncField(source='Code', destination='code', match=True),
+            SyncField(source='Omschrijving', destination='description'),
+            SyncField(source='Groep', destination='group'),
+            SyncField(source=2, destination='source', static=True, match=True),
+        ]
+        measuring_authority_source = SyncSource(
+            model=cls,
+            source_table='Meetinstantie',
+            fields=measuring_authority_fields,
+        )
+
+        return Synchronizer(sources=[watermanager_source,
+                                     measuring_authority_source])
 
 
 class FundingOrganization(models.Model):
@@ -555,12 +732,13 @@ class Measure(models.Model):
     )
 
     # Fields related to import
-    import_source = models.CharField(
-        max_length=16,
+    import_source = models.IntegerField(
         editable=False,
+        choices=SOURCE_CHOICES,
         default=SOURCE_MANUAL,
         verbose_name=_('Source of imported data'),
     )
+
     datetime_in_source = models.DateTimeField(
         blank=True,
         null=True,

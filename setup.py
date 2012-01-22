@@ -1,6 +1,6 @@
 from setuptools import setup
 
-version = '1.5.1dev'
+version = '1.5.3dev'
 
 long_description = '\n\n'.join([
     open('README.rst').read(),
@@ -19,6 +19,7 @@ install_requires = [
     'lizard-ui',
     'lxml',
     'south',
+    'suds',
     'django-nose',
     'django-treebeard',
     ],

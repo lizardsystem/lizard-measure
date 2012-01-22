@@ -12,9 +12,15 @@ Features
 
 Measures in areas are stored and their status is tracked.
 
-Measures can be imported from KRW portaal.
+Measures can be imported from 'KRW portaal', using::
+
+    $ bin/django import_krw_portaal
+
+Models can be synchronized from the Aquo domain tables using::
+
+    $ bin/django sync_aquo
+    
 - Waterbodies are not imported, but linked to areas via owmxxx.xml files.
-- Measures are imported from maatregelen.xml
 
 Data is accessible using the REST API.
 

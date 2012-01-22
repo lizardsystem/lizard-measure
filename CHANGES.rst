@@ -2,10 +2,30 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.5.1 (unreleased)
+1.5.3 (unreleased)
 ------------------
 
 - Nothing changed yet.
+
+
+1.5.2 (2012-01-19)
+------------------
+
+- Changes type of import_source field to IntegerField
+
+- Adds choices to import_source field of Measures
+
+- Adds a dummy test for buildbot
+
+
+1.5.1 (2012-01-19)
+------------------
+
+- Adds synchronization code to synchronize with aquo domain tables
+
+- Configures involved models to work with the synchronization code
+
+- Adds bin/django sync_aquo management command to run all synchronizations
 
 
 1.5 (2012-01-12)
