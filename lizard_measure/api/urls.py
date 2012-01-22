@@ -3,12 +3,9 @@ from django.conf.urls.defaults import patterns
 from django.conf.urls.defaults import url
 from django.contrib import admin
 
-from djangorestframework.views import InstanceModelView
-from djangorestframework.views import ListOrCreateModelView
-
-from lizard_measure.api.resources import MeasureResource
 from lizard_measure.api.views import RootView
-
+from lizard_measure.api.views import MeasureView
+from lizard_measure.api.views import OrganizationView
 
 admin.autodiscover()
 
@@ -20,9 +17,9 @@ urlpatterns = patterns(
         RootView.as_view(),
         name=NAME_PREFIX + 'root'),
     url(r'^measure/$',
-        ListOrCreateModelView.as_view(resource=MeasureResource),
-        name=NAME_PREFIX + 'measure_list'),
-    url(r'^measure/(?P<id>\d+)/$',
-        InstanceModelView.as_view(resource=MeasureResource),
-        name=NAME_PREFIX + 'measure_detail'),
+        MeasureView.as_view(),
+        name=NAME_PREFIX + 'measure'),
+    url(r'^organization/$',
+        OrganizationView.as_view(),
+        name=NAME_PREFIX + 'organization'),
     )

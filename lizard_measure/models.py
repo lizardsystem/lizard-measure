@@ -434,8 +434,8 @@ class MeasureStatusMoment(models.Model):
 
     measure = models.ForeignKey('Measure')
     status = models.ForeignKey(MeasureStatus)
-    date = models.DateField(null=True, blank=True)
-    is_planning = models.BooleanField(default=False)
+    planning_date = models.DateField(null=True, blank=True)
+    realisation_date = models.DateField(null=True, blank=True)
     description = models.TextField(
         blank=True, null=True,
         help_text=_('Description of statusupdate. Recommended.')
@@ -455,10 +455,10 @@ class MeasureStatusMoment(models.Model):
     class Meta:
         verbose_name = _("Measure status moment")
         verbose_name_plural = _("Measure status moments")
-        ordering = ("date", )
+        ordering = ("measure__id", "status__value", )
 
     def __unicode__(self):
-        return u'%s %s %s' % (self.measure, self.status, self.date)
+        return u'%s %s: plan: %s real: %s' % (self.measure, self.status, self.planning_date, self.realisation_date)
 
 
 class MeasurePeriod(models.Model):
@@ -516,6 +516,10 @@ class Measure(models.Model):
         blank=True,
         null=True,
         verbose_name=_('Unique code'),
+    )
+
+    deleted = models.BooleanField(
+        default=False
     )
 
     is_KRW_measure = models.NullBooleanField(
@@ -676,6 +680,7 @@ class Measure(models.Model):
     class Meta:
         verbose_name = _("Measure")
         verbose_name_plural = _("Measures")
+        ordering = ('id', )
 
     def __unicode__(self):
         return self.title
@@ -683,6 +688,80 @@ class Measure(models.Model):
     @property
     def shortname(self):
         return short_string(self.name, 17)
+
+
+    def set_statusmoments(self, status):
+        """
+            updates the many2many relation with the MeasureStatusMoments
+            input:
+                id = StatusMoment.id
+                name = StatusMoment.name
+                planning_date = MeasureStatusMoment.date for records with MeasureStatusMoment.isPlanning == True
+                realisation_date = MeasureStatusMoment.date for records with MeasureStatusMoment.isPlanning == False
+        """
+
+    def get_statusmoments(self, status, auto_create_missing_states=False, only_valid=True):
+        """
+            updates the many2many relation with the MeasureStatusMoments
+            return :
+                ordered list with statusmomnts with:
+                id = statusMoment.id
+                name = statusMoment.name
+                planning_date = statusMoment.date for records with statusMoment.isPlanning == True
+                realisation_datestatusMoment for records with statusMoment.isPlanning == False
+        """
+
+        measure_status_moments = self.measurestatusmoment_set.all(status__valid= only_valid).order_by(status__value)
+
+        output = []
+
+        if not auto_create_missing_states:
+            for measure_status_moment in measure_status_moments:
+                if not dict(output).has_key(measure_status_moment.id):
+
+
+
+
+
+        output = []
+
+        #for moments in MeasureStatus.objects.
+
+
+
+
+
+    def set_fundingorganizations(self, organizations):
+        """
+            updates the many2many relation with the funding organizations
+            input:
+                organizations is a list with dictionaries with:
+                            id = organization.id
+                            percentage = percentage
+        """
+        #todo: everything in one transaction
+        existing_links = dict([(obj.id, obj) for obj in self.fundingorganization_set.all()])
+
+        for organization in organizations:
+
+            if existing_links.has_key(organization['id']):
+                #update record
+                funding_org = existing_links[organization['id']]
+                funding_org.percentage = organization['percentage']
+                funding_org.save()
+                del existing_links[organization['id']]
+            else:
+                #create new
+                obj = self.fundingorganization_set.create(
+                    organization=Organization.objects.get(pk=organization['id']),
+                    percentage=organization['percentage'])
+                #obj.save()
+
+
+        #remove existing links, that are not anymore
+        for funding_org in existing_links.itervalues():
+            funding_org.delete()
+
 
     def status_moment_self(self, dt=datetime.datetime.now(),
                            is_planning=False):

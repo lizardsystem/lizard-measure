@@ -49,6 +49,15 @@ urlpatterns = patterns(
      'lizard_measure.views.krw_waterbody_measures',
      {},
      "lizard_measure.krw_waterbody_measures"),
+
+    (r'^measure_detailedit_portal/$',
+    'lizard_measure.views.measure_detailedit_portal',
+     {},
+     "lizard_measure.measure_detailedit_portal"),
+    (r'^measure_groupedit_portal/$',
+    'lizard_measure.views.measure_groupedit_portal',
+     {},
+     "lizard_measure.measure_groupedit_portal"),
     (r'^api/',
      include('lizard_measure.api.urls')),
     # # Map for summary view
