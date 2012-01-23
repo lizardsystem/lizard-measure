@@ -565,6 +565,12 @@ class FundingOrganization(models.Model):
     organization = models.ForeignKey(Organization)
     measure = models.ForeignKey('Measure')
 
+    @property
+    def cost(self):
+        if self.percentage is None or self.measure.total_costs is None:
+            return None
+        return self.measure.total_costs * self.percentage / 100
+
     def __unicode__(self):
         return u'%s: %s (%.0f %%)' % (
             self.organization, self.measure, self.percentage)
@@ -812,12 +818,12 @@ class Measure(models.Model):
         help_text='Verantwoordelijke afdeling binnen initiatiefnemer',
     )
 
-    total_costs = models.IntegerField(
-        null=True,
-        blank=True,
-        verbose_name='Totale kosten',
-        help_text="Totale kosten in euro's"
-    )
+#   total_costs = models.IntegerField(
+#       null=True,
+#       blank=True,
+#       verbose_name='Totale kosten',
+#       help_text="Totale kosten in euro's"
+#   )
     investment_costs = models.IntegerField(
         null=True,
         blank=True,
@@ -862,12 +868,18 @@ class Measure(models.Model):
     def shortname(self):
         return short_string(self.name, 17)
 
+    @property
+    def total_costs(self):
+        if self.investment_costs is None or self.exploitation_costs is None:
+            return None
+        return self.investment_costs + self.exploitation_costs
+
     def status_moment_self(self, dt=datetime.datetime.now(),
                            is_planning=False):
         """Returns own status_moment"""
         measure_status_moment_set = self.measurestatusmoment_set.filter(
             is_planning=is_planning,
-            datetime__lte=dt).distinct().order_by("-datetime")
+            date__lte=dt).distinct().order_by("-date")
         if measure_status_moment_set:
             return measure_status_moment_set[0]
         return None
@@ -881,13 +893,13 @@ class Measure(models.Model):
 
         """
         # Collect status_moments from children OR self.
-        if not self.get_children():
+        if not self.measure_set.all():
             msm_self = self.status_moment_self(dt=dt, is_planning=is_planning)
             measure_status_moments = [msm_self, ]
         else:
             measure_status_moments = [
                 m.status_moment(dt=dt, is_planning=is_planning)
-                for m in self.get_children()]
+                for m in self.measure_set.all()]
 
         # Apparently some directly related measures has no status
         if (None in measure_status_moments and
@@ -930,7 +942,7 @@ class Measure(models.Model):
             msm_dates = msm_dates.filter(datetime__lte=end_date)
 
         # No children: we're finished.
-        if not self.get_children():
+        if not self.measure_set.all():
             return msm_dates
 
         # With children:
@@ -978,7 +990,7 @@ class Measure(models.Model):
         """
 
         result = self.value
-        descendants = self.get_descendants()
+        descendants = self.measure_set.all()
         for descendant in descendants:
             if (descendant.unit ==
                 self.unit):
@@ -991,7 +1003,7 @@ class Measure(models.Model):
         """
 
         result = 0.0
-        children = self.get_children()
+        children = self.measure_set.all()
         if self.total_costs is not None:
             result += self.total_costs
         for child in children:
@@ -1004,7 +1016,7 @@ class Measure(models.Model):
         """
 
         result = 0.0
-        children = self.get_children()
+        children = self.measure_set.all()
         if self.investment_costs is not None:
             result += self.investment_costs
         for child in children:
@@ -1017,7 +1029,7 @@ class Measure(models.Model):
         """
 
         result = 0.0
-        children = self.get_children()
+        children = self.measure_set.all()
         if self.exploitation_costs is not None:
             result += self.exploitation_costs
         for child in children:
@@ -1027,7 +1039,7 @@ class Measure(models.Model):
     def obligation_end_date_min_max(self):
         minimum = self.obligation_end_date
         maximum = self.obligation_end_date
-        descendants = self.get_descendants()
+        descendants = self.measure_set.all()
         for descendant in descendants:
             if descendant.oblication_end_date > maximum:
                 maximum = descendant.obligation_end_date
@@ -1047,7 +1059,7 @@ class Measure(models.Model):
         result = 0.0
         for funding_organization in self.fundingorganization_set.all():
             result += funding_organization.cost
-        for descendant in self.get_descendants():
+        for descendant in self.measure_set.all():
             funding_organizations = descendant.fundingorganization_set.all()
             for funding_organization in funding_organizations:
                 result += funding_organization.cost

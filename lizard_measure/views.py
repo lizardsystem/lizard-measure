@@ -46,24 +46,12 @@ CRUMB_HOMEPAGE = {'name': 'home', 'url': '/'}
 
 
 def measure_detail(request, measure_id,
-                   template='lizard_krw/measure.html'):
+                   template='lizard_measure/measure.html'):
     measure = get_object_or_404(Measure, pk=measure_id)
-
-    crumbs = [CRUMB_HOMEPAGE,
-              {'name': measure.waterbody.name,
-               'url': measure.waterbody.get_absolute_url()},
-              {'name': 'Maatregelen',
-               'url': reverse(
-                'lizard_krw.krw_waterbody_measures',
-                kwargs={'waterbody_slug': measure.waterbody.slug})},
-              {'name': measure.name,
-               'url': measure.get_absolute_url()}]
 
     return render_to_response(
         template,
-        {'measure': measure,
-         'crumbs': crumbs
-         },
+        {'measure': measure},
         context_instance=RequestContext(request))
 
 
