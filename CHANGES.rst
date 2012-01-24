@@ -5,7 +5,11 @@ Changelog of lizard-measure
 1.5.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Adds lizard-security
+
+- Improves import script
+
+- Adds portal templates for use with lizard-portal
 
 
 1.5.2 (2012-01-19)

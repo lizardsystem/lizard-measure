@@ -15,6 +15,9 @@ from lizard_geo.models import GeoObject
 
 from lizard_area.models import Area
 
+from lizard_security.manager import FilteredGeoManager
+from lizard_security.models import DataSet
+
 from lizard_measure.synchronisation import SyncField
 from lizard_measure.synchronisation import SyncSource
 from lizard_measure.synchronisation import Synchronizer
@@ -159,45 +162,93 @@ class MeasuringRod(models.Model):
     """
 
     class Meta:
-        verbose_name = _("Maatlat")
-        verbose_name_plural = _("Maatlatten")
+        verbose_name = _("Measuring rod")
+        verbose_name_plural = _("Measuring rods")
 
-    id = models.IntegerField(
-        primary_key=True
+    measuring_rod_id = models.IntegerField(
+        null = True,
+        blank = True,
+        verbose_name=_('Measuring rod id'),
+    )
+    
+    parent = models.ForeignKey('self', blank=True, null=True)
+
+    code = models.CharField(
+        max_length=32,
+        null=True,
+        blank=True,
+        unique=True,
+        verbose_name=_("Code")
+    )
+
+    description = models.CharField(
+        max_length=256,
+        blank=True,
+        null=True,
+        verbose_name=_('Description'),
     )
 
     group = models.CharField(
         max_length=128,
         null=True,
         blank=True,
+        verbose_name=_('Group'),
     )
 
     measuring_rod = models.CharField(
         max_length=128,
         null=True,
         blank=True,
+        verbose_name=_('Measuring rod'),
     )
 
     sub_measuring_rod = models.CharField(
         max_length=128,
         null=True,
         blank=True,
+        verbose_name=_('Sub measuring rod'),
     )
 
     unit = models.CharField(
         max_length=128,
         null=True,
         blank=True,
+        verbose_name=_('Unit'),
     )
 
     sign = models.CharField(
         max_length=128,
         null=True,
         blank=True,
+        verbose_name=_('Sign'),
+    )
+
+    valid = models.NullBooleanField(
+        default=None,
+        verbose_name=_('Valid'),
     )
 
     def __unicode__(self):
         return self.measuring_rod
+
+    @classmethod
+    def get_synchronizer(cls):
+        """
+        Return a configured synchronizer object, tuned for this model.
+        """
+        fields = [
+            SyncField(source='Code', destination='code', match=True),
+            SyncField(source='Omschrijving', destination='description'),
+            SyncField(source='Groep', destination='group'),
+        ]
+
+        sources = [SyncSource(
+                            model=cls,
+                            source_table='KRWKwaliteitselement',
+                            fields=fields,
+                        )]
+
+        return Synchronizer(sources=sources)
 
 
 class Score(models.Model):
@@ -871,6 +922,12 @@ class Measure(models.Model):
     # Is this different from is_KRW_measure?
     is_indicator = models.BooleanField(default=False)
 
+    data_set = models.ForeignKey(DataSet,
+                                 null=True,
+                                 blank=True)
+
+    objects = FilteredGeoManager()
+
     class Meta:
         verbose_name = _("Measure")
         verbose_name_plural = _("Measures")
@@ -888,6 +945,15 @@ class Measure(models.Model):
         if self.investment_costs is None or self.exploitation_costs is None:
             return None
         return self.investment_costs + self.exploitation_costs
+
+    @property
+    def deleted(self):
+        """
+        For backwards compatibility
+        """
+        if valid is None:
+            return false
+        return not self.valid
 
     def get_geometry_wkt_string(self):
         """

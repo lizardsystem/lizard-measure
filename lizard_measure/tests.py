@@ -14,7 +14,3 @@ class ModelTest(TestCase):
     def test_cost_attribute(self):
         m = Measure.objects.get('TestMeasure1')
         self.assertEquals('m.cost', 500)
-
-        
-        
-

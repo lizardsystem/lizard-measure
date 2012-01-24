@@ -76,12 +76,17 @@ class ScoreAdmin(admin.ModelAdmin):
 
 
 class MeasuringRodAdmin(admin.ModelAdmin):
+    list_display_links = ['description']
     list_display = [
+        'parent',
+        'code',
         'group',
+        'description',
         'measuring_rod',
         'sub_measuring_rod',
         'unit',
         'sign',
+        'valid',
     ]
 
 
