@@ -84,8 +84,8 @@
             "description": "",
             "exploitation_expenditure": null,
             "measure": 1,
-            "is_planning": false,
-            "date": null,
+            "planning_date": null,
+            "realisation_date": null,
             "investment_expenditure": null
         }
     },

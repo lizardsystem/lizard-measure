@@ -166,11 +166,11 @@ class MeasuringRod(models.Model):
         verbose_name_plural = _("Measuring rods")
 
     measuring_rod_id = models.IntegerField(
-        null = True,
-        blank = True,
+        null=True,
+        blank=True,
         verbose_name=_('Measuring rod id'),
     )
-    
+
     parent = models.ForeignKey('self', blank=True, null=True)
 
     code = models.CharField(
@@ -694,7 +694,10 @@ class MeasureStatusMoment(models.Model):
         ordering = ("measure__id", "status__value", )
 
     def __unicode__(self):
-        return u'%s %s: plan: %s real: %s' % (self.measure, self.status, self.planning_date, self.realisation_date)
+        return u'%s %s: plan: %s real: %s' % (self.measure,
+                                              self.status,
+                                              self.planning_date,
+                                              self.realisation_date)
 
 
 class MeasurePeriod(models.Model):
@@ -951,8 +954,8 @@ class Measure(models.Model):
         """
         For backwards compatibility
         """
-        if valid is None:
-            return false
+        if self.valid is None:
+            return False
         return not self.valid
 
     def get_geometry_wkt_string(self):
@@ -964,70 +967,86 @@ class Measure(models.Model):
         else:
             return self.geom.wkt
 
-
     def create_empty_statusmoments(self):
         """
-            create status moments for measure
-
-
+        create status moments for measure
         """
-        not_yet_created = MeasureStatus.objects.exclude(measurestatusmoment__measure=self, valid=True)
+        not_yet_created = MeasureStatus.objects.exclude(
+            measurestatusmoment__measure=self,
+            valid=True,
+        )
         for status in not_yet_created:
             self.measurestatusmoment_set.create(status=status)
 
     def set_statusmoments(self, statusmoments):
         """
-            updates the many2many relation with the MeasureStatusMoments
-            input:
-                id = StatusMoment.id
-                name = StatusMoment.name
-                planning_date = MeasureStatusMoment.date for records with MeasureStatusMoment.isPlanning == True
-                realisation_date = MeasureStatusMoment.date for records with MeasureStatusMoment.isPlanning == False
+        updates the many2many relation with the MeasureStatusMoments
+        input:
+            id = StatusMoment.id
+            name = StatusMoment.name
+            planning_date = MeasureStatusMoment.date
+                for records with MeasureStatusMoment.isPlanning == True
+            realisation_date = MeasureStatusMoment.date
+                for records with MeasureStatusMoment.isPlanning == False
         """
         for moment in statusmoments:
 
             try:
-                msm, new = self.measurestatusmoment_set.get_or_create(status=MeasureStatus.objects.get(pk=moment['id']))
+                msm, new = self.measurestatusmoment_set.get_or_create(
+                    status=MeasureStatus.objects.get(pk=moment['id']),
+                )
             except MultipleObjectsReturned:
                 #remove all other
                 first = True
 
-                for msm in self.measurestatusmoment_set.filter(status=MeasureStatus.objects.get(pk=moment['id'])):
+                for msm in self.measurestatusmoment_set.filter(
+                    status=MeasureStatus.objects.get(pk=moment['id']),
+                ):
                     if first:
                         first = False
                     else:
                         msm.delete()
 
-                msm, newDimim = self.measurestatusmoment_set.get_or_create(status=MeasureStatus.objects.get(pk=moment['id']))
+                msm, newDimim = self.measurestatusmoment_set.get_or_create(
+                    status=MeasureStatus.objects.get(pk=moment['id']),
+                )
 
-            if moment['realisation_date'] is None or moment['realisation_date'] == '':
+            if (moment['realisation_date'] is None or
+                moment['realisation_date'] == ''):
                 msm.realisation_date = None
             else:
                 msm.realisation_date = moment['realisation_date'].split('T')[0]
 
-            if moment['planning_date'] is None or moment['planning_date'] == '':
+            if (moment['planning_date'] is None or
+                moment['planning_date'] == ''):
                 msm.planning_date = None
             else:
                 msm.planning_date = moment['planning_date'].split('T')[0]
 
             msm.save()
 
-    def get_statusmoments(self, auto_create_missing_states=False, only_valid=True):
+    def get_statusmoments(self,
+                          auto_create_missing_states=False,
+                          only_valid=True):
         """
-            updates the many2many relation with the MeasureStatusMoments
-            return :
-                ordered list with statusmomnts with:
-                id = statusMoment.id
-                name = statusMoment.name
-                planning_date = statusMoment.date for records with statusMoment.isPlanning == True
-                realisation_datestatusMoment for records with statusMoment.isPlanning == False
+        updates the many2many relation with the MeasureStatusMoments
+        return :
+            ordered list with statusmoments with:
+            id = statusMoment.id
+            name = statusMoment.name
+            planning_date = statusMoment.date for
+                records with statusMoment.isPlanning == True
+            realisation_datestatusMoment for
+                records with statusMoment.isPlanning == False
         """
         output = []
 
         if auto_create_missing_states:
             self.create_empty_statusmoments()
 
-        measure_status_moments = self.measurestatusmoment_set.filter(status__valid=only_valid).order_by('status__value')
+        measure_status_moments = self.measurestatusmoment_set.filter(
+            status__valid=only_valid,
+        ).order_by('status__value')
 
         for measure_status_moment in measure_status_moments:
             output.append({
@@ -1039,7 +1058,6 @@ class Measure(models.Model):
 
         return output
 
-
     def set_fundingorganizations(self, organizations):
         """
             updates the many2many relation with the funding organizations
@@ -1049,11 +1067,14 @@ class Measure(models.Model):
                             percentage = percentage
         """
         #todo: everything in one transaction
-        existing_links = dict([(obj.id, obj) for obj in self.fundingorganization_set.all()])
+        existing_links = dict(
+            [(obj.id, obj)
+             for obj in self.fundingorganization_set.all()],
+        )
 
         for organization in organizations:
 
-            if existing_links.has_key(organization['id']):
+            if organization['id'] in existing_links:
                 #update record
                 funding_org = existing_links[organization['id']]
                 funding_org.percentage = organization['percentage']
@@ -1062,10 +1083,11 @@ class Measure(models.Model):
             else:
                 #create new
                 obj = self.fundingorganization_set.create(
-                    organization=Organization.objects.get(pk=organization['id']),
+                    organization=Organization.objects.get(
+                        pk=organization['id'],
+                    ),
                     percentage=organization['percentage'])
                 #obj.save()
-
 
         #remove existing links, that are not anymore
         for funding_org in existing_links.itervalues():
