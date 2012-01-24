@@ -147,6 +147,35 @@
             },
             items: [
             {
+                xtype: 'tablefield',
+                fieldLabel: 'planning en realisatie',
+                name: 'status_moments',
+                field_name: 'status',
+                editable: true,
+                extra_fields:[{
+                    text: 'planning',
+                    dataIndex: 'planning_date',
+                    width:100,
+                    xtype: 'datecolumn',
+                    format:'d-m-Y',
+                    field: {
+                        xtype: 'datefield',
+                        format: 'd-m-Y'
+                    }
+                },{
+                    text: 'realisatie',
+                    dataIndex: 'realisation_date',
+                    width:100,
+                    xtype: 'datecolumn',
+                    format:'d-m-Y',
+                    field: {
+                        xtype: 'datefield',
+                        format: 'd-m-Y'
+                    }
+                }]
+
+            },
+            {
                 fieldLabel: 'Aggregatie',
                 name: 'aggregation_type',
                 queryMode: 'local',
@@ -323,7 +352,16 @@
                     }
                 }
             }]
-        }, {
+        },
+        {
+            fieldLabel: 'Geometrie',
+            name: 'geom',
+            grow: true,
+            anchor: '100%',
+            xtype: 'textareafield',
+            allowBlank: true
+        },
+        {
             xtype:'fieldset',
             collapsible:true,
             title: 'Metadata',

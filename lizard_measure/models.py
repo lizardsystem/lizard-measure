@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 import datetime
 import logging
+from django.core.exceptions import MultipleObjectsReturned
 
-from django.db import models
+from django.contrib.gis.db import models
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
@@ -709,6 +710,11 @@ class Measure(models.Model):
         blank=True,
     )
 
+    geom = models.GeometryField(
+        null=True,
+        blank=True,
+    )
+
     measure_type = models.ForeignKey(
         MeasureType,
         help_text="SGBP code",
@@ -867,8 +873,28 @@ class Measure(models.Model):
     def shortname(self):
         return short_string(self.name, 17)
 
+    def get_geometry_wkt_string(self):
+        """
+            returns geometry in the well known text format
+        """
+        if self.geom is None:
+            return ''
+        else:
+            return self.geom.wkt
 
-    def set_statusmoments(self, status):
+
+    def create_empty_statusmoments(self):
+        """
+            create status moments for measure
+
+
+        """
+        not_yet_created = MeasureStatus.objects.exclude(measurestatusmoment__measure=self, valid=True)
+        for status in not_yet_created:
+            self.measurestatusmoment_set.create(status=status)
+
+
+    def set_statusmoments(self, statusmoments):
         """
             updates the many2many relation with the MeasureStatusMoments
             input:
@@ -877,8 +903,37 @@ class Measure(models.Model):
                 planning_date = MeasureStatusMoment.date for records with MeasureStatusMoment.isPlanning == True
                 realisation_date = MeasureStatusMoment.date for records with MeasureStatusMoment.isPlanning == False
         """
+        for moment in statusmoments:
 
-    def get_statusmoments(self, status, auto_create_missing_states=False, only_valid=True):
+            try:
+                msm, new = self.measurestatusmoment_set.get_or_create(status=MeasureStatus.objects.get(pk=moment['id']))
+            except MultipleObjectsReturned:
+                #remove all other
+                first = True
+
+                for msm in self.measurestatusmoment_set.filter(status=MeasureStatus.objects.get(pk=moment['id'])):
+                    if first:
+                        first = False
+                    else:
+                        msm.delete()
+
+                msm, newDimim = self.measurestatusmoment_set.get_or_create(status=MeasureStatus.objects.get(pk=moment['id']))
+
+            if moment['realisation_date'] is None or moment['realisation_date'] == '':
+                msm.realisation_date = None
+            else:
+                msm.realisation_date = moment['realisation_date'].split('T')[0]
+
+            if moment['planning_date'] is None or moment['planning_date'] == '':
+                msm.planning_date = None
+            else:
+                msm.planning_date = moment['planning_date'].split('T')[0]
+
+            msm.save()
+
+
+
+    def get_statusmoments(self, auto_create_missing_states=False, only_valid=True):
         """
             updates the many2many relation with the MeasureStatusMoments
             return :
@@ -888,25 +943,22 @@ class Measure(models.Model):
                 planning_date = statusMoment.date for records with statusMoment.isPlanning == True
                 realisation_datestatusMoment for records with statusMoment.isPlanning == False
         """
-
-        measure_status_moments = self.measurestatusmoment_set.all(status__valid= only_valid).order_by(status__value)
-
         output = []
 
-        if not auto_create_missing_states:
-            for measure_status_moment in measure_status_moments:
-                if not dict(output).has_key(measure_status_moment.id):
+        if auto_create_missing_states:
+            self.create_empty_statusmoments()
 
+        measure_status_moments = self.measurestatusmoment_set.filter(status__valid=only_valid).order_by('status__value')
 
+        for measure_status_moment in measure_status_moments:
+            output.append({
+                'id': measure_status_moment.status_id,
+                'name': measure_status_moment.status.name,
+                'planning_date': measure_status_moment.planning_date,
+                'realisation_date': measure_status_moment.realisation_date
+            })
 
-
-
-        output = []
-
-        #for moments in MeasureStatus.objects.
-
-
-
+        return output
 
 
     def set_fundingorganizations(self, organizations):

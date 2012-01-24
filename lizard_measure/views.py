@@ -156,3 +156,20 @@ def measure_groupedit_portal(request):
         t = get_template('portals/geen_toegang.js')
 
     return HttpResponse(t.render(c),  mimetype="text/plain")
+
+def organization_groupedit_portal(request):
+    """
+    Return JSON for request.
+    """
+    c = RequestContext(request)
+
+    if request.user.is_authenticated():
+
+        t = get_template('portals/organisatie-beheer.js')
+        c = RequestContext(request, {
+        })
+
+    else:
+        t = get_template('portals/geen_toegang.js')
+
+    return HttpResponse(t.render(c),  mimetype="text/plain")
