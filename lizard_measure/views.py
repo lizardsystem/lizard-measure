@@ -1,14 +1,28 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
 
+import json
+
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+
+from django.http import HttpResponse
+from django.template import RequestContext
+from django.template import TemplateDoesNotExist
+from django.template import Template
+from django.template.loader import get_template
+
+
+
 # from django.views.decorators.cache import cache_page
 
 from lizard_measure.models import Measure
 from lizard_measure.models import WaterBody
-
+from lizard_measure.models import MeasureType
+from lizard_measure.models import MeasurePeriod
+from lizard_measure.models import MeasureCategory
+from lizard_measure.models import Unit
 
 HOMEPAGE_KEY = 1  # Primary key of the Workspace for rendering the homepage.
 CRUMB_HOMEPAGE = {'name': 'home', 'url': '/'}
@@ -79,3 +93,71 @@ def krw_waterbody_measures(request, waterbody_slug,
          'crumbs': crumbs
          },
         context_instance=RequestContext(request))
+
+
+def measure_detailedit_portal(request):
+    """
+    Return JSON for request.
+    """
+    c = RequestContext(request)
+
+    measure_id = request.GET.get('measure_id', None)
+
+    if request.user.is_authenticated():
+
+        t = get_template('portals/maatregelen_form.js')
+        c = RequestContext(request, {
+            'measure': Measure.objects.get(pk=measure_id),
+            'measure_types': json.dumps([{'id': r.id, 'name': str(r) } for r in MeasureType.objects.all()]),
+            'periods': json.dumps([{'id': r.id, 'name': str(r) } for r in MeasurePeriod.objects.all()]),
+            'aggregations': json.dumps([{'id': r[0], 'name': r[1] } for r in Measure.AGGREGATION_TYPE_CHOICES]),
+            'categories': json.dumps([{'id': r.id, 'name': str(r) } for r in MeasureCategory.objects.all()]),
+            'units': json.dumps([{'id': r.id, 'name': str(r) } for r in Unit.objects.all()])
+
+
+        })
+
+    else:
+        t = get_template('portals/geen_toegang.js')
+
+    return HttpResponse(t.render(c),  mimetype="text/plain")
+
+
+def measure_groupedit_portal(request):
+    """
+    Return JSON for request.
+    """
+    c = RequestContext(request)
+
+    if request.user.is_authenticated():
+
+        t = get_template('portals/maatregelen-beheer.js')
+        c = RequestContext(request, {
+            'measure_types': json.dumps([{'id': r.id, 'name': str(r) } for r in MeasureType.objects.all()]),
+            'periods': json.dumps([{'id': r.id, 'name': str(r) } for r in MeasurePeriod.objects.all()]),
+            'aggregations': json.dumps([{'id': r[0], 'name': r[1] } for r in Measure.AGGREGATION_TYPE_CHOICES]),
+            'categories': json.dumps([{'id': r.id, 'name': str(r) } for r in MeasureCategory.objects.all()]),
+            'units': json.dumps([{'id': r.id, 'name': str(r) } for r in Unit.objects.all()])
+        })
+
+    else:
+        t = get_template('portals/geen_toegang.js')
+
+    return HttpResponse(t.render(c),  mimetype="text/plain")
+
+def organization_groupedit_portal(request):
+    """
+    Return JSON for request.
+    """
+    c = RequestContext(request)
+
+    if request.user.is_authenticated():
+
+        t = get_template('portals/organisatie-beheer.js')
+        c = RequestContext(request, {
+        })
+
+    else:
+        t = get_template('portals/geen_toegang.js')
+
+    return HttpResponse(t.render(c),  mimetype="text/plain")

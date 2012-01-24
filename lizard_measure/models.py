@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 import datetime
 import logging
+from django.core.exceptions import MultipleObjectsReturned
 
-from django.db import models
+from django.contrib.gis.db import models
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
@@ -618,8 +619,8 @@ class MeasureStatusMoment(models.Model):
 
     measure = models.ForeignKey('Measure')
     status = models.ForeignKey(MeasureStatus)
-    date = models.DateField(null=True, blank=True)
-    is_planning = models.BooleanField(default=False)
+    planning_date = models.DateField(null=True, blank=True)
+    realisation_date = models.DateField(null=True, blank=True)
     description = models.TextField(
         blank=True, null=True,
         help_text=_('Description of statusupdate. Recommended.')
@@ -639,10 +640,10 @@ class MeasureStatusMoment(models.Model):
     class Meta:
         verbose_name = _("Measure status moment")
         verbose_name_plural = _("Measure status moments")
-        ordering = ("date", )
+        ordering = ("measure__id", "status__value", )
 
     def __unicode__(self):
-        return u'%s %s %s' % (self.measure, self.status, self.date)
+        return u'%s %s: plan: %s real: %s' % (self.measure, self.status, self.planning_date, self.realisation_date)
 
 
 class MeasurePeriod(models.Model):
@@ -702,12 +703,21 @@ class Measure(models.Model):
         verbose_name=_('Unique code'),
     )
 
+    valid = models.NullBooleanField(
+        default=False
+    )
+
     is_KRW_measure = models.NullBooleanField(
         verbose_name=_('Is a KRW measure'),
     )
 
     geometry = models.ForeignKey(
         GeoObject,
+        null=True,
+        blank=True,
+    )
+
+    geom = models.GeometryField(
         null=True,
         blank=True,
     )
@@ -864,6 +874,7 @@ class Measure(models.Model):
     class Meta:
         verbose_name = _("Measure")
         verbose_name_plural = _("Measures")
+        ordering = ('id', )
 
     def __unicode__(self):
         return self.title
@@ -877,6 +888,122 @@ class Measure(models.Model):
         if self.investment_costs is None or self.exploitation_costs is None:
             return None
         return self.investment_costs + self.exploitation_costs
+
+    def get_geometry_wkt_string(self):
+        """
+            returns geometry in the well known text format
+        """
+        if self.geom is None:
+            return ''
+        else:
+            return self.geom.wkt
+
+
+    def create_empty_statusmoments(self):
+        """
+            create status moments for measure
+
+
+        """
+        not_yet_created = MeasureStatus.objects.exclude(measurestatusmoment__measure=self, valid=True)
+        for status in not_yet_created:
+            self.measurestatusmoment_set.create(status=status)
+
+    def set_statusmoments(self, statusmoments):
+        """
+            updates the many2many relation with the MeasureStatusMoments
+            input:
+                id = StatusMoment.id
+                name = StatusMoment.name
+                planning_date = MeasureStatusMoment.date for records with MeasureStatusMoment.isPlanning == True
+                realisation_date = MeasureStatusMoment.date for records with MeasureStatusMoment.isPlanning == False
+        """
+        for moment in statusmoments:
+
+            try:
+                msm, new = self.measurestatusmoment_set.get_or_create(status=MeasureStatus.objects.get(pk=moment['id']))
+            except MultipleObjectsReturned:
+                #remove all other
+                first = True
+
+                for msm in self.measurestatusmoment_set.filter(status=MeasureStatus.objects.get(pk=moment['id'])):
+                    if first:
+                        first = False
+                    else:
+                        msm.delete()
+
+                msm, newDimim = self.measurestatusmoment_set.get_or_create(status=MeasureStatus.objects.get(pk=moment['id']))
+
+            if moment['realisation_date'] is None or moment['realisation_date'] == '':
+                msm.realisation_date = None
+            else:
+                msm.realisation_date = moment['realisation_date'].split('T')[0]
+
+            if moment['planning_date'] is None or moment['planning_date'] == '':
+                msm.planning_date = None
+            else:
+                msm.planning_date = moment['planning_date'].split('T')[0]
+
+            msm.save()
+
+    def get_statusmoments(self, auto_create_missing_states=False, only_valid=True):
+        """
+            updates the many2many relation with the MeasureStatusMoments
+            return :
+                ordered list with statusmomnts with:
+                id = statusMoment.id
+                name = statusMoment.name
+                planning_date = statusMoment.date for records with statusMoment.isPlanning == True
+                realisation_datestatusMoment for records with statusMoment.isPlanning == False
+        """
+        output = []
+
+        if auto_create_missing_states:
+            self.create_empty_statusmoments()
+
+        measure_status_moments = self.measurestatusmoment_set.filter(status__valid=only_valid).order_by('status__value')
+
+        for measure_status_moment in measure_status_moments:
+            output.append({
+                'id': measure_status_moment.status_id,
+                'name': measure_status_moment.status.name,
+                'planning_date': measure_status_moment.planning_date,
+                'realisation_date': measure_status_moment.realisation_date
+            })
+
+        return output
+
+
+    def set_fundingorganizations(self, organizations):
+        """
+            updates the many2many relation with the funding organizations
+            input:
+                organizations is a list with dictionaries with:
+                            id = organization.id
+                            percentage = percentage
+        """
+        #todo: everything in one transaction
+        existing_links = dict([(obj.id, obj) for obj in self.fundingorganization_set.all()])
+
+        for organization in organizations:
+
+            if existing_links.has_key(organization['id']):
+                #update record
+                funding_org = existing_links[organization['id']]
+                funding_org.percentage = organization['percentage']
+                funding_org.save()
+                del existing_links[organization['id']]
+            else:
+                #create new
+                obj = self.fundingorganization_set.create(
+                    organization=Organization.objects.get(pk=organization['id']),
+                    percentage=organization['percentage'])
+                #obj.save()
+
+
+        #remove existing links, that are not anymore
+        for funding_org in existing_links.itervalues():
+            funding_org.delete()
 
     def status_moment_self(self, dt=datetime.datetime.now(),
                            is_planning=False):
