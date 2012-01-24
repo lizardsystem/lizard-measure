@@ -395,6 +395,7 @@ class MeasureType(models.Model):
     # Other fields from KRW import
     units = models.ManyToManyField(
         Unit,
+        blank=True,
         verbose_name=_('Units'),
     )
     klass = models.CharField(
@@ -763,12 +764,14 @@ class Measure(models.Model):
 
     waterbodies = models.ManyToManyField(
         WaterBody,
+        blank=True,
         help_text=_('Which waterbodies does this measure belong to?'),
         verbose_name=_('Waterbody'),
     )
 
     areas = models.ManyToManyField(
         Area,
+        blank=True,
         related_name='area_measure_set',
         help_text=_('Which areas does this measure belong to?'),
         verbose_name=_('Area'),
@@ -783,6 +786,7 @@ class Measure(models.Model):
 
     categories = models.ManyToManyField(
         MeasureCategory,
+        blank=True,
         verbose_name=_('Categories'),
     )
 

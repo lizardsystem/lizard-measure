@@ -2,8 +2,19 @@
 
 from django.test import TestCase
 
+from lizard_measure.models import Measure
+
 
 class ModelTest(TestCase):
+    fixtures = ('testdata', )
 
-    def test(self):
-        self.assertTrue(True)
+    def setUp(self):
+        pass
+
+    def test_cost_attribute(self):
+        m = Measure.objects.get('TestMeasure1')
+        self.assertEquals('m.cost', 500)
+
+        
+        
+

@@ -3,7 +3,7 @@
 {% load workspaces %}
 {% load utility %}
 
-{% block subtitle %} {{ measure.name }} {% endblock %}
+{% block subtitle %} {{ measure.title }} {% endblock %}
 
 {% block portal-tabs %}
 {{ block.super }}
@@ -29,7 +29,7 @@
   <div>
     <dl>
       <dt>Maatregel</dt>
-      <dd><a href="{{ measure.get_absolute_url }}">{{ measure.name }}</a></dd>
+      <dd><a href="{{ measure.get_absolute_url }}">{{ measure.title }}</a></dd>
 
       {% if measure.description %}
       <dt>Beschrijving</dt>
@@ -56,7 +56,7 @@
       <dt>Bovenliggende maatregel</dt>
       <dd>
         <a href="{{ measure.parent.get_absolute_url }}">
-          {{ measure.parent.name }}
+          {{ measure.parent.title }}
         </a>
       </dd>
       {% endif %}
@@ -86,7 +86,7 @@
 
 {% block content %}
 <div id="textual">
-  <h2>Maatregel: {{ measure.name }}</h2>
+  <h2>Maatregel: {{ measure.title }}</h2>
   <div style="width: 100%; height: 130px;" class="img-use-my-size">
 {% comment %}
     <a href="{% url lizard_krw.measure_graph measure_id=measure.id %}" class="replace-with-image">
@@ -101,7 +101,7 @@
       </tr>
 
       <tr>
-        <th>Deelgebied</th><td>{{ measure.measure_collection.area_set.all|join:", " }}</td>
+        <th>Deelgebied</th><td>{{ measure.waterbodies.all|join:", " }}</td>
       </tr>
 
       <tr>
@@ -157,7 +157,7 @@
         </tr>
         <tr>
           <th>Maatgevende maatregel</th>
-          <td>{{ status_moment.measure.name }}</td>
+          <td>{{ status_moment.measure.title }}</td>
         </tr>
         {% if status_moment.description %}
         <tr>
@@ -226,7 +226,7 @@
       {% for funding_organization in measure.fundingorganization_set.all %}
       <tr>
         <td>
-          {{ measure.name }}
+          {{ measure.title }}
         </td>
         <td>
           {{ funding_organization.organization }}
@@ -240,7 +240,7 @@
         {% for funding_organization in measure_part.fundingorganization_set.all %}
       <tr>
         <td>
-          {{ measure_part.name }}
+          {{ measure_part.title }}
         </td>
         <td>
           {{ funding_organization.organization }}
