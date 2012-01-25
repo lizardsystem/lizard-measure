@@ -2,7 +2,19 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.5.4 (unreleased)
+1.5.6 (unreleased)
+------------------
+
+- Nothing changed yet.
+
+
+1.5.5 (2012-01-13)
+------------------
+
+- Forgot to pull first. Quick re-release.
+
+
+1.5.4 (2012-01-13)
 ------------------
 
 - added doelen-beheer
