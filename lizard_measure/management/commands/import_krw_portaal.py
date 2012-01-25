@@ -32,6 +32,26 @@ from lizard_measure.models import MeasureStatusMoment
 from lizard_measure.models import FundingOrganization
 
 
+def _clear_all():
+    """
+    Clear all objects related to measures.
+    """
+    KRWStatus.objects.all().delete()
+    KRWWatertype.objects.all().delete()
+    WaterBody.objects.all().delete()
+    Organization.objects.all().delete()
+    Unit.objects.all().delete()
+    MeasuringRod.objects.all().delete()
+    Score.objects.all().delete()
+    Measure.objects.all().delete()
+    MeasureCategory.objects.all().delete()
+    MeasureType.objects.all().delete()
+    MeasurePeriod.objects.all().delete()
+    MeasureStatus.objects.all().delete()
+    MeasureStatusMoment.objects.all().delete()
+    FundingOrganization.objects.all().delete()
+
+
 def _records(xml_filename):
     """
     Return a record generator
@@ -255,13 +275,14 @@ def import_waterbodies(filename, user, data_administrator):
 def import_measuring_rods(filename):
     for rec in _records(filename):
         # Only import EKR-scores
-        if not (rec['eenheid'] == 'EKR' and rec['deelmaatlat'] == 'Totaal'):
+        if rec['eenheid'] != 'EKR':
             continue
 
         measuring_rod, measuring_rod_created = _get_or_create(
             model=MeasuringRod,
-            get_kwargs={'id': rec['id']},
+            get_kwargs={'measuring_rod_id': rec['id']},
             extra_kwargs={
+                'code': rec['domgwcod'],
                 'group': rec['groep'],
                 'measuring_rod': rec['maatlat'],
                 'sub_measuring_rod': rec['deelmaatlat'],
@@ -269,20 +290,32 @@ def import_measuring_rods(filename):
                 'sign': rec['teken'],
             }
         )
+    # Assign parents, where necessary:
+    for mr in MeasuringRod.objects.all():
+        if not mr.sub_measuring_rod == 'Totaal':
+            mr.parent = MeasuringRod.objects.get(
+                measuring_rod=mr.measuring_rod,
+                sub_measuring_rod='Totaal',
+            )
+            mr.save()
 
 
 def import_scores(filename):
     for rec in _records(filename):
 
         # Only import if MeasuringRod is imported
-        if not MeasuringRod.objects.filter(id=rec['maatlat']).exists():
+        if not MeasuringRod.objects.filter(
+            measuring_rod_id=rec['maatlat'],
+        ).exists():
             continue
 
         # Try to get Area
         area_ident = rec['owmident'].strip()
         area = _area_or_none(area_ident)
 
-        measuring_rod = MeasuringRod.objects.get(id=rec['maatlat'])
+        measuring_rod = MeasuringRod.objects.get(
+            measuring_rod_id=rec['maatlat'],
+        )
         mep = _to_float_or_none(rec['mep'])
         gep = _to_float_or_none(rec['gep'])
         limit_bad_insufficient = _to_float_or_none(rec['ontoereikend'])
@@ -365,6 +398,7 @@ def import_measures(filename):
             'exploitation_costs': rec['exploitkosten'],
             'executive': None,
             'initiator': initiator,
+            'valid': True
 
         }
 
@@ -418,7 +452,7 @@ def import_measures(filename):
         measure_status_moment = MeasureStatusMoment(
             measure=measure,
             status=measure_status,
-            date=measure_status_date,
+            planning_date=measure_status_date,
             description='Import KRW portaal',
         )
         measure_status_moment.save()
@@ -449,6 +483,10 @@ class Command(BaseCommand):
         else:
             rel_path = 'import_krw_portaal'
         import_path = os.path.join(settings.BUILDOUT_DIR, rel_path)
+
+        print 'Deleting all measure-related objects.'
+        _clear_all()
+
         print 'Importing KRW portaal xml files from %s.' % import_path
 
         user = User.objects.get(pk=1)
@@ -480,7 +518,10 @@ class Command(BaseCommand):
             )
 
         # Import MeasuringRods
-        import_measuring_rods(os.path.join(import_path, 'maatlatten.xml'))
+        import_measuring_rods(
+            # Using corrected maatlatten, see readme.RST in xmldir.
+            os.path.join(import_path, 'maatlatten_corrected.xml'),
+        )
 
         # Import scores
         Score.objects.all().delete()

@@ -15,6 +15,9 @@ from lizard_geo.models import GeoObject
 
 from lizard_area.models import Area
 
+from lizard_security.manager import FilteredGeoManager
+from lizard_security.models import DataSet
+
 from lizard_measure.synchronisation import SyncField
 from lizard_measure.synchronisation import SyncSource
 from lizard_measure.synchronisation import Synchronizer
@@ -159,45 +162,93 @@ class MeasuringRod(models.Model):
     """
 
     class Meta:
-        verbose_name = _("Maatlat")
-        verbose_name_plural = _("Maatlatten")
+        verbose_name = _("Measuring rod")
+        verbose_name_plural = _("Measuring rods")
 
-    id = models.IntegerField(
-        primary_key=True
+    measuring_rod_id = models.IntegerField(
+        null=True,
+        blank=True,
+        verbose_name=_('Measuring rod id'),
+    )
+
+    parent = models.ForeignKey('self', blank=True, null=True)
+
+    code = models.CharField(
+        max_length=32,
+        null=True,
+        blank=True,
+        unique=True,
+        verbose_name=_("Code")
+    )
+
+    description = models.CharField(
+        max_length=256,
+        blank=True,
+        null=True,
+        verbose_name=_('Description'),
     )
 
     group = models.CharField(
         max_length=128,
         null=True,
         blank=True,
+        verbose_name=_('Group'),
     )
 
     measuring_rod = models.CharField(
         max_length=128,
         null=True,
         blank=True,
+        verbose_name=_('Measuring rod'),
     )
 
     sub_measuring_rod = models.CharField(
         max_length=128,
         null=True,
         blank=True,
+        verbose_name=_('Sub measuring rod'),
     )
 
     unit = models.CharField(
         max_length=128,
         null=True,
         blank=True,
+        verbose_name=_('Unit'),
     )
 
     sign = models.CharField(
         max_length=128,
         null=True,
         blank=True,
+        verbose_name=_('Sign'),
+    )
+
+    valid = models.NullBooleanField(
+        default=None,
+        verbose_name=_('Valid'),
     )
 
     def __unicode__(self):
         return self.measuring_rod
+
+    @classmethod
+    def get_synchronizer(cls):
+        """
+        Return a configured synchronizer object, tuned for this model.
+        """
+        fields = [
+            SyncField(source='Code', destination='code', match=True),
+            SyncField(source='Omschrijving', destination='description'),
+            SyncField(source='Groep', destination='group'),
+        ]
+
+        sources = [SyncSource(
+                            model=cls,
+                            source_table='KRWKwaliteitselement',
+                            fields=fields,
+                        )]
+
+        return Synchronizer(sources=sources)
 
 
 class Score(models.Model):
@@ -396,6 +447,7 @@ class MeasureType(models.Model):
     # Other fields from KRW import
     units = models.ManyToManyField(
         Unit,
+        blank=True,
         verbose_name=_('Units'),
     )
     klass = models.CharField(
@@ -566,6 +618,12 @@ class FundingOrganization(models.Model):
     organization = models.ForeignKey(Organization)
     measure = models.ForeignKey('Measure')
 
+    @property
+    def cost(self):
+        if self.percentage is None or self.measure.total_costs is None:
+            return None
+        return self.measure.total_costs * self.percentage / 100
+
     def __unicode__(self):
         return u'%s: %s (%.0f %%)' % (
             self.organization, self.measure, self.percentage)
@@ -636,7 +694,10 @@ class MeasureStatusMoment(models.Model):
         ordering = ("measure__id", "status__value", )
 
     def __unicode__(self):
-        return u'%s %s: plan: %s real: %s' % (self.measure, self.status, self.planning_date, self.realisation_date)
+        return u'%s %s: plan: %s real: %s' % (self.measure,
+                                              self.status,
+                                              self.planning_date,
+                                              self.realisation_date)
 
 
 class MeasurePeriod(models.Model):
@@ -696,7 +757,7 @@ class Measure(models.Model):
         verbose_name=_('Unique code'),
     )
 
-    deleted = models.BooleanField(
+    valid = models.NullBooleanField(
         default=False
     )
 
@@ -767,12 +828,14 @@ class Measure(models.Model):
 
     waterbodies = models.ManyToManyField(
         WaterBody,
+        blank=True,
         help_text=_('Which waterbodies does this measure belong to?'),
         verbose_name=_('Waterbody'),
     )
 
     areas = models.ManyToManyField(
         Area,
+        blank=True,
         related_name='area_measure_set',
         help_text=_('Which areas does this measure belong to?'),
         verbose_name=_('Area'),
@@ -787,6 +850,7 @@ class Measure(models.Model):
 
     categories = models.ManyToManyField(
         MeasureCategory,
+        blank=True,
         verbose_name=_('Categories'),
     )
 
@@ -822,12 +886,12 @@ class Measure(models.Model):
         help_text='Verantwoordelijke afdeling binnen initiatiefnemer',
     )
 
-    total_costs = models.IntegerField(
-        null=True,
-        blank=True,
-        verbose_name='Totale kosten',
-        help_text="Totale kosten in euro's"
-    )
+#   total_costs = models.IntegerField(
+#       null=True,
+#       blank=True,
+#       verbose_name='Totale kosten',
+#       help_text="Totale kosten in euro's"
+#   )
     investment_costs = models.IntegerField(
         null=True,
         blank=True,
@@ -861,6 +925,12 @@ class Measure(models.Model):
     # Is this different from is_KRW_measure?
     is_indicator = models.BooleanField(default=False)
 
+    data_set = models.ForeignKey(DataSet,
+                                 null=True,
+                                 blank=True)
+
+    objects = FilteredGeoManager()
+
     class Meta:
         verbose_name = _("Measure")
         verbose_name_plural = _("Measures")
@@ -873,6 +943,21 @@ class Measure(models.Model):
     def shortname(self):
         return short_string(self.title, 17)
 
+    @property
+    def total_costs(self):
+        if self.investment_costs is None or self.exploitation_costs is None:
+            return None
+        return self.investment_costs + self.exploitation_costs
+
+    @property
+    def deleted(self):
+        """
+        For backwards compatibility
+        """
+        if self.valid is None:
+            return False
+        return not self.valid
+
     def get_geometry_wkt_string(self):
         """
             returns geometry in the well known text format
@@ -882,73 +967,86 @@ class Measure(models.Model):
         else:
             return self.geom.wkt
 
-
     def create_empty_statusmoments(self):
         """
-            create status moments for measure
-
-
+        create status moments for measure
         """
-        not_yet_created = MeasureStatus.objects.exclude(measurestatusmoment__measure=self, valid=True)
+        not_yet_created = MeasureStatus.objects.exclude(
+            measurestatusmoment__measure=self,
+            valid=True,
+        )
         for status in not_yet_created:
             self.measurestatusmoment_set.create(status=status)
 
-
     def set_statusmoments(self, statusmoments):
         """
-            updates the many2many relation with the MeasureStatusMoments
-            input:
-                id = StatusMoment.id
-                name = StatusMoment.name
-                planning_date = MeasureStatusMoment.date for records with MeasureStatusMoment.isPlanning == True
-                realisation_date = MeasureStatusMoment.date for records with MeasureStatusMoment.isPlanning == False
+        updates the many2many relation with the MeasureStatusMoments
+        input:
+            id = StatusMoment.id
+            name = StatusMoment.name
+            planning_date = MeasureStatusMoment.date
+                for records with MeasureStatusMoment.isPlanning == True
+            realisation_date = MeasureStatusMoment.date
+                for records with MeasureStatusMoment.isPlanning == False
         """
         for moment in statusmoments:
 
             try:
-                msm, new = self.measurestatusmoment_set.get_or_create(status=MeasureStatus.objects.get(pk=moment['id']))
+                msm, new = self.measurestatusmoment_set.get_or_create(
+                    status=MeasureStatus.objects.get(pk=moment['id']),
+                )
             except MultipleObjectsReturned:
                 #remove all other
                 first = True
 
-                for msm in self.measurestatusmoment_set.filter(status=MeasureStatus.objects.get(pk=moment['id'])):
+                for msm in self.measurestatusmoment_set.filter(
+                    status=MeasureStatus.objects.get(pk=moment['id']),
+                ):
                     if first:
                         first = False
                     else:
                         msm.delete()
 
-                msm, newDimim = self.measurestatusmoment_set.get_or_create(status=MeasureStatus.objects.get(pk=moment['id']))
+                msm, newDimim = self.measurestatusmoment_set.get_or_create(
+                    status=MeasureStatus.objects.get(pk=moment['id']),
+                )
 
-            if moment['realisation_date'] is None or moment['realisation_date'] == '':
+            if (moment['realisation_date'] is None or
+                moment['realisation_date'] == ''):
                 msm.realisation_date = None
             else:
                 msm.realisation_date = moment['realisation_date'].split('T')[0]
 
-            if moment['planning_date'] is None or moment['planning_date'] == '':
+            if (moment['planning_date'] is None or
+                moment['planning_date'] == ''):
                 msm.planning_date = None
             else:
                 msm.planning_date = moment['planning_date'].split('T')[0]
 
             msm.save()
 
-
-
-    def get_statusmoments(self, auto_create_missing_states=False, only_valid=True):
+    def get_statusmoments(self,
+                          auto_create_missing_states=False,
+                          only_valid=True):
         """
-            updates the many2many relation with the MeasureStatusMoments
-            return :
-                ordered list with statusmomnts with:
-                id = statusMoment.id
-                name = statusMoment.name
-                planning_date = statusMoment.date for records with statusMoment.isPlanning == True
-                realisation_datestatusMoment for records with statusMoment.isPlanning == False
+        updates the many2many relation with the MeasureStatusMoments
+        return :
+            ordered list with statusmoments with:
+            id = statusMoment.id
+            name = statusMoment.name
+            planning_date = statusMoment.date for
+                records with statusMoment.isPlanning == True
+            realisation_datestatusMoment for
+                records with statusMoment.isPlanning == False
         """
         output = []
 
         if auto_create_missing_states:
             self.create_empty_statusmoments()
 
-        measure_status_moments = self.measurestatusmoment_set.filter(status__valid=only_valid).order_by('status__value')
+        measure_status_moments = self.measurestatusmoment_set.filter(
+            status__valid=only_valid,
+        ).order_by('status__value')
 
         for measure_status_moment in measure_status_moments:
             output.append({
@@ -960,7 +1058,6 @@ class Measure(models.Model):
 
         return output
 
-
     def set_fundingorganizations(self, organizations):
         """
             updates the many2many relation with the funding organizations
@@ -970,11 +1067,14 @@ class Measure(models.Model):
                             percentage = percentage
         """
         #todo: everything in one transaction
-        existing_links = dict([(obj.id, obj) for obj in self.fundingorganization_set.all()])
+        existing_links = dict(
+            [(obj.id, obj)
+             for obj in self.fundingorganization_set.all()],
+        )
 
         for organization in organizations:
 
-            if existing_links.has_key(organization['id']):
+            if organization['id'] in existing_links:
                 #update record
                 funding_org = existing_links[organization['id']]
                 funding_org.percentage = organization['percentage']
@@ -983,20 +1083,20 @@ class Measure(models.Model):
             else:
                 #create new
                 self.fundingorganization_set.create(
-                    organization=Organization.objects.get(pk=organization['id']),
+                    organization=Organization.objects.get(
+                            pk=organization['id']),
                     percentage=organization['percentage'])
 
         #remove existing links, that are not anymore
         for funding_org in existing_links.itervalues():
             funding_org.delete()
 
-
     def status_moment_self(self, dt=datetime.datetime.now(),
                            is_planning=False):
         """Returns own status_moment"""
         measure_status_moment_set = self.measurestatusmoment_set.filter(
             is_planning=is_planning,
-            datetime__lte=dt).distinct().order_by("-datetime")
+            date__lte=dt).distinct().order_by("-date")
         if measure_status_moment_set:
             return measure_status_moment_set[0]
         return None
@@ -1010,13 +1110,13 @@ class Measure(models.Model):
 
         """
         # Collect status_moments from children OR self.
-        if not self.get_children():
+        if not self.measure_set.all():
             msm_self = self.status_moment_self(dt=dt, is_planning=is_planning)
             measure_status_moments = [msm_self, ]
         else:
             measure_status_moments = [
                 m.status_moment(dt=dt, is_planning=is_planning)
-                for m in self.get_children()]
+                for m in self.measure_set.all()]
 
         # Apparently some directly related measures has no status
         if (None in measure_status_moments and
@@ -1059,7 +1159,7 @@ class Measure(models.Model):
             msm_dates = msm_dates.filter(datetime__lte=end_date)
 
         # No children: we're finished.
-        if not self.get_children():
+        if not self.measure_set.all():
             return msm_dates
 
         # With children:
@@ -1107,7 +1207,7 @@ class Measure(models.Model):
         """
 
         result = self.value
-        descendants = self.get_descendants()
+        descendants = self.measure_set.all()
         for descendant in descendants:
             if (descendant.unit ==
                 self.unit):
@@ -1120,7 +1220,7 @@ class Measure(models.Model):
         """
 
         result = 0.0
-        children = self.get_children()
+        children = self.measure_set.all()
         if self.total_costs is not None:
             result += self.total_costs
         for child in children:
@@ -1133,7 +1233,7 @@ class Measure(models.Model):
         """
 
         result = 0.0
-        children = self.get_children()
+        children = self.measure_set.all()
         if self.investment_costs is not None:
             result += self.investment_costs
         for child in children:
@@ -1146,7 +1246,7 @@ class Measure(models.Model):
         """
 
         result = 0.0
-        children = self.get_children()
+        children = self.measure_set.all()
         if self.exploitation_costs is not None:
             result += self.exploitation_costs
         for child in children:
@@ -1156,7 +1256,7 @@ class Measure(models.Model):
     def obligation_end_date_min_max(self):
         minimum = self.obligation_end_date
         maximum = self.obligation_end_date
-        descendants = self.get_descendants()
+        descendants = self.measure_set.all()
         for descendant in descendants:
             if descendant.oblication_end_date > maximum:
                 maximum = descendant.obligation_end_date
@@ -1176,7 +1276,7 @@ class Measure(models.Model):
         result = 0.0
         for funding_organization in self.fundingorganization_set.all():
             result += funding_organization.cost
-        for descendant in self.get_descendants():
+        for descendant in self.measure_set.all():
             funding_organizations = descendant.fundingorganization_set.all()
             for funding_organization in funding_organizations:
                 result += funding_organization.cost

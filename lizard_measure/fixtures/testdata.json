@@ -1,0 +1,132 @@
+[
+    {
+        "pk": 1,
+        "model": "lizard_measure.unit",
+        "fields": {
+            "code": "ha",
+            "group": "",
+            "description": "Hectare",
+            "dimension": "",
+            "conversion_factor": null,
+            "valid": null
+        }
+    },
+    {
+        "pk": 1,
+        "model": "lizard_measure.measuretype",
+        "fields": {
+            "code": "TestType1",
+            "group": "",
+            "subcategory": "",
+            "harmonisation": "",
+            "valid": null,
+            "klass": "",
+            "units": [],
+            "combined_name": "",
+            "description": "Description"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "lizard_measure.organization",
+        "fields": {
+            "source": 5,
+            "code": 1,
+            "group": "",
+            "description": "TestOrganization1",
+            "valid": null
+        }
+    },
+    {
+        "pk": 2,
+        "model": "lizard_measure.organization",
+        "fields": {
+            "source": 5,
+            "code": 2,
+            "group": "",
+            "description": "TestOrganization2",
+            "valid": null
+        }
+    },
+    {
+        "pk": 1,
+        "model": "lizard_measure.fundingorganization",
+        "fields": {
+            "organization": 1,
+            "percentage": 33.0,
+            "measure": 1
+        }
+    },
+    {
+        "pk": 2,
+        "model": "lizard_measure.fundingorganization",
+        "fields": {
+            "organization": 2,
+            "percentage": 67.0,
+            "measure": 1
+        }
+    },
+    {
+        "pk": 1,
+        "model": "lizard_measure.measurestatus",
+        "fields": {
+            "color": "ff0000",
+            "valid": null,
+            "name": "TestStatus1",
+            "value": 0.0
+        }
+    },
+    {
+        "pk": 1,
+        "model": "lizard_measure.measurestatusmoment",
+        "fields": {
+            "status": 1,
+            "description": "",
+            "exploitation_expenditure": null,
+            "measure": 1,
+            "planning_date": null,
+            "realisation_date": null,
+            "investment_expenditure": null
+        }
+    },
+    {
+        "pk": 1,
+        "model": "lizard_measure.measureperiod",
+        "fields": {
+            "valid": null,
+            "start_date": "2012-01-24",
+            "end_date": "2015-01-24",
+            "description": "TestPeriod1"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "lizard_measure.measure",
+        "fields": {
+            "is_KRW_measure": null,
+            "executive": 1,
+            "period": 1,
+            "import_source": 3,
+            "unit": 1,
+            "exploitation_costs": 300,
+            "read_only": false,
+            "aggregation_type": 1,
+            "is_indicator": false,
+            "title": "TestMeasure1",
+            "import_raw": null,
+            "areas": [],
+            "description": "TestMeasure1",
+            "parent": null,
+            "investment_costs": 200,
+            "categories": [],
+            "datetime_in_source": null,
+            "initiator": 1,
+            "ident": "1",
+            "geometry": null,
+            "value": 1.0,
+            "responsible_department": "TestComment1",
+            "measure_type": 1,
+            "waterbodies": []
+        }
+    }
+]

@@ -2,12 +2,22 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.5.3 (unreleased)
+1.5.4 (unreleased)
 ------------------
 
 - added doelen-beheer
 
 - improved api and measure forms
+
+
+1.5.3 (2012-01-24)
+------------------
+
+- Adds lizard-security
+
+- Improves import script
+
+- Adds portal templates for use with lizard-portal
 
 
 1.5.2 (2012-01-19)

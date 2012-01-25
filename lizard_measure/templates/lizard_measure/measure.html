@@ -3,7 +3,7 @@
 {% load workspaces %}
 {% load utility %}
 
-{% block subtitle %} {{ measure.name }} {% endblock %}
+{% block subtitle %} {{ measure.title }} {% endblock %}
 
 {% block portal-tabs %}
 {{ block.super }}
@@ -13,12 +13,14 @@
 {% block sidebar %}
 <div class="sidebarbox">
   <h2>Kaart</h2>
+{% comment %}
   <a href="/">
   <img src="{% url lizard_krw.tiny_map waterbody_slug=measure.waterbody.slug %}"
        height="140"
        width="300"
        alt="geselecteerde waterlichaam"/>
   </a>
+{% endcomment %}
 </div>
 <div class="sidebarbox sidebarbox-stretched">
   <h2>
@@ -27,7 +29,7 @@
   <div>
     <dl>
       <dt>Maatregel</dt>
-      <dd><a href="{{ measure.get_absolute_url }}">{{ measure.name }}</a></dd>
+      <dd><a href="{{ measure.get_absolute_url }}">{{ measure.title }}</a></dd>
 
       {% if measure.description %}
       <dt>Beschrijving</dt>
@@ -54,7 +56,7 @@
       <dt>Bovenliggende maatregel</dt>
       <dd>
         <a href="{{ measure.parent.get_absolute_url }}">
-          {{ measure.parent.name }}
+          {{ measure.parent.title }}
         </a>
       </dd>
       {% endif %}
@@ -76,30 +78,38 @@
 {# Look up icon classes in http://www.ajaxbestiary.com/Labs/SilkSprite/ #}
 <span title="Werkt nog niet" class="notworking ss_sprite ss_printer">Printen</span> |
 <span title="Werkt nog niet" class="notworking ss_sprite ss_application_go">Exporteren</span> |
+{% comment %}
 <span class="ss_sprite ss_help"><a href="{% url help %}" target="_blank">Help</a></span>
+{% endcomment %}
 {% endblock %}
 
 
 {% block content %}
 <div id="textual">
-  <h2>Maatregel: {{ measure.name }}</h2>
+  <h2>Maatregel: {{ measure.title }}</h2>
   <div style="width: 100%; height: 130px;" class="img-use-my-size">
+{% comment %}
     <a href="{% url lizard_krw.measure_graph measure_id=measure.id %}" class="replace-with-image">
       afbeelding nog niet geladen
     </a>
+{% endcomment %}
   </div>
   <table class="generic-table">
     <tbody>
       <tr>
-        <th>Naam maatregel</th><td>{{ measure.name }}</td>
+        <th>Naam maatregel</th><td>{{ measure.title }}</td>
       </tr>
 
       <tr>
-        <th>Deelgebied</th><td>{{ measure.measure_collection.area_set.all|join:", " }}</td>
+        <th>Deelgebied</th><td>{{ measure.waterbodies.all|join:", " }}</td>
       </tr>
 
       <tr>
-        <th>Code</th><td>{% firstof measure.code '(geen code)' %}</td>
+        <th>Code</th><td>{% firstof measure.ident '(geen code)' %}</td>
+      </tr>
+
+      <tr>
+        <th>SGBP type</th><td>{{ measure.measure_type }}</td>
       </tr>
 
       <tr>
@@ -107,7 +117,11 @@
       </tr>
 
       <tr>
-        <th>Initiatiefnemer/uitvoerder</th><td>{{ measure.executive }}</td>
+        <th>Initiatiefnemer</th><td>{{ measure.initiator|default_if_none:"-" }}</td>
+      </tr>
+
+      <tr>
+        <th>Uitvoerder</th><td>{{ measure.executive|default_if_none:"-" }}</td>
       </tr>
 
       <tr>
@@ -139,11 +153,11 @@
         {% if status_moment %}
         <tr>
           <th>Status (geaggregeerd)</th>
-          <td>{{ status_moment.status }} (vanaf {{ status_moment.datetime }})</td>
+          <td>{{ status_moment.status }} (vanaf {{ status_moment.date }})</td>
         </tr>
         <tr>
           <th>Maatgevende maatregel</th>
-          <td>{{ status_moment.measure.name }}</td>
+          <td>{{ status_moment.measure.title }}</td>
         </tr>
         {% if status_moment.description %}
         <tr>
@@ -162,7 +176,7 @@
         {% if status_moment %}
         <tr>
           <th>Status (eigen)</th>
-          <td>{{ status_moment.status }} (vanaf {{ status_moment.datetime }})</td>
+          <td>{{ status_moment.status }} (vanaf {{ status_moment.date }})</td>
         </tr>
         {% if status_moment.description %}
         <tr>
@@ -183,7 +197,7 @@
         {% if status_moment %}
         <tr>
           <th>Planning (geaggregeerd)</th>
-          <td>{{ status_moment.status }} (vanaf {{ status_moment.datetime }})</td>
+          <td>{{ status_moment.status }} (vanaf {{ status_moment.date }})</td>
         </tr>
         {% if status_moment.description %}
         <tr>
@@ -212,7 +226,7 @@
       {% for funding_organization in measure.fundingorganization_set.all %}
       <tr>
         <td>
-          {{ measure.name }}
+          {{ measure.title }}
         </td>
         <td>
           {{ funding_organization.organization }}
@@ -222,11 +236,11 @@
         </td>
       </tr>
       {% endfor %}
-      {% for measure_part in measure.get_descendants %}
+      {% for measure_part in measure.get_parts %}
         {% for funding_organization in measure_part.fundingorganization_set.all %}
       <tr>
         <td>
-          {{ measure_part.name }}
+          {{ measure_part.title }}
         </td>
         <td>
           {{ funding_organization.organization }}

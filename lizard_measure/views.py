@@ -8,12 +8,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from django.http import HttpResponse
-from django.template import RequestContext
-from django.template import TemplateDoesNotExist
-from django.template import Template
 from django.template.loader import get_template
-
-
 
 # from django.views.decorators.cache import cache_page
 
@@ -60,24 +55,12 @@ CRUMB_HOMEPAGE = {'name': 'home', 'url': '/'}
 
 
 def measure_detail(request, measure_id,
-                   template='lizard_krw/measure.html'):
+                   template='lizard_measure/measure.html'):
     measure = get_object_or_404(Measure, pk=measure_id)
-
-    crumbs = [CRUMB_HOMEPAGE,
-              {'name': measure.waterbody.name,
-               'url': measure.waterbody.get_absolute_url()},
-              {'name': 'Maatregelen',
-               'url': reverse(
-                'lizard_krw.krw_waterbody_measures',
-                kwargs={'waterbody_slug': measure.waterbody.slug})},
-              {'name': measure.name,
-               'url': measure.get_absolute_url()}]
 
     return render_to_response(
         template,
-        {'measure': measure,
-         'crumbs': crumbs
-         },
+        {'measure': measure},
         context_instance=RequestContext(request))
 
 
@@ -120,13 +103,26 @@ def measure_detailedit_portal(request):
         t = get_template('portals/maatregelen_form.js')
         c = RequestContext(request, {
             'measure': Measure.objects.get(pk=measure_id),
-            'measure_types': json.dumps([{'id': r.id, 'name': str(r) } for r in MeasureType.objects.all()]),
-            'periods': json.dumps([{'id': r.id, 'name': str(r) } for r in MeasurePeriod.objects.all()]),
-            'aggregations': json.dumps([{'id': r[0], 'name': r[1] } for r in Measure.AGGREGATION_TYPE_CHOICES]),
-            'categories': json.dumps([{'id': r.id, 'name': str(r) } for r in MeasureCategory.objects.all()]),
-            'units': json.dumps([{'id': r.id, 'name': str(r) } for r in Unit.objects.all()])
-
-
+            'measure_types': json.dumps(
+                [{'id': r.id, 'name': str(r)}
+                 for r in MeasureType.objects.all()]
+            ),
+            'periods': json.dumps(
+                [{'id': r.id, 'name': str(r)}
+                 for r in MeasurePeriod.objects.all()]
+            ),
+            'aggregations': json.dumps(
+                [{'id': r[0], 'name': r[1]}
+                 for r in Measure.AGGREGATION_TYPE_CHOICES]
+            ),
+            'categories': json.dumps(
+                [{'id': r.id, 'name': str(r)}
+                 for r in MeasureCategory.objects.all()]
+            ),
+            'units': json.dumps(
+                [{'id': r.id, 'name': str(r)}
+                 for r in Unit.objects.all()]
+            ),
         })
 
     else:
@@ -145,17 +141,33 @@ def measure_groupedit_portal(request):
 
         t = get_template('portals/maatregelen-beheer.js')
         c = RequestContext(request, {
-            'measure_types': json.dumps([{'id': r.id, 'name': str(r) } for r in MeasureType.objects.all()]),
-            'periods': json.dumps([{'id': r.id, 'name': str(r) } for r in MeasurePeriod.objects.all()]),
-            'aggregations': json.dumps([{'id': r[0], 'name': r[1] } for r in Measure.AGGREGATION_TYPE_CHOICES]),
-            'categories': json.dumps([{'id': r.id, 'name': str(r) } for r in MeasureCategory.objects.all()]),
-            'units': json.dumps([{'id': r.id, 'name': str(r) } for r in Unit.objects.all()])
+            'measure_types': json.dumps(
+                [{'id': r.id, 'name': str(r)}
+                 for r in MeasureType.objects.all()],
+            ),
+            'periods': json.dumps(
+                [{'id': r.id, 'name': str(r)}
+                 for r in MeasurePeriod.objects.all()],
+            ),
+            'aggregations': json.dumps(
+                [{'id': r[0], 'name': r[1]}
+                 for r in Measure.AGGREGATION_TYPE_CHOICES],
+            ),
+            'categories': json.dumps(
+                [{'id': r.id, 'name': str(r)}
+                 for r in MeasureCategory.objects.all()],
+            ),
+            'units': json.dumps(
+                [{'id': r.id, 'name': str(r)}
+                 for r in Unit.objects.all()],
+            ),
         })
 
     else:
         t = get_template('portals/geen_toegang.js')
 
     return HttpResponse(t.render(c),  mimetype="text/plain")
+
 
 def organization_groupedit_portal(request):
     """
