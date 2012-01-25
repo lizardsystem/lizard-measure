@@ -5,6 +5,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import simplejson
+from django.template.defaultfilters import slugify
 # from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.auth.models import User
 from lxml import etree
@@ -15,6 +16,7 @@ import os
 from lizard_area.models import Area
 from lizard_area.models import DataAdministrator
 
+from lizard_geo.models import GeoObjectGroup
 
 from lizard_measure.models import KRWStatus
 from lizard_measure.models import KRWWatertype
@@ -204,27 +206,66 @@ def import_measure_types(filename):
             measure_type.units.add(unit_obj)
 
 
-def import_waterbodies(filename, user, data_administrator):
-#   geo_object_group_name = ('measure::waterbody::%s' %
-#                            os.path.basename(filename))
-#   try:
-#       print 'Finding existing geo object group...'
-#       geo_object_group = GeoObjectGroup.objects.get(
-#           name=geo_object_group_name)
-#       print 'Deleting existing geo object group...'
-#       geo_object_group.delete()
-#   except GeoObjectGroup.DoesNotExist:
-#       pass
+def import_waterbodies(wb_import_settings):
+    """
+    Create geoobjects and waterbodies.
+    """
+    import pprint
+    pprint.pprint(wb_import_settings)
+    owmsources = wb_import_settings['owm_sources']
+    owmsourcefiles = [s['file'] for s in owmsources] 
 
-    # Create geoobject group
-#   geo_object_group = GeoObjectGroup(
-#       name=geo_object_group_name,
-#       slug=slugify(os.path.basename(filename).split('.')[-2]),
-#       created_by=user,
-#   )
-#   geo_object_group.save()
+    # Reset geo object groups
+    for s in wb_import_settings['owm_sources']:
+        # Determine geoobject group name
+        geo_object_group_name = ('measure::waterbody::%s' %
+                                 os.path.basename(s['file']))
+        
+        # Remove geoobject group by name if it exists
+        try:
+            print 'Finding existing geo object group...'
+            geo_object_group = GeoObjectGroup.objects.get(
+                name=geo_object_group_name)
+            print 'Deleting existing geo object group...'
+            geo_object_group.delete()
+        except GeoObjectGroup.DoesNotExist:
+            pass
 
-    for rec in _records(filename):
+        # Create new geoobject group with that name
+        geo_object_group = GeoObjectGroup(
+            name=geo_object_group_name,
+            slug=slugify(os.path.basename(s['file']).split('.')[-2]),
+            created_by=s['user'],
+        )
+        geo_object_group.save()
+
+
+    # Make a list of all owmidents needed
+    owmidents_needed = set()
+    for filename in owmsourcefiles:
+        for rec in _records(filename):
+            owmidents_needed.add(rec['owmident'].strip())
+
+
+    # Make a list of all idents already in the system.
+    owmidents_present = set([area.ident for area in Area.objects.all()])
+
+    # Make a mapping of owmidents to sets of owaidents
+    # There are multiple owaidents per owmident
+    owaidents = {}
+    for rec in _records(wb_import_settings['link_file']):
+        owm = rec['owmident']
+        owa = rec['owaident']
+        if owm not in owaidents:
+            owaidents[owm] = []
+        owaidents[owm].append(owa)
+
+    # Loop geofile, create geometry object for each geometry
+
+
+
+
+
 
         # Get or create Area
 #       ident = rec['owmident'].strip()
@@ -255,21 +296,21 @@ def import_waterbodies(filename, user, data_administrator):
 #       )
 
         # Try to get Area
-        area_ident = rec['owmident'].strip()
-        area = _area_or_none(area_ident)
+#       area_ident = rec['owmident'].strip()
+#       area = _area_or_none(area_ident)
 
-        # Create WaterBody
-        krw_status = KRWStatus.objects.get(code=rec['owmstat'].strip())
-        krw_watertype = KRWWatertype.objects.get(code=rec['owmtype'].strip())
-        waterbody, waterbody_created = _get_or_create(
-            model=WaterBody,
-            get_kwargs={'area_ident': area_ident},
-            extra_kwargs={
-                'area': area,
-                'krw_status': krw_status,
-                'krw_watertype': krw_watertype,
-            },
-        )
+#       # Create WaterBody
+#       krw_status = KRWStatus.objects.get(code=rec['owmstat'].strip())
+#       krw_watertype = KRWWatertype.objects.get(code=rec['owmtype'].strip())
+#       waterbody, waterbody_created = _get_or_create(
+#           model=WaterBody,
+#           get_kwargs={'area_ident': area_ident},
+#           extra_kwargs={
+#               'area': area,
+#               'krw_status': krw_status,
+#               'krw_watertype': krw_watertype,
+#           },
+#       )
 
 
 def import_measuring_rods(filename):
@@ -494,14 +535,6 @@ class Command(BaseCommand):
         # Import Lookups
         import_KRW_lookup(os.path.join(import_path, 'KRW_lookup.xml'))
 
-        # Maatregeltypes (SGBP)
-        import_measure_types(
-            filename=os.path.join(
-                import_path,
-                'maatregelstandaard.xml',
-            ),
-        )
-
         # Waterbodies
         owm_sources = [
             ('HHNK', 'owmhhnk.xml'),
@@ -509,32 +542,52 @@ class Command(BaseCommand):
             ('Rijnland', 'owmrijnland.xml'),
         ]
 
-        for admin_name, xml_file in owm_sources:
-            administrator = DataAdministrator.objects.get(name=admin_name)
-            import_waterbodies(
-                filename=os.path.join(import_path, xml_file),
-                user=user,
-                data_administrator=administrator,
+        wb_import_settings = {
+            'geometry_file': os.path.join(import_path, 'owageovlakken.xml'),
+            'link_file': os.path.join(import_path, 'owa.xml'),
+            'owm_sources': [],
+        }
+
+        for data_administrator_name, xml_file in owm_sources:
+            print data_administrator_name
+            data_administrator = DataAdministrator.objects.get(
+                name=data_administrator_name,
             )
+            wb_import_settings['owm_sources'].append({
+                'data_administrator': data_administrator,
+                'user': user,
+                'file': os.path.join(import_path, xml_file),
+            })
+        
+        import_waterbodies(wb_import_settings=wb_import_settings)
 
-        # Import MeasuringRods
-        import_measuring_rods(
-            # Using corrected maatlatten, see readme.RST in xmldir.
-            os.path.join(import_path, 'maatlatten_corrected.xml'),
-        )
+#       # Maatregeltypes (SGBP)
+#       import_measure_types(
+#           filename=os.path.join(
+#               import_path,
+#               'maatregelstandaard.xml',
+#           ),
+#       )
 
-        # Import scores
-        Score.objects.all().delete()
-        score_sources = [
-            'doelenhhnk.xml',
-            'doelenrijnland.xml',
-            'doelenwaternet.xml',
-        ]
 
-        for xml_file in score_sources:
-            import_scores(
-                filename=os.path.join(import_path, xml_file),
-            )
+#       # Import MeasuringRods
+#       import_measuring_rods(
+#           # Using corrected maatlatten, see readme.RST in xmldir.
+#           os.path.join(import_path, 'maatlatten_corrected.xml'),
+#       )
 
-        # Import measures
-        import_measures(os.path.join(import_path, 'maatregelen.xml'))
+#       # Import scores
+#       Score.objects.all().delete()
+#       score_sources = [
+#           'doelenhhnk.xml',
+#           'doelenrijnland.xml',
+#           'doelenwaternet.xml',
+#       ]
+
+#       for xml_file in score_sources:
+#           import_scores(
+#               filename=os.path.join(import_path, xml_file),
+#           )
+
+#       # Import measures
+#       import_measures(os.path.join(import_path, 'maatregelen.xml'))
