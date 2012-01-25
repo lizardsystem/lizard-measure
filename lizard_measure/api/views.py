@@ -81,8 +81,6 @@ class MeasureView(BaseApiView):
     Area configuration.
     """
     model_class = Measure
-    valid_field = 'deleted'
-    valid_value = False
 
     def get_funding_organisations(self, measure):
         """

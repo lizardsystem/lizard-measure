@@ -758,7 +758,7 @@ class Measure(models.Model):
     )
 
     valid = models.NullBooleanField(
-        default=False
+        default=True
     )
 
     is_KRW_measure = models.NullBooleanField(
