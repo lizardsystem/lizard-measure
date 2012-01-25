@@ -5,7 +5,9 @@ Changelog of lizard-measure
 1.5.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- added doelen-beheer
+
+- improved api and measure forms
 
 
 1.5.2 (2012-01-19)
