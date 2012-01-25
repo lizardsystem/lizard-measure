@@ -6,7 +6,7 @@
     trackResetOnLoad: true,
     bodyPadding: '10 25 10 10',//padding on the right side 25 for scrollbar
     height: '100%',
-    url: '/measure/api/measure/?_accept=application/json&action=update',
+    url: '/measure/api/measure/?_accept=application/json&include_geom=true&action=update',
     loadProxy: {
         url: '/measure/api/measure/',
         type: 'ajax',
@@ -16,6 +16,7 @@
           type: 'json'
         },
         params: {
+            include_geom: true,
             flat: false,
             _accept: 'application/json',
             object_id: {{ measure.id }}
@@ -46,6 +47,25 @@
             anchor: '100%',
             xtype: 'textfield',
             allowBlank: false
+        },
+        {
+            fieldLabel: 'Onderdeel van maatregel',
+            name: 'parent',
+            displayField: 'name',
+            valueField: 'id',
+            xtype: 'combodict',
+            forceSelection: false,
+            store: {
+                fields: ['id', 'name'],
+                proxy: {
+                    type: 'ajax',
+                    url: '/measure/api/measure/?_accept=application%2Fjson&query=parent:None&size=id_name',
+                    reader: {
+                        type: 'json',
+                        root: 'data'
+                    }
+                }
+            }
         },
         {
             fieldLabel: 'KRW maatregel',
@@ -212,7 +232,7 @@
                     fields: ['id', 'name'],
                     proxy: {
                         type: 'ajax',
-                        url: '/measure/api/organization/?_accept=application%2Fjson',
+                        url: '/measure/api/organization/?_accept=application%2Fjson&size=id_name',
                         reader: {
                             type: 'json',
                             root: 'data'
@@ -237,7 +257,7 @@
                     fields: ['id', 'name'],
                     proxy: {
                         type: 'ajax',
-                        url: '/measure/api/organization/?_accept=application%2Fjson',
+                        url: '/measure/api/organization/?_accept=application%2Fjson&size=id_name',
                         reader: {
                             type: 'json',
                             root: 'data'
@@ -292,7 +312,7 @@
                     ],
                     proxy: {
                         type: 'ajax',
-                        url: '/measure/api/organization/?_accept=application%2Fjson',
+                        url: '/measure/api/organization/?_accept=application%2Fjson&size=id_name',
                         reader: {
                             type: 'json',
                             root: 'data'
@@ -324,7 +344,7 @@
                     ],
                     proxy: {
                         type: 'ajax',
-                        url: '/area/api/catchment-areas/?node=root&_accept=application%2Fjson&id=id',
+                        url: '/area/api/catchment-areas/?node=root&_accept=application%2Fjson&size=id_name',
                         reader: {
                             type: 'json',
                             root: 'areas'
@@ -344,7 +364,7 @@
                     ],
                     proxy: {
                         type: 'ajax',
-                        url: '/area/api/krw-areas/?node=root&_accept=application%2Fjson&id=id',
+                        url: '/area/api/krw-areas/?node=root&_accept=application%2Fjson&size=id_name',
                         reader: {
                             type: 'json',
                             root: 'areas'
@@ -371,7 +391,7 @@
                 anchor: '100%'
             },
             items :[
-           {
+            {
                 fieldLabel: 'Alleen lezen',
                 name: 'read_only',
                 xtype: 'displayfield'
@@ -389,37 +409,6 @@
             }
             ]
         }
-        /*,{
-            xtype: 'tableforform',//iets van een tabel. setValue, getValue. combine with defaults
-            fieldLabel: 'Status planning en realisatie',
-            name: 'status_moments',
-            default_rows: [{
-
-            }],
-            fields: [{
-                text: 'id',
-                mapping: 'status_moment_id',
-                width:'200'
-            }, {
-                text: 'status',
-                mapping: 'status_moment_name',
-            }, {
-                text: 'p_id',
-                mapping: 'planning_id',
-            }, {
-                text: 'r_id',
-                mapping: 'realisation_id',
-            }, {
-                text: 'planning',
-                mapping: 'planning_date',
-            }, {
-                text: 'gerealiseerd',
-                mapping: 'realisation_date',
-            }
-             ]
-
-        }*/
-
     ],
     buttons:[
     {

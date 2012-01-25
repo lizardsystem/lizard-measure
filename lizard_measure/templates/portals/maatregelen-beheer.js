@@ -39,7 +39,9 @@
             //proxyUrl: '/portal/wbstructures.json',
             proxyUrl: '/measure/api/measure/',
             proxyParams: {
-                flat: false
+                flat: false,
+                size: 'small',
+                include_geom: false
             },
             addEditIcon: true,
             addDeleteIcon: true,
@@ -74,12 +76,9 @@
                 {name: 'title', title: 'titel', editable: true, visible: true, width: 200, type: 'text'},
                 {name: 'is_KRW_measure', title: 'KRW maatregel', editable: true, visible: true, width: 100, type: 'boolean'},//automatisch aanmaken
                 {name: 'is_indicator', title: 'focus maatregel', editable: true, visible: true, width: 100, type: 'boolean'},
-
+                {name: 'parent', title: 'onderdeel van', editable: false, visible: true, width: 75, type: 'combo'},
                 {name: 'measure_type', title: 'maatregeltype', editable: true, visible: true, width: 150, type: 'combo', choices: Ext.JSON.decode({% autoescape off %}'{{ measure_types }}'{% endautoescape %})},//todo: voeg choices to vanuit model
                 {name: 'period', title: 'periode', editable: true, visible: true, width: 100, type: 'combo', choices: Ext.JSON.decode({% autoescape off %}'{{ periods }}'{% endautoescape %})},//todo: voeg choices to vanuit model
-
-                {name: 'aggregation_type', title: 'aggregatie', editable: true, visible: true, width: 75, type: 'combo', choices: Ext.JSON.decode({% autoescape off %}'{{ aggregations }}'{% endautoescape %})},
-                //{name: 'description', title: 'beschrijving', editable: true, visible: false, width: 250, type: 'text'},
                 {name: 'categories', title: 'categorie', editable: false, visible: true, width: 150, type: 'combo', multiSelect: true, choices: Ext.JSON.decode({% autoescape off %}'{{ categories }}'{% endautoescape %})},
                 {name: 'value', title: 'waarde', editable: true, visible: true, width: 75, type: 'number'},
                 {name: 'unit', title: 'eenheid', editable: true, visible: true, width: 75, type: 'combo', choices: Ext.JSON.decode({% autoescape off %}'{{ units }}'{% endautoescape %})},

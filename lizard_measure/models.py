@@ -147,7 +147,7 @@ class WaterBody(models.Model):
         if self.area is None:
             return 'area_ident: %s (No geometry)' % self.area_ident
         else:
-            return u'%s' % (self.area.name)
+            return u'%s' % self.area.name
 
 
 class MeasuringRod(models.Model):
@@ -291,7 +291,7 @@ class MeasureCategory(models.Model):
         verbose_name_plural = _("Measure categories")
 
     def __unicode__(self):
-        return u'%s' % (self.name)
+        return u'%s' % self.name
 
 
 class Unit(models.Model):
@@ -871,7 +871,7 @@ class Measure(models.Model):
 
     @property
     def shortname(self):
-        return short_string(self.name, 17)
+        return short_string(self.title, 17)
 
     def get_geometry_wkt_string(self):
         """
@@ -982,11 +982,9 @@ class Measure(models.Model):
                 del existing_links[organization['id']]
             else:
                 #create new
-                obj = self.fundingorganization_set.create(
+                self.fundingorganization_set.create(
                     organization=Organization.objects.get(pk=organization['id']),
                     percentage=organization['percentage'])
-                #obj.save()
-
 
         #remove existing links, that are not anymore
         for funding_org in existing_links.itervalues():
