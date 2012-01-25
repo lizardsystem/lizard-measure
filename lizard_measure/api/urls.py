@@ -6,6 +6,7 @@ from django.contrib import admin
 from lizard_measure.api.views import RootView
 from lizard_measure.api.views import MeasureView
 from lizard_measure.api.views import OrganizationView
+from lizard_measure.api.views import ScoreView
 
 admin.autodiscover()
 
@@ -22,4 +23,10 @@ urlpatterns = patterns(
     url(r'^organization/$',
         OrganizationView.as_view(),
         name=NAME_PREFIX + 'organization'),
+    url(r'^score/$',
+        ScoreView.as_view(),
+        name=NAME_PREFIX + 'score'),
     )
+
+
+

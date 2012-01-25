@@ -14,14 +14,25 @@ LOGGING = setup_logging(BUILDOUT_DIR)
 
 DEBUG = True
 TEMPLATE_DEBUG = True
-DATABASE_ENGINE = 'sqlite3'
-DATABASE_NAME = 'test.db'
+DATABASES = {
+    'default': {
+        'NAME': 'measure',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'USER': 'buildout',
+        'PASSWORD': 'buildout',
+        'HOST': '127.0.0.1',  # empty string for localhost.
+        'PORT': '',  # empty string for default.
+        }
+    }
 SITE_ID = 1
 INSTALLED_APPS = [
     'south',
-    'lizard_measure',
     'lizard_map',
     'lizard_ui',
+    'lizard_security',
+    'lizard_geo',
+    'lizard_area',
+    'lizard_measure',
     'django_extensions',
     'staticfiles',
     'compressor',
@@ -49,6 +60,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'staticfiles.context_processors.static_url',
     )
 
+SOUTH_TESTS_MIGRATE = False
 
 try:
     # Import local settings that aren't stored in svn.

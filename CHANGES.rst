@@ -2,7 +2,15 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.5.3 (unreleased)
+1.5.4 (unreleased)
+------------------
+
+- added doelen-beheer
+
+- improved api and measure forms
+
+
+1.5.3 (2012-01-24)
 ------------------
 
 - Adds lizard-security
