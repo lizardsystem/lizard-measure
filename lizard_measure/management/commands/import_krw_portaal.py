@@ -259,7 +259,10 @@ def import_waterbodies(wb_import_settings):
     owa_geometry = {}
     for f in wb_import_settings['geometry_files']:
         for rec in _records(f):
-            owa_geometry[rec['owaident']] = GEOSGeometry(rec['wkb_geometry'])
+            owa_geometry[rec['owaident']] = GEOSGeometry(
+                rec['wkb_geometry'],
+                srid=28992,
+            ).transform(4326, clone=True)
 
     # Go through the owm files, to get or create the corresponding areas
     for s in owmsources:
