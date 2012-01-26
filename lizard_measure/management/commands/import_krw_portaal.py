@@ -212,7 +212,6 @@ def import_waterbodies(wb_import_settings):
     Create geoobjects and waterbodies.
     """
     owmsources = wb_import_settings['owm_sources']
-    owmsourcefiles = [s['file'] for s in owmsources] 
 
     # Reset geo object groups
     geogroups = {}
@@ -220,7 +219,7 @@ def import_waterbodies(wb_import_settings):
         # Determine geoobject group name
         geo_object_group_name = ('measure::waterbody::%s' %
                                  os.path.basename(s['file']))
-        
+
         # Remove geoobject group by name if it exists
         try:
             print 'Finding existing geoobject group named %s' % (
@@ -267,7 +266,7 @@ def import_waterbodies(wb_import_settings):
         for rec in _records(s['file']):
             owm_ident = rec['owmident'].strip()
             # Get or create area
-            try: 
+            try:
                 area = Area.objects.get(ident=owm_ident)
             except Area.DoesNotExist:
                 owa_geometries = [owa_geometry[owa_ident]
@@ -288,10 +287,11 @@ def import_waterbodies(wb_import_settings):
                 )
                 area.save()
 
-
             # Create WaterBody
             krw_status = KRWStatus.objects.get(code=rec['owmstat'].strip())
-            krw_watertype = KRWWatertype.objects.get(code=rec['owmtype'].strip())
+            krw_watertype = KRWWatertype.objects.get(
+                code=rec['owmtype'].strip()
+            )
             waterbody, waterbody_created = _get_or_create(
                 model=WaterBody,
                 get_kwargs={'area_ident': area.ident},
@@ -550,7 +550,7 @@ class Command(BaseCommand):
                 'user': user,
                 'file': os.path.join(import_path, xml_file),
             })
-        
+
         import_waterbodies(wb_import_settings=wb_import_settings)
 
         # Maatregeltypes (SGBP)
@@ -560,7 +560,6 @@ class Command(BaseCommand):
                 'maatregelstandaard.xml',
             ),
         )
-
 
         # Import MeasuringRods
         import_measuring_rods(

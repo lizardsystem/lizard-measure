@@ -17,6 +17,7 @@ class RootView(View):
             "measure": reverse("lizard_measure_api_measure"),
             }
 
+
 class ScoreView(BaseApiView):
     """
     Show organisations for selection and edit
@@ -24,19 +25,26 @@ class ScoreView(BaseApiView):
     #todo: add waarde optioneel
     model_class = Score
 
-    def get_object_for_api(self, score, flat=True, size=BaseApiView.COMPLETE, include_geom=False):
+    def get_object_for_api(self,
+                           score,
+                           flat=True,
+                           size=BaseApiView.COMPLETE,
+                           include_geom=False):
         """
             create object of measure
         """
         output = {
-            'id':score.id,
+            'id': score.id,
             'mep': score.mep,
             'gep': score.gep,
             'limit_insufficient_moderate': score.limit_insufficient_moderate,
             'limit_bad_insufficient': score.limit_bad_insufficient,
             'target_2015': score.target_2015,
             'target_2027': score.target_2027,
-            'measuring_rod': self._get_related_object(score.measuring_rod, flat),
+            'measuring_rod': self._get_related_object(
+                score.measuring_rod,
+                flat,
+            ),
             'area': self._get_related_object(score.area, flat),
         }
         return output
@@ -58,12 +66,12 @@ class OrganizationView(BaseApiView):
         """
         if size == self.ID_NAME:
             output = {
-                'id':org.id,
+                'id': org.id,
                 'name': org.description,
             }
         else:
             output = {
-                'id':org.id,
+                'id': org.id,
                 'code': org.code,
                 'description': org.description,
                 'group': org.group,
@@ -106,13 +114,13 @@ class MeasureView(BaseApiView):
 
         if size == self.ID_NAME:
             output = {
-                'id':measure.id,
+                'id': measure.id,
                 'name': measure.title,
             }
 
         if size >= self.SMALL:
             output = {
-                'id':measure.id,
+                'id': measure.id,
                 'ident': measure.ident,
                 'title': measure.title,
                 'is_KRW_measure': measure.is_KRW_measure,
@@ -129,14 +137,20 @@ class MeasureView(BaseApiView):
                 ),
                 'period': self._get_related_object(measure.period, flat),
                 'unit': self._get_related_object(measure.unit, flat),
-                'categories': self._get_related_objects(measure.categories, flat),
+                'categories': self._get_related_objects(
+                    measure.categories,
+                    flat,
+                ),
                 'initiator': self._get_related_object(
                     measure.initiator,
                     flat
                 ),
                 'executive': self._get_related_object(measure.executive, flat),
                 'areas': self._get_related_objects(measure.areas, flat),
-                'waterbodies': self._get_related_objects(measure.waterbodies, flat),
+                'waterbodies': self._get_related_objects(
+                    measure.waterbodies,
+                    flat,
+                ),
                 'parent': self._get_related_object(
                     measure.parent,
                     flat
@@ -195,4 +209,3 @@ class MeasureView(BaseApiView):
                 model_field,
                 linked_records,
             )
-

@@ -27,6 +27,3 @@ urlpatterns = patterns(
         ScoreView.as_view(),
         name=NAME_PREFIX + 'score'),
     )
-
-
-
