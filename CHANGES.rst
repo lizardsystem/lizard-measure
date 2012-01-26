@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.5.6 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Adjusts krw portal import script to use owa geometries.
 
 
 1.5.5 (2012-01-13)

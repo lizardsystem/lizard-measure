@@ -6,7 +6,8 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import simplejson
 from django.template.defaultfilters import slugify
-# from django.contrib.gis.geos import GEOSGeometry
+from django.contrib.gis.geos import GEOSGeometry
+from django.contrib.gis.geos import GeometryCollection
 from django.contrib.auth.models import User
 from lxml import etree
 
@@ -210,12 +211,11 @@ def import_waterbodies(wb_import_settings):
     """
     Create geoobjects and waterbodies.
     """
-    import pprint
-    pprint.pprint(wb_import_settings)
     owmsources = wb_import_settings['owm_sources']
     owmsourcefiles = [s['file'] for s in owmsources] 
 
     # Reset geo object groups
+    geogroups = {}
     for s in wb_import_settings['owm_sources']:
         # Determine geoobject group name
         geo_object_group_name = ('measure::waterbody::%s' %
@@ -223,10 +223,14 @@ def import_waterbodies(wb_import_settings):
         
         # Remove geoobject group by name if it exists
         try:
-            print 'Finding existing geo object group...'
+            print 'Finding existing geoobject group named %s' % (
+                geo_object_group_name,
+            )
             geo_object_group = GeoObjectGroup.objects.get(
                 name=geo_object_group_name)
-            print 'Deleting existing geo object group...'
+            print 'Deleting existing geoobject group named %s' % (
+                geo_object_group_name,
+            )
             geo_object_group.delete()
         except GeoObjectGroup.DoesNotExist:
             pass
@@ -239,78 +243,64 @@ def import_waterbodies(wb_import_settings):
         )
         geo_object_group.save()
 
-
-    # Make a list of all owmidents needed
-    owmidents_needed = set()
-    for filename in owmsourcefiles:
-        for rec in _records(filename):
-            owmidents_needed.add(rec['owmident'].strip())
-
-
-    # Make a list of all idents already in the system.
-    owmidents_present = set([area.ident for area in Area.objects.all()])
+        # Keep a dict of geo_object_groups for later assignment
+        geogroups[s['data_administrator'].name] = geo_object_group
 
     # Make a mapping of owmidents to sets of owaidents
     # There are multiple owaidents per owmident
-    owaidents = {}
+    owa_idents = {}
     for rec in _records(wb_import_settings['link_file']):
         owm = rec['owmident']
         owa = rec['owaident']
-        if owm not in owaidents:
-            owaidents[owm] = []
-        owaidents[owm].append(owa)
+        if owm not in owa_idents:
+            owa_idents[owm] = []
+        owa_idents[owm].append(owa)
 
     # Loop geofile, create geometry object for each geometry
+    owa_geometry = {}
+    for f in wb_import_settings['geometry_files']:
+        for rec in _records(f):
+            owa_geometry[rec['owaident']] = GEOSGeometry(rec['wkb_geometry'])
+
+    # Go through the owm files, to get or create the corresponding areas
+    for s in owmsources:
+        for rec in _records(s['file']):
+            owm_ident = rec['owmident'].strip()
+            # Get or create area
+            try: 
+                area = Area.objects.get(ident=owm_ident)
+            except Area.DoesNotExist:
+                owa_geometries = [owa_geometry[owa_ident]
+                                  for owa_ident in owa_idents[owm_ident]]
+                area = Area(
+                    # Fields from GeoObject
+                    ident=owm_ident,
+                    geometry=GeometryCollection(owa_geometries),
+                    geo_object_group=geogroups[s['data_administrator'].name],
+                    # Fields from Area
+                    area_class=Area.AREA_CLASS_KRW_WATERLICHAAM,
+                    data_administrator=s['data_administrator'],
+                    parent=None,
+                    # Fields from Communique
+                    name=rec['owmnaam'].strip(),
+                    code=None,
+                    description='',
+                )
+                area.save()
 
 
-
-
-
-
-        # Get or create Area
-#       ident = rec['owmident'].strip()
-#       geometry = GEOSGeometry('POINT(0 0)')  # Dummy geometry
-
-#       # Fields from Communique
-#       name = rec['owmnaam'].strip()
-#       code = None
-#       description = ''  # Check this one. I thought there was a description.
-
-#       # Fields from Area
-#       parent = None
-#       data_administrator=data_administrator
-#       area_class = Area.AREA_CLASS_KRW_WATERLICHAAM,
-#       area, area_created = _get_or_create(
-#           model=Area,
-#           get_kwargs={'ident': ident},
-#           extra_kwargs={
-#               'geometry': geometry,
-#               'geo_object_group': geo_object_group,
-#               'name': name,
-#               'code': code,
-#               'description': description,
-#               'parent': parent,
-#               'data_administrator': data_administrator,
-#               'area_class': Area.AREA_CLASS_KRW_WATERLICHAAM,
-#           },
-#       )
-
-        # Try to get Area
-#       area_ident = rec['owmident'].strip()
-#       area = _area_or_none(area_ident)
-
-#       # Create WaterBody
-#       krw_status = KRWStatus.objects.get(code=rec['owmstat'].strip())
-#       krw_watertype = KRWWatertype.objects.get(code=rec['owmtype'].strip())
-#       waterbody, waterbody_created = _get_or_create(
-#           model=WaterBody,
-#           get_kwargs={'area_ident': area_ident},
-#           extra_kwargs={
-#               'area': area,
-#               'krw_status': krw_status,
-#               'krw_watertype': krw_watertype,
-#           },
-#       )
+            # Create WaterBody
+            krw_status = KRWStatus.objects.get(code=rec['owmstat'].strip())
+            krw_watertype = KRWWatertype.objects.get(code=rec['owmtype'].strip())
+            waterbody, waterbody_created = _get_or_create(
+                model=WaterBody,
+                get_kwargs={'area_ident': area.ident},
+                extra_kwargs={
+                    'area': area,
+                    'krw_status': krw_status,
+                    'krw_watertype': krw_watertype,
+                },
+            )
 
 
 def import_measuring_rods(filename):
@@ -543,13 +533,15 @@ class Command(BaseCommand):
         ]
 
         wb_import_settings = {
-            'geometry_file': os.path.join(import_path, 'owageovlakken.xml'),
+            'geometry_files': [
+                os.path.join(import_path, 'owageovlakken.xml'),
+                os.path.join(import_path, 'owageolijnen.xml'),
+            ],
             'link_file': os.path.join(import_path, 'owa.xml'),
             'owm_sources': [],
         }
 
         for data_administrator_name, xml_file in owm_sources:
-            print data_administrator_name
             data_administrator = DataAdministrator.objects.get(
                 name=data_administrator_name,
             )
@@ -561,33 +553,33 @@ class Command(BaseCommand):
         
         import_waterbodies(wb_import_settings=wb_import_settings)
 
-#       # Maatregeltypes (SGBP)
-#       import_measure_types(
-#           filename=os.path.join(
-#               import_path,
-#               'maatregelstandaard.xml',
-#           ),
-#       )
+        # Maatregeltypes (SGBP)
+        import_measure_types(
+            filename=os.path.join(
+                import_path,
+                'maatregelstandaard.xml',
+            ),
+        )
 
 
-#       # Import MeasuringRods
-#       import_measuring_rods(
-#           # Using corrected maatlatten, see readme.RST in xmldir.
-#           os.path.join(import_path, 'maatlatten_corrected.xml'),
-#       )
+        # Import MeasuringRods
+        import_measuring_rods(
+            # Using corrected maatlatten, see readme.RST in xmldir.
+            os.path.join(import_path, 'maatlatten_corrected.xml'),
+        )
 
-#       # Import scores
-#       Score.objects.all().delete()
-#       score_sources = [
-#           'doelenhhnk.xml',
-#           'doelenrijnland.xml',
-#           'doelenwaternet.xml',
-#       ]
+        # Import scores
+        Score.objects.all().delete()
+        score_sources = [
+            'doelenhhnk.xml',
+            'doelenrijnland.xml',
+            'doelenwaternet.xml',
+        ]
 
-#       for xml_file in score_sources:
-#           import_scores(
-#               filename=os.path.join(import_path, xml_file),
-#           )
+        for xml_file in score_sources:
+            import_scores(
+                filename=os.path.join(import_path, xml_file),
+            )
 
-#       # Import measures
-#       import_measures(os.path.join(import_path, 'maatregelen.xml'))
+        # Import measures
+        import_measures(os.path.join(import_path, 'maatregelen.xml'))
