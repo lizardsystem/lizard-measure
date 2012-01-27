@@ -7,7 +7,10 @@ from django.db import transaction
 from django.utils import simplejson
 from django.template.defaultfilters import slugify
 from django.contrib.gis.geos import GEOSGeometry
-from django.contrib.gis.geos import GeometryCollection
+from django.contrib.gis.geos import LineString
+from django.contrib.gis.geos import MultiLineString
+from django.contrib.gis.geos import Polygon
+from django.contrib.gis.geos import MultiPolygon
 from django.contrib.auth.models import User
 from lxml import etree
 
@@ -131,6 +134,57 @@ def _dates_from_xml(description):
     start_date = datetime.date(year=start_year, month=1, day=1)
     end_date = datetime.date(year=end_year, month=1, day=1)
     return start_date, end_date
+
+
+def _union(geometries):
+    """
+    Return single geometry or None
+
+    Only works on geometries of same type
+    """
+    if not geometries:
+        return None
+    elif len(geometries) == 1:
+        return geometries[0]
+    print 'computing union'
+    return reduce(
+        lambda x, y: x.union(y),
+        geometries,
+    )
+
+    
+def _combine(geometries):
+    """
+    Try to combine geometries with least computing power necessary.
+    
+    
+    Lines only get buffered when they need to be combined with
+    polygons. Assumes that there is at least one geometry in the list
+    """
+    if len(geometries) == 1:
+        return geometries[0]
+
+    lines = [g for g in geometries
+             if isinstance(g, (LineString))]
+    multilines = [g for g in geometries
+             if isinstance(g, (MultiLineString))]
+    polygons = [g for g in geometries
+                if isinstance(g, (Polygon))]
+    multipolygons = [g for g in geometries
+                if isinstance(g, (MultiPolygon))]
+
+    import pdb; pdb.set_trace() 
+    multilines.append(MultiLineString(lines))
+    multipolygons.append(MultiPolygon(polygons))
+
+    multipolygon = _union(multipolygons)
+    multiline = _union(multilines)
+
+    # combine using buffer:
+    print 'computing buffer'
+    buf = multiline.buffer(0.01, 4)
+    print 'computing master union'
+    return buf.union(multipolygon)
 
 
 def import_KRW_lookup(filename):
@@ -259,14 +313,19 @@ def import_waterbodies(wb_import_settings):
     owa_geometry = {}
     for f in wb_import_settings['geometry_files']:
         for rec in _records(f):
-            owa_geometry[rec['owaident']] = GEOSGeometry(
+            geometry = GEOSGeometry(
                 rec['wkb_geometry'],
                 srid=28992,
-            ).transform(4326, clone=True)
+            )
+            geometry.transform(4326)
+            owa_geometry[rec['owaident']] = geometry
 
     # Go through the owm files, to get or create the corresponding areas
+    lijstje = open('/home/arjan/lijstje.csv', 'w')
     for s in owmsources:
         for rec in _records(s['file']):
+            lijstje.write('"' + rec['owmident'].strip() + '"' + ',' +
+                          '"' + rec['owmnaam'].strip() + '"' + '\n')
             owm_ident = rec['owmident'].strip()
             # Get or create area
             try:
@@ -277,7 +336,7 @@ def import_waterbodies(wb_import_settings):
                 area = Area(
                     # Fields from GeoObject
                     ident=owm_ident,
-                    geometry=GeometryCollection(owa_geometries),
+                    geometry=_combine(owa_geometries),
                     geo_object_group=geogroups[s['data_administrator'].name],
                     # Fields from Area
                     area_class=Area.AREA_CLASS_KRW_WATERLICHAAM,
@@ -304,7 +363,7 @@ def import_waterbodies(wb_import_settings):
                     'krw_watertype': krw_watertype,
                 },
             )
-
+    lijstje.close()
 
 def import_measuring_rods(filename):
     for rec in _records(filename):

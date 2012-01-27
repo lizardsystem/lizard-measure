@@ -7,20 +7,20 @@ prerequisites on the model:
 - Model should define a classmethod 'get_synchronizer'
   that returns a configured Synchronizer object, for example:
 
-    @classmethod
-    def get_synchronizer(cls):
-        fields = [
-            SyncField(source='Code', destination='code', match=True),
-            SyncField(source='Omschrijving', destination='description'),
-        ]
+#   @classmethod
+#   def get_synchronizer(cls):
+#       fields = [
+#           SyncField(source='Code', destination='code', match=True),
+#           SyncField(source='Omschrijving', destination='description'),
+#       ]
 
-        sources = [SyncSource(
-                            model=cls,
-                            source_table='KRWStatus',
-                            fields=fields,
-                        )]
+#       sources = [SyncSource(
+#                           model=cls,
+#                           source_table='KRWStatus',
+#                           fields=fields,
+#                       )]
 
-        return Synchronizer(sources=sources)
+#       return Synchronizer(sources=sources)
 """
 from django.db import models
 
