@@ -136,30 +136,18 @@ def _dates_from_xml(description):
     return start_date, end_date
 
 
-def _union(geometries):
-    """
-    Return single geometry or None
-
-    Only works on geometries of same type
-    """
-    if not geometries:
-        return None
-    elif len(geometries) == 1:
-        return geometries[0]
-    print 'computing union'
-    return reduce(
-        lambda x, y: x.union(y),
-        geometries,
-    )
-
-    
 def _combine(geometries):
     """
     Try to combine geometries with least computing power necessary.
     
-    
-    Lines only get buffered when they need to be combined with
-    polygons. Assumes that there is at least one geometry in the list
+    If there are both lines and polygons, all lines are first buffered
+    one by one into polygons, and then added to a MultiPolygon together
+    with the other polygons.
+
+    If there are only polygons, they are combined in a single
+    multipolygon.
+
+    If there are only lines, they are combined in a single multilinestring
     """
     if len(geometries) == 1:
         return geometries[0]
@@ -173,18 +161,23 @@ def _combine(geometries):
     multipolygons = [g for g in geometries
                 if isinstance(g, (MultiPolygon))]
 
-    import pdb; pdb.set_trace() 
-    multilines.append(MultiLineString(lines))
-    multipolygons.append(MultiPolygon(polygons))
+    if polygons or multipolygons:
+        if lines or multilines:
+            # All kinds of stuff present
+            lines.extend([l for ml in multilines for l in ml])
+            print 'buffering lines'
+            for l in lines:
+                polygons.append(l.buffer(0.001, 2))
+        result = MultiPolygon(polygons)
+        for mp in multipolygons:
+            result.extend(mp)
+    else:
+        # Only lines or multilines
+        result = MultiLineString(lines)
+        for ml in multilines:
+            result.extend(ml)
 
-    multipolygon = _union(multipolygons)
-    multiline = _union(multilines)
-
-    # combine using buffer:
-    print 'computing buffer'
-    buf = multiline.buffer(0.01, 4)
-    print 'computing master union'
-    return buf.union(multipolygon)
+    return result
 
 
 def import_KRW_lookup(filename):
