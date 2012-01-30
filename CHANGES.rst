@@ -5,7 +5,10 @@ Changelog of lizard-measure
 1.5.7 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Improves geometry imports in import script
+
+- Populates data_set attributes of both areas and measures from krw-portal
+  data.
 
 
 1.5.6 (2012-01-26)
