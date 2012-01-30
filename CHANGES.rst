@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.5.7 (unreleased)
+1.5.7 (2012-01-30)
 ------------------
 
 - Improves geometry imports in import script
