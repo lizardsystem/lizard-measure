@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.5.8 (unreleased)
+1.5.8 (2012-01-31)
 ------------------
 
 - added forms and sort functionality to api
