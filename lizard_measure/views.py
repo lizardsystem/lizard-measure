@@ -19,7 +19,9 @@ from lizard_measure.models import MeasurePeriod
 from lizard_measure.models import MeasureCategory
 from lizard_measure.models import Unit
 
-HOMEPAGE_KEY = 1  # Primary key of the Workspace for rendering the homepage.
+from lizard_map.views import AppView
+
+# HOMEPAGE_KEY = 1  # Primary key of the Workspace for rendering the homepage.
 CRUMB_HOMEPAGE = {'name': 'home', 'url': '/'}
 
 
@@ -52,6 +54,24 @@ CRUMB_HOMEPAGE = {'name': 'home', 'url': '/'}
 #     # javascript popup handler
 #     # will fire.
 #     return HttpResponse('')
+
+class MeasureDetailView(AppView):
+    """
+    Show measure details
+    """
+    template_name='lizard_measure/measure.html'
+
+    def measure(self):
+        """Return a measure"""
+        if not hasattr(self, '_measure'):
+            self._measure = Measure.objects.get(
+                pk=self.measure_id)
+        return self._measure
+
+    def get(self, request, *args, **kwargs):
+        self.measure_id = kwargs['measure_id']
+        return super(MeasureDetailView, self).get(
+            request, *args, **kwargs)
 
 
 def measure_detail(request, measure_id,
