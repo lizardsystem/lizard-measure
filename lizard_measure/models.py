@@ -1096,8 +1096,7 @@ class Measure(models.Model):
                            is_planning=False):
         """Returns own status_moment"""
         measure_status_moment_set = self.measurestatusmoment_set.filter(
-            is_planning=is_planning,
-            date__lte=dt).distinct().order_by("-date")
+            planning_date__lte=dt).distinct().order_by("-planning_date")
         if measure_status_moment_set:
             return measure_status_moment_set[0]
         return None

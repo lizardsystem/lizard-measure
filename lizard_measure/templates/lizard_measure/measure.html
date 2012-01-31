@@ -29,39 +29,39 @@
   <div>
     <dl>
       <dt>Maatregel</dt>
-      <dd><a href="{{ measure.get_absolute_url }}">{{ measure.title }}</a></dd>
+      <dd><a href="{{ view.measure.get_absolute_url }}">{{ view.measure.title }}</a></dd>
 
-      {% if measure.description %}
+      {% if view.measure.description %}
       <dt>Beschrijving</dt>
-      <dd>{{ measure.description }}</dd>
+      <dd>{{ view.measure.description }}</dd>
       {% endif %}
 
       <dt>Maatregelverzameling</dt>
-      <dd><a href="{{ measure.measure_collection.get_absolute_url }}">{% firstof measure.measure_collection.name '(geen maatregelverzameling)' %}</a></dd>
+      <dd><a href="{{ view.measure.measure_collection.get_absolute_url }}">{% firstof view.measure.measure_collection.name '(geen maatregelverzameling)' %}</a></dd>
 
-      {% if measure.identity %}
+      {% if view.measure.identity %}
       <dt>Identiteit</dt>
-      <dd>{{ measure.identity }}</dd>
+      <dd>{{ view.measure.identity }}</dd>
       {% endif %}
 
-      {% if measure.category %}
+      {% if view.measure.category %}
       <dt>Categorie</dt>
-      <dd>{{ measure.category }}</dd>
+      <dd>{{ view.measure.category }}</dd>
       {% endif %}
 
       <dt>Waterlichaam</dt>
-      <dd><a href="{{ measure.measure_collection.waterbody.get_absolute_url }}">{{ measure.measure_collection.waterbody }}</a></dd>
+      <dd><a href="{{ view.measure.measure_collection.waterbody.get_absolute_url }}">{{ view.measure.measure_collection.waterbody }}</a></dd>
 
-      {% if measure.parent %}
+      {% if view.measure.parent %}
       <dt>Bovenliggende maatregel</dt>
       <dd>
-        <a href="{{ measure.parent.get_absolute_url }}">
-          {{ measure.parent.title }}
+        <a href="{{ view.measure.parent.get_absolute_url }}">
+          {{ view.measure.parent.title }}
         </a>
       </dd>
       {% endif %}
 
-      {% if measure.measure_set.all %}
+      {% if view.measure.measure_set.all %}
       <dt>Onderliggende maatregelen</dt>
       <dd>
         {% with "lizard_krw/measure_tree_snippet.html" as ourselves %}
@@ -86,7 +86,7 @@
 
 {% block content %}
 <div id="textual">
-  <h2>Maatregel: {{ measure.title }}</h2>
+  <h2>Maatregel: {{ view.measure.title }}</h2>
   <div style="width: 100%; height: 130px;" class="img-use-my-size">
 {% comment %}
     <a href="{% url lizard_krw.measure_graph measure_id=measure.id %}" class="replace-with-image">
@@ -97,51 +97,51 @@
   <table class="generic-table">
     <tbody>
       <tr>
-        <th>Naam maatregel</th><td>{{ measure.title }}</td>
+        <th>Naam maatregel</th><td>{{ view.measure.title }}</td>
       </tr>
 
       <tr>
-        <th>Deelgebied</th><td>{{ measure.waterbodies.all|join:", " }}</td>
+        <th>Deelgebied</th><td>{{ view.measure.waterbodies.all|join:", " }}</td>
       </tr>
 
       <tr>
-        <th>Code</th><td>{% firstof measure.ident '(geen code)' %}</td>
+        <th>Code</th><td>{% firstof view.measure.ident '(geen code)' %}</td>
       </tr>
 
       <tr>
-        <th>SGBP type</th><td>{{ measure.measure_type }}</td>
+        <th>SGBP type</th><td>{{ view.measure.measure_type }}</td>
       </tr>
 
       <tr>
-        <th>SGBP</th><td>{{ measure.value_sum }} {{ measure.unit }}</td>
+        <th>SGBP</th><td>{{ view.measure.value_sum }} {{ view.measure.unit }}</td>
       </tr>
 
       <tr>
-        <th>Initiatiefnemer</th><td>{{ measure.initiator|default_if_none:"-" }}</td>
+        <th>Initiatiefnemer</th><td>{{ view.measure.initiator|default_if_none:"-" }}</td>
       </tr>
 
       <tr>
-        <th>Uitvoerder</th><td>{{ measure.executive|default_if_none:"-" }}</td>
+        <th>Uitvoerder</th><td>{{ view.measure.executive|default_if_none:"-" }}</td>
       </tr>
 
       <tr>
         <th>Totale kosten (incl. optelling deelmaatregelen)</th>
-        <td>{{ measure.costs_sum|euro }}</td>
+        <td>{{ view.measure.costs_sum|euro }}</td>
       </tr>
 
       <tr>
         <th>Investeringskosten (incl. optelling deelmaatregelen)</th>
-        <td>{{ measure.investment_costs_sum|euro }}</td>
+        <td>{{ view.measure.investment_costs_sum|euro }}</td>
       </tr>
 
       <tr>
         <th>Exploitatiekosten (incl. optelling deelmaatregelen)</th>
-        <td>{{ measure.exploitation_costs_sum|euro }}</td>
+        <td>{{ view.measure.exploitation_costs_sum|euro }}</td>
       </tr>
 
       <tr>
         <th>Periode</th>
-        <td>{{ measure.period }}</td>
+        <td>{{ view.measure.period }}</td>
       </tr>
     </tbody>
   </table>
@@ -149,11 +149,11 @@
   <h2>Stand van zaken</h2>
   <table class="generic-table">
     <tbody>
-      {% with measure.status_moment as status_moment %}
+      {% with view.measure.status_moment as status_moment %}
         {% if status_moment %}
         <tr>
           <th>Status (geaggregeerd)</th>
-          <td>{{ status_moment.status }} (vanaf {{ status_moment.date }})</td>
+          <td>{{ status_moment.status }} (vanaf {{ status_moment.planning_date }})</td>
         </tr>
         <tr>
           <th>Maatgevende maatregel</th>
@@ -172,11 +172,11 @@
       {% endwith %}
 
       {# Own status without aggregation #}
-      {% with measure.status_moment_self as status_moment %}
+      {% with view.measure.status_moment_self as status_moment %}
         {% if status_moment %}
         <tr>
           <th>Status (eigen)</th>
-          <td>{{ status_moment.status }} (vanaf {{ status_moment.date }})</td>
+          <td>{{ status_moment.status }} (vanaf {{ status_moment.planning_date }})</td>
         </tr>
         {% if status_moment.description %}
         <tr>
@@ -193,11 +193,11 @@
       {% endwith %}
 
       {# Planning #}
-      {% with measure.status_moment_planned as status_moment %}
+      {% with view.measure.status_moment_planned as status_moment %}
         {% if status_moment %}
         <tr>
           <th>Planning (geaggregeerd)</th>
-          <td>{{ status_moment.status }} (vanaf {{ status_moment.date }})</td>
+          <td>{{ status_moment.status }} (vanaf {{ status_moment.planning_date }})</td>
         </tr>
         {% if status_moment.description %}
         <tr>
@@ -223,10 +223,10 @@
       </tr>
     </thead>
     <tbody>
-      {% for funding_organization in measure.fundingorganization_set.all %}
+      {% for funding_organization in view.measure.fundingorganization_set.all %}
       <tr>
         <td>
-          {{ measure.title }}
+          {{ view.measure.title }}
         </td>
         <td>
           {{ funding_organization.organization }}
@@ -236,7 +236,7 @@
         </td>
       </tr>
       {% endfor %}
-      {% for measure_part in measure.get_parts %}
+      {% for measure_part in view.measure.get_parts %}
         {% for funding_organization in measure_part.fundingorganization_set.all %}
       <tr>
         <td>
@@ -258,7 +258,7 @@
           Totaal
         </td>
         <td>
-          {{ measure.funding_organization_cost_sum|euro }}
+          {{ view.measure.funding_organization_cost_sum|euro }}
         </td>
       </tr>
     </tfoot>

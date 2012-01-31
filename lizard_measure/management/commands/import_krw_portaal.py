@@ -6,11 +6,18 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import simplejson
 from django.template.defaultfilters import slugify
+
 from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.geos import LineString
 from django.contrib.gis.geos import MultiLineString
 from django.contrib.gis.geos import Polygon
 from django.contrib.gis.geos import MultiPolygon
+from django.contrib.gis.gdal import SpatialReference
+from django.contrib.gis.gdal import CoordTransform
+
+from lizard_map.coordinates import RD
+from lizard_map.coordinates import WGS84
+
 from django.contrib.auth.models import User
 from lxml import etree
 
@@ -18,9 +25,12 @@ import datetime
 import os
 
 from lizard_area.models import Area
+from lizard_area.models import Category
 from lizard_area.models import DataAdministrator
 
 from lizard_geo.models import GeoObjectGroup
+
+from lizard_security.models import DataSet
 
 from lizard_measure.models import KRWStatus
 from lizard_measure.models import KRWWatertype
@@ -136,30 +146,18 @@ def _dates_from_xml(description):
     return start_date, end_date
 
 
-def _union(geometries):
-    """
-    Return single geometry or None
-
-    Only works on geometries of same type
-    """
-    if not geometries:
-        return None
-    elif len(geometries) == 1:
-        return geometries[0]
-    print 'computing union'
-    return reduce(
-        lambda x, y: x.union(y),
-        geometries,
-    )
-
-    
 def _combine(geometries):
     """
     Try to combine geometries with least computing power necessary.
-    
-    
-    Lines only get buffered when they need to be combined with
-    polygons. Assumes that there is at least one geometry in the list
+
+    If there are both lines and polygons, all lines are first buffered
+    one by one into polygons, and then added to a MultiPolygon together
+    with the other polygons.
+
+    If there are only polygons, they are combined in a single
+    multipolygon.
+
+    If there are only lines, they are combined in a single multilinestring
     """
     if len(geometries) == 1:
         return geometries[0]
@@ -173,18 +171,23 @@ def _combine(geometries):
     multipolygons = [g for g in geometries
                 if isinstance(g, (MultiPolygon))]
 
-    import pdb; pdb.set_trace() 
-    multilines.append(MultiLineString(lines))
-    multipolygons.append(MultiPolygon(polygons))
+    if polygons or multipolygons:
+        if lines or multilines:
+            # All kinds of stuff present
+            lines.extend([l for ml in multilines for l in ml])
+            print 'buffering lines'
+            for l in lines:
+                polygons.append(l.buffer(0.0001, 2))
+        result = MultiPolygon(polygons)
+        for mp in multipolygons:
+            result.extend(mp)
+    else:
+        # Only lines or multilines
+        result = MultiLineString(lines)
+        for ml in multilines:
+            result.extend(ml)
 
-    multipolygon = _union(multipolygons)
-    multiline = _union(multilines)
-
-    # combine using buffer:
-    print 'computing buffer'
-    buf = multiline.buffer(0.01, 4)
-    print 'computing master union'
-    return buf.union(multipolygon)
+    return result
 
 
 def import_KRW_lookup(filename):
@@ -269,6 +272,8 @@ def import_waterbodies(wb_import_settings):
 
     # Reset geo object groups
     geogroups = {}
+    category = Category.objects.get(slug='krw-waterlichamen')
+
     for s in wb_import_settings['owm_sources']:
         # Determine geoobject group name
         geo_object_group_name = ('measure::waterbody::%s' %
@@ -296,6 +301,9 @@ def import_waterbodies(wb_import_settings):
         )
         geo_object_group.save()
 
+        # Add this geoobject group to lizard_area category of waterbodies
+        category.geo_object_groups.add(geo_object_group)
+
         # Keep a dict of geo_object_groups for later assignment
         geogroups[s['data_administrator'].name] = geo_object_group
 
@@ -311,21 +319,24 @@ def import_waterbodies(wb_import_settings):
 
     # Loop geofile, create geometry object for each geometry
     owa_geometry = {}
+    spatialreference_wgs84 = SpatialReference(WGS84)
+    spatialreference_rd = SpatialReference(RD)
+    coordtransform = CoordTransform(
+        spatialreference_rd,
+        spatialreference_wgs84,
+    )
     for f in wb_import_settings['geometry_files']:
         for rec in _records(f):
             geometry = GEOSGeometry(
                 rec['wkb_geometry'],
                 srid=28992,
             )
-            geometry.transform(4326)
+            geometry.transform(coordtransform)
             owa_geometry[rec['owaident']] = geometry
 
     # Go through the owm files, to get or create the corresponding areas
-    lijstje = open('/home/arjan/lijstje.csv', 'w')
     for s in owmsources:
         for rec in _records(s['file']):
-            lijstje.write('"' + rec['owmident'].strip() + '"' + ',' +
-                          '"' + rec['owmnaam'].strip() + '"' + '\n')
             owm_ident = rec['owmident'].strip()
             # Get or create area
             try:
@@ -347,7 +358,9 @@ def import_waterbodies(wb_import_settings):
                     code=None,
                     description='',
                 )
-                area.save()
+            # Set data_set on area in any case, existing or imported here.
+            area.data_set = s['data_set']
+            area.save()
 
             # Create WaterBody
             krw_status = KRWStatus.objects.get(code=rec['owmstat'].strip())
@@ -363,7 +376,7 @@ def import_waterbodies(wb_import_settings):
                     'krw_watertype': krw_watertype,
                 },
             )
-    lijstje.close()
+
 
 def import_measuring_rods(filename):
     for rec in _records(filename):
@@ -404,7 +417,7 @@ def import_scores(filename):
 
         # Try to get Area
         area_ident = rec['owmident'].strip()
-        area = _area_or_none(area_ident)
+        area = Area.objects.get(ident=area_ident)
 
         measuring_rod = MeasuringRod.objects.get(
             measuring_rod_id=rec['maatlat'],
@@ -515,6 +528,16 @@ def import_measures(filename):
             waterbody.save()
             measure.waterbodies.add(waterbody)
 
+        data_set_set = set([w.area.data_set
+                            for w in measure.waterbodies.all()])
+        if None in data_set_set:
+            data_set_set.remove(None)
+        if len(data_set_set) == 1:
+            # If dataset is unambiguously defined by the associated area's,
+            # Use it for the measure, too.
+            measure.data_set = data_set_set.pop()
+            measure.save()
+
         # Add some categories
         boolean_categories = [
             'wb21',
@@ -607,8 +630,12 @@ class Command(BaseCommand):
             data_administrator = DataAdministrator.objects.get(
                 name=data_administrator_name,
             )
+            data_set = DataSet.objects.get(
+                name=data_administrator_name,
+            )
             wb_import_settings['owm_sources'].append({
                 'data_administrator': data_administrator,
+                'data_set': data_set,
                 'user': user,
                 'file': os.path.join(import_path, xml_file),
             })

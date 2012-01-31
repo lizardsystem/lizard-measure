@@ -4,6 +4,8 @@ from django.conf.urls.defaults import patterns
 from django.conf import settings
 from django.contrib import admin
 
+from lizard_measure.views import MeasureDetailView
+
 
 API_URL_NAME = 'lizard_measure_api_root'
 
@@ -80,7 +82,7 @@ urlpatterns = patterns(
     #  "lizard_measure.measure_collection_graph"),
     # # KRW measure info
     (r'^measure/(?P<measure_id>\d+)/$',
-     'lizard_measure.views.measure_detail',
+     MeasureDetailView.as_view(),
      {},
      "lizard_measure.measure"),
     # (r'^measure/(?P<measure_id>\d+)/graph/$',
