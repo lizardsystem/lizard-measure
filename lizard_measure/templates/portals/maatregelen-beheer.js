@@ -27,12 +27,10 @@
             ],
             applyParams: function(params) {
                 var params = params|| {};
-                console.log('apply params');
+                console.log('apply params on store:');
                 console.log(params);
 
                 if (this.store) {
-                    //this.store.applyParams({object_id: params.object_id,
-                    //                        area_object_type: 'Structure'});
                     this.store.load();
                 }
             },
@@ -44,17 +42,30 @@
                 include_geom: false
             },
             addEditIcon: true,
-            addDeleteIcon: true,
+            addDeleteIcon: false,
             actionEditIcon:function(record) {
+                var me = this
+                console.log(this.store.getNewRecords())
+                if (this.store.getNewRecords().length >0 ||
+                    this.store.getUpdatedRecords().length >0 ||
+                    this.store.getRemovedRecords().length >0) {
+
+                    Ext.Msg.alert("Let op", 'Sla eerst de bewerking(en) in het grid op, voordat een enkel record kan worden bewerkt');
+                    return
+                }
+
                 console.log('edit record:');
                 console.log(record);
 
                 Ext.create('Ext.window.Window', {
                     title: 'Maatregel',
                     width: 800,
-                    height: '60%',
+                    height: 600,
+                    modal: true,
+                    finish_edit_function: function (updated_record) {
+                        me.store.load();
+                    },
                     editpopup: true,
-                    //autoScroll: true,
                     loader:{
                         loadMask: true,
                         autoLoad: true,
@@ -87,7 +98,7 @@
                         fields: ['id', 'name'],
                         proxy: {
                             type: 'ajax',
-                            url: '/measure/api/organization/?_accept=application%2Fjson',
+                            url: '/measure/api/organization/?_accept=application%2Fjson&size=id_name',
                             reader: {
                                 type: 'json',
                                 root: 'data'
@@ -100,7 +111,7 @@
                         fields: ['id', 'name'],
                         proxy: {
                             type: 'ajax',
-                            url: '/measure/api/organization/?_accept=application%2Fjson',
+                            url: '/measure/api/organization/?_accept=application%2Fjson&size=id_name',
                             reader: {
                                 type: 'json',
                                 root: 'data'
@@ -110,7 +121,7 @@
                 },
                 {name: 'responsible_department', title: 'afdeling', editable: true, visible: true, width: 75, type: 'text'},
 
-                {name: 'total_costs', title: 'totale kosten', editable: true, visible: true, width: 75, type: 'number'},
+                {name: 'total_costs', title: 'totale kosten', editable: false, visible: true, width: 75, type: 'number'},
                 {name: 'investment_costs', title: 'investeringskosten', editable: true, visible: true, width: 75, type: 'number'},
                 {name: 'exploitation_costs', title: 'exploitatiekosten', editable: true, visible: true, width: 75, type: 'number'},
 

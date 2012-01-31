@@ -971,9 +971,10 @@ class Measure(models.Model):
         """
         create status moments for measure
         """
-        not_yet_created = MeasureStatus.objects.exclude(
-            measurestatusmoment__measure=self,
-            valid=True,
+        not_yet_created = MeasureStatus.objects.filter(
+            valid=True
+        ).exclude(
+            measurestatusmoment__measure=self
         )
         for status in not_yet_created:
             self.measurestatusmoment_set.create(status=status)

@@ -33,6 +33,21 @@ class ScoreView(BaseApiView):
         """
             create object of measure
         """
+        model_class = Score
+        name_field = 'measuring_rod__description'
+
+        field_mapping = {
+            'id': 'id',
+            'mep': 'mep',
+            'gep': 'gep',
+            'limit_insufficient_moderate': 'limit_insufficient_moderate',
+            'limit_bad_insufficient': 'limit_bad_insufficient',
+            'target_2015': 'target_2015',
+            'target_2027': 'target_2027',
+            'measuring_rod':'measuring_rod__description',
+            'area': 'area__name'
+        }
+
         output = {
             'id': score.id,
             'mep': score.mep,
@@ -55,6 +70,16 @@ class OrganizationView(BaseApiView):
     Show organisations for selection and edit
     """
     model_class = Organization
+    name_field = 'description'
+
+    field_mapping = {
+        'id': 'id',
+        'code': 'code',
+        'description': 'description',
+        'group': 'group',
+        'source': 'source'
+    }
+
 
     def get_object_for_api(self,
                            org,
@@ -89,6 +114,32 @@ class MeasureView(BaseApiView):
     Area configuration.
     """
     model_class = Measure
+    name_field = 'title'
+
+    field_mapping = {
+        'id': 'id',
+        'ident': 'ident',
+        'title': 'title',
+        'is_KRW_measure': 'is_KRW_measure',
+        'is_indicator': 'is_indicator',
+        'description': 'description',
+        'investment_costs': 'investment_costs',
+        'exploitation_costs': 'exploitation_costs',
+        'responsible_department': 'responsible_department',
+        'value': 'value',
+        'measure_type': 'measure_type__description',
+        'period': 'period__start_date',
+        'unit': 'unit__description',
+        'initiator': 'initiator__description',
+        'executive': 'executive__description',
+        'parent': 'parent__title',
+        'aggregation_type':  'aggregation_type',
+        'read_only': 'read_only',
+        'import_raw': 'import_raw',
+        'import_source': 'import_source'
+
+
+    }
 
     def get_funding_organisations(self, measure):
         """

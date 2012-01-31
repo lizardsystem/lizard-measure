@@ -19,6 +19,8 @@
             anchor:'100%',
             flex:1,
             xtype: 'leditgrid',
+            editable: false,
+            useSaveBar: false,
             plugins: [
                 'applycontext'
             ],
@@ -36,6 +38,7 @@
             },
             proxyUrl: '/measure/api/score/',
             proxyParams: {
+                test:'test'
 
             },
             dataConfig:[
