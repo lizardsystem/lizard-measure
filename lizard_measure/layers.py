@@ -329,53 +329,7 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
                 legend_labels.append(measure_status.name)
             graph.legend(legend_handles, legend_labels, ncol=3)
 
-    @classmethod
-    def _image_score(cls, graph, layer_name, waterbodies,
-                     start_date, end_date):
-        # add specific graphics to krw_graph
-        graph.suptitle("krw score(s)")
-        graph.axes.set_ylim(0, len(waterbodies))
-        # we fit 50 scores in the graph
-        score_width = (date2num(end_date) - date2num(start_date)) / 50
 
-        score_categories = {
-            'score-fyto': SCORE_CATEGORY_FYTO,
-            'score-flora': SCORE_CATEGORY_FLORA,
-            'score-fauna': SCORE_CATEGORY_FAUNA,
-            'score-vis': SCORE_CATEGORY_VIS,
-            }
-        category = score_categories[layer_name]
-        for index, waterbody in enumerate(waterbodies):
-            scores = Score.objects.filter(start_date__gte=start_date,
-                                          start_date__lte=end_date,
-                                          waterbody=waterbody,
-                                          category=category)
-            score_data = []
-            score_colors = []
-            for score in scores:
-                score_data.append((date2num(score.start_date), score_width))
-                color = score.alpha_score.color.html
-                score_colors.append(color)
-
-            graph.axes.broken_barh(score_data,
-                                   (index - 0.45, 1),
-                                   facecolors=score_colors,
-                                   edgecolors='grey')
-
-        # Y ticks
-        waterbodies_short = [
-            short_string(wb.__unicode__(), 17) for wb in waterbodies]
-        graph.axes.set_yticks(range(len(waterbodies)))
-        graph.axes.set_yticklabels(waterbodies_short)
-        graph.axes.set_ylim(-0.5, len(waterbodies) - 0.5)
-
-        # Legend.
-        legend_handles, legend_labels = [], []
-        for alpha_score in AlphaScore.objects.all():
-            legend_handles.append(
-                Line2D([], [], color=alpha_score.color.html, lw=10))
-            legend_labels.append(alpha_score.name)
-        graph.legend(legend_handles, legend_labels, ncol=2)
 
     def image(self, identifier_list,
               start_date, end_date,
@@ -412,26 +366,8 @@ class WorkspaceItemAdapterKrw(workspace.WorkspaceItemAdapter):
         #             len(legend_handles) * 10.0, height)
 
         graph = adapter.Graph(start_date, end_date, width, height)
-        if measures:
-            # krw measures
-            self._image_measures(graph, measures, start_date, end_date)
-        else:
-            # krw-score
-            self._image_score(graph, self.layer_name, waterbodies,
-                              start_date, end_date)
+
+        self._image_measures(graph, measures, start_date, end_date)
 
         graph.add_today()
         return graph.http_png()
-
-    def symbol_url(self, identifier=None, start_date=None, end_date=None):
-        return super(WorkspaceItemAdapterKrw, self).symbol_url(
-            identifier=identifier,
-            start_date=start_date,
-            end_date=end_date,
-            icon_style=ICON_STYLE[self.layer_name])
-
-    def html(self, snippet_group=None, identifiers=None, layout_options=None):
-        return super(WorkspaceItemAdapterKrw, self).html_default(
-            snippet_group=snippet_group,
-            identifiers=identifiers,
-            layout_options=layout_options)

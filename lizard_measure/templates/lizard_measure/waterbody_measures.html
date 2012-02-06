@@ -1,82 +1,22 @@
 {# info and graphs on KRW measures for a specific waterbody #}
-{% extends "lizard_map/lizardgis.html" %}
-{% load workspaces %}
 
-{% block subtitle %} Maatregelen voor {{ waterbody.name }} {% endblock %}
-
-
-{% block portal-tabs %}
-{{ block.super }}
-<div id="portal-tab-selected" data-selected="#portal-tab-overzicht"></div>
-{% endblock portal-tabs %}
-
-{% block sidebar %}
-<div class="sidebarbox">
-  <h2>Kaart</h2>
-  <a href="/">
-  <img src="{% url lizard_krw.tiny_map waterbody_slug=waterbody.slug %}"
-       height="140"
-       width="300"
-       alt="geselecteerde waterlichaam"/>
-  </a>
-</div>
-<div class="sidebarbox sidebarbox-stretched">
-  <h2>
-    Info
-  </h2>
-  <div>
-    <div>
-      <p>Bovenaan wordt een afbeelding getoond van maatregelverzamelingen.</p>
-
-      <p>Hieronder staan de maatregelverzamelingen op een rij, inclusief onderliggende (deel-)maatregelen. Door op de links te klikken kunnen maatregelverzamelingen en (deel)maatregelen in meer detail bekeken worden.</p>
-    </div>
-  </div>
-</div>
-{% endblock %}
-
-{% block object-actions %}
-{# Look up icon classes in http://www.ajaxbestiary.com/Labs/SilkSprite/ #}
-<span title="Werkt nog niet" class="notworking ss_sprite ss_printer">Printen</span> |
-<span title="Werkt nog niet" class="notworking ss_sprite ss_application_go">Exporteren</span> |
-<span class="ss_sprite ss_help"><a href="{% url help %}" target="_blank">Help</a></span>
-{% endblock %}
-
-
-{% block content %}
-<div id="textual">
+<div id="textual" class='lizard'>
   <h2>Maatregelen voor {{ waterbody.name }}</h2>
   <div style="width: 100%; height: 250px;" class="img-use-my-size">
-    <a href="{% url lizard_krw.krw_measure_graph waterbody_slug=waterbody.slug %}" class="replace-with-image">
+    <a href="/measure/summary/{{ waterbody.ident }}/measure_graph/" class="replace-with-image">
       afbeelding nog niet geladen
     </a>
   </div>
-  <h2>Maatregelverzamelingen</h2>
-  <ul>
-    {% for measure_collection in measure_collections %}
-    <li>
-      <a href="{{ measure_collection.get_absolute_url }}">{{ measure_collection.name }} ({% firstof measure_collection.status_moment.status 'geen status' %})</a>
-      <ul>
-      {% for measure in measure_collection.measure_set.all %}
-        <li><a href="{{ measure.get_absolute_url }}">{{ measure.name }}{% if measure.status_moment %} ({{ measure.status_moment.status }}){% endif %}</a>
-          {% with "lizard_krw/measure_tree_snippet.html" as ourselves %}
-            {% include ourselves %}
-          {% endwith %}
-        </li>
-      {% endfor %}
-      </ul>
-    </li>
-    {% endfor %}
-  </ul>
 
   <h2>Maatregelen</h2>
   <ul>
     {% for measure in main_measures %}
-    <li><a href="{{ measure.get_absolute_url }}">{{ measure.name }}{% if measure.status_moment %} ({{ measure.status_moment.status }}){% endif %}</a>
-        {% with "lizard_krw/measure_tree_snippet.html" as ourselves %}
+    <li><a href="javascript:Ext.getCmp('portalWindow').linkToPopup('maatregel {{ measure.title }}','/measure/measure/{{ measure.id }}/',{},{save: ['bewerk', '/measure/measure_detailedit_portal/',{measure_id: '{{ measure.id }}'}, null, false, 'component', true]}, false )">{{ measure.title }}{% if measure.status_moment %} ({{ measure.status_moment.status }}){% endif %}</a>
+        {% with "lizard_measure/measure_tree_snippet.html" as ourselves %}
           {% include ourselves %}
         {% endwith %}
     </li>
     {% endfor %}
   </ul>
 </div>
-{% endblock %}
+

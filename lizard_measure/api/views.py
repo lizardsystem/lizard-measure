@@ -137,8 +137,6 @@ class MeasureView(BaseApiView):
         'read_only': 'read_only',
         'import_raw': 'import_raw',
         'import_source': 'import_source'
-
-
     }
 
     def get_funding_organisations(self, measure):

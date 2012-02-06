@@ -1,91 +1,8 @@
 {# KRW measure view: info and graphs on KRW measures #}
-{% extends "lizard_map/lizardgis.html" %}
 {% load workspaces %}
 {% load utility %}
 
-{% block subtitle %} {{ measure.title }} {% endblock %}
-
-{% block portal-tabs %}
-{{ block.super }}
-<div id="portal-tab-selected" data-selected="#portal-tab-overzicht"></div>
-{% endblock portal-tabs %}
-
-{% block sidebar %}
-<div class="sidebarbox">
-  <h2>Kaart</h2>
-{% comment %}
-  <a href="/">
-  <img src="{% url lizard_krw.tiny_map waterbody_slug=measure.waterbody.slug %}"
-       height="140"
-       width="300"
-       alt="geselecteerde waterlichaam"/>
-  </a>
-{% endcomment %}
-</div>
-<div class="sidebarbox sidebarbox-stretched">
-  <h2>
-    Info
-  </h2>
-  <div>
-    <dl>
-      <dt>Maatregel</dt>
-      <dd><a href="{{ view.measure.get_absolute_url }}">{{ view.measure.title }}</a></dd>
-
-      {% if view.measure.description %}
-      <dt>Beschrijving</dt>
-      <dd>{{ view.measure.description }}</dd>
-      {% endif %}
-
-      <dt>Maatregelverzameling</dt>
-      <dd><a href="{{ view.measure.measure_collection.get_absolute_url }}">{% firstof view.measure.measure_collection.name '(geen maatregelverzameling)' %}</a></dd>
-
-      {% if view.measure.identity %}
-      <dt>Identiteit</dt>
-      <dd>{{ view.measure.identity }}</dd>
-      {% endif %}
-
-      {% if view.measure.category %}
-      <dt>Categorie</dt>
-      <dd>{{ view.measure.category }}</dd>
-      {% endif %}
-
-      <dt>Waterlichaam</dt>
-      <dd><a href="{{ view.measure.measure_collection.waterbody.get_absolute_url }}">{{ view.measure.measure_collection.waterbody }}</a></dd>
-
-      {% if view.measure.parent %}
-      <dt>Bovenliggende maatregel</dt>
-      <dd>
-        <a href="{{ view.measure.parent.get_absolute_url }}">
-          {{ view.measure.parent.title }}
-        </a>
-      </dd>
-      {% endif %}
-
-      {% if view.measure.measure_set.all %}
-      <dt>Onderliggende maatregelen</dt>
-      <dd>
-        {% with "lizard_krw/measure_tree_snippet.html" as ourselves %}
-          {% include ourselves %}
-        {% endwith %}
-      </dd>
-      {% endif %}
-    </dl>
-  </div>
-</div>
-{% endblock %}
-
-{% block object-actions %}
-{# Look up icon classes in http://www.ajaxbestiary.com/Labs/SilkSprite/ #}
-<span title="Werkt nog niet" class="notworking ss_sprite ss_printer">Printen</span> |
-<span title="Werkt nog niet" class="notworking ss_sprite ss_application_go">Exporteren</span> |
-{% comment %}
-<span class="ss_sprite ss_help"><a href="{% url help %}" target="_blank">Help</a></span>
-{% endcomment %}
-{% endblock %}
-
-
-{% block content %}
-<div id="textual">
+<div id="textual" class="lizard">
   <h2>Maatregel: {{ view.measure.title }}</h2>
   <div style="width: 100%; height: 130px;" class="img-use-my-size">
 {% comment %}
@@ -264,4 +181,3 @@
     </tfoot>
   </table>
 </div>
-{% endblock %}
