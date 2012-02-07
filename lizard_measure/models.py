@@ -22,7 +22,7 @@ from lizard_measure.synchronisation import SyncField
 from lizard_measure.synchronisation import SyncSource
 from lizard_measure.synchronisation import Synchronizer
 
-from lizard_graph.models import GraphItemMixin
+#from lizard_graph.models import GraphItemMixin
 
 
 logger = logging.getLogger(__name__)
