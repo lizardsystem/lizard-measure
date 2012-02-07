@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-07 07:26-0600\n"
+"POT-Creation-Date: 2012-02-07 07:36-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: models.py:40 models.py:90 models.py:188 models.py:365 models.py:438
-#: models.py:545 models.py:858
+#: models.py:545 models.py:891
 msgid "Description"
 msgstr ""
 
@@ -47,7 +47,7 @@ msgstr ""
 msgid "KRW Watertypes"
 msgstr ""
 
-#: models.py:134 models.py:843
+#: models.py:134 models.py:876
 msgid "Waterbody"
 msgstr ""
 
@@ -251,78 +251,94 @@ msgstr ""
 msgid "Measure status moments"
 msgstr ""
 
-#: models.py:721
+#: models.py:721 models.py:754
 msgid "Measure period"
 msgstr ""
 
-#: models.py:722
+#: models.py:722 models.py:755
 msgid "Measure periods"
 msgstr ""
 
-#: models.py:737
-msgid "Min"
-msgstr ""
-
-#: models.py:738
-msgid "Max"
-msgstr ""
-
 #: models.py:739
-msgid "Avg"
+msgid "Ecological Key Factor"
 msgstr ""
 
-#: models.py:762
-msgid "Unique code"
+#: models.py:742
+msgid "Target"
+msgstr ""
+
+#: models.py:745
+msgid "Positive"
+msgstr ""
+
+#: models.py:748
+msgid "Negative"
 msgstr ""
 
 #: models.py:770
+msgid "Min"
+msgstr ""
+
+#: models.py:771
+msgid "Max"
+msgstr ""
+
+#: models.py:772
+msgid "Avg"
+msgstr ""
+
+#: models.py:795
+msgid "Unique code"
+msgstr ""
+
+#: models.py:803
 msgid "Is a KRW measure"
 msgstr ""
 
-#: models.py:792
+#: models.py:825
 msgid "in SGBP"
 msgstr ""
 
-#: models.py:816
+#: models.py:849
 msgid "Source of imported data"
 msgstr ""
 
-#: models.py:822
+#: models.py:855
 msgid "Original date of imported data"
 msgstr ""
 
-#: models.py:827
+#: models.py:860
 msgid "Full raw imported data"
 msgstr ""
 
-#: models.py:842
+#: models.py:875
 msgid "Which waterbodies does this measure belong to?"
 msgstr ""
 
-#: models.py:850
+#: models.py:883
 msgid "Which areas does this measure belong to?"
 msgstr ""
 
-#: models.py:851
+#: models.py:884
 msgid "Area"
 msgstr ""
 
-#: models.py:864
+#: models.py:897
 msgid "Categories"
 msgstr ""
 
-#: models.py:881
+#: models.py:914
 msgid "Initiator of this measure"
 msgstr ""
 
-#: models.py:889
+#: models.py:922
 msgid "Executive of this measure"
 msgstr ""
 
-#: models.py:945
+#: models.py:978
 msgid "Measure"
 msgstr ""
 
-#: models.py:946
+#: models.py:979
 msgid "Measures"
 msgstr ""
