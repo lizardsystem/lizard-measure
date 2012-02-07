@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.5.9 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Moved HorizontalBarGraph View and models from lizard-graph to here.
 
 
 1.5.8 (2012-01-31)

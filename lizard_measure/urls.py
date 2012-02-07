@@ -1,10 +1,12 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
 from django.conf.urls.defaults import include
 from django.conf.urls.defaults import patterns
+from django.conf.urls.defaults import url
 from django.conf import settings
 from django.contrib import admin
 
 from lizard_measure.views import MeasureDetailView
+from lizard_measure.views import HorizontalBarGraphView
 
 
 API_URL_NAME = 'lizard_measure_api_root'
@@ -100,6 +102,9 @@ urlpatterns = patterns(
     #     'lizard_measure.views.select_area',
     #     name="help"
     #     ),
+    url(r'^bar/$',
+        HorizontalBarGraphView.as_view(),
+        name="lizard_graph_horizontal_bar_graph_view"),
     )
 
 
