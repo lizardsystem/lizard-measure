@@ -9,6 +9,8 @@ Changelog of lizard-measure
 
 - Several smaller improvements on importscript and model
 
+- Moved HorizontalBarGraph View and models from lizard-graph to here.
+
 
 1.5.8 (2012-01-31)
 ------------------
