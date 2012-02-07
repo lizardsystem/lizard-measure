@@ -55,7 +55,9 @@ def _clear_all():
     KRWStatus.objects.all().delete()
     KRWWatertype.objects.all().delete()
     WaterBody.objects.all().delete()
-    Organization.objects.all().delete()
+    Organization.objects.filter(
+        source=Organization.SOURCE_KRW_PORTAL,
+    ).delete()
     Unit.objects.all().delete()
     MeasuringRod.objects.all().delete()
     Score.objects.all().delete()
@@ -205,11 +207,14 @@ def import_KRW_lookup(filename):
                 }
             )
         # Insert 'matstatus'
-        if rec['domein'] == 'Matstatus':
+        if rec['domein'] == 'matstatus':
             measure_status, measure_status_created = _get_or_create(
                 model=MeasureStatus,
                 get_kwargs={'name': rec['description']},
-                extra_kwargs={'color': 'gray'},
+                extra_kwargs={
+                    'color': 'gray',
+                    'valid': True,
+                },
             )
         # Insert 'tijdvak'
         if rec['domein'] == 'tijdvak' and not rec['description'] == 'onbekend':
@@ -244,7 +249,7 @@ def import_measure_types(filename):
 
         extra_kwargs = {
             'description': rec['samengestelde_naam'],
-            'group': group,  # Hoofdcategorie
+            'group': rec['hoofdcategorie'],
             'klass': rec['klasse'],
             'subcategory': rec['subcategorie'],
             'harmonisation': rec['harmonisatie'],
@@ -504,7 +509,8 @@ def import_measures(filename):
             'exploitation_costs': rec['exploitkosten'],
             'executive': None,
             'initiator': initiator,
-            'valid': True
+            'valid': True,
+            'in_sgbp': rec['par_sgbp'],
 
         }
 
@@ -539,6 +545,10 @@ def import_measures(filename):
             measure.save()
 
         # Add some categories
+        krw_category, created = MeasureCategory.objects.get_or_create(
+            name='KRW',
+        )
+        measure.categories.add(krw_category)
         boolean_categories = [
             'wb21',
             'n2000',
@@ -546,7 +556,6 @@ def import_measures(filename):
         ]
         for c in boolean_categories:
             if rec[c] == '1':
-                
                 category, category_created = _get_or_create(
                     model=MeasureCategory,
                     get_kwargs={'name': c},
@@ -560,10 +569,8 @@ def import_measures(filename):
             measure.categories.add(category)
 
         # Add a measurestatusmoment for the status at import
-        measure_status, measure_status_created = _get_or_create(
-            model=MeasureStatus,
-            get_kwargs={'name': rec['maatregelstatus']},
-            extra_kwargs={'color': 'gray'},
+        measure_status = MeasureStatus.objects.get(
+            name=rec['maatregelstatus'],
         )
         measure_status_date = datetime.date(year=2010, month=1, day=1)
         measure_status_moment = MeasureStatusMoment(
