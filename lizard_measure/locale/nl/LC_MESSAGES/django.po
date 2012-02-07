@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-07 07:36-0600\n"
+"POT-Creation-Date: 2012-02-07 07:44-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: models.py:40 models.py:90 models.py:188 models.py:365 models.py:438
-#: models.py:545 models.py:891
+#: models.py:545 models.py:890
 msgid "Description"
 msgstr "Omschrijving"
 
@@ -48,7 +48,7 @@ msgstr "KRW watertype"
 msgid "KRW Watertypes"
 msgstr "KRW watertypes"
 
-#: models.py:134 models.py:876
+#: models.py:134 models.py:875
 msgid "Waterbody"
 msgstr "Waterlichaam"
 
@@ -252,15 +252,15 @@ msgstr "Maatergel status moment"
 msgid "Measure status moments"
 msgstr "Maatregel status momenten"
 
-#: models.py:721 models.py:754
+#: models.py:721
 msgid "Measure period"
 msgstr "Maatregel periode"
 
-#: models.py:722 models.py:755
+#: models.py:722
 msgid "Measure periods"
 msgstr "Maatregel periodes"
 
-#: models.py:739
+#: models.py:739 models.py:753
 msgid "Ecological Key Factor"
 msgstr "Ecologische Sleutel Factor"
 
@@ -276,70 +276,75 @@ msgstr "Positief"
 msgid "Negative"
 msgstr "Negatief"
 
-#: models.py:770
+#: models.py:754
+#, fuzzy
+msgid "Ecological Key Factors"
+msgstr "Ecologische Sleutel Factoren"
+
+#: models.py:769
 msgid "Min"
 msgstr "Min"
 
-#: models.py:771
+#: models.py:770
 msgid "Max"
 msgstr "Max"
 
-#: models.py:772
+#: models.py:771
 msgid "Avg"
 msgstr "Gemiddeld"
 
-#: models.py:795
+#: models.py:794
 msgid "Unique code"
 msgstr "Unieke code"
 
-#: models.py:803
+#: models.py:802
 msgid "Is a KRW measure"
 msgstr "Is een KRW maatregel"
 
-#: models.py:825
+#: models.py:824
 msgid "in SGBP"
 msgstr "in SGBP"
 
-#: models.py:849
+#: models.py:848
 msgid "Source of imported data"
 msgstr "Bron van de geïmporteerde data"
 
-#: models.py:855
+#: models.py:854
 msgid "Original date of imported data"
 msgstr "Oorspronkelijke datum van de geïmporteerde data"
 
-#: models.py:860
+#: models.py:859
 msgid "Full raw imported data"
 msgstr "Volledige weergave van geïmporteerde data"
 
-#: models.py:875
+#: models.py:874
 msgid "Which waterbodies does this measure belong to?"
 msgstr "Bij welke waterlichamen hoort deze maatregel?"
 
-#: models.py:883
+#: models.py:882
 msgid "Which areas does this measure belong to?"
 msgstr "Bij welke deelgebieden hoort deze maatregel?"
 
-#: models.py:884
+#: models.py:883
 msgid "Area"
 msgstr "Deelgebied"
 
-#: models.py:897
+#: models.py:896
 msgid "Categories"
 msgstr "Categoriën"
 
-#: models.py:914
+#: models.py:913
 msgid "Initiator of this measure"
 msgstr "Initiatiefnemer van deze maatregel"
 
-#: models.py:922
+#: models.py:921
 msgid "Executive of this measure"
 msgstr "Uitvoerder van deze maatregel"
 
-#: models.py:978
+#: models.py:977
 msgid "Measure"
 msgstr "Maatregel"
 
-#: models.py:979
+#: models.py:978
 msgid "Measures"
 msgstr "Maatregelen"
