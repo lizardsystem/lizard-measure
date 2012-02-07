@@ -5,7 +5,9 @@ Changelog of lizard-measure
 1.5.9 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add EKF model
+
+- Several smaller improvements on importscript and model
 
 
 1.5.8 (2012-01-31)

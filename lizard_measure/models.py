@@ -615,6 +615,11 @@ class FundingOrganization(models.Model):
         verbose_name_plural = _("Funding organizations")
 
     percentage = models.FloatField()
+    comment = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name=_('Comment'),
+    )
     organization = models.ForeignKey(Organization)
     measure = models.ForeignKey('Measure')
 
@@ -720,6 +725,37 @@ class MeasurePeriod(models.Model):
         return '%d - %d' % (self.start_date.year, self.end_date.year)
 
 
+class EKF(models.Model):
+    """
+    EKFs related to measures.
+    """
+    EKF_CHOICES = [(n, n) for n in range(1, 10)]
+
+    measure = models.ForeignKey('Measure')
+    ekf = models.IntegerField(
+        choices=EKF_CHOICES,
+        blank=True,
+        null=True,
+        verbose_name=_('Ecological Key Factor'),
+    )
+    target = models.NullBooleanField(
+        verbose_name=_('Target'),
+    )
+    positive = models.NullBooleanField(
+        verbose_name=_('Positive'),
+    )
+    negative = models.NullBooleanField(
+        verbose_name=_('Negative'),
+    )
+
+    class Meta:
+        verbose_name = _("Ecological Key Factor")
+        verbose_name_plural = _("Ecological Key Factors")
+
+    def __unicode__(self):
+        return '%s - %i' % (self.measure, self.ekf)
+
+
 class Measure(models.Model):
     """
     KRW maatregel,
@@ -780,6 +816,11 @@ class Measure(models.Model):
         MeasureType,
         help_text="SGBP code",
         verbose_name='Maatregeltype',
+    )
+
+    in_sgbp = models.NullBooleanField(
+        default=None,
+        verbose_name=_('in SGBP'),
     )
 
     title = models.CharField(

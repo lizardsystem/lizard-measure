@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+from lizard_measure.models import EKF
 from lizard_measure.models import FundingOrganization
 from lizard_measure.models import Measure
 from lizard_measure.models import MeasurePeriod
@@ -24,6 +25,10 @@ class FundingOrganizationInline(admin.TabularInline):
     model = FundingOrganization
 
 
+class EKFInline(admin.TabularInline):
+    model = EKF
+
+
 class MeasureInline(admin.TabularInline):
     model = Measure
 
@@ -40,7 +45,7 @@ class MeasureAdmin(admin.ModelAdmin):
         'import_source',
     ]
     inlines = [
-        MeasureStatusMomentInline, FundingOrganizationInline,
+        MeasureStatusMomentInline, FundingOrganizationInline, EKFInline
     ]
 
 
