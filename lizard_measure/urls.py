@@ -17,21 +17,12 @@ admin.autodiscover()
 urlpatterns = patterns(
     '',
     # # Homepage.
-    # url(r'^$',
-    #     'lizard_measure.views.select_area',
-    #     name="lizard_measure.select_area"
-    #     ),
-    # # summary view.
+     # # summary view.
     # (r'^summary/(?P<area>[^/]+)/$',
     #  'lizard_measure.views.waterbody_summary',
     #  {},
     #  'lizard_measure.waterbody',
     #  ),
-    # # KRW browser.
-    # url(r'^krw-browser/$',
-    #     'lizard_measure.views.krw_browser',
-    #     name="lizard_measure.krw_browser"
-    #     ),
     # # Graphs for the summary view.
     # (r'^summary/(?P<waterbody_slug>.*)/krw_scores/$',
     #  'lizard_measure.views.krw_scores',
@@ -45,15 +36,21 @@ urlpatterns = patterns(
     #  'lizard_measure.views.krw_score_graph',
     #  {},
     #  "lizard_measure.krw_score_graph"),
-    # (r'^summary/(?P<waterbody_slug>.*)/krw_measure_graph/$',
-    #  'lizard_measure.views.krw_measure_graph',
-    #  {},
-    #  "lizard_measure.krw_measure_graph"),
-    (r'^summary/(?P<waterbody_slug>.*)/krw_measures/$',
+
+    (r'^summary/(?P<area_ident>.*)/measure_graph/$',
+      'lizard_measure.views.measure_graph',
+      {},
+      "lizard_measure.measure_graph"),
+    (r'^summary/(?P<area_ident>.*)/krw_measures/$',
      'lizard_measure.views.krw_waterbody_measures',
      {},
      "lizard_measure.krw_waterbody_measures"),
+    (r'^measure/(?P<measure_id>\d+)/$',
+     MeasureDetailView.as_view(),
+     {},
+     "lizard_measure.measure"),
 
+    #edit screens
     (r'^measure_detailedit_portal/$',
     'lizard_measure.views.measure_detailedit_portal',
      {},
@@ -68,25 +65,7 @@ urlpatterns = patterns(
      "lizard_measure.organization_groupedit_portal"),
     (r'^api/',
      include('lizard_measure.api.urls')),
-    # # Map for summary view
-    # (r'^summary/(?P<waterbody_slug>.*)/tiny_map/$',
-    #  'lizard_measure.views.tiny_map',
-    #  {},
-    #  "lizard_measure.tiny_map"),
-    # # Measure collection
-    # (r'^measure_collection/(?P<measure_collection_id>\d+)/$',
-    #  'lizard_measure.views.measure_collection',
-    #  {},
-    #  "lizard_measure.measure_collection"),
-    # (r'^measure_collection/(?P<measure_collection_id>\d+)/graph/$',
-    #  'lizard_measure.views.krw_measure_graph',
-    #  {},
-    #  "lizard_measure.measure_collection_graph"),
-    # # KRW measure info
-    (r'^measure/(?P<measure_id>\d+)/$',
-     MeasureDetailView.as_view(),
-     {},
-     "lizard_measure.measure"),
+
     # (r'^measure/(?P<measure_id>\d+)/graph/$',
     #  'lizard_measure.views.krw_measure_graph',
     #  {},

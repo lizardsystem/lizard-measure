@@ -1155,10 +1155,12 @@ class Measure(models.Model):
         """If the measure has no children, take own
         measure_status_moments. Else return calculated aggregated list
         of status moments. """
-        msm_dates = self.measurestatusmoment_set.filter(
-            is_planning=is_planning)
+        msm_dates = self.measurestatusmoment_set.all()
         if end_date is not None:
-            msm_dates = msm_dates.filter(datetime__lte=end_date)
+            if is_planning:
+                msm_dates = msm_dates.filter(planning_date__lte=end_date)
+            else:
+                msm_dates = msm_dates.filter(realisation_date__lte=end_date)
 
         # No children: we're finished.
         if not self.measure_set.all():

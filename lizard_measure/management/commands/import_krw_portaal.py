@@ -238,9 +238,9 @@ def import_KRW_lookup(filename):
 def import_measure_types(filename):
     for rec in _records(filename):
 
-        group = MeasureCategory.objects.get_or_create(
-            name=rec['hoofdcategorie'],
-        )[0]
+#       group = MeasureCategory.objects.get_or_create(
+#           name=rec['hoofdcategorie'],
+#       )[0]
 
         extra_kwargs = {
             'description': rec['samengestelde_naam'],
@@ -545,10 +545,11 @@ def import_measures(filename):
             'gwb',
         ]
         for c in boolean_categories:
-            if rec[c] == 1:
+            if rec[c] == '1':
+                
                 category, category_created = _get_or_create(
                     model=MeasureCategory,
-                    get_kwargs={'naam': c},
+                    get_kwargs={'name': c},
                 )
                 measure.categories.add(category)
         if rec['thema'] is not None:
