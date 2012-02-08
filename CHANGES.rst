@@ -5,7 +5,10 @@ Changelog of lizard-measure
 1.5.9 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- fixed measure graph
+- extend waterbody_measure according to use case
+- fixed doel management screen (api and gridview)
+
 
 
 1.5.8 (2012-01-31)
