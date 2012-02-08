@@ -232,7 +232,7 @@ class MeasuringRod(models.Model):
     )
 
     def __unicode__(self):
-        return self.measuring_rod
+        return u'%s' % self.measuring_rod
 
     @classmethod
     def get_synchronizer(cls):
@@ -304,6 +304,17 @@ class Score(models.Model):
     class Meta:
         verbose_name = _("Score")
         verbose_name_plural = _("Scores")
+
+    @property
+    def targets(self):
+        return (self.target_2015, self.target_2027)
+
+    @property
+    def borders(self):
+        return (self.limit_bad_insufficient,
+                self.limit_insufficient_moderate,
+                self.gep,
+                self.mep)
 
 
 class SteeringParameter(models.Model):
@@ -1348,7 +1359,7 @@ class Measure(models.Model):
 
 class HorizontalBarGraph(models.Model):
     """
-    Predefined horizontal bar graph.
+    Predefined horizontal bar graph. EKR scores.
     """
     name = models.CharField(max_length=80)
     slug = models.SlugField(unique=True)
@@ -1368,32 +1379,21 @@ class HorizontalBarGraph(models.Model):
         return '%s (%s)' % (self.name, self.slug)
 
 
-class HorizontalBarGraphGoal(models.Model):
-    """
-    Define a goal for a horizontal bar.
-    """
-    timestamp = models.DateTimeField()
-    value = models.FloatField()
-
-    class Meta:
-        ordering = ('timestamp', 'value', )
-
-    def __unicode__(self):
-        return '%s - %s' % (self.timestamp, self.value)
-
-
 class HorizontalBarGraphItem(GraphItemMixin):
     """
     Represent one row of a horizontal bar graph.
+
+    The MeasuringRod together with the Area (ident=location.ident)
+    determine the Score. The Score describes which value maps to which
+    color.
     """
     horizontal_bar_graph = models.ForeignKey(HorizontalBarGraph)
     index = models.IntegerField(default=100)
 
     label = models.CharField(
         null=True, blank=True, max_length=80)
-
-    goals = models.ManyToManyField(
-        HorizontalBarGraphGoal, null=True, blank=True)
+    measuring_rod = models.ForeignKey(
+        MeasuringRod, null=True, blank=True)
 
     class Meta:
         # Graphs are drawn on y values in increasing order. The lowest
@@ -1415,8 +1415,6 @@ class HorizontalBarGraphItem(GraphItemMixin):
         - location: fews location id
         - parameter: fews parameter id
         - module: fews module id
-        - goals (optional): list of {'timestamp':<datetime>,
-          'value':<floatvalue>}
         """
         try:
             location = GeoLocationCache.objects.get(ident=d['location'])
@@ -1432,5 +1430,4 @@ class HorizontalBarGraphItem(GraphItemMixin):
         graph_item.location = location
         graph_item.parameter = ParameterCache(ident=d['parameter'])
         graph_item.module = ModuleCache(ident=d['module'])
-        graph_item.goals = []
 

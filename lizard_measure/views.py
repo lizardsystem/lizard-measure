@@ -30,6 +30,7 @@ from lizard_measure.models import MeasureCategory
 from lizard_measure.models import Unit
 from lizard_measure.models import HorizontalBarGraph
 from lizard_measure.models import HorizontalBarGraphItem
+from lizard_measure.models import Score
 from lizard_area.models import Area
 
 from nens_graph.common import DateGridGraph
@@ -235,7 +236,7 @@ def measure_graph(self, area_ident, filter='all',
 
     each row is an area
     """
-    
+
     if filter == 'measure':
         measures = Measure.objects.filter(Q(pk=area_ident)|Q(parent__id=area_ident))
     else:
@@ -457,6 +458,28 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
         return graph_items, graph_settings
 
     def get(self, request, *args, **kwargs):
+        """
+        Draw the EKR graph
+        """
+        def score_from_graph_item(graph_item):
+            """
+            Return a score from graph_item.
+
+            When a corresponding Score cannot be found, return empty
+            memory score.
+            """
+            try:
+                # TODO: test with correct database
+                score = Score.objects.get(
+                    area__ident=graph_item.location.ident,
+                    measuring_rod=graph_item.measuring_rod)
+            except Score.DoesNotExist:
+                score = Score()
+                logger.warn('HorizontalBarGraphView: Score could '
+                            'not be found using %s, %s' %
+                            (graph_item.location.ident,
+                             graph_item.measuring_rod))
+            return score
 
         dt_start, dt_end = self._dt_from_request()
         graph_items, graph_settings = self._graph_items_from_request()
@@ -478,12 +501,16 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
 
         yticklabels = []
         block_width = (date2num(dt_end) - date2num(dt_start)) / 50
-        collected_goal_timestamps = Set()
+        # collected_goal_timestamps = Set()
 
         for index, graph_item in enumerate(graph_items):
             yticklabels.append(graph_item.label)
             if not graph_item.location:
                 graph_item.location = graph_settings['location']
+
+            # Find the corresponding Score.
+            score = score_from_graph_item(graph_item)
+
             # We want to draw a shadow past the end of the last
             # event. That's why we ignore dt_start.
             ts = graph_item.time_series(dt_end=dt_end)
@@ -518,7 +545,7 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
                     (date2num(last_date),
                      (date2num(dt_end) - date2num(dt_start))))
 
-                a, b, c, d = .2, .4, .6, .8
+                a, b, c, d = score.borders
                 block_colors = [value_to_html_color(value, a=a, b=b, c=c, d=d)
                                 for value in values]
 
@@ -532,28 +559,40 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
                     block_dates, (index - 0.4, 0.8),
                     facecolors=block_colors, edgecolors='grey')
 
-            for goal in graph_item.goals.all():
-                collected_goal_timestamps.update([goal.timestamp, ])
+            # for goal in graph_item.goals.all():
+            #     collected_goal_timestamps.update([goal.timestamp, ])
 
         # For each unique bar goal timestamp, generate a mini
         # graph. The graphs are ordered by timestamp.
-        goal_timestamps = list(collected_goal_timestamps)
-        goal_timestamps.sort()
+        goal_timestamps = [
+            datetime.datetime(2015, 1, 1, 0, 0),
+            datetime.datetime(2027, 1, 1, 0, 0),
+            ]
         subplot_numbers = [312, 313]
-        for index, goal_timestamp in enumerate(goal_timestamps[:2]):
+        for index, goal_timestamp in enumerate(goal_timestamps):
             axes_goal = graph.figure.add_subplot(subplot_numbers[index])
             axes_goal.set_yticks(range(len(yticklabels)))
             axes_goal.set_yticklabels('')
             axes_goal.set_xticks([0, ])
             axes_goal.set_xticklabels([goal_timestamp.year, ])
             for graph_item_index, graph_item in enumerate(graph_items):
-                # 0 or 1 items
-                goals = graph_item.goals.filter(timestamp=goal_timestamp)
-                for goal in goals:
+                # TODO: make more efficient; score is retrieved twice
+                # in this function.
+                score = score_from_graph_item(graph_item)
+                a, b, c, d = score.borders
+                goal = score.targets[index]
+                if goal is not None:
                     axes_goal.broken_barh(
                         [(-0.5, 1)], (graph_item_index - 0.4, 0.8),
-                        facecolors=value_to_html_color(goal.value),
+                        facecolors=value_to_html_color(goal),
                         edgecolors='grey')
+                # # 0 or 1 items
+                # goals = graph_item.goals.filter(timestamp=goal_timestamp)
+                # for goal in goals:
+                #     axes_goal.broken_barh(
+                #         [(-0.5, 1)], (graph_item_index - 0.4, 0.8),
+                #         facecolors=value_to_html_color(goal.value),
+                #         edgecolors='grey')
             axes_goal.set_xlim((-0.5, 0.5))
             axes_goal.set_ylim(-0.5, len(yticklabels) - 0.5)
 

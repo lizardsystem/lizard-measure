@@ -16,7 +16,6 @@ from lizard_measure.models import KRWWatertype
 from lizard_measure.models import Score
 from lizard_measure.models import MeasuringRod
 from lizard_measure.models import HorizontalBarGraph
-from lizard_measure.models import HorizontalBarGraphGoal
 from lizard_measure.models import HorizontalBarGraphItem
 
 
