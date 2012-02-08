@@ -511,6 +511,7 @@ def import_measures(filename):
             'initiator': initiator,
             'valid': True,
             'in_sgbp': rec['par_sgbp'],
+            'is_indicator': True,
 
         }
 
