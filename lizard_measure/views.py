@@ -35,8 +35,8 @@ from nens_graph.common import dates_values
 from matplotlib.dates import date2num
 from lizard_map.views import AppView
 from lizard_graph.views import TimeSeriesViewMixin
-#from lizard_measure.models import HorizontalBarGraph
-#from lizard_graph.models import HorizontalBarGraphItem
+from lizard_measure.models import HorizontalBarGraph
+from lizard_measure.models import HorizontalBarGraphItem
 from lizard_fewsnorm.models import GeoLocationCache
 
 
