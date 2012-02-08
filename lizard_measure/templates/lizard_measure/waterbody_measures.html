@@ -3,20 +3,55 @@
 <div id="textual" class='lizard'>
   <h2>Maatregelen voor {{ waterbody.name }}</h2>
   <div style="width: 100%; height: 250px;" class="img-use-my-size">
-    <a href="/measure/summary/{{ waterbody.ident }}/measure_graph/" class="replace-with-image">
+    <a href="/measure/measure_graph/{{ waterbody.ident }}/focus/" class="replace-with-image">
       afbeelding nog niet geladen
     </a>
   </div>
 
   <h2>Maatregelen</h2>
-  <ul>
+  <table>
+    <tr>
+        <td>
+            Titel
+        </td>
+        <td>
+            Type Maatregel
+        </td>
+        <td>
+            Status
+        </td>
+        <td>
+            KRW maatregel
+        </td>
+        <td>
+            Initiatiefnemer
+        </td>
+        <td>
+            Bron
+        </td>
+    </tr>
     {% for measure in main_measures %}
-    <li><a href="javascript:Ext.getCmp('portalWindow').linkToPopup('maatregel {{ measure.title }}','/measure/measure/{{ measure.id }}/',{},{save: ['bewerk', '/measure/measure_detailedit_portal/',{measure_id: '{{ measure.id }}'}, null, false, 'component', true]}, false )">{{ measure.title }}{% if measure.status_moment %} ({{ measure.status_moment.status }}){% endif %}</a>
-        {% with "lizard_measure/measure_tree_snippet.html" as ourselves %}
-          {% include ourselves %}
-        {% endwith %}
-    </li>
+    <tr>
+        <td>
+            <a href="javascript:Ext.getCmp('portalWindow').linkToPopup('maatregel {{ measure.title }}','/measure/measure/{{ measure.id }}/',{},{save: ['bewerk', '/measure/measure_detailedit_portal/',{measure_id: '{{ measure.id }}'}, null, false, 'component', true]}, false )">{{ measure.title }}</a>
+        </td>
+        <td>
+            {{ measure.measure_type }}
+        </td>
+        <td>
+            {% if measure.status_moment %} {{ measure.status_moment.status }}{% endif %}
+        </td>
+        <td>
+            {{ measure.is_KRW_measure }}
+        </td>
+        <td>
+            {{ measure.initiator }}
+        </td>
+        <td>
+            {{ measure.get_import_source_display }}
+        </td>
+    </tr>
     {% endfor %}
-  </ul>
+  </table>
 </div>
 

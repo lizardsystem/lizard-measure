@@ -5,11 +5,11 @@
 <div id="textual" class="lizard">
   <h2>Maatregel: {{ view.measure.title }}</h2>
   <div style="width: 100%; height: 130px;" class="img-use-my-size">
-{% comment %}
-    <a href="{% url lizard_krw.measure_graph measure_id=measure.id %}" class="replace-with-image">
+
+   <a href="/measure/measure_graph/{{ view.measure.id }}/measure/" class="replace-with-image">
       afbeelding nog niet geladen
     </a>
-{% endcomment %}
+
   </div>
   <table class="generic-table">
     <tbody>

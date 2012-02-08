@@ -24,7 +24,17 @@ class ScoreView(BaseApiView):
     """
     #todo: add waarde optioneel
     model_class = Score
-
+    field_mapping = {
+        'id': 'id',
+        'mep': 'mep',
+        'gep': 'gep',
+        'limit_insufficient_moderate': 'limit_insufficient_moderate',
+        'limit_bad_insufficient': 'limit_bad_insufficient',
+        'target_2015': 'target_2015',
+        'target_2027': 'target_2027',
+        'measuring_rod':'measuring_rod__description',
+        'area': 'area__name'
+    }
     def get_object_for_api(self,
                            score,
                            flat=True,
@@ -36,17 +46,7 @@ class ScoreView(BaseApiView):
         model_class = Score
         name_field = 'measuring_rod__description'
 
-        field_mapping = {
-            'id': 'id',
-            'mep': 'mep',
-            'gep': 'gep',
-            'limit_insufficient_moderate': 'limit_insufficient_moderate',
-            'limit_bad_insufficient': 'limit_bad_insufficient',
-            'target_2015': 'target_2015',
-            'target_2027': 'target_2027',
-            'measuring_rod':'measuring_rod__description',
-            'area': 'area__name'
-        }
+
 
         output = {
             'id': score.id,
@@ -224,9 +224,9 @@ class MeasureView(BaseApiView):
 
         if size >= self.COMPLETE:
             output.update({
-                'read_only': measure.read_only,
-                'import_raw': measure.import_raw,
-                'import_source': measure.import_source,
+                'read_only': measure.read_only, #read only
+                'import_raw': measure.import_raw, #read only
+                'import_source': measure.get_import_source_display(), #read only
             })
 
         if include_geom:

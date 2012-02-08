@@ -1,6 +1,7 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
 # -*- coding: utf-8 -*-
 import datetime
+import dateutil
 import logging
 from django.core.exceptions import MultipleObjectsReturned
 
@@ -1058,13 +1059,13 @@ class Measure(models.Model):
                 moment['realisation_date'] == ''):
                 msm.realisation_date = None
             else:
-                msm.realisation_date = moment['realisation_date'].split('T')[0]
+                msm.realisation_date = dateutil.parser.parse(moment['realisation_date'])
 
             if (moment['planning_date'] is None or
                 moment['planning_date'] == ''):
                 msm.planning_date = None
             else:
-                msm.planning_date = moment['planning_date'].split('T')[0]
+                msm.planning_date = dateutil.parser.parse(moment['planning_date'])
 
             msm.save()
 
@@ -1196,38 +1197,54 @@ class Measure(models.Model):
         measure_status_moments. Else return calculated aggregated list
         of status moments. """
         msm_dates = self.measurestatusmoment_set.all()
+
         if end_date is not None:
             if is_planning:
                 msm_dates = msm_dates.filter(planning_date__lte=end_date)
+                return msm_dates
             else:
                 msm_dates = msm_dates.filter(realisation_date__lte=end_date)
 
-        # No children: we're finished.
-        if not self.measure_set.all():
-            return msm_dates
+        return msm_dates
 
-        # With children:
-        # Collect all msms where the date is used to calculate statuses.
-        msm_dates = list(msm_dates)
-        for measure_child in self.measure_set.all():
-            msm_dates_children = measure_child.measure_status_moments(
-                is_planning=is_planning, end_date=end_date)
-            msm_dates_children = filter(None, msm_dates_children)
-            msm_dates.extend(list(msm_dates_children))
-        # For each date, calculate status and append to msm.
-        msm = []
-        for msm_date in msm_dates:
-            status_moment = self.status_moment(
-                dt=msm_date.datetime, is_planning=is_planning)
-            # Remove None's: they can only appear at 'the front' of
-            # the timeline and they are irrelevant.
-            if status_moment:
-                status_moment.datetime = msm_date.datetime
-                msm.append(status_moment)
 
-        msm = sorted(msm, key=lambda m: m.datetime)
 
-        return msm
+        #niet meer nodig??? planning van hoofdmaatregel is nu maatgevend?
+#        if end_date is not None:
+#            if is_planning:
+#                msm_dates = msm_dates.filter(planning_date__lte=end_date)
+#            else:
+#                msm_dates = msm_dates.filter(realisation_date__lte=end_date)
+#
+#        # No children: we're finished.
+#        if not self.measure_set.all():
+#            return msm_dates
+#
+#        # With children:
+#        # Collect all msms where the date is used to calculate statuses.
+#        msm_dates = list(msm_dates)
+#        for measure_child in self.measure_set.all():
+#            msm_dates_children = measure_child.measure_status_moments(
+#                is_planning=is_planning, end_date=end_date)
+#            msm_dates_children = filter(None, msm_dates_children)
+#            msm_dates.extend(list(msm_dates_children))
+#        # For each date, calculate status and append to msm.
+#        msm = []
+#        for msm_date in msm_dates:
+#            status_moment = self.status_moment(
+#                dt=msm_date.datetime, is_planning=is_planning)
+#            # Remove None's: they can only appear at 'the front' of
+#            # the timeline and they are irrelevant.
+#            if status_moment:
+#                if is_planning:
+#                    status_moment.datetime = msm_date.planning_date
+#                else:
+#                    status_moment.datetime = msn_date.realisation_date
+#                msm.append(status_moment)
+#
+#        msm = sorted(msm, key=lambda m: m.datetime)
+#
+#        return msm
 
     def image(self, start_date, end_date, width=None, height=None):
         """Return image from adapter for measures.

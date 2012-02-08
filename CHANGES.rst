@@ -5,6 +5,10 @@ Changelog of lizard-measure
 1.5.9 (unreleased)
 ------------------
 
+- fixed measure graph
+- extend waterbody_measure according to use case
+- fixed doel management screen (api and gridview)
+
 - Add EKF model
 
 - Several smaller improvements on importscript and model
