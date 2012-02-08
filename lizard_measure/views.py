@@ -28,6 +28,8 @@ from lizard_measure.models import MeasureType
 from lizard_measure.models import MeasurePeriod
 from lizard_measure.models import MeasureCategory
 from lizard_measure.models import Unit
+from lizard_measure.models import HorizontalBarGraph
+from lizard_measure.models import HorizontalBarGraphItem
 from lizard_area.models import Area
 
 from nens_graph.common import DateGridGraph
@@ -35,10 +37,8 @@ from nens_graph.common import dates_values
 from matplotlib.dates import date2num
 from lizard_map.views import AppView
 from lizard_graph.views import TimeSeriesViewMixin
-from lizard_measure.models import HorizontalBarGraph
-from lizard_measure.models import HorizontalBarGraphItem
 from lizard_fewsnorm.models import GeoLocationCache
-
+from lizard_history.utils import get_full_history
 
 logger = logging.getLogger(__name__)
 
@@ -76,6 +76,7 @@ CRUMB_HOMEPAGE = {'name': 'home', 'url': '/'}
 #     # will fire.
 #     return HttpResponse('')
 
+
 class MeasureDetailView(AppView):
     """
     Show measure details
@@ -93,6 +94,24 @@ class MeasureDetailView(AppView):
         self.measure_id = kwargs['measure_id']
         return super(MeasureDetailView, self).get(
             request, *args, **kwargs)
+
+
+class MeasureHistoryView(MeasureDetailView):
+    """
+    Show measure history
+    """
+    template_name='lizard_measure/measure_history.html'
+
+    def full_history(self):
+        """
+        Return full history, if possible cached
+        """
+        if not hasattr(self, '_full_history'):
+            self._full_history = get_full_history(
+                self.measure(),
+            )
+
+        return self._full_history
 
 
 def measure_detail(request, measure_id,

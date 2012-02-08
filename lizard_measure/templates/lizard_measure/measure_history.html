@@ -1,0 +1,25 @@
+{# KRW measure view: info and graphs on KRW measures #}
+{% load workspaces %}
+{% load utility %}
+
+<div id="textual" class="lizard">
+  <h2>Maatregel: {{ view.measure.title }}</h2>
+  <table class="generic-table">
+    <thead>
+      <tr>
+        <td>Gebruiker</td>
+        <td>Registratie</td>
+        <td>Samenvatting</td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for h in view.full_history %}
+      <tr>
+        <td>{{h.user}}</td>
+        <td>{{h.datetime}}</td>
+        <td>{{h.changes}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
