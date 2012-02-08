@@ -645,7 +645,6 @@ class MeasureStatus(models.Model):
         max_length=200,
         verbose_name=_('Status'),
     )
-    # Color is matplotlib style, i.e. '0.75', 'red', '#eeff00'.
     color = ColorField(
         max_length=20,
         help_text=_('Color is rrggbb'),

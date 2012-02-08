@@ -53,7 +53,7 @@ class MeasureAdmin(admin.ModelAdmin):
 
 
 class MeasureStatusAdmin(admin.ModelAdmin):
-    list_display = ['name', 'value', 'color', ]
+    list_display = ['name', 'value', 'color', 'valid']
 
 
 class MeasureTypeAdmin(admin.ModelAdmin):

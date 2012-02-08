@@ -65,7 +65,7 @@ def _clear_all():
     MeasureCategory.objects.all().delete()
     MeasureType.objects.all().delete()
     MeasurePeriod.objects.all().delete()
-    MeasureStatus.objects.all().delete()
+#   MeasureStatus.objects.all().delete()
     MeasureStatusMoment.objects.all().delete()
     FundingOrganization.objects.all().delete()
 
@@ -207,15 +207,15 @@ def import_KRW_lookup(filename):
                 }
             )
         # Insert 'matstatus'
-        if rec['domein'] == 'matstatus':
-            measure_status, measure_status_created = _get_or_create(
-                model=MeasureStatus,
-                get_kwargs={'name': rec['description']},
-                extra_kwargs={
-                    'color': 'gray',
-                    'valid': True,
-                },
-            )
+#       if rec['domein'] == 'matstatus':
+#           measure_status, measure_status_created = _get_or_create(
+#               model=MeasureStatus,
+#               get_kwargs={'name': rec['description']},
+#               extra_kwargs={
+#                   'color': 'gray',
+#                   'valid': True,
+#               },
+#           )
         # Insert 'tijdvak'
         if rec['domein'] == 'tijdvak' and not rec['description'] == 'onbekend':
             start_date, end_date = _dates_from_xml(rec['description'])
@@ -608,7 +608,7 @@ class Command(BaseCommand):
             rel_path = 'import_krw_portaal'
         import_path = os.path.join(settings.BUILDOUT_DIR, rel_path)
 
-        print 'Deleting all measure-related objects.'
+        print 'Deleting many measure-related objects.'
         _clear_all()
 
         print 'Importing KRW portaal xml files from %s.' % import_path
