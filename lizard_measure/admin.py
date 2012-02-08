@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+from lizard_measure.models import EKF
 from lizard_measure.models import FundingOrganization
 from lizard_measure.models import Measure
 from lizard_measure.models import MeasurePeriod
@@ -14,6 +15,9 @@ from lizard_measure.models import KRWStatus
 from lizard_measure.models import KRWWatertype
 from lizard_measure.models import Score
 from lizard_measure.models import MeasuringRod
+#from lizard_measure.models import HorizontalBarGraph
+#from lizard_measure.models import HorizontalBarGraphGoal
+#from lizard_measure.models import HorizontalBarGraphItem
 
 
 class MeasureStatusMomentInline(admin.TabularInline):
@@ -22,6 +26,10 @@ class MeasureStatusMomentInline(admin.TabularInline):
 
 class FundingOrganizationInline(admin.TabularInline):
     model = FundingOrganization
+
+
+class EKFInline(admin.TabularInline):
+    model = EKF
 
 
 class MeasureInline(admin.TabularInline):
@@ -40,7 +48,7 @@ class MeasureAdmin(admin.ModelAdmin):
         'import_source',
     ]
     inlines = [
-        MeasureStatusMomentInline, FundingOrganizationInline,
+        MeasureStatusMomentInline, FundingOrganizationInline, EKFInline
     ]
 
 
@@ -132,6 +140,15 @@ class OrganizationAdmin(admin.ModelAdmin):
     ]
 
 
+#class HorizontalBarGraphItemInline(admin.TabularInline):
+#    model = HorizontalBarGraphItem
+#
+#
+#class HorizontalBarGraphAdmin(admin.ModelAdmin):
+#    prepopulated_fields = {"slug": ("name", )}
+#    inlines = [HorizontalBarGraphItemInline]
+
+
 admin.site.register(FundingOrganization)
 admin.site.register(Measure, MeasureAdmin)
 admin.site.register(MeasurePeriod)
@@ -146,3 +163,6 @@ admin.site.register(KRWStatus, KRWStatusAdmin)
 admin.site.register(KRWWatertype, KRWWatertypeAdmin)
 admin.site.register(Score, ScoreAdmin)
 admin.site.register(MeasuringRod, MeasuringRodAdmin)
+#admin.site.register(HorizontalBarGraph, HorizontalBarGraphAdmin)
+#admin.site.register(HorizontalBarGraphItem)
+

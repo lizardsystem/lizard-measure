@@ -9,6 +9,11 @@ Changelog of lizard-measure
 - extend waterbody_measure according to use case
 - fixed doel management screen (api and gridview)
 
+- Add EKF model
+
+- Several smaller improvements on importscript and model
+
+- Moved HorizontalBarGraph View and models from lizard-graph to here.
 
 
 1.5.8 (2012-01-31)

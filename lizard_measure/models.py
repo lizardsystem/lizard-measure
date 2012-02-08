@@ -23,6 +23,8 @@ from lizard_measure.synchronisation import SyncField
 from lizard_measure.synchronisation import SyncSource
 from lizard_measure.synchronisation import Synchronizer
 
+from lizard_graph.models import GraphItemMixin
+
 
 logger = logging.getLogger(__name__)
 
@@ -616,6 +618,11 @@ class FundingOrganization(models.Model):
         verbose_name_plural = _("Funding organizations")
 
     percentage = models.FloatField()
+    comment = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name=_('Comment'),
+    )
     organization = models.ForeignKey(Organization)
     measure = models.ForeignKey('Measure')
 
@@ -721,6 +728,37 @@ class MeasurePeriod(models.Model):
         return '%d - %d' % (self.start_date.year, self.end_date.year)
 
 
+class EKF(models.Model):
+    """
+    EKFs related to measures.
+    """
+    EKF_CHOICES = [(n, n) for n in range(1, 10)]
+
+    measure = models.ForeignKey('Measure')
+    ekf = models.IntegerField(
+        choices=EKF_CHOICES,
+        blank=True,
+        null=True,
+        verbose_name=_('Ecological Key Factor'),
+    )
+    target = models.NullBooleanField(
+        verbose_name=_('Target'),
+    )
+    positive = models.NullBooleanField(
+        verbose_name=_('Positive'),
+    )
+    negative = models.NullBooleanField(
+        verbose_name=_('Negative'),
+    )
+
+    class Meta:
+        verbose_name = _("Ecological Key Factor")
+        verbose_name_plural = _("Ecological Key Factors")
+
+    def __unicode__(self):
+        return '%s - %i' % (self.measure, self.ekf)
+
+
 class Measure(models.Model):
     """
     KRW maatregel,
@@ -781,6 +819,11 @@ class Measure(models.Model):
         MeasureType,
         help_text="SGBP code",
         verbose_name='Maatregeltype',
+    )
+
+    in_sgbp = models.NullBooleanField(
+        default=None,
+        verbose_name=_('in SGBP'),
     )
 
     title = models.CharField(
@@ -1300,3 +1343,95 @@ class Measure(models.Model):
             for funding_organization in funding_organizations:
                 result += funding_organization.cost
         return result
+
+
+# EKR Graphs
+#
+#class HorizontalBarGraph(models.Model):
+#    """
+#    Predefined horizontal bar graph.
+#    """
+#    name = models.CharField(max_length=80)
+#    slug = models.SlugField(unique=True)
+#    description = models.TextField(null=True, blank=True)
+#
+#    title = models.CharField(
+#        null=True, blank=True, max_length=80,
+#        help_text="Last filled in is used in graph")
+#    x_label = models.CharField(
+#        null=True, blank=True, max_length=80,
+#        help_text="Last filled in is used in graph")
+#    y_label = models.CharField(
+#        null=True, blank=True, max_length=80,
+#        help_text="Last filled in is used in graph")
+#
+#    def __unicode__(self):
+#        return '%s (%s)' % (self.name, self.slug)
+#
+#
+#class HorizontalBarGraphGoal(models.Model):
+#    """
+#    Define a goal for a horizontal bar.
+#    """
+#    timestamp = models.DateTimeField()
+#    value = models.FloatField()
+#
+#    class Meta:
+#        ordering = ('timestamp', 'value', )
+#
+#    def __unicode__(self):
+#        return '%s - %s' % (self.timestamp, self.value)
+#
+#
+#class HorizontalBarGraphItem(GraphItemMixin):
+#    """
+#    Represent one row of a horizontal bar graph.
+#    """
+#    horizontal_bar_graph = models.ForeignKey(HorizontalBarGraph)
+#    index = models.IntegerField(default=100)
+#
+#    label = models.CharField(
+#        null=True, blank=True, max_length=80)
+#
+#    goals = models.ManyToManyField(
+#        HorizontalBarGraphGoal, null=True, blank=True)
+#
+#    class Meta:
+#        # Graphs are drawn on y values in increasing order. The lowest
+#        # bar is drawn first.
+#        ordering = ('-index', )
+#
+#    def __unicode__(self):
+#        return '%s' % self.label
+#
+#    @classmethod
+#    def from_dict(cls, d):
+#        """
+#        Return a HorizontalBarGraphItem matching the provided dictionary.
+#
+#        Note that the objects are not saved.
+#
+#        The provided dictionary must have the following keys:
+#        - label: label that you want to show.
+#        - location: fews location id
+#        - parameter: fews parameter id
+#        - module: fews module id
+#        - goals (optional): list of {'timestamp':<datetime>,
+#          'value':<floatvalue>}
+#        """
+#        try:
+#            location = GeoLocationCache.objects.get(ident=d['location'])
+#        except GeoLocationCache.DoesNotExist:
+#            # TODO: see if "db_name" is provided, then add
+#            # location anyway
+#            location = GeoLocationCache(ident=d['location'])
+#            logger.exception(
+#                "Ignored not existing GeoLocationCache for ident=%s" %
+#                d['location'])
+#
+#        graph_item = HorizotalBarGraphItem()
+#        graph_item.location = location
+#        graph_item.parameter = ParameterCache(ident=d['parameter'])
+#        graph_item.module = ModuleCache(ident=d['module'])
+#        graph_item.goals = []
+#

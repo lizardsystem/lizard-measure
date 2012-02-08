@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-24 09:58-0600\n"
+"POT-Creation-Date: 2012-02-07 07:44-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,304 +17,332 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: models.py:37 models.py:87 models.py:185 models.py:362 models.py:435
-#: models.py:542 models.py:842
+#: models.py:40 models.py:90 models.py:188 models.py:365 models.py:438
+#: models.py:545 models.py:890
 msgid "Description"
 msgstr ""
 
-#: models.py:44 models.py:97 models.py:225 models.py:334 models.py:384
-#: models.py:476 models.py:560 models.py:651 models.py:705
+#: models.py:47 models.py:100 models.py:228 models.py:337 models.py:387
+#: models.py:479 models.py:563 models.py:659 models.py:716
 msgid "Valid"
 msgstr ""
 
-#: models.py:48
+#: models.py:51
 msgid "KRW Status"
 msgstr ""
 
-#: models.py:49
+#: models.py:52
 msgid "KRW Statuses"
 msgstr ""
 
-#: models.py:93 models.py:192 models.py:379 models.py:441 models.py:551
+#: models.py:96 models.py:195 models.py:382 models.py:444 models.py:554
 msgid "Group"
 msgstr ""
 
-#: models.py:101
+#: models.py:104
 msgid "KRW Watertype"
 msgstr ""
 
-#: models.py:102
+#: models.py:105
 msgid "KRW Watertypes"
 msgstr ""
 
-#: models.py:131 models.py:827
+#: models.py:134 models.py:875
 msgid "Waterbody"
 msgstr ""
 
-#: models.py:132
+#: models.py:135
 msgid "Waterbodies"
 msgstr ""
 
-#: models.py:140 models.py:262
+#: models.py:143 models.py:265
 msgid "Area ident for the case the real Area cannot be imported yet"
 msgstr ""
 
-#: models.py:162 models.py:199
+#: models.py:165 models.py:202
 msgid "Measuring rod"
 msgstr ""
 
-#: models.py:163
+#: models.py:166
 msgid "Measuring rods"
 msgstr ""
 
-#: models.py:168
+#: models.py:171
 msgid "Measuring rod id"
 msgstr ""
 
-#: models.py:178 models.py:357 models.py:432 models.py:537
+#: models.py:181 models.py:360 models.py:435 models.py:540
 msgid "Code"
 msgstr ""
 
-#: models.py:206
+#: models.py:209
 msgid "Sub measuring rod"
 msgstr ""
 
-#: models.py:213 models.py:388
+#: models.py:216 models.py:391
 msgid "Unit"
 msgstr ""
 
-#: models.py:220
+#: models.py:223
 msgid "Sign"
 msgstr ""
 
-#: models.py:270
+#: models.py:273
 msgid "Insufficient-moderate limit"
 msgstr ""
 
-#: models.py:271
+#: models.py:274
 msgid "limit from insufficient to moderate"
 msgstr ""
 
-#: models.py:276
+#: models.py:279
 msgid "Bad-insufficient limit"
 msgstr ""
 
-#: models.py:277
+#: models.py:280
 msgid "limit from bad to insufficient"
 msgstr ""
 
-#: models.py:281
+#: models.py:284
 msgid "True if higher is better"
 msgstr ""
 
-#: models.py:299
+#: models.py:302
 msgid "Score"
 msgstr ""
 
-#: models.py:300
+#: models.py:303
 msgid "Scores"
 msgstr ""
 
-#: models.py:322
+#: models.py:325
 msgid "Steering parameter"
 msgstr ""
 
-#: models.py:323
+#: models.py:326
 msgid "Steering parameters"
 msgstr ""
 
-#: models.py:338
+#: models.py:341
 msgid "Measure category"
 msgstr ""
 
-#: models.py:339
+#: models.py:342
 msgid "Measure categories"
 msgstr ""
 
-#: models.py:368
+#: models.py:371
 msgid "Dimension"
 msgstr ""
 
-#: models.py:373
+#: models.py:376
 msgid "Conversion factor"
 msgstr ""
 
-#: models.py:389 models.py:448
+#: models.py:392 models.py:451
 msgid "Units"
 msgstr ""
 
-#: models.py:425
+#: models.py:428
 msgid "Measure type"
 msgstr ""
 
-#: models.py:426
+#: models.py:429
 msgid "Measure types"
 msgstr ""
 
-#: models.py:454
+#: models.py:457
 msgid "Class"
 msgstr ""
 
-#: models.py:460
+#: models.py:463
 msgid "Subcategory"
 msgstr ""
 
-#: models.py:466
+#: models.py:469
 msgid "Harmonisation"
 msgstr ""
 
-#: models.py:472
+#: models.py:475
 msgid "Combined Name"
 msgstr ""
 
-#: models.py:523
+#: models.py:526
 msgid "Aquo domain table 'Waterbeheerder'"
 msgstr ""
 
-#: models.py:524
+#: models.py:527
 msgid "Aquo domain table 'Meetinstantie'"
 msgstr ""
 
-#: models.py:525
+#: models.py:528
 msgid "CBS Municipality"
 msgstr ""
 
-#: models.py:526
+#: models.py:529
 msgid "KRW portal"
 msgstr ""
 
-#: models.py:527
+#: models.py:530
 msgid "Other"
 msgstr ""
 
-#: models.py:564
+#: models.py:567
 msgid "Organization"
 msgstr ""
 
-#: models.py:565
+#: models.py:568
 msgid "Organizations"
 msgstr ""
 
-#: models.py:611
+#: models.py:614
 msgid "Funding organization"
 msgstr ""
 
-#: models.py:612
+#: models.py:615
 msgid "Funding organizations"
 msgstr ""
 
-#: models.py:636
+#: models.py:621
+msgid "Comment"
+msgstr ""
+
+#: models.py:644
 msgid "Status"
 msgstr ""
 
-#: models.py:641
+#: models.py:649
 msgid "Color is rrggbb"
 msgstr ""
 
-#: models.py:642
+#: models.py:650
 msgid "Color"
 msgstr ""
 
-#: models.py:647
+#: models.py:655
 msgid "Numeric value"
 msgstr ""
 
-#: models.py:655
+#: models.py:663
 msgid "Measure status"
 msgstr ""
 
-#: models.py:656
+#: models.py:664
 msgid "Measure statuses"
 msgstr ""
 
-#: models.py:674
+#: models.py:682
 msgid "Description of statusupdate. Recommended."
 msgstr "Omschrijving van de statusupdate. Aanbevolen."
 
-#: models.py:680
+#: models.py:688
 msgid "Expenditure for investment"
 msgstr ""
 
-#: models.py:685
+#: models.py:693
 msgid "Expenditure for exploitation"
 msgstr ""
 
-#: models.py:689
+#: models.py:697
 msgid "Measure status moment"
 msgstr ""
 
-#: models.py:690
+#: models.py:698
 msgid "Measure status moments"
 msgstr ""
 
-#: models.py:710
+#: models.py:721
 msgid "Measure period"
 msgstr ""
 
-#: models.py:711
+#: models.py:722
 msgid "Measure periods"
 msgstr ""
 
-#: models.py:726
+#: models.py:739 models.py:753
+msgid "Ecological Key Factor"
+msgstr ""
+
+#: models.py:742
+msgid "Target"
+msgstr ""
+
+#: models.py:745
+msgid "Positive"
+msgstr ""
+
+#: models.py:748
+msgid "Negative"
+msgstr ""
+
+#: models.py:754
+msgid "Ecological Key Factors"
+msgstr ""
+
+#: models.py:769
 msgid "Min"
 msgstr ""
 
-#: models.py:727
+#: models.py:770
 msgid "Max"
 msgstr ""
 
-#: models.py:728
+#: models.py:771
 msgid "Avg"
 msgstr ""
 
-#: models.py:751
+#: models.py:794
 msgid "Unique code"
 msgstr ""
 
-#: models.py:759
+#: models.py:802
 msgid "Is a KRW measure"
 msgstr ""
 
-#: models.py:800
-msgid "Source of imported data"
-msgstr ""
-
-#: models.py:806
-msgid "Original date of imported data"
-msgstr ""
-
-#: models.py:811
-msgid "Full raw imported data"
-msgstr ""
-
-#: models.py:826
-msgid "Which waterbodies does this measure belong to?"
-msgstr ""
-
-#: models.py:834
-msgid "Which areas does this measure belong to?"
-msgstr ""
-
-#: models.py:835
-msgid "Area"
+#: models.py:824
+msgid "in SGBP"
 msgstr ""
 
 #: models.py:848
+msgid "Source of imported data"
+msgstr ""
+
+#: models.py:854
+msgid "Original date of imported data"
+msgstr ""
+
+#: models.py:859
+msgid "Full raw imported data"
+msgstr ""
+
+#: models.py:874
+msgid "Which waterbodies does this measure belong to?"
+msgstr ""
+
+#: models.py:882
+msgid "Which areas does this measure belong to?"
+msgstr ""
+
+#: models.py:883
+msgid "Area"
+msgstr ""
+
+#: models.py:896
 msgid "Categories"
 msgstr ""
 
-#: models.py:865
+#: models.py:913
 msgid "Initiator of this measure"
 msgstr ""
 
-#: models.py:873
+#: models.py:921
 msgid "Executive of this measure"
 msgstr ""
 
-#: models.py:923
+#: models.py:977
 msgid "Measure"
 msgstr ""
 
-#: models.py:924
+#: models.py:978
 msgid "Measures"
 msgstr ""
