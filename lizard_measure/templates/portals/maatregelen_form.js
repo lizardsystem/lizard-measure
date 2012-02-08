@@ -6,7 +6,8 @@
     trackResetOnLoad: true,
     bodyPadding: '10 25 10 10',//padding on the right side 25 for scrollbar
     height: '100%',
-    url: '/measure/api/measure/?_accept=application/json&include_geom=true&action=update',
+    url: '/measure/api/measure/?_accept=application/json&include_geom=true&action={% if measure %}update{% else %}create{% endif %}',
+{% if measure %}
     loadProxy: {
         url: '/measure/api/measure/',
         type: 'ajax',
@@ -29,6 +30,7 @@
             Ext.Msg.alert("Load failed", action.result.errorMessage);
         }
     },
+{% endif %}
     items:[
         {
             name: 'id',
@@ -121,7 +123,7 @@
         },
 
         {
-            fieldLabel: 'Categoriën',
+            fieldLabel: 'Beleidsdoelen',
             name: 'categories',
             displayField: 'name',
             valueField: 'id',
@@ -445,7 +447,7 @@
                             values.edit_summary = text;
                             form_window.setLoading(true);
                             Ext.Ajax.request({
-                                url: '/measure/api/measure/?action=update&_accept=application/json&flat=false',
+                                url: '/measure/api/measure/?action={% if measure %}update{% else %}create{% endif %}&_accept=application/json&flat=false',
                                 params: {
                                     object_id: values.id,
                                     edit_message: text,

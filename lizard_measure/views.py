@@ -136,8 +136,12 @@ def _image_measures(graph, measures, start_date, end_date,
             if msm_index == len(measure_status_moments) - 1:
                 msm_end_date = end_date
             else:
-                msm_end_date = measure_status_moments[
-                    msm_index + 1].datetime
+                if is_planning:
+                    msm_end_date = measure_status_moments[
+                        msm_index + 1].planning_date
+                else:
+                    msm_end_date = measure_status_moments[
+                        msm_index + 1].realisation_date
 
             if is_planning:
                 begin = msm.planning_date
@@ -188,7 +192,7 @@ def _image_measures(graph, measures, start_date, end_date,
 
 
 
-def measure_graph(self, area_ident,
+def measure_graph(self, area_ident, filter='all',
           width=None, height=None,
           layout_extra=None):
     """
@@ -199,13 +203,20 @@ def measure_graph(self, area_ident,
 
     each row is an area
     """
-    area = get_object_or_404(Area, ident=area_ident)
-    # Obsolete: use MeasureCollections instead
-    # get measures without parent: main measures
-    measures = Measure.objects.filter(Q(waterbodies__area=area)|Q(areas=area))
+    
+    if filter == 'measure':
+        measures = Measure.objects.filter(Q(pk=area_ident)|Q(parent__id=area_ident))
+    else:
+        area = get_object_or_404(Area, ident=area_ident)
+        # Obsolete: use MeasureCollections instead
+        # get measures without parent: main measures
+        measures = Measure.objects.filter(Q(waterbodies__area=area)|Q(areas=area))
+
+        if filter == 'focus':
+            measures = measures.filter(is_indicator=True)
 
     start_date = datetime.date(2009,1,1)
-    end_date = datetime.date(2011,1,1)
+    end_date = datetime.date(2013,1,1)
     width = self.GET.get('width', 380)
     height = self.GET.get('height', 170)
     layout_extra = None
@@ -243,11 +254,16 @@ def measure_detailedit_portal(request):
 
     measure_id = request.GET.get('measure_id', None)
 
+    try:
+        measure = Measure.objects.get(pk=measure_id)
+    except Measure.DoesNotExist:
+        measure = None
+
     if request.user.is_authenticated():
 
         t = get_template('portals/maatregelen_form.js')
         c = RequestContext(request, {
-            'measure': Measure.objects.get(pk=measure_id),
+            'measure': measure,
             'measure_types': json.dumps(
                 [{'id': r.id, 'name': str(r)}
                  for r in MeasureType.objects.all()]

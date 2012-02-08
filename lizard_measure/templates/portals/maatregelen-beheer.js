@@ -57,6 +57,15 @@
                 console.log('edit record:');
                 console.log(record);
 
+                if (record) {
+                    params = {
+                        measure_id: record.data.id
+                    }
+
+                } else {
+                    params = null
+                }
+
                 Ext.create('Ext.window.Window', {
                     title: 'Maatregel',
                     width: 800,
@@ -73,13 +82,14 @@
                         ajaxOptions: {
                             method: 'GET'
                         },
-                        params: {
-                            measure_id: record.data.id
-                        },
+                        params: params,
                         renderer: 'component'
                     }
                 }).show();
             },
+            addRecord: function() {
+                this.actionEditIcon();
+           },
             dataConfig:[
                 //is_computed altijd 1 in en 1 uit en verder niet
                 {name: 'id', title: 'id', editable: false, visible: false, width: 30, type: 'number'},
@@ -90,7 +100,7 @@
                 {name: 'parent', title: 'onderdeel van', editable: false, visible: true, width: 75, type: 'combo'},
                 {name: 'measure_type', title: 'maatregeltype', editable: true, visible: true, width: 150, type: 'combo', choices: Ext.JSON.decode({% autoescape off %}'{{ measure_types }}'{% endautoescape %})},//todo: voeg choices to vanuit model
                 {name: 'period', title: 'periode', editable: true, visible: true, width: 100, type: 'combo', choices: Ext.JSON.decode({% autoescape off %}'{{ periods }}'{% endautoescape %})},//todo: voeg choices to vanuit model
-                {name: 'categories', title: 'categorie', editable: false, visible: true, width: 150, type: 'combo', multiSelect: true, choices: Ext.JSON.decode({% autoescape off %}'{{ categories }}'{% endautoescape %})},
+                {name: 'categories', title: 'beleidsdoel', editable: false, visible: true, width: 150, type: 'combo', multiSelect: true, choices: Ext.JSON.decode({% autoescape off %}'{{ categories }}'{% endautoescape %})},
                 {name: 'value', title: 'waarde', editable: true, visible: true, width: 75, type: 'number'},
                 {name: 'unit', title: 'eenheid', editable: true, visible: true, width: 75, type: 'combo', choices: Ext.JSON.decode({% autoescape off %}'{{ units }}'{% endautoescape %})},
                 {name: 'initiator', title: 'initiatiefnemer', editable: true, visible: true, width: 100,
