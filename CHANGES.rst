@@ -7,6 +7,8 @@ Changelog of lizard-measure
 
 - Fix graph not loading on measuredetail view
 
+- Add link to history page on measuredetail page
+
 
 1.6.1 (2012-02-09)
 ------------------
