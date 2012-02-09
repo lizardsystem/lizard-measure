@@ -475,6 +475,11 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
                     measuring_rod=graph_item.measuring_rod)
             except Score.DoesNotExist:
                 score = Score()
+                # These are dummy values.
+                score.mep = 0.8
+                score.gep = 0.6
+                score.limit_insufficient_moderate = 0.4
+                score.limit_bad_insufficient = 0.2
                 logger.warn('HorizontalBarGraphView: Score could '
                             'not be found using %s, %s' %
                             (graph_item.location.ident,
@@ -501,15 +506,17 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
 
         yticklabels = []
         block_width = (date2num(dt_end) - date2num(dt_start)) / 50
-        # collected_goal_timestamps = Set()
 
         for index, graph_item in enumerate(graph_items):
-            yticklabels.append(graph_item.label)
             if not graph_item.location:
                 graph_item.location = graph_settings['location']
 
             # Find the corresponding Score.
             score = score_from_graph_item(graph_item)
+            if score.id is None:
+                graph_item.label = '(%s)' % graph_item.label
+
+            yticklabels.append(graph_item.label)
 
             # We want to draw a shadow past the end of the last
             # event. That's why we ignore dt_start.
