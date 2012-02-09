@@ -2,8 +2,8 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.5.9 (unreleased)
-------------------
+1.6 (2012-02-09)
+----------------
 
 - Added default Score to EKR graph. When the score is not found in the
   database, the label will be in parentheses.
