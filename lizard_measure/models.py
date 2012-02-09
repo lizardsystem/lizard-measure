@@ -156,6 +156,13 @@ class WaterBody(models.Model):
             return u'%s' % self.area.name
 
 
+class MeasuringRodManager(models.Manager):
+    def get_by_natural_key(self, code, measuring_rod, sub_measuring_rod):
+        return self.get(
+            code=code, measuring_rod=measuring_rod,
+            sub_measuring_rod=sub_measuring_rod)
+
+
 class MeasuringRod(models.Model):
     """
     Presently only a stub to hold MeasuringRod objects.
@@ -163,6 +170,7 @@ class MeasuringRod(models.Model):
     This model must be synchronized with the Aquo domain table
     'KRWKwaliteitselement'.
     """
+    objects = MeasuringRodManager()
 
     class Meta:
         verbose_name = _("Measuring rod")
@@ -252,6 +260,9 @@ class MeasuringRod(models.Model):
                         )]
 
         return Synchronizer(sources=sources)
+
+    def natural_key(self):
+        return (self.code, self.measuring_rod, self.sub_measuring_rod, )
 
 
 class Score(models.Model):
