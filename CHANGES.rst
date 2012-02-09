@@ -2,8 +2,8 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.7 (unreleased)
-----------------
+1.6.1 (2012-02-09)
+------------------
 
 - Added natural keys for MeasuringRod (they are synced using
   import_krw_portaal).
