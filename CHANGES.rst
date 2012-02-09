@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.7 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fix graph not loading on measuredetail view
 
 
 1.6.1 (2012-02-09)
