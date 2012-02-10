@@ -149,7 +149,8 @@ class MeasureView(BaseApiView):
 
         return [{'id': obj.organization_id,
                  'percentage': obj.percentage,
-                 'name': obj.organization.description}
+                 'name': obj.organization.description,
+                 'comment': obj.comment}
                 for obj in measure.fundingorganization_set.all()]
 
     def get_object_for_api(self,
@@ -191,7 +192,7 @@ class MeasureView(BaseApiView):
                 'unit': self._get_related_object(measure.unit, flat),
                 'categories': self._get_related_objects(
                     measure.categories,
-                    flat,
+                    flat
                 ),
                 'initiator': self._get_related_object(
                     measure.initiator,
@@ -201,7 +202,7 @@ class MeasureView(BaseApiView):
                 'areas': self._get_related_objects(measure.areas, flat),
                 'waterbodies': self._get_related_objects(
                     measure.waterbodies,
-                    flat,
+                    flat
                 ),
                 'parent': self._get_related_object(
                     measure.parent,
@@ -223,7 +224,7 @@ class MeasureView(BaseApiView):
                     auto_create_missing_states=True,
                     only_valid=True,
                 ),
-                'esflinks': measure.get_esflinks(
+                'esflink_set': measure.get_esflinks(
                     auto_create_missing_states=True
                 ),
             })
@@ -242,7 +243,7 @@ class MeasureView(BaseApiView):
 
         return output
 
-    def update_many2many(self, record, model_field, linked_records):
+    def update_many2many(self, record, model_field, name, linked_records):
         """
         update specific part of manyToMany relations.
         input:
@@ -254,11 +255,11 @@ class MeasureView(BaseApiView):
             another object
         """
 
-        if model_field.name == 'funding_organizations':
+        if name == 'funding_organizations':
             record.set_fundingorganizations(linked_records)
-        elif model_field.name == 'status_moments':
+        elif name == 'status_moments':
             record.set_statusmoments(linked_records)
-        elif model_field.name == 'esflinks':
+        elif name == 'esflink_set':
             record.set_esflinks(linked_records)
         else:
             #areas, waterbodies, category

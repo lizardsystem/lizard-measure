@@ -1122,7 +1122,7 @@ class Measure(models.Model):
                 'id': measure_status_moment.status_id,
                 'name': measure_status_moment.status.name,
                 'planning_date': measure_status_moment.planning_date,
-                'realisation_date': measure_status_moment.realisation_date
+                'realisation_date': measure_status_moment.realisation_date,
             })
 
         return output
@@ -1146,11 +1146,15 @@ class Measure(models.Model):
         """
         for esflink in esflinks:
 
-            esf, new = self.esflink_set.get_or_create(
-                esf=esflink['esf']
+
+            print esflink
+            esf = self.esflink_set.get(
+                pk=esflink['id']
             )
 
-            esf.is_target_esf = esflink['esf']
+            print esflink
+
+            esf.is_target_esf = esflink['is_target_esf']
             esf.positive = esflink['positive']
             esf.negative = esflink['negative']
 
@@ -1203,10 +1207,14 @@ class Measure(models.Model):
 
         for organization in organizations:
 
+            if not 'comment' in organization:
+                organization['comment'] = ''
+
             if organization['id'] in existing_links:
                 #update record
                 funding_org = existing_links[organization['id']]
                 funding_org.percentage = organization['percentage']
+                funding_org.comment = organization['comment']
                 funding_org.save()
                 del existing_links[organization['id']]
             else:
@@ -1214,7 +1222,8 @@ class Measure(models.Model):
                 self.fundingorganization_set.create(
                     organization=Organization.objects.get(
                             pk=organization['id']),
-                    percentage=organization['percentage'])
+                    percentage=organization['percentage'],
+                    comment=organization['comment'])
 
         #remove existing links, that are not anymore
         for funding_org in existing_links.itervalues():

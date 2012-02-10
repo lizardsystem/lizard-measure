@@ -54,6 +54,7 @@
             fieldLabel: 'Onderdeel van maatregel',
             name: 'parent',
             displayField: 'name',
+            width: 400,
             valueField: 'id',
             xtype: 'combodict',
             forceSelection: false,
@@ -112,6 +113,7 @@
             name: 'measure_type',
             displayField: 'name',
             valueField: 'id',
+            width: 400,
             xtype: 'combodict',
             store: {
                 fields: ['id', 'name'],
@@ -119,8 +121,7 @@
             },
             multiSelect: false,
             forceSelection: true,
-            allowBlank: false,
-            width: 300
+            allowBlank: false
         },
         {
             fieldLabel: 'Periode',
@@ -134,7 +135,7 @@
             },
             forceSelection: true,
             allowBlank: false,
-            width: 300
+            width: 400
         },
 
         {
@@ -150,35 +151,35 @@
             multiSelect: true,
             forceSelection: true,
             allowBlank: false,
-            width: 300
+            width: 400
         },
         {
             xtype: 'tablefield',
             fieldLabel: 'Effect op ESF',
-            name: 'esflinks',
+            name: 'esflink_set',
             field_name: 'Effect',
             editable: true,
             extra_fields:[{
                 text: 'is doel',
                 dataIndex: 'is_target_esf',
                 width:100,
-                xtype: 'checkbox',
+                xtype: 'checkcolumn',
                 field: {
                     xtype: 'checkbox'
                 }
             },{
                 text: 'verwacht positief effect',
                 dataIndex: 'positive',
-                width:100,
-                xtype: 'checkbox',
+                width:150,
+                xtype: 'checkcolumn',
                 field: {
                     xtype: 'checkbox'
                 }
             },{
                 text: 'verwacht negatief effect',
                 dataIndex: 'negative',
-                width:100,
-                xtype: 'checkbox',
+                width:150,
+                xtype: 'checkcolumn',
                 field: {
                     xtype: 'checkbox'
                 }
@@ -189,7 +190,8 @@
             name: 'value',
             xtype: 'numberfield',
             minValue: 0,
-            allowBlank: true
+            allowBlank: true,
+            width: 200
         },
         {
             fieldLabel: 'Eenheid',
@@ -203,7 +205,7 @@
             },
             forceSelection: true,
             allowBlank: false,
-            width: 300
+            width: 200
         },
         {
             xtype:'fieldset',
@@ -243,7 +245,7 @@
                     }
                 }]
 
-            },
+            }/*,
             {
                 fieldLabel: 'Aggregatie',
                 name: 'aggregation_type',
@@ -257,7 +259,7 @@
                 },
                 forceSelection: true,
                 allowBlank: false
-            }
+            }*/
         ]
         },
         {
@@ -266,9 +268,6 @@
             title: 'Organisaties en kosten',
             collapsed: false,
             layout: 'anchor',
-            defaults: {
-                anchor: '100%'
-            },
             items: [
             {
                 fieldLabel: 'Initiatiefnemer',
@@ -280,6 +279,7 @@
                 typeAhead: true,
                 minChars:0,
                 forceSelection: true,
+                width: 400,
                 store: {
                     fields: ['id', 'name'],
                     proxy: {
@@ -296,6 +296,7 @@
                 fieldLabel: 'Afdeling',
                 name: 'responsible_department',
                 xtype: 'textfield',
+                width: 400,
                 allowBlank: true
             },
             {
@@ -308,6 +309,7 @@
                 queryMode: 'remote', //'local' 'remote
                 typeAhead: true,
                 minChars:0,
+                width: 400,
                 store: {
                     fields: ['id', 'name'],
                     proxy: {
@@ -325,6 +327,7 @@
                 name: 'investment_costs',
                 minValue: 0,
                 allowDecimals: false,
+                width: 200,
                 xtype: 'numberfield'
             },
             {
@@ -332,6 +335,7 @@
                 name: 'exploitation_costs',
                 minValue: 0,
                 allowDecimals: false,
+                width: 200,
                 xtype: 'numberfield'
             },
             {
@@ -340,6 +344,7 @@
                 name: 'funding_organizations',
                 read_at_once: true,
                 editable: true,
+                anchor: '100%',
                 extra_fields:[{
                     text: 'percentage',
                     dataIndex: 'percentage',
@@ -351,12 +356,20 @@
                         maxValue: 100,
                         minValue: 0
                     }
+                },{
+                    text: 'comment',
+                    dataIndex: 'comment',
+                    width:200,
+                    field: {
+                        xtype:'textfield'
+                    }
                 }],
                 combo_store: {
                     fields: [
                         {name: 'id', mapping: 'id'},
                         {name: 'percentage', mapping: 'percentage', defaultValue: 0},
-                        {name: 'name', mapping: 'name'}
+                        {name: 'name', mapping: 'name'},
+                        {name: 'comment', mapping: 'comment'}
                     ],
                     proxy: {
                         type: 'ajax',
@@ -371,7 +384,7 @@
         },
         {
             xtype:'fieldset',
-            collapsible:true,
+            collapsible: true,
             title: 'Link naar aan/afvoergebied en/of KRW-waterlichaam',
             collapsed: false,
             layout: 'anchor',
