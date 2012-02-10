@@ -33,7 +33,36 @@
     {% for measure in main_measures %}
     <tr>
         <td>
-            <a href="javascript:Ext.getCmp('portalWindow').linkToPopup('maatregel {{ measure.title }}','/measure/measure/{{ measure.id }}/',{},{save: ['bewerk', '/measure/measure_detailedit_portal/',{measure_id: '{{ measure.id }}'}, null, false, 'component', true]}, false )">{{ measure.title }}</a>
+            <a href="javascript:Ext.getCmp('portalWindow').linkToPopup(
+              'maatregel {{ measure.title }}',
+              '/measure/measure/{{ measure.id }}/',
+              {},
+              {
+                save: [
+                  'bewerk',
+                  '/measure/measure_detailedit_portal/',
+                  {measure_id: '{{ measure.id }}'},
+                  null,
+                  false,
+                  'component',
+                  true
+                ],
+                search: [
+                  'Geschiedenis',
+                  '/measure/history/{{measure.id}}',
+                  {},
+                  {},
+                  false,
+                  'html',
+                  false,
+                  false
+                ]
+              },
+              false,
+              'html',
+              false,
+              true
+              )">{{ measure.title }}</a>
         </td>
         <td>
             {{ measure.measure_type }}

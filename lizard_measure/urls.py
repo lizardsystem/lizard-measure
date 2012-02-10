@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib import admin
 
 from lizard_measure.views import MeasureDetailView
+from lizard_measure.views import MeasureHistoryView
 from lizard_measure.views import HorizontalBarGraphView
 
 
@@ -58,6 +59,10 @@ urlpatterns = patterns(
      MeasureDetailView.as_view(),
      {},
      "lizard_measure.measure"),
+    (r'^history/(?P<measure_id>\d+)/$',
+     MeasureHistoryView.as_view(),
+     {},
+     "lizard_measure.history"),
 
     #edit screens
     (r'^measure_detailedit_portal/$',

@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'lizard_security',
     'lizard_geo',
     'lizard_area',
+    'lizard_graph',
     'lizard_measure',
     'django_extensions',
     'staticfiles',
