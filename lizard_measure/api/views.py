@@ -77,7 +77,8 @@ class OrganizationView(BaseApiView):
         'code': 'code',
         'description': 'description',
         'group': 'group',
-        'source': 'source'
+        'source': 'source',
+        'read_only': 'source'
     }
 
 
@@ -105,6 +106,7 @@ class OrganizationView(BaseApiView):
                     org.source,
                     flat
                 ),
+                'read_only': org.source > 0
             }
         return output
 
@@ -180,6 +182,7 @@ class MeasureView(BaseApiView):
                 'exploitation_costs': measure.exploitation_costs,
                 'responsible_department': measure.responsible_department,
                 'value': measure.value,
+                'in_sgbp': measure.in_sgbp,
                 'measure_type': self._get_related_object(
                     measure.measure_type,
                     flat
@@ -220,6 +223,9 @@ class MeasureView(BaseApiView):
                     auto_create_missing_states=True,
                     only_valid=True,
                 ),
+                'esflinks': measure.get_esflinks(
+                    auto_create_missing_states=True
+                ),
             })
 
         if size >= self.COMPLETE:
@@ -250,8 +256,10 @@ class MeasureView(BaseApiView):
 
         if model_field.name == 'funding_organizations':
             record.set_fundingorganizations(linked_records)
-        if model_field.name == 'status_moments':
+        elif model_field.name == 'status_moments':
             record.set_statusmoments(linked_records)
+        elif model_field.name == 'esflinks':
+            record.set_esflinks(linked_records)
         else:
             #areas, waterbodies, category
             self.save_single_many2many_relation(record,

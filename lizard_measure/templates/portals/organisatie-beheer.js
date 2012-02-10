@@ -45,7 +45,8 @@
                 {name: 'code', title: 'code', editable: true, visible: true, width: 100, type: 'text'},
                 {name: 'description', title: 'beschrijving', editable: true, visible: true, width: 200, type: 'text'},
                 {name: 'group', title: 'groep', editable: true, visible: true, width: 200, type: 'text'},
-                {name: 'source', title: 'bron', editable: false, visible: true, width: 200, type: 'gridcombobox'}
+                {name: 'source', title: 'bron', editable: false, visible: true, width: 200, type: 'gridcombobox'},
+                {name: 'read_only', title: 'Alleen lezen', editable: false, visible: true, width: 50, type: 'boolean'},
            ]
         }]
 	}]

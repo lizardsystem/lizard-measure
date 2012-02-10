@@ -526,6 +526,7 @@ class Organization(models.Model):
     """
 
     SOURCE_CHOICES = (
+        (0, _("Manual")),
         (1, _("Aquo domain table 'Waterbeheerder'")),
         (2, _("Aquo domain table 'Meetinstantie'")),
         (3, _("CBS Municipality")),
@@ -533,6 +534,7 @@ class Organization(models.Model):
         (5, _("Other")),
     )
 
+    SOURCE_MANUAL = 0
     SOURCE_AQUO_WATERMANAGER = 1
     SOURCE_AQUO_MEASUREMENT_AUTHORITY = 2
     SOURCE_CBS_MUNICIPALITY = 3
@@ -558,7 +560,7 @@ class Organization(models.Model):
     )
     source = models.IntegerField(
         choices=SOURCE_CHOICES,
-        default=SOURCE_OTHER,
+        default=SOURCE_MANUAL,
     )
 
     valid = models.NullBooleanField(
@@ -728,20 +730,20 @@ class MeasurePeriod(models.Model):
         return '%d - %d' % (self.start_date.year, self.end_date.year)
 
 
-class EKF(models.Model):
+class EsfLink(models.Model):
     """
-    EKFs related to measures.
+    ESF related to measure.
     """
-    EKF_CHOICES = [(n, n) for n in range(1, 10)]
+    ESF_CHOICES = [(n, n) for n in range(1, 10)]
 
     measure = models.ForeignKey('Measure')
-    ekf = models.IntegerField(
-        choices=EKF_CHOICES,
+    esf = models.IntegerField(
+        choices=ESF_CHOICES,
         blank=True,
         null=True,
         verbose_name=_('Ecological Key Factor'),
     )
-    target = models.NullBooleanField(
+    is_target_esf = models.NullBooleanField(
         verbose_name=_('Target'),
     )
     positive = models.NullBooleanField(
@@ -754,9 +756,10 @@ class EKF(models.Model):
     class Meta:
         verbose_name = _("Ecological Key Factor")
         verbose_name_plural = _("Ecological Key Factors")
+        unique_together = ('measure', 'esf')
 
     def __unicode__(self):
-        return '%s - %i' % (self.measure, self.ekf)
+        return '%s - %i' % (self.measure, self.esf)
 
 
 class Measure(models.Model):
@@ -1103,6 +1106,66 @@ class Measure(models.Model):
 
         return output
 
+    def create_empty_esflinks(self):
+        """
+        create esflinks for measure
+        """
+        created = self.esflink_set.all().values_list('esf',flat=True)
+        for esf_nr in range(1,10):
+            if esf_nr not in created:
+                self.esflink_set.create(esf=esf_nr)
+
+
+    def set_esflinks(self, esflinks):
+        """
+        updates the relation with the esflink
+        input:
+            id = EsfLink.id
+            and other fields of esflink
+        """
+        for esflink in esflinks:
+
+            esf, new = self.esflink_set.get_or_create(
+                esf=esflink['esf']
+            )
+
+            esf.is_target_esf = esflink['esf']
+            esf.positive = esflink['positive']
+            esf.negative = esflink['negative']
+
+            esf.save()
+
+    def get_esflinks(self,
+                          auto_create_missing_states=False):
+        """
+        updates the many2many relation with the MeasureStatusMoments
+        return :
+            ordered list with esflinks with:
+            id
+            name
+            is_target_esf
+            positive
+            negative
+        """
+        output = []
+
+        if auto_create_missing_states:
+            self.create_empty_esflinks()
+
+        esflinks = self.esflink_set.all().order_by('esf')
+
+        for esflink in esflinks:
+            output.append({
+                'id': esflink.id,
+                'name': 'ESF %i'%esflink.esf,
+                'is_target_esf': esflink.is_target_esf,
+                'positive': esflink.positive,
+                'negative': esflink.negative
+            })
+
+        return output
+
+
     def set_fundingorganizations(self, organizations):
         """
             updates the many2many relation with the funding organizations
@@ -1139,8 +1202,12 @@ class Measure(models.Model):
     def status_moment_self(self, dt=datetime.datetime.now(),
                            is_planning=False):
         """Returns own status_moment"""
-        measure_status_moment_set = self.measurestatusmoment_set.filter(
-            planning_date__lte=dt).distinct().order_by("-planning_date")
+        if is_planning:
+            measure_status_moment_set = self.measurestatusmoment_set.filter(
+                planning_date__lte=dt).distinct().order_by("-planning_date")
+        else:
+            measure_status_moment_set = self.measurestatusmoment_set.filter(
+                planning_date__lte=dt).distinct().order_by("-realisation_date")
         if measure_status_moment_set:
             return measure_status_moment_set[0]
         return None
@@ -1188,15 +1255,13 @@ class Measure(models.Model):
             return min(measure_status_moments,
                        key=lambda msm: msm.status.value)
 
-    def status_moment_planned(self):
-        """For use in templates"""
-        return self.status_moment(is_planning=True)
+
 
     def measure_status_moments(self, end_date=None, is_planning=False,
                                debug=False):
         """If the measure has no children, take own
-        measure_status_moments. Else return calculated aggregated list
-        of status moments. """
+        measure_status_moments.
+        """
         msm_dates = self.measurestatusmoment_set.all()
 
         if end_date is not None:
@@ -1209,59 +1274,43 @@ class Measure(models.Model):
         return msm_dates
 
 
-
-        #niet meer nodig??? planning van hoofdmaatregel is nu maatgevend?
-#        if end_date is not None:
-#            if is_planning:
-#                msm_dates = msm_dates.filter(planning_date__lte=end_date)
-#            else:
-#                msm_dates = msm_dates.filter(realisation_date__lte=end_date)
-#
-#        # No children: we're finished.
-#        if not self.measure_set.all():
-#            return msm_dates
-#
-#        # With children:
-#        # Collect all msms where the date is used to calculate statuses.
-#        msm_dates = list(msm_dates)
-#        for measure_child in self.measure_set.all():
-#            msm_dates_children = measure_child.measure_status_moments(
-#                is_planning=is_planning, end_date=end_date)
-#            msm_dates_children = filter(None, msm_dates_children)
-#            msm_dates.extend(list(msm_dates_children))
-#        # For each date, calculate status and append to msm.
-#        msm = []
-#        for msm_date in msm_dates:
-#            status_moment = self.status_moment(
-#                dt=msm_date.datetime, is_planning=is_planning)
-#            # Remove None's: they can only appear at 'the front' of
-#            # the timeline and they are irrelevant.
-#            if status_moment:
-#                if is_planning:
-#                    status_moment.datetime = msm_date.planning_date
-#                else:
-#                    status_moment.datetime = msn_date.realisation_date
-#                msm.append(status_moment)
-#
-#        msm = sorted(msm, key=lambda m: m.datetime)
-#
-#        return msm
-
-    def image(self, start_date, end_date, width=None, height=None):
-        """Return image from adapter for measures.
+    def measure_status_moments_aggregate_children(self, end_date=None, is_planning=False,
+                               debug=False):
         """
+            Else return calculated aggregated list
+            of status moments
+        """
+        if end_date is not None:
+            if is_planning:
+                msm_dates = msm_dates.filter(planning_date__lte=end_date)
+            else:
+                msm_dates = msm_dates.filter(realisation_date__lte=end_date)
 
-        # Import here to prevent cyclic imports.
-        from lizard_krw.layers import WorkspaceItemAdapterKrw
-        adapter = WorkspaceItemAdapterKrw(
-            workspace_item=None, layer_arguments={"layer": "measure"})
+        # With children:
+        # Collect all msms where the date is used to calculate statuses.
+        msm_dates = list(msm_dates)
+        for measure_child in self.measure_set.all():
+            msm_dates_children = measure_child.measure_status_moments(
+                is_planning=is_planning, end_date=end_date)
+            msm_dates_children = filter(None, msm_dates_children)
+            msm_dates.extend(list(msm_dates_children))
+        # For each date, calculate status and append to msm.
+        msm = []
+        for msm_date in msm_dates:
+            status_moment = self.status_moment(
+                dt=msm_date.datetime, is_planning=is_planning)
+            # Remove None's: they can only appear at 'the front' of
+            # the timeline and they are irrelevant.
+            if status_moment:
+                if is_planning:
+                    status_moment.datetime = msm_date.planning_date
+                else:
+                    status_moment.datetime = msn_date.realisation_date
+                msm.append(status_moment)
 
-        return adapter.image([{'measure_id': self.id}],
-                             start_date, end_date,
-                             width=width, height=height)
+        msm = sorted(msm, key=lambda m: m.datetime)
 
-    def get_absolute_url(self):
-        return reverse('lizard_krw.measure', kwargs={'measure_id': self.pk})
+        return msm
 
     def value_sum(self):
         """

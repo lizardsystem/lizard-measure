@@ -84,6 +84,21 @@
             xtype: 'checkbox',
             allowBlank: true
         },
+
+        {
+            fieldLabel: 'Focus maatregel',
+            name: 'is_indicator',
+            inputValue: true,
+            xtype: 'checkbox',
+            allowBlank: true
+        },
+        {
+            fieldLabel: 'In sgbp',
+            name: 'in_sgbp',
+            inputValue: true,
+            xtype: 'checkbox',
+            allowBlank: true
+        },
         {
             fieldLabel: 'Beschrijving',
             name: 'description',
@@ -136,6 +151,38 @@
             forceSelection: true,
             allowBlank: false,
             width: 300
+        },
+        {
+            xtype: 'tablefield',
+            fieldLabel: 'Effect op ESF',
+            name: 'esflinks',
+            field_name: 'Effect',
+            editable: true,
+            extra_fields:[{
+                text: 'is doel',
+                dataIndex: 'is_target_esf',
+                width:100,
+                xtype: 'checkbox',
+                field: {
+                    xtype: 'checkbox'
+                }
+            },{
+                text: 'verwacht positief effect',
+                dataIndex: 'positive',
+                width:100,
+                xtype: 'checkbox',
+                field: {
+                    xtype: 'checkbox'
+                }
+            },{
+                text: 'verwacht negatief effect',
+                dataIndex: 'negative',
+                width:100,
+                xtype: 'checkbox',
+                field: {
+                    xtype: 'checkbox'
+                }
+            }]
         },
         {
             fieldLabel: 'Waarde',
