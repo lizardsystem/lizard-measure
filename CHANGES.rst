@@ -9,6 +9,15 @@ Changelog of lizard-measure
 
 - Add link to history page on measuredetail page
 
+- add read only functionality to organization-management
+
+- some migrations
+
+- removed unique constraint on organizations
+
+- changed EKF model to EsfLink model
+
+
 
 1.6.1 (2012-02-09)
 ------------------
