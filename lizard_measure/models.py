@@ -593,7 +593,7 @@ class Organization(models.Model):
     class Meta:
         verbose_name = _("Organization")
         verbose_name_plural = _("Organizations")
-        unique_together = ('source', 'code')
+        #unique_together = ('source', 'code')
         ordering = ('description', )
 
     def __unicode__(self):

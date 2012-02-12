@@ -81,6 +81,10 @@ class OrganizationView(BaseApiView):
         'read_only': 'source'
     }
 
+    read_only_fields = [
+        'source',
+        'read_only'
+    ]
 
     def get_object_for_api(self,
                            org,
