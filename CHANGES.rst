@@ -17,6 +17,8 @@ Changelog of lizard-measure
 
 - changed EKF model to EsfLink model
 
+- measure graph request for all parameters as parameter instead of url
+
 
 
 1.6.1 (2012-02-09)

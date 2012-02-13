@@ -5,6 +5,8 @@ import logging
 from sets import Set
 import datetime
 
+import iso8601
+
 from django.core.urlresolvers import reverse
 from django.db.models.query_utils import Q
 from django.shortcuts import get_object_or_404
@@ -224,10 +226,18 @@ def _image_measures(graph, measures, start_date, end_date,
         graph.legend(legend_handles, legend_labels, ncol=3)
 
 
+def measure_graph_api(request):
+    """
+        wrapper around measure_graph which get arguments from parameters instead of url
 
-def measure_graph(self, area_ident, filter='all',
-          width=None, height=None,
-          layout_extra=None):
+
+    """
+    area_ident = request.GET.get('location', None)
+    filter = request.GET.get('filter', 'all')
+
+    return measure_graph(request, area_ident, filter)
+
+def measure_graph(request, area_ident, filter='all'):
     """
     visualizes scores or measures in a graph
 
@@ -236,6 +246,8 @@ def measure_graph(self, area_ident, filter='all',
 
     each row is an area
     """
+
+    print area_ident
 
     if filter == 'measure':
         measures = Measure.objects.filter(Q(pk=area_ident)|Q(parent__id=area_ident))
@@ -248,28 +260,10 @@ def measure_graph(self, area_ident, filter='all',
         if filter == 'focus':
             measures = measures.filter(is_indicator=True)
 
-    start_date = datetime.date(2009,1,1)
-    end_date = datetime.date(2013,1,1)
-    width = self.GET.get('width', 380)
-    height = self.GET.get('height', 170)
-    layout_extra = None
-
-
-    #measures = []
-    waterbodies = []
-    #for identifier in identifier_list:
-    #    # it's a measure
-    #    measure = Measure.objects.get(pk=identifier['measure_id'])
-    #    measures.append(measure
-
-    if width is None:
-        width = 380.0
-    if height is None:
-        height = 170.0
-
-    # Calculate own height, which can be smaller than given.
-    #height = min((len(measures) + len(waterbodies)) * 40 + 20 +
-    #             len(legend_handles) * 10.0, height)
+    start_date = iso8601.parse_date(request.GET.get('dt_start', '2008-1-1T00:00:00')).date()
+    end_date = iso8601.parse_date(request.GET.get('dt_end', '2013-1-1T00:00:00')).date()
+    width = request.GET.get('width', 380)
+    height = request.GET.get('height', 170)
 
     graph = adapter.Graph(start_date, end_date, width, height)
 
