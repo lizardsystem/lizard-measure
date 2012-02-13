@@ -1,6 +1,7 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
 
 from django.test import TestCase
+from django.http import QueryDict
 from lizard_measure.models import Measure
 
 from lizard_measure.views import HorizontalBarGraphView
