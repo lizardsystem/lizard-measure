@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.6.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Make krw portal import script backwards compatible
 
 
 1.6.2 (2012-02-13)

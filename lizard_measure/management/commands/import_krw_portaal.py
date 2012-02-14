@@ -65,7 +65,11 @@ def _clear_all():
     MeasureCategory.objects.all().delete()
     MeasureType.objects.all().delete()
     MeasurePeriod.objects.all().delete()
-#   MeasureStatus.objects.all().delete()
+    # Measure statuses are now in a fixture. To prevent duplicates
+    # on systems that already did the import before there was a fixture,
+    # have old statuses in their systems. Therefore, we clear out those
+    # objects here. See #19.
+    MeasureStatus.objects.filter(color__in=['blue', 'gray']).delete()
     MeasureStatusMoment.objects.all().delete()
     FundingOrganization.objects.all().delete()
 
