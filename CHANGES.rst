@@ -7,6 +7,8 @@ Changelog of lizard-measure
 
 - Make krw portal import script backwards compatible
 
+- Make sync_aquo management command work on Ubuntu 10
+
 
 1.6.2 (2012-02-13)
 ------------------
