@@ -5,7 +5,8 @@ Changelog of lizard-measure
 1.6.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- The measure graph now uses nens-graph, which makes the graph
+  consistent with other graphs.
 
 
 1.6.2 (2012-02-13)

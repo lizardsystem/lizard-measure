@@ -144,7 +144,7 @@ def krw_waterbody_measures(request, area_ident,
 
 
 def _image_measures(graph, measures, start_date, end_date,
-                    end_date_realized=None, add_legend=True,
+                    end_date_realized=None, legend_location=-1,
                     title=None):
     """Function to draw measures
 
@@ -192,7 +192,7 @@ def _image_measures(graph, measures, start_date, end_date,
         end_date_realized = min(end_date, datetime.datetime.now().date())
     if title is None:
         title = "krw maatregel(en)"
-    graph.suptitle(title)
+    graph.figure.suptitle(title, x=0.5, y=1, horizontalalignment='center', verticalalignment='top')
     for index, measure in enumerate(measures):
         # realized
         measure_bar, measure_colors = calc_bar_colors(
@@ -217,13 +217,13 @@ def _image_measures(graph, measures, start_date, end_date,
     graph.axes.set_ylim(-len(measures) + 0.5, 0.5)
 
     # Legend
-    if add_legend:
+    if legend_location >= 0:
         legend_handles, legend_labels = [], []
         for measure_status in MeasureStatus.objects.all():
             legend_handles.append(
                 Line2D([], [], color=measure_status.color.html, lw=10))
             legend_labels.append(measure_status.name)
-        graph.legend(legend_handles, legend_labels, ncol=3)
+        graph.legend(legend_handles, legend_labels, legend_location=legend_location)
 
 
 def measure_graph_api(request):
@@ -247,8 +247,6 @@ def measure_graph(request, area_ident, filter='all'):
     each row is an area
     """
 
-    print area_ident
-
     if filter == 'measure':
         measures = Measure.objects.filter(Q(pk=area_ident)|Q(parent__id=area_ident))
     else:
@@ -262,15 +260,17 @@ def measure_graph(request, area_ident, filter='all'):
 
     start_date = iso8601.parse_date(request.GET.get('dt_start', '2008-1-1T00:00:00')).date()
     end_date = iso8601.parse_date(request.GET.get('dt_end', '2013-1-1T00:00:00')).date()
-    width = request.GET.get('width', 380)
-    height = request.GET.get('height', 170)
+    width = int(request.GET.get('width', 380))
+    height = int(request.GET.get('height', 170))
+    legend_location = int(request.GET.get('legend_location', -1))
 
-    graph = adapter.Graph(start_date, end_date, width, height)
+    graph = DateGridGraph(width=width, height=height)
 
-    _image_measures(graph, measures, start_date, end_date)
+    _image_measures(graph, measures, start_date, end_date, legend_location=legend_location)
 
-    graph.add_today()
-    return graph.http_png()
+    graph.set_margins()
+    return graph.png_response(
+        response=HttpResponse(content_type='image/png'))
 
 
 def measure_detailedit_portal(request):
