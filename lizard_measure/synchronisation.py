@@ -261,7 +261,7 @@ class Synchronizer(object):
         data_rows = root.xpath(xpath_data_rows, namespaces=namespaces)
 
         for data_row in data_rows:
-            data_fields = data_row.findall(
+            data_fields = data_row.xpath(
                 'a:Fields/a:DataField',
                 namespaces=namespaces,
             )
