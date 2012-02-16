@@ -72,6 +72,9 @@ class OrganizationView(BaseApiView):
     model_class = Organization
     name_field = 'description'
 
+    valid_field='valid'
+    valid_value=True
+
     field_mapping = {
         'id': 'id',
         'code': 'code',
@@ -82,6 +85,8 @@ class OrganizationView(BaseApiView):
     }
 
     read_only_fields = [
+        'code',
+        'group',
         'source',
         'read_only'
     ]
@@ -114,6 +119,18 @@ class OrganizationView(BaseApiView):
             }
         return output
 
+    def create_objects(self, data):
+        """
+            overwrite of base api to append code
+        """
+        success, touched_objects =  super(OrganizationView, self).create_objects(data)
+
+        for object in touched_objects:
+            object.code = object.id + 1000
+            object.save()
+
+        return success, touched_objects
+
 
 class MeasureView(BaseApiView):
     """
@@ -121,6 +138,9 @@ class MeasureView(BaseApiView):
     """
     model_class = Measure
     name_field = 'title'
+
+    valid_field='valid'
+    valid_value=True
 
     field_mapping = {
         'id': 'id',

@@ -578,6 +578,7 @@ class Organization(models.Model):
         max_length=128,
         null=True,
         blank=True,
+        default='Lokaal',
         verbose_name=_("Group")
     )
     source = models.IntegerField(
@@ -585,15 +586,15 @@ class Organization(models.Model):
         default=SOURCE_MANUAL,
     )
 
-    valid = models.NullBooleanField(
-        default=None,
+    valid = models.BooleanField(
+        default=True,
         verbose_name=_('Valid'),
     )
 
     class Meta:
         verbose_name = _("Organization")
         verbose_name_plural = _("Organizations")
-        #unique_together = ('source', 'code')
+        unique_together = ('source', 'code')
         ordering = ('description', )
 
     def __unicode__(self):
@@ -680,8 +681,8 @@ class MeasureStatus(models.Model):
         default=0.0,
         verbose_name=_('Numeric value'),
     )
-    valid = models.NullBooleanField(
-        default=None,
+    valid = models.BooleanField(
+        default=True,
         verbose_name=_('Valid'),
     )
 
@@ -737,8 +738,8 @@ class MeasurePeriod(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     description = models.TextField(null=True, blank=True)
-    valid = models.NullBooleanField(
-        default=None,
+    valid = models.BooleanField(
+        default=True,
         verbose_name=_('Valid'),
     )
 
@@ -765,12 +766,15 @@ class EsfLink(models.Model):
         verbose_name=_('Ecological Key Factor'),
     )
     is_target_esf = models.NullBooleanField(
+        default=False,
         verbose_name=_('Target'),
     )
     positive = models.NullBooleanField(
+        default=False,
         verbose_name=_('Positive'),
     )
     negative = models.NullBooleanField(
+        default=False,
         verbose_name=_('Negative'),
     )
 
@@ -820,7 +824,7 @@ class Measure(models.Model):
         verbose_name=_('Unique code'),
     )
 
-    valid = models.NullBooleanField(
+    valid = models.BooleanField(
         default=True
     )
 

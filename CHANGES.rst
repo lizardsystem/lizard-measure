@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.8 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Changed valid field from NullBoolean to boolean
 
 
 1.7.1 (2012-02-16)
