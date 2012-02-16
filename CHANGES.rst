@@ -7,6 +7,10 @@ Changelog of lizard-measure
 
 - Changed valid field from NullBoolean to boolean
 
+- Add migrations
+
+- Add total costs and land costs fields
+
 
 1.7.1 (2012-02-16)
 ------------------

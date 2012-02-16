@@ -825,7 +825,8 @@ class Measure(models.Model):
     )
 
     valid = models.BooleanField(
-        default=True
+        default=True,
+        verbose_name=_('Valid'),
     )
 
     is_KRW_measure = models.NullBooleanField(
@@ -958,12 +959,12 @@ class Measure(models.Model):
         help_text='Verantwoordelijke afdeling binnen initiatiefnemer',
     )
 
-#   total_costs = models.IntegerField(
-#       null=True,
-#       blank=True,
-#       verbose_name='Totale kosten',
-#       help_text="Totale kosten in euro's"
-#   )
+    total_costs = models.IntegerField(
+        null=True,
+        blank=True,
+        verbose_name='Totale kosten',
+        help_text="Totale kosten in euro's"
+    )
     investment_costs = models.IntegerField(
         null=True,
         blank=True,
@@ -974,6 +975,12 @@ class Measure(models.Model):
         null=True,
         blank=True,
         verbose_name='Exploitatiekosten',
+        help_text="Exploitatiekosten in euro's"
+    )
+    land_costs = models.IntegerField(
+        null=True,
+        blank=True,
+        verbose_name='Grondkosten',
         help_text="Exploitatiekosten in euro's"
     )
 
