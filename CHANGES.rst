@@ -16,6 +16,7 @@ Changelog of lizard-measure
 
 - removed double entry in measure form (field focus measure)
 
+
 1.6.2 (2012-02-13)
 ------------------
 
