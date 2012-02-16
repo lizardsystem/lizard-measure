@@ -85,14 +85,6 @@
             xtype: 'checkbox',
             allowBlank: true
         },
-
-        {
-            fieldLabel: 'Focus maatregel',
-            name: 'is_indicator',
-            inputValue: true,
-            xtype: 'checkbox',
-            allowBlank: true
-        },
         {
             fieldLabel: 'In sgbp',
             name: 'in_sgbp',

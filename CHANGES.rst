@@ -12,6 +12,9 @@ Changelog of lizard-measure
 
 - Make sync_aquo management command work on Ubuntu 10
 
+- added distinct to measure selection for graph
+
+- removed double entry in measure form (field focus measure)
 
 1.6.2 (2012-02-13)
 ------------------
