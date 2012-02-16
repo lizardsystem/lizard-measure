@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.8 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fixed measure graph x-lim.
 
 
 1.7 (2012-02-16)

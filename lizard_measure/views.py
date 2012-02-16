@@ -214,6 +214,7 @@ def _image_measures(graph, measures, start_date, end_date,
     yticklabels.reverse()
     graph.axes.set_yticks(range(int(-len(measures) + 0.5), 1))
     graph.axes.set_yticklabels(yticklabels)
+    graph.axes.set_xlim(date2num((start_date, end_date)))
     graph.axes.set_ylim(-len(measures) + 0.5, 0.5)
 
     # Legend
