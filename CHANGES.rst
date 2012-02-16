@@ -5,9 +5,13 @@ Changelog of lizard-measure
 1.6.3 (unreleased)
 ------------------
 
+- The measure graph now uses nens-graph, which makes the graph
+  consistent with other graphs.
+
 - Make krw portal import script backwards compatible
 
 - Make sync_aquo management command work on Ubuntu 10
+
 
 
 1.6.2 (2012-02-13)
