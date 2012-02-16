@@ -11,6 +11,8 @@ Changelog of lizard-measure
 
 - Add total costs and land costs fields
 
+- Add history details view
+
 
 1.7.1 (2012-02-16)
 ------------------

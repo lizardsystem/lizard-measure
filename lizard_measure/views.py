@@ -41,7 +41,8 @@ from matplotlib.dates import date2num
 from lizard_map.views import AppView
 from lizard_graph.views import TimeSeriesViewMixin
 from lizard_fewsnorm.models import GeoLocationCache
-from lizard_history.utils import get_full_history
+from lizard_history.utils import get_history
+
 
 logger = logging.getLogger(__name__)
 
@@ -105,16 +106,51 @@ class MeasureHistoryView(MeasureDetailView):
     """
     template_name='lizard_measure/measure_history.html'
 
-    def full_history(self):
+    def history(self):
         """
         Return full history, if possible cached
         """
-        if not hasattr(self, '_full_history'):
-            self._full_history = get_full_history(
-                self.measure(),
+        if not hasattr(self, '_log_entry'):
+            self._history = get_history(
+                obj=self.measure(),
             )
 
-        return self._full_history
+        return self._history
+
+
+class MeasureHistoryDetailView(MeasureDetailView):
+    """
+    Show measure history details
+    """
+    template_name='lizard_measure/measure_history_details.html'
+
+    def action(self):
+        """
+        Return history details dict
+        """
+        if not hasattr(self, '_action'):
+            self._action = get_history(
+                log_entry_id=self.log_entry_id,
+            )
+
+        return self._action
+
+    def changes(self):
+        """
+        Return list of changes using verbose names of fields
+        """
+        result = [(self.measure()._meta.get_field(f).verbose_name, v)
+                  for f, v in self.action()['changes'].items()]
+        return result
+
+
+    def get(self, request, *args, **kwargs):
+        """
+        Pick the log_entry_id from the url
+        """
+        self.log_entry_id = kwargs['log_entry_id']
+        return super(MeasureHistoryDetailView, self).get(
+            request, *args, **kwargs)
 
 
 def measure_detail(request, measure_id,

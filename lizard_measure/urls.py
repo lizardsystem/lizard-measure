@@ -7,6 +7,7 @@ from django.contrib import admin
 
 from lizard_measure.views import MeasureDetailView
 from lizard_measure.views import MeasureHistoryView
+from lizard_measure.views import MeasureHistoryDetailView
 from lizard_measure.views import HorizontalBarGraphView
 
 
@@ -67,6 +68,10 @@ urlpatterns = patterns(
      MeasureHistoryView.as_view(),
      {},
      "lizard_measure.history"),
+    (r'^history_details/(?P<measure_id>\d+)/(?P<log_entry_id>\d+)/$',
+     MeasureHistoryDetailView.as_view(),
+     {},
+     "lizard_measure.history_details"),
 
     #edit screens
     (r'^measure_detailedit_portal/$',

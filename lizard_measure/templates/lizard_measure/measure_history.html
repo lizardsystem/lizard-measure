@@ -10,14 +10,27 @@
         <td>Gebruiker</td>
         <td>Registratie</td>
         <td>Samenvatting</td>
+        <td></td>
       </tr>
     </thead>
     <tbody>
-      {% for h in view.full_history %}
+      {% for h in view.history %}
       <tr>
         <td>{{h.user}}</td>
         <td>{{h.datetime}}</td>
         <td>{{h.summary}}</td>
+        <td>
+          <a href="javascript:Ext.getCmp('portalWindow').linkToPopup(
+            'maatregel {{ view.measure.title }}',
+            '/measure/history_details/{{view.measure.id}}/{{h.log_entry_id}}',
+            {},
+            {},
+            false,
+            'html',
+            false,
+            true
+            )">Details</a>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
