@@ -255,7 +255,7 @@ def measure_graph(request, area_ident, filter='all'):
         area = get_object_or_404(Area, ident=area_ident)
         # Obsolete: use MeasureCollections instead
         # get measures without parent: main measures
-        measures = Measure.objects.filter(Q(waterbodies__area=area)|Q(areas=area))
+        measures = Measure.objects.filter(Q(waterbodies__area=area)|Q(areas=area)).distinct()
 
         if filter == 'focus':
             measures = measures.filter(is_indicator=True)
