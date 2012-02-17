@@ -3,7 +3,6 @@
 {% load utility %}
 
 <div id="textual" class="lizard">
-  <h2>Maatregel: {{ view.measure.title }}</h2>
   <div style="width: 100%; height: 130px;" class="img-use-my-size">
 
    <a href="/measure/measure_graph/{{ view.measure.id }}/measure/?legend_location=0" class="replace-with-image">
@@ -14,6 +13,10 @@
   <table class="generic-table">
     <tbody>
       <tr>
+        <th>Ident</th><td>{% firstof view.measure.ident '(geen code)' %}</td>
+      </tr>
+
+      <tr>
         <th>Naam maatregel</th><td>{{ view.measure.title }}</td>
       </tr>
 
@@ -22,15 +25,49 @@
       </tr>
 
       <tr>
-        <th>Code</th><td>{% firstof view.measure.ident '(geen code)' %}</td>
+        <th>KRW maatregel</th><td>
+          {% if view.measure.is_KRW_measure %}
+          Ja
+          {% else %}
+          Nee
+          {% endif %}
+        </td>
       </tr>
 
       <tr>
-        <th>SGBP type</th><td>{{ view.measure.measure_type }}</td>
+        <th>Focus maatregel</th><td>
+          {% if view.measure.is_indicator %}
+          Ja
+          {% else %}
+          Nee
+          {% endif %}
+        </td>
       </tr>
 
       <tr>
-        <th>SGBP</th><td>{{ view.measure.value_sum }} {{ view.measure.unit }}</td>
+        <th>in SGBP</th><td>
+          {% if view.measure.in_sgbp %}
+          Ja
+          {% else %}
+          Nee
+          {% endif %}
+        </td>
+      </tr>
+
+      <tr>
+        <th>Beschrijving</th><td>{{ view.measure.description }}</td>
+      </tr>
+
+      <tr>
+        <th>Maatregel type</th><td>{{ view.measure.measure_type }}</td>
+      </tr>
+      
+      <tr>
+        <th>Waarde en eenheid</th>
+        <td>
+          {{ view.measure.value_sum }}
+          {{ view.measure.unit }}
+        </td>
       </tr>
 
       <tr>
@@ -38,28 +75,59 @@
       </tr>
 
       <tr>
+        <th>Verantwoordelijke afdeling</th>
+        <td>{{ view.measure.responsible_department|default:"-" }}</td>
+      </tr>
+
+      <tr>
         <th>Uitvoerder</th><td>{{ view.measure.executive|default_if_none:"-" }}</td>
       </tr>
 
       <tr>
-        <th>Totale kosten (incl. optelling deelmaatregelen)</th>
-        <td>{{ view.measure.costs_sum|euro }}</td>
+        <th>Totale kosten</th>
+        <td>{{ view.measure.total_costs|euro }}</td>
       </tr>
 
       <tr>
-        <th>Investeringskosten (incl. optelling deelmaatregelen)</th>
-        <td>{{ view.measure.investment_costs_sum|euro }}</td>
+        <th>Investeringskosten</th>
+        <td>{{ view.measure.investment_costs|euro }}</td>
       </tr>
 
       <tr>
-        <th>Exploitatiekosten (incl. optelling deelmaatregelen)</th>
-        <td>{{ view.measure.exploitation_costs_sum|euro }}</td>
+        <th>Exploitatiekosten</th>
+        <td>{{ view.measure.exploitation_costs|euro }}</td>
+      </tr>
+
+      <tr>
+        <th>Grondkosten</th>
+        <td>{{ view.measure.land_costs|euro }}</td>
       </tr>
 
       <tr>
         <th>Periode</th>
         <td>{{ view.measure.period }}</td>
       </tr>
+
+      <tr>
+        <th>Beleidsdoel</th>
+        <td>
+          {% for cat in view.measure.categories.all %}
+          {{ cat }}
+          {% if not forloop.last %}{{ ', ' }}{% endif%}
+          {% endfor %}
+        </td>
+      </tr>
+
+      <tr>
+        <th>Doel</th>
+        <td>{{ view.measure.target_esf_string }}</td>
+      </tr>
+
+      <tr>
+        <th>Effect</th>
+        <td>{{ view.measure.effect_esf_string }}</td>
+      </tr>
+
     </tbody>
   </table>
 

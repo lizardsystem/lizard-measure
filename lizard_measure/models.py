@@ -966,12 +966,6 @@ class Measure(models.Model):
         verbose_name='Totale kosten',
         help_text="Totale kosten in euro's"
     )
-    total_costs = models.IntegerField(
-        null=True,
-        blank=True,
-        verbose_name='Totale kosten',
-        help_text="Totale kosten in euro's"
-    )
 
     investment_costs = models.IntegerField(
         null=True,

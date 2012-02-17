@@ -32,6 +32,7 @@ Changelog of lizard-measure
 
 - Add submeasure table with links to submeasures in measure view
 
+- Add various vields to measure detail view
 
 
 1.7.1 (2012-02-16)
