@@ -21,6 +21,9 @@
             Status
         </td>
         <td>
+            Deelmaatregel
+        </td>
+        <td>
             KRW maatregel
         </td>
         <td>
@@ -71,7 +74,18 @@
             {% if measure.status_moment %} {{ measure.status_moment.status }}{% endif %}
         </td>
         <td>
-            {{ measure.is_KRW_measure }}
+            {% if measure.parent %}
+            Ja
+            {% else %}
+            Nee
+            {% endif %}
+        </td>
+        <td>
+            {% if measure.is_KRW_measure %}
+            Ja
+            {% else %}
+            Nee
+            {% endif %}
         </td>
         <td>
             {{ measure.initiator }}

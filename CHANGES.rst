@@ -15,6 +15,8 @@ Changelog of lizard-measure
 
 - Truncate datetimestring to minutes via template tag
 
+- Add indication submeasure to waterbody_measures
+
 
 1.7.1 (2012-02-16)
 ------------------
