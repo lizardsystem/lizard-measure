@@ -1,7 +1,7 @@
 {% load get_grid %}
 {% load get_portal_template %}
 
-{% if perms.auth.is_analyst %}
+
 
 {
     itemId: 'organisatie-beheer',
@@ -53,6 +53,4 @@
         }]
 	}]
 }
-{% else %}
-    {% get_portal_template geen_toegang %}
-{% endif %}
+

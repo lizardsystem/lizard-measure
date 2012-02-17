@@ -146,11 +146,14 @@ class MeasureView(BaseApiView):
         'id': 'id',
         'ident': 'ident',
         'title': 'title',
+        'source': 'source',
         'is_KRW_measure': 'is_KRW_measure',
         'is_indicator': 'is_indicator',
         'description': 'description',
         'investment_costs': 'investment_costs',
         'exploitation_costs': 'exploitation_costs',
+        'ground_costs': 'ground_costs',
+        'total_costs': 'total_costs',
         'responsible_department': 'responsible_department',
         'value': 'value',
         'measure_type': 'measure_type__description',
@@ -199,12 +202,14 @@ class MeasureView(BaseApiView):
                 'id': measure.id,
                 'ident': measure.ident,
                 'title': measure.title,
+                'import_source': measure.get_import_source_display(),
                 'is_KRW_measure': measure.is_KRW_measure,
                 'is_indicator': measure.is_indicator,
                 'description': measure.description,
                 'total_costs': measure.total_costs,
                 'investment_costs': measure.investment_costs,
                 'exploitation_costs': measure.exploitation_costs,
+                'land_costs': measure.land_costs,
                 'responsible_department': measure.responsible_department,
                 'value': measure.value,
                 'in_sgbp': measure.in_sgbp,
@@ -232,6 +237,12 @@ class MeasureView(BaseApiView):
                     measure.parent,
                     flat
                 ),
+                'target_esf': measure.target_esf_string(),
+                'effect_esf': measure.effect_esf_string(),
+                'status_planned': measure.status_moment_string(is_planning=True),
+                'status_realisation': measure.status_moment_string(is_planning=False),
+
+
             }
 
         if size >= self.MEDIUM:

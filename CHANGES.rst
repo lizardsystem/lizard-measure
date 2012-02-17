@@ -13,6 +13,16 @@ Changelog of lizard-measure
 
 - Add history details view
 
+- Add extra cost fields
+
+- Add this fields to Measure form
+
+- Add extra fields to Measuregrid
+
+- implement generic summary popup
+
+- implement sortable property for column configuration for Measure grid
+
 
 1.7.1 (2012-02-16)
 ------------------

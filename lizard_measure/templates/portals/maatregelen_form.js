@@ -315,6 +315,14 @@
                 }
             },
             {
+                fieldLabel: 'Totale kosten',
+                name: 'total_costs',
+                minValue: 0,
+                allowDecimals: false,
+                width: 200,
+                xtype: 'numberfield'
+            },
+            {
                 fieldLabel: 'Investeringskosten',
                 name: 'investment_costs',
                 minValue: 0,
@@ -325,6 +333,14 @@
             {
                 fieldLabel: 'Exploitatiekosten',
                 name: 'exploitation_costs',
+                minValue: 0,
+                allowDecimals: false,
+                width: 200,
+                xtype: 'numberfield'
+            },
+            {
+                fieldLabel: 'Grondkosten',
+                name: 'land_costs',
                 minValue: 0,
                 allowDecimals: false,
                 width: 200,
@@ -482,18 +498,14 @@
 
                 if (!values['is_KRW_measure']) {
                     values['is_KRW_measure'] = false
-
                 }
                 if (!values['is_indicator']) {
                     values['is_indicator'] = false
                 }
 
-                Ext.MessageBox.show({
-                    title: 'Wijzigingen opslaan',
-                    msg: 'Samenvatting',
-                    width: 300,
-                    multiline: true,
-                    buttons: Ext.MessageBox.OKCANCEL,
+
+                Lizard.window.EditSummaryBox.show({
+                    
                     fn: function (btn, text) {
                         if (btn=='ok') {
                             values.edit_summary = text;
@@ -519,7 +531,9 @@
                                     form_window.setLoading(false);
                                 }
                             });
+
                         }
+                        return true;
                     }
                 })
             }

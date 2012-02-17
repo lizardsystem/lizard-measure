@@ -7,6 +7,7 @@ from django.core.exceptions import MultipleObjectsReturned
 
 from django.contrib.gis.db import models
 from django.core.urlresolvers import reverse
+from django.db.models.query_utils import Q
 from django.utils.translation import ugettext as _
 
 from lizard_map.models import ColorField
@@ -965,6 +966,13 @@ class Measure(models.Model):
         verbose_name='Totale kosten',
         help_text="Totale kosten in euro's"
     )
+    total_costs = models.IntegerField(
+        null=True,
+        blank=True,
+        verbose_name='Totale kosten',
+        help_text="Totale kosten in euro's"
+    )
+
     investment_costs = models.IntegerField(
         null=True,
         blank=True,
@@ -1021,12 +1029,6 @@ class Measure(models.Model):
     @property
     def shortname(self):
         return short_string(self.title, 17)
-
-    @property
-    def total_costs(self):
-        if self.investment_costs is None or self.exploitation_costs is None:
-            return None
-        return self.investment_costs + self.exploitation_costs
 
     @property
     def deleted(self):
@@ -1157,8 +1159,6 @@ class Measure(models.Model):
         """
         for esflink in esflinks:
 
-
-            print esflink
             esf = self.esflink_set.get(
                 pk=esflink['id']
             )
@@ -1243,17 +1243,35 @@ class Measure(models.Model):
     def status_moment_self(self, dt=datetime.datetime.now(),
                            is_planning=False):
         """Returns own status_moment"""
+
         if is_planning:
             measure_status_moment_set = self.measurestatusmoment_set.filter(
                 planning_date__lte=dt).distinct().order_by("-planning_date")
         else:
             measure_status_moment_set = self.measurestatusmoment_set.filter(
-                planning_date__lte=dt).distinct().order_by("-realisation_date")
+                realisation_date__lte=dt).distinct().order_by("-realisation_date")
         if measure_status_moment_set:
             return measure_status_moment_set[0]
         return None
 
-    def status_moment(self, dt=datetime.datetime.now(), is_planning=False):
+
+    def status_moment_string(self, dt=datetime.datetime.now(), is_planning=False, aggretation_of_childs=False):
+        """
+        String representation of status_moment function
+
+        """
+
+        st = self.status_moment(dt=dt, is_planning=is_planning, aggretation_of_childs=aggretation_of_childs)
+
+        if st == None:
+            return '-'
+        else:
+            return st.status.name
+
+
+
+
+    def status_moment(self, dt=datetime.datetime.now(), is_planning=False, aggretation_of_childs=False):
         """
         Get status for a given datetime (defaults to today)
         returns MeasureStatusMoment or None.
@@ -1262,18 +1280,17 @@ class Measure(models.Model):
 
         """
         # Collect status_moments from children OR self.
-        if not self.measure_set.all():
-            msm_self = self.status_moment_self(dt=dt, is_planning=is_planning)
-            measure_status_moments = [msm_self, ]
-        else:
+        if self.measure_set.all() and aggretation_of_childs:
             measure_status_moments = [
                 m.status_moment(dt=dt, is_planning=is_planning)
                 for m in self.measure_set.all()]
+        else:
+            msm_self = self.status_moment_self(dt=dt, is_planning=is_planning)
+            measure_status_moments = [msm_self, ]
 
         # Apparently some directly related measures has no status
         if (None in measure_status_moments and
             self.aggregation_type == self.AGGREGATION_TYPE_MIN):
-
             return None
 
         # Remove Nones
@@ -1433,6 +1450,23 @@ class Measure(models.Model):
             for funding_organization in funding_organizations:
                 result += funding_organization.cost
         return result
+
+    def target_esf_string(self):
+        esf_list = self.esflink_set.filter(is_target_esf=True).order_by('esf').values_list('esf', flat=True)
+
+        return ', '.join(['%i'%esf for esf in esf_list])
+
+    def effect_esf_string(self):
+        esf_list = self.esflink_set.filter(Q(positive=True)|Q(negative=True)).order_by('esf')
+        output = ''
+        for esf in esf_list:
+            output += '%i'% esf.esf
+            if esf.positive:
+                output += '(+)'
+            if esf.negative:
+                output += '(-)'
+            output += ', '
+        return output
 
 
 # EKR Graphs
