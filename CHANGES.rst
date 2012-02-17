@@ -13,6 +13,7 @@ Changelog of lizard-measure
 
 - Add history details view
 
+
 - Add extra cost fields
 
 - Add this fields to Measure form
@@ -22,6 +23,15 @@ Changelog of lizard-measure
 - implement generic summary popup
 
 - implement sortable property for column configuration for Measure grid
+
+- Truncate datetimestring to minutes via template tag
+
+- Add indication submeasure to waterbody_measures
+
+- Add legend location to urls of waterbody_measures and measure templates
+
+- Add submeasure table with links to submeasures in measure view
+
 
 
 1.7.1 (2012-02-16)

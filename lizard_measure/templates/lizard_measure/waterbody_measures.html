@@ -3,7 +3,7 @@
 <div id="textual" class='lizard'>
   <h2>Maatregelen voor {{ waterbody.name }}</h2>
   <div style="width: 100%; height: 250px;" class="img-use-my-size">
-    <a href="/measure/measure_graph/{{ waterbody.ident }}/focus/" class="replace-with-image">
+    <a href="/measure/measure_graph/{{ waterbody.ident }}/focus/?legend_location=0" class="replace-with-image">
       afbeelding nog niet geladen
     </a>
   </div>
@@ -19,6 +19,9 @@
         </td>
         <td>
             Status
+        </td>
+        <td>
+            Deelmaatregel
         </td>
         <td>
             KRW maatregel
@@ -71,7 +74,18 @@
             {% if measure.status_moment %} {{ measure.status_moment.status }}{% endif %}
         </td>
         <td>
-            {{ measure.is_KRW_measure }}
+            {% if measure.parent %}
+            Ja
+            {% else %}
+            Nee
+            {% endif %}
+        </td>
+        <td>
+            {% if measure.is_KRW_measure %}
+            Ja
+            {% else %}
+            Nee
+            {% endif %}
         </td>
         <td>
             {{ measure.initiator }}

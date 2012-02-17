@@ -1,6 +1,8 @@
 {# KRW measure view: info and graphs on KRW measures #}
 {% load workspaces %}
 {% load utility %}
+{% load measure_extras %}
+
 
 <div id="textual" class="lizard">
   <h2>Maatregel: {{ view.measure.title }}</h2>
@@ -17,7 +19,7 @@
       {% for h in view.history %}
       <tr>
         <td>{{h.user}}</td>
-        <td>{{h.datetime}}</td>
+        <td>{{h.datetime|format_date_string}}</td>
         <td>{{h.summary}}</td>
         <td>
           <a href="javascript:Ext.getCmp('portalWindow').linkToPopup(
