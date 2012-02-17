@@ -17,6 +17,8 @@ Changelog of lizard-measure
 
 - Add indication submeasure to waterbody_measures
 
+- Add legend location to urls of waterbody_measures and measure templates
+
 
 1.7.1 (2012-02-16)
 ------------------
