@@ -19,6 +19,8 @@ Changelog of lizard-measure
 
 - Add legend location to urls of waterbody_measures and measure templates
 
+- Add submeasure table with links to submeasures in measure view
+
 
 1.7.1 (2012-02-16)
 ------------------

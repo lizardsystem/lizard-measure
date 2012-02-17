@@ -63,6 +63,57 @@
     </tbody>
   </table>
 
+  <h2>Deelmaatregelen</h2>
+  <table class="generic-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Maatregel</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for submeasure in view.measure.measure_set.all %}
+      <tr>
+        <td>
+          {{ submeasure.ident }}
+        </td>
+        <td>
+          <a href="javascript:Ext.getCmp('portalWindow').linkToPopup(
+            'maatregel {{ submeasure.title }}',
+            '/measure/measure/{{ submeasure.id }}/',
+            {},
+            {
+              save: [
+                'bewerk',
+                '/measure/measure_detailedit_portal/',
+                {measure_id: '{{ submeasure.id }}'},
+                null,
+                false,
+                'component',
+                true
+              ],
+              search: [
+                'Geschiedenis',
+                '/measure/history/{{submeasure.id}}',
+                {},
+                {},
+                false,
+                'html',
+                false,
+                false
+              ]
+            },
+            false,
+            'html',
+            false,
+            true
+            )">{{ submeasure.title }}</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
   <h2>Stand van zaken</h2>
   <table class="generic-table">
     <tbody>
