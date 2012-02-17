@@ -13,6 +13,8 @@ Changelog of lizard-measure
 
 - Add history details view
 
+- Truncate datetimestring to minutes via template tag
+
 
 1.7.1 (2012-02-16)
 ------------------
