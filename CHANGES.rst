@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.8 (unreleased)
+1.8 (2012-02-17)
 ----------------
 
 - Changed valid field from NullBoolean to boolean
