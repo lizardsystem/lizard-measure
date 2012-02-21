@@ -1,22 +1,24 @@
 from django.contrib import admin
 
 from lizard_measure.models import EsfLink
+from lizard_measure.models import ESFPattern
 from lizard_measure.models import FundingOrganization
-from lizard_measure.models import Measure
-from lizard_measure.models import MeasurePeriod
-from lizard_measure.models import MeasureCategory
-from lizard_measure.models import MeasureType
-from lizard_measure.models import MeasureStatus
-from lizard_measure.models import MeasureStatusMoment
-from lizard_measure.models import Organization
-from lizard_measure.models import Unit
-from lizard_measure.models import WaterBody
-from lizard_measure.models import KRWStatus
-from lizard_measure.models import KRWWatertype
-from lizard_measure.models import Score
-from lizard_measure.models import MeasuringRod
 from lizard_measure.models import HorizontalBarGraph
 from lizard_measure.models import HorizontalBarGraphItem
+from lizard_measure.models import KRWStatus
+from lizard_measure.models import KRWWatertype
+from lizard_measure.models import Measure
+from lizard_measure.models import MeasureCategory
+from lizard_measure.models import MeasurePeriod
+from lizard_measure.models import MeasureStatus
+from lizard_measure.models import MeasureStatusMoment
+from lizard_measure.models import MeasureType
+from lizard_measure.models import MeasuringRod
+from lizard_measure.models import Organization
+from lizard_measure.models import Score
+from lizard_measure.models import Unit
+from lizard_measure.models import WaterBody
+from lizard_measure.models import WatertypeGroup
 
 
 class MeasureStatusMomentInline(admin.TabularInline):
@@ -148,20 +150,22 @@ class HorizontalBarGraphAdmin(admin.ModelAdmin):
     inlines = [HorizontalBarGraphItemInline]
 
 
+admin.site.register(ESFPattern)
 admin.site.register(FundingOrganization)
-admin.site.register(Measure, MeasureAdmin)
-admin.site.register(MeasurePeriod)
-admin.site.register(MeasureCategory)
-admin.site.register(MeasureType, MeasureTypeAdmin)
-admin.site.register(MeasureStatus, MeasureStatusAdmin)
-admin.site.register(MeasureStatusMoment)
-admin.site.register(Organization, OrganizationAdmin)
-admin.site.register(Unit, UnitAdmin)
-admin.site.register(WaterBody)
-admin.site.register(KRWStatus, KRWStatusAdmin)
-admin.site.register(KRWWatertype, KRWWatertypeAdmin)
-admin.site.register(Score, ScoreAdmin)
-admin.site.register(MeasuringRod, MeasuringRodAdmin)
 admin.site.register(HorizontalBarGraph, HorizontalBarGraphAdmin)
 admin.site.register(HorizontalBarGraphItem)
+admin.site.register(KRWStatus, KRWStatusAdmin)
+admin.site.register(KRWWatertype, KRWWatertypeAdmin)
+admin.site.register(Measure, MeasureAdmin)
+admin.site.register(MeasureCategory)
+admin.site.register(MeasurePeriod)
+admin.site.register(MeasureStatus, MeasureStatusAdmin)
+admin.site.register(MeasureStatusMoment)
+admin.site.register(MeasureType, MeasureTypeAdmin)
+admin.site.register(MeasuringRod, MeasuringRodAdmin)
+admin.site.register(Organization, OrganizationAdmin)
+admin.site.register(Score, ScoreAdmin)
+admin.site.register(Unit, UnitAdmin)
+admin.site.register(WaterBody)
+admin.site.register(WatertypeGroup)
 
