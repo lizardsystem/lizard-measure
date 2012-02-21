@@ -178,6 +178,16 @@ def krw_waterbody_measures(request, area_ident,
         context_instance=RequestContext(request))
 
 
+def suited_measures(request, area_ident,
+                    template='lizard_measure/suited_measures.html'):
+    # for testing purposes, we retrieve all measures
+    suited_measures = Measure.objects.all()
+    print "suited_measures count:", Measure.objects.all().count()
+    return render_to_response(
+        template,
+        {'suited_measures': suited_measures},
+        context_instance=RequestContext(request))
+
 
 def _image_measures(graph, measures, start_date, end_date,
                     end_date_realized=None, legend_location=-1,

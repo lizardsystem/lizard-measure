@@ -1,0 +1,20 @@
+{# info on suited KRW measures for a specific waterbody #}
+
+<div id="textual" class='lizard'>
+  <h2>Groslijst geschikte maatregelen</h2>
+  <table class="generic-table">
+    <thead>
+      <tr>
+        <th>Code</th><th>Omschrijving</th><th>Landelijk</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for measure in suited_measures %}
+      <tr>
+        <td>{{measure.ident}}</td><td>{{measure.title}}</td><td>attribuut 'Landelijk' nog onbekend</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
