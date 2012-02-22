@@ -1488,6 +1488,9 @@ class EsfPattern(models.Model):
         verbose_name = _("ESF pattern")
         verbose_name_plural = _("ESF patterns")
 
+    pattern = models.CharField(help_text="Pattern that specifies critical ESFs",
+         default='-' * 16, max_length=16)
+
     watertype_group = models.ForeignKey(WatertypeGroup,
         verbose_name=_('Watertype group'), blank=True, null=True,
         related_name='+')
