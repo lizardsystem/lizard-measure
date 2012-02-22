@@ -19,6 +19,7 @@ class PatternMeasuresRetriever(object):
         set.
 
         """
-        patterns = EsfPattern.objects.filter(Q(data_set__exact=None) |  Q(data_set=data_set))
+        objects = EsfPattern.objects.filter(Q(data_set__exact=None) |  Q(data_set=data_set))
+        patterns = [o.pattern for o in objects]
         measures = [0] * len(patterns)
         return dict(zip(patterns, measures))

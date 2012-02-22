@@ -8,15 +8,21 @@
 from unittest import TestCase
 
 from lizard_measure.models import EsfPattern
+from lizard_measure.models import Measure
+from lizard_measure.models import MeasureType
 from lizard_measure.pattern_measures_retriever import PatternMeasuresRetriever
+# from lizard_security.models import DataSet
 
 
 class PatternMeasuresRetriever_retrieve_TestSuite(TestCase):
 
     def test_a(self):
-        """Test the right patterns is retrieved for a single ESF pattern."""
+        """Test the right pattern is retrieved for a single ESF pattern."""
         pattern = EsfPattern()
+        pattern.pattern = 'XX------'
         pattern.save()
         retriever = PatternMeasuresRetriever()
-        pks = [p.pk for p in retriever.retrieve(data_set=None).keys()]
-        self.assertEqual([pattern.pk], pks)
+        measures_map = retriever.retrieve(data_set=None)
+        self.assertEqual(1, len(measures_map))
+        self.assertEqual(u'XX------', measures_map.keys()[0])
+
