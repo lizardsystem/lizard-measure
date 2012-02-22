@@ -5,21 +5,29 @@
 
 # Copyright (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.rst.
 
-from django.db.models import Q
-
-from lizard_measure.models import EsfPattern
 
 class PatternMeasuresRetriever(object):
+    """Defines an interface to retrieve the candidate measures for an area.
 
-    def retrieve(self, data_set):
-        """Return the dict of ESF pattern to the list of suitable Measures.
+    This class also implements the interface.
 
-        The dict that is returned contains the ESF patterns that are valid for
-        the country as a whole as the ones that are only valid for the given data
-        set.
+    """
+    def retrieve(self, area):
+        """Return the dict of ESF pattern to list of suitable measures.
+
+        Which ESF patterns apply to the current area depends on the water type of
+        the area and on the water manager of the area.
 
         """
-        objects = EsfPattern.objects.filter(Q(data_set__exact=None) |  Q(data_set=data_set))
-        patterns = [o.pattern for o in objects]
-        measures = [0] * len(patterns)
-        return dict(zip(patterns, measures))
+        watertype_group = self.retrieve_watertype_group(area)
+        water_manager = self.retrieve_water_manager(area)
+        return self.retrieve_from_database(watertype_group, water_manager)
+
+    def retrieve_watertype_group(self, area):
+        pass
+
+    def retrieve_water_manager(self, area):
+        return area.data_set.name
+
+
+
