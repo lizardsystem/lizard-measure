@@ -1482,7 +1482,7 @@ class Measure(models.Model):
         return output
 
 
-class ESFPattern(models.Model):
+class EsfPattern(models.Model):
 
     class Meta:
         verbose_name = _("ESF pattern")
