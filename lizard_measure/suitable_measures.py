@@ -7,11 +7,13 @@
 
 class SuitableMeasures(object):
 
+    def __init__(self, pattern_matcher):
+        self.pattern_matcher = pattern_matcher
+
     def get(self, area):
         """Return the list of suitable measures for the given area."""
-        measures = []
-        for pattern in self.available_patterns:
-            if area.esf_pattern == pattern:
-                measures += self.available_measures[pattern]
-        return measures
-
+        suitable_measures = []
+        for pattern, measures in self.available_patterns.iteritems():
+            if self.pattern_matcher.matches(area.esf_pattern, pattern):
+                suitable_measures += measures
+        return suitable_measures
