@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.9 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Require higher lizard-history version.
 
 
 1.8 (2012-02-17)
