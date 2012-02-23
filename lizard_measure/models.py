@@ -868,6 +868,7 @@ class Measure(models.Model):
         MeasureType,
         help_text="SGBP code",
         verbose_name='Maatregeltype',
+        related_name='measures',
     )
 
     in_sgbp = models.NullBooleanField(
@@ -1501,6 +1502,14 @@ class EsfPattern(models.Model):
     measure_types = models.ManyToManyField(MeasureType,
         verbose_name=_('Measure type'), blank=True, null=True,
         related_name='+')
+
+    @property
+    def measures(self):
+        """Return the list of measures of each MeasureType."""
+        measures_list = []
+        for measure_type in self.measure_types.all():
+            measures_list += measure_type.measures.all()
+        return measures_list
 
 
 # EKR Graphs
