@@ -65,5 +65,5 @@ class PatternMeasuresRetriever(object):
     def retrieve_esf_patterns(self, watertype_group, water_manager):
         """Return the ESF patterns of the specified parameters."""
         query = Q(watertype_group__exact=watertype_group) & \
-            (Q(data_set__exact=None) | Q(data_set=water_manager))
+            (Q(data_set__exact=None) | Q(data_set__name=water_manager))
         return EsfPattern.objects.filter(query)
