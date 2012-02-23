@@ -26,6 +26,9 @@ from lizard_measure.models import MeasureCategory
 from lizard_measure.models import Unit
 from lizard_measure.models import HorizontalBarGraph
 from lizard_measure.models import Score
+from lizard_measure.models import SteeringParameterFree
+from lizard_measure.models import SteeringParameterPredefinedGraph
+from lizard_measure.models import PredefinedGraphSelection
 from lizard_area.models import Area
 
 from nens_graph.common import DateGridGraph
@@ -412,6 +415,61 @@ def organization_groupedit_portal(request):
         t = get_template('portals/geen_toegang.js')
 
     return HttpResponse(t.render(c),  mimetype="text/plain")
+
+
+def steering_parameter_form(request):
+    """
+        Return JSON with editor for steering parameters .
+    """
+    c = RequestContext(request)
+
+    object_id = request.GET.get('object_id', None)
+
+    area = get_object_or_404(Area,ident=object_id)
+
+
+    if request.user.is_authenticated():
+
+        t = get_template('portals/stuurparameter_form.js')
+
+        if area.area_class == Area.AREA_CLASS_KRW_WATERLICHAAM:
+            predefined_graphs = PredefinedGraphSelection.objects.filter(
+                Q(for_area_type=Area.AREA_CLASS_KRW_WATERLICHAAM)|Q(for_area_type=None))
+
+            related_areas = Area.objects.filter(Q(arealink_a__area_b=area)|Q(arealink_b__area_a=area)).distinct()
+        elif  area.area_class == Area.AREA_CLASS_AAN_AFVOERGEBIED:
+            predefined_graphs = PredefinedGraphSelection.objects.filter(
+                Q(for_area_type=Area.AREA_CLASS_AAN_AFVOERGEBIED)|Q(for_area_type=None))
+
+            related_areas = Area.objects.filter(Q(arealink_a__area_b=area)|Q(arealink_b__area_a=area)).distinct()
+
+        c = RequestContext(request, {
+            'area': area,
+            'predefined_graphs': json.dumps(
+                [{'id': r.id, 'name': r.name}
+                 for r in predefined_graphs]),
+            'related_areas': json.dumps(
+                [{'id': r.id, 'name': r.name}
+                 for r in related_areas]),
+        })
+
+    else:
+        t = get_template('portals/geen_toegang.js')
+
+    return HttpResponse(t.render(c),  mimetype="text/plain")
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ################ EKR GRAPHS

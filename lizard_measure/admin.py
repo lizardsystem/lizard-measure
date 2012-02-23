@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from lizard_measure.models import EsfLink
-from lizard_measure.models import ESFPattern
+from lizard_measure.models import EsfPattern
 from lizard_measure.models import FundingOrganization
 from lizard_measure.models import HorizontalBarGraph
 from lizard_measure.models import HorizontalBarGraphItem
@@ -15,7 +15,10 @@ from lizard_measure.models import MeasureStatusMoment
 from lizard_measure.models import MeasureType
 from lizard_measure.models import MeasuringRod
 from lizard_measure.models import Organization
+from lizard_measure.models import PredefinedGraphSelection
 from lizard_measure.models import Score
+from lizard_measure.models import SteeringParameterFree
+from lizard_measure.models import SteeringParameterPredefinedGraph
 from lizard_measure.models import Unit
 from lizard_measure.models import WaterBody
 from lizard_measure.models import WatertypeGroup
@@ -36,6 +39,14 @@ class EsfLinkInline(admin.TabularInline):
 class MeasureInline(admin.TabularInline):
     model = Measure
 
+class SteeringParameterPredefinedGraphAdmin(admin.ModelAdmin):
+    pass
+
+class PredefinedGraphSelectionAdmin(admin.ModelAdmin):
+    list_display = ['name', 'code', 'url', 'for_area_type', 'valid']
+
+class SteeringParameterFreeAdmin(admin.ModelAdmin):
+    pass
 
 class MeasureAdmin(admin.ModelAdmin):
     filter_horizontal = [
@@ -150,7 +161,7 @@ class HorizontalBarGraphAdmin(admin.ModelAdmin):
     inlines = [HorizontalBarGraphItemInline]
 
 
-admin.site.register(ESFPattern)
+admin.site.register(EsfPattern)
 admin.site.register(FundingOrganization)
 admin.site.register(HorizontalBarGraph, HorizontalBarGraphAdmin)
 admin.site.register(HorizontalBarGraphItem)
@@ -163,8 +174,11 @@ admin.site.register(MeasureStatus, MeasureStatusAdmin)
 admin.site.register(MeasureStatusMoment)
 admin.site.register(MeasureType, MeasureTypeAdmin)
 admin.site.register(MeasuringRod, MeasuringRodAdmin)
+admin.site.register(PredefinedGraphSelection, PredefinedGraphSelectionAdmin)
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Score, ScoreAdmin)
+admin.site.register(SteeringParameterFree, SteeringParameterFreeAdmin)
+admin.site.register(SteeringParameterPredefinedGraph, SteeringParameterPredefinedGraphAdmin)
 admin.site.register(Unit, UnitAdmin)
 admin.site.register(WaterBody)
 admin.site.register(WatertypeGroup)
