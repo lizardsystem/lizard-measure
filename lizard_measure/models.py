@@ -77,6 +77,22 @@ class KRWStatus(models.Model):
         return Synchronizer(sources=sources)
 
 
+class WatertypeGroup(models.Model):
+
+    class Meta:
+        verbose_name = _('Watertype group')
+        verbose_name_plural = _('Watertype groups')
+
+    code = models.CharField(max_length=32, unique=True,
+        verbose_name=_('Code'),
+        help_text=_('Unique code to identify the watertype group'))
+    description = models.CharField(max_length=256, blank=True, null=True,
+        verbose_name=_('Description'))
+
+    def __unicode__(self):
+        return self.code
+
+
 class KRWWatertype(models.Model):
     """
     Type of KRW Watertype.
@@ -103,6 +119,9 @@ class KRWWatertype(models.Model):
         default=None,
         verbose_name=_('Valid'),
     )
+
+    watertype_group = models.ForeignKey(WatertypeGroup, verbose_name=_('Watertype group'),
+        null=True, blank=True, related_name='watertypes')
 
     class Meta:
         verbose_name = _('KRW Watertype')
@@ -1525,6 +1544,27 @@ class Measure(models.Model):
                 output += '(-)'
             output += ', '
         return output
+
+
+class EsfPattern(models.Model):
+
+    class Meta:
+        verbose_name = _("ESF pattern")
+        verbose_name_plural = _("ESF patterns")
+
+    pattern = models.CharField(help_text="Pattern that specifies critical ESFs",
+         default='-' * 16, max_length=16)
+
+    watertype_group = models.ForeignKey(WatertypeGroup,
+        verbose_name=_('Watertype group'), blank=True, null=True,
+        related_name='+')
+
+    data_set = models.ForeignKey(DataSet, verbose_name=_('Water manager'),
+        blank=True, null=True, related_name='+')
+
+    measure_types = models.ManyToManyField(MeasureType,
+        verbose_name=_('Measure type'), blank=True, null=True,
+        related_name='+')
 
 
 # EKR Graphs
