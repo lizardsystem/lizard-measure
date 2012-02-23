@@ -34,3 +34,47 @@ class PatternMeasuresRetrieverTestSuite(TestCase):
         retriever.retrieve(area='area name')
         retriever.retrieve_from_database.assert_called_with('M', 'HHNK')
         retriever.retrieve_database_key.assert_called_with('area name')
+
+
+class PatternMeasuresRetriever_retrieve_from_database_TestSuite(TestCase):
+
+    def test_a(self):
+        """Test an empty dict is returned when there are no ESF patterns."""
+        retriever = PatternMeasuresRetriever()
+        retriever.retrieve_esf_patterns = Mock(return_value=[])
+        pattern_measures = retriever.retrieve_from_database('M', 'HHNK')
+        self.assertEqual(0, len(pattern_measures))
+
+    def create_esf_pattern(self, pattern, measures):
+        return Mock(pattern=pattern, get_measures = Mock(return_value=measures))
+
+    def test_b(self):
+        """Test the right dict is returned when there is a single ESF pattern"""
+        retriever = PatternMeasuresRetriever()
+        esf_patterns = [0]
+        esf_patterns[0] = self.create_esf_pattern(pattern='XX-------', measures=['dummy measure'])
+        retriever.retrieve_esf_patterns = Mock(return_value=esf_patterns)
+
+        pattern_measures = retriever.retrieve_from_database('M', 'HHNK')
+        expected_pattern_measures = {
+            'XX-------': ['dummy measure'],
+            }
+        self.assertEqual(expected_pattern_measures, pattern_measures)
+
+    def test_c(self):
+        """Test the right dict is returned when there are multiple ESF patterns"""
+        retriever = PatternMeasuresRetriever()
+        esf_patterns = [0] * 2
+        esf_patterns[0] = self.create_esf_pattern(pattern='XX-------', measures=['dummy measure'])
+        esf_patterns[1] = self.create_esf_pattern(pattern='----?----', measures=['another dummy measure'])
+        retriever.retrieve_esf_patterns = Mock(return_value=esf_patterns)
+
+        pattern_measures = retriever.retrieve_from_database('M', 'HHNK')
+        expected_pattern_measures = {
+            'XX-------': ['dummy measure'],
+            '----?----': ['another dummy measure']
+            }
+        self.assertEqual(expected_pattern_measures, pattern_measures)
+
+
+
