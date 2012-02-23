@@ -13,21 +13,19 @@ class PatternMeasuresRetriever(object):
 
     """
     def retrieve(self, area):
-        """Return the dict of ESF pattern to list of suitable measures.
+        """Return the dict of ESF pattern to the list of suitable measures.
 
-        Which ESF patterns apply to the current area depends on the water type of
-        the area and on the water manager of the area.
+        With 'ESF pattern', we mean the string pattern that defines the ESF
+        pattern.
 
         """
-        watertype_group = self.retrieve_watertype_group(area)
-        water_manager = self.retrieve_water_manager(area)
+        watertype_group, water_manager = self.retrieve_database_key(area)
         return self.retrieve_from_database(watertype_group, water_manager)
 
-    def retrieve_watertype_group(self, area):
-        pass
+    def retrieve_database_key(self, area):
+        """Return the (watertype group, water manager) of the given area."""
+        return None, area.data_set.name
 
-    def retrieve_water_manager(self, area):
-        return area.data_set.name
 
 
 
