@@ -1,473 +1,100 @@
 
 {
-    xtype: 'formautoload',
     layout: 'anchor',
     autoScroll: true,
     trackResetOnLoad: true,
     bodyPadding: '10 25 10 10',//padding on the right side 25 for scrollbar
     height: '100%',
-    url: '/measure/api/measure/?_accept=application/json&include_geom=true&action=update',
-    loadProxy: {
-        url: '/measure/api/measure/',
-        type: 'ajax',
-        method: 'GET',
-        reader: {
-          root: 'data',
-          type: 'json'
+    items:[{
+        html: '<h1>{{ area.name }}</h1><br> '
+    },{
+        title: 'Enkelvoudige grafieken',
+        anchor:'100%',
+        autoHeight: true,
+        xtype: 'leditgrid',
+        useSaveBar: false,
+        usePagination: false,
+        storeAutoLoad: true,
+        //proxyUrl: '/portal/wbbuckets.json',
+        proxyUrl: '/measure/api/steer_free/',
+        proxyParams: {
+            filter: Ext.JSON.encode([{"property":"area","value":"{{ area.name }}"}])
         },
-        params: {
-            include_geom: true,
-            flat: false,
-            _accept: 'application/json',
-            object_id: {{ measure.id }}
-        },
-        success: function(form, action) {
-            console.log('success gives:');
-            console.log(arguments);
-        },
-        failure: function(form, action) {
-            Ext.Msg.alert("Load failed", action.result.errorMessage);
-        }
-    },
-    items:[
-        {
-            name: 'id',
-            xtype: 'hiddenfield'
-        },
-        {
-            fieldLabel: 'Ident',
-            name: 'ident',
-            width: 200,
-            xtype: 'textfield',
-            allowBlank: false
-        },
-        {
-            fieldLabel: 'Titel',
-            name: 'title',
-            anchor: '100%',
-            xtype: 'textfield',
-            allowBlank: false
-        },
-        {
-            fieldLabel: 'Onderdeel van maatregel',
-            name: 'parent',
-            displayField: 'name',
-            valueField: 'id',
-            xtype: 'combodict',
-            forceSelection: false,
-            store: {
-                fields: ['id', 'name'],
-                proxy: {
-                    type: 'ajax',
-                    url: '/measure/api/measure/?_accept=application%2Fjson&query=parent:None&size=id_name',
-                    reader: {
-                        type: 'json',
-                        root: 'data'
-                    }
-                }
-            }
-        },
-        {
-            fieldLabel: 'KRW maatregel',
-            name: 'is_KRW_measure',
-            xtype: 'checkbox',
-            inputValue: true,
-            allowBlank: true
-        },
+        dataConfig:[
+            {name: 'id', title: 'id', editable: false, visible: false, width: 30, type: 'text'},//automatisch
+            {name: 'area', title: 'gebied', editable: false, visible: false, only_store: true, width: 300, type: 'gridcombobox',
+                defaultValue: {id:{{ area.id }}, name:'{{ area.name }}'}},//todo: hier gebieds info
+            {name: 'name', title: 'naam', editable: true, visible: true, width: 100, type: 'text'},//automatisch genereren
 
-        {
-            fieldLabel: 'Focus maatregel',
-            name: 'is_indicator',
-            inputValue: true,
-            xtype: 'checkbox',
-            allowBlank: true
-        },
-        {
-            fieldLabel: 'Beschrijving',
-            name: 'description',
-            grow: true,
-            anchor: '100%',
-            xtype: 'textareafield',
-            allowBlank: true
-        },
-        {
-            fieldLabel: 'Maatregel type',
-            name: 'measure_type',
-            displayField: 'name',
-            valueField: 'id',
-            xtype: 'combodict',
-            store: {
-                fields: ['id', 'name'],
-                data: Ext.JSON.decode({% autoescape off %}'{{ measure_types }}'{% endautoescape %})
-            },
-            multiSelect: false,
-            forceSelection: true,
-            allowBlank: false,
-            width: 300
-        },
-        {
-            fieldLabel: 'Periode',
-            name: 'period',
-            displayField: 'name',
-            valueField: 'id',
-            xtype: 'combodict',
-            store: {
-                fields: ['id', 'name'],
-                data: Ext.JSON.decode({% autoescape off %}'{{ periods }}'{% endautoescape %})
-            },
-            forceSelection: true,
-            allowBlank: false,
-            width: 300
-        },
-
-        {
-            fieldLabel: 'Categoriën',
-            name: 'categories',
-            displayField: 'name',
-            valueField: 'id',
-            xtype: 'combodict',
-            store: {
-                fields: ['id', 'name'],
-                data: Ext.JSON.decode({% autoescape off %}'{{ categories }}'{% endautoescape %})
-            },
-            multiSelect: true,
-            forceSelection: true,
-            allowBlank: false,
-            width: 300
-        },
-        {
-            fieldLabel: 'Waarde',
-            name: 'value',
-            xtype: 'numberfield',
-            minValue: 0,
-            allowBlank: true
-        },
-        {
-            fieldLabel: 'Eenheid',
-            name: 'unit',
-            displayField: 'name',
-            valueField: 'id',
-            xtype: 'combodict',
-            store: {
-                fields: ['id', 'name'],
-                data: Ext.JSON.decode({% autoescape off %}'{{ units }}'{% endautoescape %})
-            },
-            forceSelection: true,
-            allowBlank: false,
-            width: 300
-        },
-        {
-            xtype:'fieldset',
-            collapsible: true,
-            title: 'Planning',
-            collapsed: false,
-            layout: 'anchor',
-            defaults: {
-                anchor: '100%'
-            },
-            items: [
-            {
-                xtype: 'tablefield',
-                fieldLabel: 'planning en realisatie',
-                name: 'status_moments',
-                field_name: 'status',
-                editable: true,
-                extra_fields:[{
-                    text: 'planning',
-                    dataIndex: 'planning_date',
-                    width:100,
-                    xtype: 'datecolumn',
-                    format:'d-m-Y',
-                    field: {
-                        xtype: 'datefield',
-                        format: 'd-m-Y'
-                    }
-                },{
-                    text: 'realisatie',
-                    dataIndex: 'realisation_date',
-                    width:100,
-                    xtype: 'datecolumn',
-                    format:'d-m-Y',
-                    field: {
-                        xtype: 'datefield',
-                        format: 'd-m-Y'
-                    }
-                }]
-
-            },
-            {
-                fieldLabel: 'Aggregatie',
-                name: 'aggregation_type',
-                queryMode: 'local',
-                displayField: 'name',
-                valueField: 'id',
-                xtype: 'combodict',
-                store: {
-                    fields: ['id', 'name'],
-                    data: Ext.JSON.decode({% autoescape off %}'{{ aggregations }}'{% endautoescape %}),
-                },
-                forceSelection: true,
-                allowBlank: false
-            }
+            {name: 'order', title: 'volgorde', editable: true, visible: true, width: 50, type: 'number', defaultValue: 10},
+            {name: 'for_evaluation', title: 'type', editable: true, visible: true, width: 70, type: 'gridcombobox',
+                defaultValue: {id:false, name:'toestand'},
+                choices: [{id:true, name:'evaluatie'},{id:false, name:'toestand'}]},//default invullen
+            {name: 'has_target', title: 'heeft doel', editable: true, visible: true, width: 70, type: 'boolean'},
+            {name: 'target_value', title: 'doel waarde', editable: true, visible: true, width: 70, type: 'float'},
+            {name: 'parameter_code', title: 'parameter code', editable: true, visible: true, width: 100, type: 'text'},
+            {name: 'location_modulinstance_string', title: 'locatie module instance, etc code', editable: true, visible: true, width: 330, type: 'text'}
         ]
+    },{
+        html: '<br><br>'
+    },{
+        title: 'Samengestelde grafieken',
+  
+        anchor:'100%',
+        autoHeight: true,
+        xtype: 'leditgrid',
+        useSaveBar: false,
+        usePagination: false,
+        storeAutoLoad: true,
+        proxyUrl: '/measure/api/steer_predefined/',
+        proxyParams: {
+            filter: Ext.JSON.encode([{"property":"area","value":"{{ area.name }}"}])
         },
-        {
-            xtype:'fieldset',
-            collapsible: true,
-            title: 'Organisaties en kosten',
-            collapsed: false,
-            layout: 'anchor',
-            defaults: {
-                anchor: '100%'
-            },
-            items: [
-            {
-                fieldLabel: 'Initiatiefnemer',
-                name: 'initiator',
-                displayField: 'name',
-                valueField: 'id',
-                xtype: 'combodict',
-                queryMode: 'remote', //'local' 'remote
-                typeAhead: true,
-                minChars:0,
-                forceSelection: true,
-                store: {
-                    fields: ['id', 'name'],
-                    proxy: {
-                        type: 'ajax',
-                        url: '/measure/api/organization/?_accept=application%2Fjson&size=id_name',
-                        reader: {
-                            type: 'json',
-                            root: 'data'
-                        }
-                    }
-                }
-            },
-            {
-                fieldLabel: 'Afdeling',
-                name: 'responsible_department',
-                xtype: 'textfield',
-                allowBlank: true
-            },
-            {
-                xtype: 'combodict',
-                fieldLabel: 'Uitvoerder',
-                name: 'executive',
-                displayField: 'name',
-                valueField: 'id',
-                forceSelection: true,
-                queryMode: 'remote', //'local' 'remote
-                typeAhead: true,
-                minChars:0,
-                store: {
-                    fields: ['id', 'name'],
-                    proxy: {
-                        type: 'ajax',
-                        url: '/measure/api/organization/?_accept=application%2Fjson&size=id_name',
-                        reader: {
-                            type: 'json',
-                            root: 'data'
-                        }
-                    }
-                }
-            },
-            {
-                fieldLabel: 'Investeringskosten',
-                name: 'investment_costs',
-                minValue: 0,
-                allowDecimals: false,
-                xtype: 'numberfield'
-            },
-            {
-                fieldLabel: 'Exploitatiekosten',
-                name: 'exploitation_costs',
-                minValue: 0,
-                allowDecimals: false,
-                xtype: 'numberfield'
-            },
-            {
-                xtype: 'combomultiselect',
-                fieldLabel: 'Kosten verdeling organisaties',
-                name: 'funding_organizations',
-                read_at_once: true,
-                editable: true,
-                extra_fields:[{
-                    text: 'percentage',
-                    dataIndex: 'percentage',
-                    width:100,
-                    field: {
-                        xtype:'numberfield',
-                        step:1,
-                        allowDecimals: false,
-                        maxValue: 100,
-                        minValue: 0
-                    }
-                }],
-                combo_store: {
-                    fields: [
-                        {name: 'id', mapping: 'id'},
-                        {name: 'percentage', mapping: 'percentage', defaultValue: 0},
-                        {name: 'name', mapping: 'name'}
-                    ],
-                    proxy: {
-                        type: 'ajax',
-                        url: '/measure/api/organization/?_accept=application%2Fjson&size=id_name',
-                        reader: {
-                            type: 'json',
-                            root: 'data'
-                        }
-                    }
-                }
-            }]
-        },
-        {
-            xtype:'fieldset',
-            collapsible:true,
-            title: 'Link naar aan/afvoergebied en/of KRW-waterlichaam',
-            collapsed: false,
-            layout: 'anchor',
-            defaults: {
-                anchor: '100%'
-            },
-            items :[
-            {
-                xtype: 'combomultiselect',
-                fieldLabel: 'aan/ afvoer gebieden',
-                name: 'areas',
-                field_name: 'aan/ afvoer gebieden',
-                read_at_once: false,
-                combo_store: {
-                    fields: [
-                        {name: 'id', mapping: 'id' },
-                        {name: 'name', mapping: 'name' }
-                    ],
-                    proxy: {
-                        type: 'ajax',
-                        url: '/area/api/catchment-areas/?node=root&_accept=application%2Fjson&size=id_name',
-                        reader: {
-                            type: 'json',
-                            root: 'areas'
-                        }
-                    }
-                }
-            }, {
-                xtype: 'combomultiselect',
-                fieldLabel: 'KRW waterlichamen',
-                name: 'waterbodies',
-                field_name: 'KRW waterlichamen',
-                read_at_once: false,
-                combo_store: {
-                    fields: [
-                        {name: 'id', mapping: 'id' },
-                        {name: 'name', mapping: 'name' }
-                    ],
-                    proxy: {
-                        type: 'ajax',
-                        url: '/area/api/krw-areas/?node=root&_accept=application%2Fjson&size=id_name',
-                        reader: {
-                            type: 'json',
-                            root: 'areas'
-                        }
-                    }
-                }
-            }]
-        },
-        {
-            fieldLabel: 'Geometrie',
-            name: 'geom',
-            grow: true,
-            anchor: '100%',
-            xtype: 'textareafield',
-            allowBlank: true
-        },
-        {
-            xtype:'fieldset',
-            collapsible:true,
-            title: 'Metadata',
-            collapsed: true,
-            layout: 'anchor',
-            defaults: {
-                anchor: '100%'
-            },
-            items :[
-            {
-                fieldLabel: 'Alleen lezen',
-                name: 'read_only',
-                xtype: 'displayfield'
 
-            },
-            {
-                fieldLabel: 'Bron',
-                name: 'import_source',
-                xtype: 'displayfield'
-            },
-            {
-                fieldLabel: 'Ruwe data bron',
-                name: 'import_raw',
-                xtype: 'displayfield'
-            }
-            ]
-        }
-    ],
-    buttons:[
+        dataConfig:[
+            {name: 'id', title: 'id', editable: false, visible: false, width: 30, type: 'text'},//automatisch
+            {name: 'area', title: 'gebied', editable: false, visible: false, only_store: true, width: 300, type: 'gridcombobox',
+                defaultValue: {id:{{ area.id }}, name:'{{ area.name }}'}},//todo: hier gebieds info
+            {name: 'name', title: 'naam', editable: true, visible: true, width: 100, type: 'text'},//automatisch genereren
+            {name: 'order', title: 'volgorde', editable: true, visible: true, width: 50, type: 'number'},
+            {name: 'for_evaluation', title: 'type', editable: true, visible: true, width: 70, type: 'gridcombobox', choices: [{id:true, name:'evaluatie'},{id:false, name:'toestand'}],//default invullen
+                defaultValue: {id:false, name:'toestand'},
+                choices: [{id:true, name:'evaluatie'},{id:false, name:'toestand'}]},//default invullen
+            {name: 'predefined_graph', title: 'grafiek', editable: true, visible: true, width: 100, type: 'gridcombobox',
+                choices: Ext.JSON.decode('{% autoescape off %}{{ predefined_graphs }}{% endautoescape %}')},//default invullen
+            {name: 'area_of_predefined_graph', title: 'gebied', editable: true, visible: true, width: 330,
+                type: 'gridcombobox', choices: Ext.JSON.decode('{% autoescape off %}{{ related_areas }}{% endautoescape %}')}
+       ]
+    }],
+    bbar:[
     {
         text: 'Annuleren',
         handler: function() {
             this.up('window').close();
         }
-    },{
-        text: 'Opslaan',
-        //formBind: true, //only enabled once the form is valid
-        //disabled: true,
-        handler: function() {
-            var form = this.up('form').getForm();
-            var form_window = this.up('window')
-            if (form.isValid()) {
-                /* todo: de waarden zelf gaan rangschikken en verzenden */
-                var values = form.getValues()
-
-                if (!values['is_KRW_measure']) {
-                    values['is_KRW_measure'] = false
-
-                }
-                if (!values['is_indicator']) {
-                    values['is_indicator'] = false
-                }
-
-                Ext.MessageBox.show({
-                    title: 'Wijzigingen opslaan',
-                    msg: 'Samenvatting',
-                    width: 300,
-                    multiline: true,
-                    buttons: Ext.MessageBox.OKCANCEL,
-                    fn: function (btn, text) {
-                        if (btn=='ok') {
-                            values.edit_summary = text;
-                            form_window.setLoading(true);
-                            Ext.Ajax.request({
-                                url: '/measure/api/measure/?action=update&_accept=application/json&flat=false',
-                                params: {
-                                    object_id: values.id,
-                                    edit_message: text,
-                                    data:  Ext.JSON.encode(values)
-                                },
-                                method: 'POST',
-                                success: function(xhr) {
-                                    Ext.Msg.alert("Opgeslagen", "Opslaan gelukt");
-                                    form_window.close();
-                                    form_window.setLoading(false);
-                                    if (form_window.finish_edit_function) {
-                                        form_window.finish_edit_function();
-                                    }
-                                },
-                                failure: function(xhr) {
-                                    Ext.Msg.alert("Fout", "Server communication error");
-                                    form_window.setLoading(false);
-                                }
-                            });
-                        }
-                    }
-                })
+    },
+    {
+        xtype: 'button',
+        text: 'Reset',
+        iconCls: 'l-icon-cancel',
+        handler: function (menuItem, checked) {
+            var panel = menuItem.up('panel');
+            var grids = panel.query('leditgrid');
+            for (var i = 0; i < grids.length; i++) {
+                grids[i].cancelEdits()
+            }
+        }
+    },
+    {
+        xtype: 'button',
+        text: 'Save',
+        iconCls: 'l-icon-disk',
+        handler: function (menuItem) {
+            var panel = menuItem.up('panel');
+            var grids = panel.query('leditgrid');
+            panel_global = panel;
+            for (var i = 0; i < grids.length; i++) {
+                grids[i].saveEdits();
             }
         }
     }]

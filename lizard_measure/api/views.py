@@ -1,7 +1,9 @@
 from django.core.urlresolvers import reverse
+from django.shortcuts import get_object_or_404
 from djangorestframework.views import View
+from lizard_area.models import Area
 
-from lizard_measure.models import Organization, Measure, Score
+from lizard_measure.models import Organization, Measure, Score, SteeringParameterPredefinedGraph, SteeringParameterFree
 from lizard_api.base import BaseApiView
 
 import logging
@@ -63,6 +65,122 @@ class ScoreView(BaseApiView):
             'area': self._get_related_object(score.area, flat),
         }
         return output
+
+
+class SteeringParameterPredefinedGraphView(BaseApiView):
+    """
+        Show organisations for selection and edit
+    """
+    model_class = SteeringParameterPredefinedGraph
+    name_field = 'name'
+
+    valid_field=None
+
+    field_mapping = {
+       'id': 'id',
+        'name': 'name',
+        'area': 'area__name',
+        'order': 'order',
+        'for_evaluation': 'for_evaluation',
+        'predefined_graph': 'predefined_graph__name',
+        'area_of_predefined_graph': 'area_of_predefined_graph__name'
+    }
+
+    read_only_fields = [
+
+    ]
+
+    def get_object_for_api(self,
+                           sp,
+                           flat=True,
+                           size=BaseApiView.COMPLETE,
+                           include_geom=False):
+        """
+        create object of measure
+        """
+        if size == self.ID_NAME:
+            output = {
+                'id': sp.id,
+                'name': sp.name,
+            }
+        else:
+            output = {
+                'id': sp.id,
+                'name': sp.name,
+                'area': self._get_related_object(
+                    sp.area,
+                    flat=flat
+                ),
+                'order': sp.order,
+                'for_evaluation': sp.for_evaluation,
+                'predefined_graph': self._get_related_object(
+                    sp.predefined_graph,
+                    flat=flat
+                ),
+                'area_of_predefined_graph': self._get_related_object(
+                    sp.area_of_predefined_graph,
+                    flat=flat
+                )
+            }
+        return output
+
+
+class SteeringParameterFreeView(BaseApiView):
+    """
+        Show organisations for selection and edit
+    """
+    model_class = SteeringParameterFree
+    name_field = 'name'
+
+    valid_field=None
+
+    field_mapping = {
+        'id': 'id',
+        'name': 'name',
+        'area': 'area__name',
+        'order': 'order',
+        'parameter_code': 'parameter_code',
+        'has_target': 'has_target',
+        'target_value': 'target_value',
+        'for_evaluation': 'for_evaluation',
+        'location_modulinstance_string': 'location_modulinstance_string'
+    }
+
+    read_only_fields = [
+
+    ]
+
+    def get_object_for_api(self,
+                           sp,
+                           flat=True,
+                           size=BaseApiView.COMPLETE,
+                           include_geom=False):
+        """
+        create object of measure
+        """
+        if size == self.ID_NAME:
+            output = {
+                'id': sp.id,
+                'name': sp.name,
+            }
+        else:
+            output = {
+                'id': sp.id,
+                'name': sp.name,
+                'area': self._get_related_object(
+                    sp.area,
+                    flat=flat
+                ),
+                'order': sp.order,
+                'parameter_code': sp.parameter_code,
+                'has_target': sp.has_target,
+                'target_value': sp.target_value,
+                'for_evaluation': sp.for_evaluation,
+                'location_modulinstance_string': sp.location_modulinstance_string
+            }
+        return output
+
+
 
 
 class OrganizationView(BaseApiView):
@@ -302,3 +420,97 @@ class MeasureView(BaseApiView):
                 model_field,
                 linked_records,
             )
+
+
+class SteerParameterGraphs(View):
+    """
+        Api for toestand and krw-overzicht screen settings
+    """
+    graph_count = 0
+    def _get_graph_id(self):
+        self.graph_count += 1
+        return 'gr%i'%self.graph_count
+
+
+    def _get_free_graphsettings(self, graph):
+            #todo: locaties goed en doel scores toevoegen
+        return {
+            'id': self._get_graph_id,
+            'name': graph.name,
+            'visible': True,
+            'base_url': '/graph/',
+            'use_context_location': True,
+            'location': None,
+            'extra_params': {}
+        }
+
+
+    def _get_predefined_graphsettings(self, graph):
+
+        if graph.area_of_predefined_graph:
+            location_ident = graph.area_of_predefined_graph.ident
+        else:
+            location_ident = None
+
+        return {
+            'id': self._get_graph_id,
+            'name': graph.name,
+            'visible': True,
+            'base_url': graph.predefined_graph.url,
+            'use_context_location': graph.area_of_predefined_graph == None,
+            'location': location_ident,
+            'extra_params': {},
+        }
+
+
+
+    def get(self, request):
+
+        graphs = []
+        prefix = ''
+        count = 0
+        area_ident = request.GET.get('object_id')
+
+        area = get_object_or_404(Area, ident=area_ident)
+
+
+        for graph in area.steeringparameterfree_set.filter(for_evaluation = False).order_by('order'):
+            graphs.append(self._get_free_graphsettings(graph))
+
+        for graph in area.steeringparameterpredefinedgraph_set.filter(for_evaluation = False).order_by('order'):
+            graphs.append(self._get_predefined_graphsettings(graph))
+
+        for graph in area.steeringparameterfree_set.filter(for_evaluation = True).order_by('order'):
+            graphs.append(self._get_free_graphsettings(graph))
+
+        for graph in area.steeringparameterpredefinedgraph_set.filter(for_evaluation = True).order_by('order'):
+            graphs.append(self._get_predefined_graphsettings(graph))
+
+        if area.area_class == Area.AREA_CLASS_KRW_WATERLICHAAM:
+            graphs.append({
+               'id': prefix + '99',
+                'name': 'EKR scores',
+                'visible': True,
+                'base_url': '/measure/bar/?',
+                'use_context_location': True,
+                'location': None,
+                'predefined_graph': 'ekr',
+                'extra_params': {},
+                'detail_link': 'ekr',
+            })
+
+        graphs.append({
+            'id': prefix + '100',
+            'name': 'maatregelen',
+            'visible': True,
+            'base_url': '/measure/measure_graph/?filter=focus',
+            'use_context_location': True,
+            'location': None,
+            'predefined_graph': None,
+            'extra_params': {},
+            'detail_link': 'maatregelen',
+        })
+
+
+
+        return graphs

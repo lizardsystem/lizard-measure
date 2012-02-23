@@ -7,6 +7,9 @@ from lizard_measure.api.views import RootView
 from lizard_measure.api.views import MeasureView
 from lizard_measure.api.views import OrganizationView
 from lizard_measure.api.views import ScoreView
+from lizard_measure.api.views import SteeringParameterFreeView
+from lizard_measure.api.views import SteeringParameterPredefinedGraphView
+from lizard_measure.api.views import SteerParameterGraphs
 
 admin.autodiscover()
 
@@ -26,4 +29,14 @@ urlpatterns = patterns(
     url(r'^score/$',
         ScoreView.as_view(),
         name=NAME_PREFIX + 'score'),
+    url(r'^steer_free/$',
+        SteeringParameterFreeView.as_view(),
+        name=NAME_PREFIX + 'steering_parameter'),
+    url(r'^steer_predefined/$',
+        SteeringParameterPredefinedGraphView.as_view(),
+        name=NAME_PREFIX + 'steering_parameter_predefined'),
+    url(r'^steer_parameter_graphs/$',
+        SteerParameterGraphs.as_view(),
+        name=NAME_PREFIX + 'steering_parameter_graphs'),
+
     )

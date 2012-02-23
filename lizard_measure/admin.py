@@ -17,7 +17,9 @@ from lizard_measure.models import Score
 from lizard_measure.models import MeasuringRod
 from lizard_measure.models import HorizontalBarGraph
 from lizard_measure.models import HorizontalBarGraphItem
-
+from lizard_measure.models import SteeringParameterPredefinedGraph
+from lizard_measure.models import PredefinedGraphSelection
+from lizard_measure.models import SteeringParameterFree
 
 class MeasureStatusMomentInline(admin.TabularInline):
     model = MeasureStatusMoment
@@ -34,6 +36,14 @@ class EsfLinkInline(admin.TabularInline):
 class MeasureInline(admin.TabularInline):
     model = Measure
 
+class SteeringParameterPredefinedGraphAdmin(admin.ModelAdmin):
+    pass
+
+class PredefinedGraphSelectionAdmin(admin.ModelAdmin):
+    list_display = ['name', 'code', 'url', 'for_area_type', 'valid']
+
+class SteeringParameterFreeAdmin(admin.ModelAdmin):
+    pass
 
 class MeasureAdmin(admin.ModelAdmin):
     filter_horizontal = [
@@ -148,6 +158,10 @@ class HorizontalBarGraphAdmin(admin.ModelAdmin):
     inlines = [HorizontalBarGraphItemInline]
 
 
+
+admin.site.register(SteeringParameterPredefinedGraph, SteeringParameterPredefinedGraphAdmin)
+admin.site.register(PredefinedGraphSelection, PredefinedGraphSelectionAdmin)
+admin.site.register(SteeringParameterFree, SteeringParameterFreeAdmin)
 admin.site.register(FundingOrganization)
 admin.site.register(Measure, MeasureAdmin)
 admin.site.register(MeasurePeriod)
