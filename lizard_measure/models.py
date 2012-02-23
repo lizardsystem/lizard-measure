@@ -348,27 +348,91 @@ class Score(models.Model):
                 self.mep)
 
 
-class SteeringParameter(models.Model):
+class PredefinedGraphSelection(models.Model):
     """
-    Err...
+        List of graphs which can be selected
     """
-    area = models.ForeignKey(Area)  # Need to make this generic?
-                                    # May also point to WaterBody...
+    name = models.CharField(max_length=256,
+                        help_text='naam voor selectie')
 
-    fews_parameter = models.CharField(max_length=256)
-    #fews_timeseries = models.ManyToManyField(TimeSeries)
-    target_minimum = models.FloatField(
+    code = models.CharField(max_length=256,
+                        help_text='code zoals gedefinieerd bij de pre-defined graphs')
+
+    url = models.CharField(max_length=256,
+                        help_text='basis url of grafiek')
+
+    for_area_type = models.IntegerField(null=True, blank=True,
+                        choices=Area.AREA_CLASS_CHOICES,
+                        help_text='voor de gebieden groep waarvoor de grafiek gekozen kan worden. null is voor alle')
+
+    valid = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        return self.name
+
+class SteeringParameterPredefinedGraph(models.Model):
+    """
+        predefined graphs
+    """
+
+    name = models.CharField(max_length=256,
+                        help_text='alleen gebruikt voor weergave')
+
+    area = models.ForeignKey(Area,
+                        help_text='Gebied waarbij stuurparameter hoort')
+
+    order = models.IntegerField(default=0,
+                        help_text='volgorde van grafieken (binnen zelfde type)')
+
+    for_evaluation = models.BooleanField(
+                        default= False,
+                        help_text='Evaluatie stuurparameter, anders Toestand')
+
+    predefined_graph = models.ForeignKey(PredefinedGraphSelection)
+
+    area_of_predefined_graph = models.ForeignKey(Area,
+                        null=True, blank=True,
+                        related_name='+',
+                        help_text='locatie van pre-defined graph anders dan eigen gebied')
+
+    class Meta:
+        verbose_name = _("Steering parameter predefined graph ")
+        verbose_name_plural = _("Steering parameters predefined graph")
+
+class SteeringParameterFree(models.Model):
+    """
+        selection of parameter and locations for a steerparameter graph
+    """
+    name = models.CharField(max_length=256,
+                    help_text='alleen gebruikt voor weergave')
+
+    area = models.ForeignKey(Area)
+
+    order = models.IntegerField(default=0,
+                        help_text='volgorde van grafieken (binnen zelfde type)')
+
+    for_evaluation = models.BooleanField(
+                        default= False,
+                        help_text='Evaluatie stuurparameter, anders Toestand')
+
+    parameter_code = models.CharField(max_length=256)
+
+    has_target = models.BooleanField(
+        default=False
+    )
+    target_value = models.FloatField(
         blank=True,
         null=True,
     )
-    target_maximum = models.FloatField(
-        blank=True,
-        null=True,
+    location_modulinstance_string = models.TextField(
+        help_text = 'text string met "location_ident,moduleinstance_code,timestep_id,identifier_id".\
+                    Als een deel wordt weggelaten, dan wordt indien de verwijzing naar meerdere is\
+                    een willekeurige genomen. Meerdere locaties opdelen met een ";"'
     )
 
     class Meta:
-        verbose_name = _("Steering parameter")
-        verbose_name_plural = _("Steering parameters")
+        verbose_name = _("Steering parameter free selection")
+        verbose_name_plural = _("Steering parameters free selection")
 
 
 # Measures

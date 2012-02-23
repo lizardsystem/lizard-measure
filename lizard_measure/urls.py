@@ -76,8 +76,9 @@ urlpatterns = patterns(
      MeasureHistoryDetailView.as_view(),
      {},
      "lizard_measure.history_details"),
-
-    #edit screens
+    (r'^api/',
+     include('lizard_measure.api.urls')),
+    #edit screens measures
     (r'^measure_detailedit_portal/$',
     'lizard_measure.views.measure_detailedit_portal',
      {},
@@ -90,8 +91,13 @@ urlpatterns = patterns(
     'lizard_measure.views.organization_groupedit_portal',
      {},
      "lizard_measure.organization_groupedit_portal"),
-    (r'^api/',
-     include('lizard_measure.api.urls')),
+
+    #edit screens steering parameters
+    (r'^steering_parameter_form/$',
+    'lizard_measure.views.steering_parameter_form',
+     {},
+     "lizard_measure.steering_parameter_form"),
+
 
     # (r'^measure/(?P<measure_id>\d+)/graph/$',
     #  'lizard_measure.views.krw_measure_graph',
