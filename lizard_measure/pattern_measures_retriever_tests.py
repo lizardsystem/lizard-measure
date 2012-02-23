@@ -16,24 +16,23 @@ class PatternMeasuresRetrieverTestSuite(TestCase):
 
     def setup_retriever(self):
         self.pattern_measures = {'string pattern': 'Measure(s)'} # pylint: disable=C0301, W0201
+        self.area = Mock(water_manager='HHNK')  # pylint: disable=W0201
         retriever = PatternMeasuresRetriever()
-        retriever.retrieve_from_database = \
-            Mock(return_value=self.pattern_measures)
-        retriever.retrieve_database_key = Mock(return_value=('M', 'HHNK'))
+        retriever.retrieve_from_database = Mock(return_value=self.pattern_measures)
+        retriever.retrieve_watertype_group = Mock(return_value='M')
         return retriever
 
     def test_a(self):
         """Test the right dict is retrieved."""
         retriever = self.setup_retriever()
-        self.assertEqual(self.pattern_measures,
-            retriever.retrieve(area='area name'))
+        self.assertEqual(self.pattern_measures, retriever.retrieve(self.area))
 
     def test_b(self):
         """Test the right parameters are passed to the underlying methods."""
         retriever = self.setup_retriever()
-        retriever.retrieve(area='area name')
+        retriever.retrieve(self.area)
         retriever.retrieve_from_database.assert_called_with('M', 'HHNK')
-        retriever.retrieve_database_key.assert_called_with('area name')
+        retriever.retrieve_watertype_group.assert_called_with(self.area)
 
 
 class PatternMeasuresRetriever_retrieve_from_database_TestSuite(TestCase):
@@ -56,9 +55,7 @@ class PatternMeasuresRetriever_retrieve_from_database_TestSuite(TestCase):
         retriever.retrieve_esf_patterns = Mock(return_value=esf_patterns)
 
         pattern_measures = retriever.retrieve_from_database('M', 'HHNK')
-        expected_pattern_measures = {
-            'XX-------': ['dummy measure'],
-            }
+        expected_pattern_measures = { 'XX-------': ['dummy measure'] }
         self.assertEqual(expected_pattern_measures, pattern_measures)
 
     def test_c(self):
@@ -75,6 +72,3 @@ class PatternMeasuresRetriever_retrieve_from_database_TestSuite(TestCase):
             '----?----': ['another dummy measure']
             }
         self.assertEqual(expected_pattern_measures, pattern_measures)
-
-
-
