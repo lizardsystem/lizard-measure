@@ -5,6 +5,8 @@
 
 # Copyright (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.rst.
 
+import logging
+
 from django.core.exceptions import ObjectDoesNotExist
 
 from django.db.models import Q
@@ -13,6 +15,8 @@ from mock import Mock
 
 from lizard_measure.models import EsfPattern
 from lizard_measure.models import WaterBody
+
+logger = logging.getLogger(__name__)
 
 
 class PatternMeasuresRetriever(object):
@@ -29,6 +33,10 @@ class PatternMeasuresRetriever(object):
 
         """
         watertype_group = self.retrieve_watertype_group(area)
+        if watertype_group is None:
+            logger.debug('unable to retrieve a watertype group for the given area')
+        else:
+            logger.debug('retrieved watertype group %s', watertype_group.code)
         return self.retrieve_from_database(watertype_group, area.water_manager)
 
     def retrieve_watertype_group(self, area):
@@ -49,6 +57,7 @@ class PatternMeasuresRetriever(object):
     def retrieve_from_database(self, watertype_group, water_manager):
         pattern_measures = {}
         esf_patterns = self.retrieve_esf_patterns(watertype_group, water_manager)
+        logger.debug("retrieved %d ESF patterns", len(esf_patterns))
         for esf_pattern in esf_patterns:
             pattern_measures[esf_pattern.pattern] = esf_pattern.get_measures()
         return pattern_measures
