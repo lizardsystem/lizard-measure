@@ -5,9 +5,14 @@
 
 # Copyright (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.rst.
 
+from django.core.exceptions import ObjectDoesNotExist
+
 from django.db.models import Q
 
+from mock import Mock
+
 from lizard_measure.models import EsfPattern
+from lizard_measure.models import WaterBody
 
 
 class PatternMeasuresRetriever(object):
@@ -27,8 +32,19 @@ class PatternMeasuresRetriever(object):
         return self.retrieve_from_database(watertype_group, area.water_manager)
 
     def retrieve_watertype_group(self, area):
-        """Return the water type group of the given area."""
-        assert False
+        """Return the water type group of the given area.
+
+        This method returns None when a WaterBody does not exist for the given
+        area or when the water type is not specified for the WaterBody.
+
+        """
+        try:
+            waterbody = WaterBody.objects.get(area=area)
+            if waterbody.krw_watertype is None:
+                watertype = Mock(watertype_group=None)
+        except ObjectDoesNotExist:
+            watertype = Mock(watertype_group=None)
+        return watertype.watertype_group
 
     def retrieve_from_database(self, watertype_group, water_manager):
         pattern_measures = {}
@@ -42,7 +58,3 @@ class PatternMeasuresRetriever(object):
         query = Q(watertype_group__exact=watertype_group)
         query.add(Q(data_set__exact=None) | Q(data_set=water_manager))
         return EsfPattern.objects.filter(query)
-
-
-
-
