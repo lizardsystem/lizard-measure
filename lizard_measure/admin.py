@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from lizard_measure.models import EsfLink
-from lizard_measure.models import ESFPattern
+from lizard_measure.models import EsfPattern
 from lizard_measure.models import FundingOrganization
 from lizard_measure.models import HorizontalBarGraph
 from lizard_measure.models import HorizontalBarGraphItem
@@ -161,7 +161,7 @@ class HorizontalBarGraphAdmin(admin.ModelAdmin):
     inlines = [HorizontalBarGraphItemInline]
 
 
-admin.site.register(ESFPattern)
+admin.site.register(EsfPattern)
 admin.site.register(FundingOrganization)
 admin.site.register(HorizontalBarGraph, HorizontalBarGraphAdmin)
 admin.site.register(HorizontalBarGraphItem)
