@@ -2,12 +2,10 @@
 
 import json
 import logging
-from sets import Set
 import datetime
 
 import iso8601
 
-from django.core.urlresolvers import reverse
 from django.db.models.query_utils import Q
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render_to_response
@@ -20,24 +18,18 @@ from django.views.generic.base import View
 from matplotlib.dates import date2num
 from matplotlib.lines import Line2D
 
-from lizard_map import adapter
-
-# from django.views.decorators.cache import cache_page
 
 from lizard_measure.models import Measure, MeasureStatus
-from lizard_measure.models import WaterBody
 from lizard_measure.models import MeasureType
 from lizard_measure.models import MeasurePeriod
 from lizard_measure.models import MeasureCategory
 from lizard_measure.models import Unit
 from lizard_measure.models import HorizontalBarGraph
-from lizard_measure.models import HorizontalBarGraphItem
 from lizard_measure.models import Score
 from lizard_area.models import Area
 
 from nens_graph.common import DateGridGraph
 from nens_graph.common import dates_values
-from matplotlib.dates import date2num
 from lizard_map.views import AppView
 from lizard_graph.views import TimeSeriesViewMixin
 from lizard_fewsnorm.models import GeoLocationCache
@@ -177,6 +169,16 @@ def krw_waterbody_measures(request, area_ident,
          },
         context_instance=RequestContext(request))
 
+
+def suited_measures(request, area_ident,
+                    template='lizard_measure/suited_measures.html'):
+    # for testing purposes, we retrieve all measures
+    suited_measures = Measure.objects.all()
+    print "suited_measures count:", Measure.objects.all().count()
+    return render_to_response(
+        template,
+        {'suited_measures': suited_measures},
+        context_instance=RequestContext(request))
 
 
 def _image_measures(graph, measures, start_date, end_date,

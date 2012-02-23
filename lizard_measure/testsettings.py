@@ -14,16 +14,27 @@ LOGGING = setup_logging(BUILDOUT_DIR)
 
 DEBUG = True
 TEMPLATE_DEBUG = True
+
+# Django supports the databases 'postgresql_psycopg2', 'postgresql', 'mysql',
+# 'sqlite3' and 'oracle'. If you use a geodatabase, Django supports the
+# following ones:
+#
+#   'django.contrib.gis.db.backends.postgis'
+#   'django.contrib.gis.db.backends.mysql'
+#   'django.contrib.gis.db.backends.oracle'
+#   'django.contrib.gis.db.backends.spatialite'
+
 DATABASES = {
     'default': {
-        'NAME': 'measure',
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': os.path.join(BUILDOUT_DIR, 'lizard-measure.db'),
+        'ENGINE': 'django.contrib.gis.db.backends.spatialite',
         'USER': 'buildout',
         'PASSWORD': 'buildout',
-        'HOST': '127.0.0.1',  # empty string for localhost.
+        'HOST': '',  # empty string for localhost.
         'PORT': '',  # empty string for default.
         }
     }
+
 SITE_ID = 1
 INSTALLED_APPS = [
     'south',

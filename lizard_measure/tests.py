@@ -17,17 +17,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class ModelTest(TestCase):
-    fixtures = ('testdata', )
-
-    def setUp(self):
-        pass
-
-    def test_cost_attribute(self):
-        m = Measure.objects.get(title='TestMeasure1')
-        self.assertEquals(m.total_costs, 500)
-
-
 class HorizontalBarGraphViewTest(TestCase):
     def graph_items_from_request(self, get):
         class MockRequest(object):
