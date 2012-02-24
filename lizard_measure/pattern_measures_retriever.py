@@ -35,8 +35,6 @@ class PatternMeasuresRetriever(object):
         watertype_group = self.retrieve_watertype_group(area)
         if watertype_group is None:
             logger.debug('unable to retrieve a watertype group for the given area')
-        else:
-            logger.debug('retrieved watertype group %s', watertype_group.code)
         return self.retrieve_from_database(watertype_group, area.water_manager)
 
     def retrieve_watertype_group(self, area):
