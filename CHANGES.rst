@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.9 (unreleased)
+1.9 (2012-02-24)
 ----------------
 
 - Adds initial support for suitable measures (beta),
