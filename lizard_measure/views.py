@@ -19,6 +19,7 @@ from matplotlib.dates import date2num
 from matplotlib.lines import Line2D
 
 
+from lizard_area.models import Area
 from lizard_measure.models import Measure, MeasureStatus
 from lizard_measure.models import MeasureType
 from lizard_measure.models import MeasurePeriod
@@ -26,6 +27,7 @@ from lizard_measure.models import MeasureCategory
 from lizard_measure.models import Unit
 from lizard_measure.models import HorizontalBarGraph
 from lizard_measure.models import Score
+from lizard_measure.suitable_measures import get_suitable_measures
 from lizard_measure.models import SteeringParameterFree
 from lizard_measure.models import SteeringParameterPredefinedGraph
 from lizard_measure.models import PredefinedGraphSelection
@@ -176,11 +178,12 @@ def krw_waterbody_measures(request, area_ident,
 def suited_measures(request, area_ident,
                     template='lizard_measure/suited_measures.html'):
     # for testing purposes, we retrieve all measures
-    suited_measures = Measure.objects.all()
-    print "suited_measures count:", Measure.objects.all().count()
+    area = get_object_or_404(Area, ident=area_ident)
+    suitable_measures = get_suitable_measures(area)
+    logger.debug("found %d suitable measures", len(suitable_measures))
     return render_to_response(
         template,
-        {'suited_measures': suited_measures},
+        {'suited_measures': suitable_measures},
         context_instance=RequestContext(request))
 
 
