@@ -5,7 +5,8 @@ Changelog of lizard-measure
 1.9 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Adds initial support for suitable measures (beta),
+  issue lizardsystem/lizard-portal#18.
 
 
 1.8 (2012-02-17)
