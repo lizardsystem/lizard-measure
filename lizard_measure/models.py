@@ -1575,6 +1575,9 @@ class EsfPattern(models.Model):
             measures_list += measure_type.measures.all()
         return measures_list
 
+    def __unicode__(self):
+        return self.pattern
+
 
 # EKR Graphs
 
