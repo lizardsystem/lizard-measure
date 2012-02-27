@@ -183,7 +183,7 @@ def suited_measures(request, area_ident,
     logger.debug("found %d suitable measures", len(suitable_measures))
     return render_to_response(
         template,
-        {'suited_measures': suitable_measures},
+        {'suitable_measures': suitable_measures},
         context_instance=RequestContext(request))
 
 

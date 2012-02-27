@@ -9,9 +9,9 @@
       </tr>
     </thead>
     <tbody>
-      {% for measure in suited_measures %}
+      {% for info in suitable_measures %}
       <tr>
-        <td>{{measure.ident}}</td><td>{{measure.title}}</td><td>attribuut 'Landelijk' nog onbekend</td>
+        <td>{{info.measure.ident}}</td><td>{{info.measure.title}}</td><td>{{info.is_country_wide}}</td>
       </tr>
       {% endfor %}
     </tbody>

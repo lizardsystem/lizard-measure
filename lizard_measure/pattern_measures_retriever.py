@@ -56,7 +56,7 @@ class PatternMeasuresRetriever(object):
         pattern_measures = {}
         esf_patterns = self.retrieve_esf_patterns(watertype_group, water_manager)
         for esf_pattern in esf_patterns:
-            pattern_measures[esf_pattern.pattern] = esf_pattern.measures
+            pattern_measures[esf_pattern] = esf_pattern.measures
         return pattern_measures
 
     def retrieve_esf_patterns(self, watertype_group, water_manager):
