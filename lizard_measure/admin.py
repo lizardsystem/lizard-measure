@@ -36,6 +36,13 @@ class EsfLinkInline(admin.TabularInline):
     model = EsfLink
 
 
+class EsfPatternAdmin(admin.ModelAdmin):
+    list_filter = [
+        'data_set',
+        'watertype_group',
+    ]
+
+
 class MeasureInline(admin.TabularInline):
     model = Measure
 
@@ -161,7 +168,7 @@ class HorizontalBarGraphAdmin(admin.ModelAdmin):
     inlines = [HorizontalBarGraphItemInline]
 
 
-admin.site.register(EsfPattern)
+admin.site.register(EsfPattern, EsfPatternAdmin)
 admin.site.register(FundingOrganization)
 admin.site.register(HorizontalBarGraph, HorizontalBarGraphAdmin)
 admin.site.register(HorizontalBarGraphItem)
