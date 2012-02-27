@@ -45,7 +45,7 @@ class PatternMeasuresRetriever_retrieve_from_database_TestSuite(TestCase):
         self.assertEqual(0, len(pattern_measures))
 
     def create_esf_pattern(self, pattern, measures):
-        return Mock(pattern=pattern, get_measures = Mock(return_value=measures))
+        return Mock(pattern=pattern, measures=measures)
 
     def test_b(self):
         """Test the right dict is returned when there is a single ESF pattern"""

@@ -5,8 +5,12 @@
 
 # Copyright (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.rst.
 
+import logging
+
 from lizard_measure.pattern_matcher import PatternMatcher
 from lizard_measure.pattern_measures_retriever import PatternMeasuresRetriever
+
+logger = logging.getLogger(__name__)
 
 
 class SuitableMeasures(object):
