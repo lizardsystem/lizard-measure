@@ -5,11 +5,18 @@
 
 # Copyright (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.rst.
 
+import logging
+
 from django.core.management.base import BaseCommand
 
 from lizard_measure.models import EsfPattern
+from lizard_measure.models import KRWWatertype
 from lizard_measure.models import MeasureType
 from lizard_measure.models import WatertypeGroup
+
+logger = logging.getLogger(__name__)
+
+WATERTYPE_GROUP_CODES = ['M', 'R', 'K&O']
 
 PATTERNS = [
     ['M','X','?','?','?','?','?','?','?','?','BR01'],
@@ -94,14 +101,40 @@ PATTERNS = [
     ['M','?','?','?','?','?','?','?','?','X','IN10'],
     ]
 
+
+class WatertypeGroups(object):
+    """Implements the functionality to insert WatertypeGroup(s)."""
+
+    def create(self, *codes):
+        """Create a WatertypeGroup for each given code.
+
+        This method also creates the reference from each KRWWatertype to each
+        new WatertypeGroup.
+
+        Parameter:
+          *codes* list of codes where each code specifies the
+             code of a WatertypeGroup
+
+        """
+        for code in codes:
+            watertype_group, _= WatertypeGroup.objects.get_or_create(code=code)
+            for watertype in KRWWatertype.objects.all():
+                if len(watertype.code) > 0 and watertype.code[0] in code:
+                    watertype.watertype_group = watertype_group
+                    watertype.save()
+
+
 class EsfPatterns(object):
-    """Implements the fucntionality to insert ESF patterns in the database."""
+    """Implements the functionality to insert EsfPattern(s)."""
 
     def insert(self, patterns):
         """Insert the specified ESF patterns in the database.
 
-        Parameter ``patterns`` is a list of patterns, where each pattern is
-        specified by a list of 10 strings. Let p be such a pattern, then
+        Parameter:
+          *patterns* list of patterns, where each pattern is
+             specified by a list of 10 strings.
+
+        Let p be a pattern in *patterns*, then
 
           - p[0] specifies the code of the WatertypeGroup,
           - p[i], where 0 < i < 10, is a string that specifies whether ESF i
@@ -131,7 +164,13 @@ class EsfPatterns(object):
 
             esf_pattern.save()
 
+
 class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
-       EsfPatterns().insert(PATTERNS)
+        logger.info('Create each WatertypeGroup %s and connect each '
+                    'KRWWatertype', ', '.join(WATERTYPE_GROUP_CODES))
+        WatertypeGroups().create(WATERTYPE_GROUP_CODES)
+        logger.info('Create each EsfPattern')
+        EsfPatterns().insert(PATTERNS)
+        logger.info('Done.')
