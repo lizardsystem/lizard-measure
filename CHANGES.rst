@@ -5,8 +5,9 @@ Changelog of lizard-measure
 1.11 (unreleased)
 -----------------
 
-- Implements management command ``create_esf_patterns`` to create the
-  country-wide ESF patterns.
+- Implements management command ``create_esf_patterns`` to create each
+  WatertypeGroup, connect each KRWWatertype to the appropriate WatertypeGroup
+  and connect each country-wide ESF patterns.
 
 
 1.10 (2012-02-27)
