@@ -268,8 +268,8 @@ class Synchronizer(object):
 
             result_row = {}
             for field in data_fields:
-                field_key = field.find('a:Name', namespaces=namespaces).text
-                field_value = field.find('a:Data', namespaces=namespaces).text
+                field_key = field.xpath('a:Name', namespaces=namespaces)[0].text
+                field_value = field.xpath('a:Data', namespaces=namespaces)[0].text
                 result_row[field_key] = field_value
 
             result.append(result_row)
