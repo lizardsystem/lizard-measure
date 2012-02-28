@@ -45,7 +45,7 @@ class PatternMeasuresRetriever_retrieve_from_database_TestSuite(TestCase):
         self.assertEqual(0, len(pattern_measures))
 
     def create_esf_pattern(self, pattern, measures):
-        return Mock(pattern=pattern, get_measures = Mock(return_value=measures))
+        return Mock(pattern=pattern, measures=measures)
 
     def test_b(self):
         """Test the right dict is returned when there is a single ESF pattern"""
@@ -55,7 +55,7 @@ class PatternMeasuresRetriever_retrieve_from_database_TestSuite(TestCase):
         retriever.retrieve_esf_patterns = Mock(return_value=esf_patterns)
 
         pattern_measures = retriever.retrieve_from_database('M', 'HHNK')
-        expected_pattern_measures = { 'XX-------': ['dummy measure'] }
+        expected_pattern_measures = { esf_patterns[0]: ['dummy measure'] }
         self.assertEqual(expected_pattern_measures, pattern_measures)
 
     def test_c(self):
@@ -68,7 +68,7 @@ class PatternMeasuresRetriever_retrieve_from_database_TestSuite(TestCase):
 
         pattern_measures = retriever.retrieve_from_database('M', 'HHNK')
         expected_pattern_measures = {
-            'XX-------': ['dummy measure'],
-            '----?----': ['another dummy measure']
+            esf_patterns[0]: ['dummy measure'],
+            esf_patterns[1]: ['another dummy measure']
             }
         self.assertEqual(expected_pattern_measures, pattern_measures)

@@ -2,10 +2,27 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.10 (unreleased)
------------------
+1.10.2 (unreleased)
+-------------------
 
 - Require higher lizard-history version.
+
+
+1.10.1 (2012-02-28)
+-------------------
+
+- distinct on measure list
+
+- different link for KRW an aan/afvoer measures
+
+- implementation of free steeringparameter graphs
+
+
+1.10 (2012-02-27)
+-----------------
+
+- Implements further functionality for suitable measures (beta),
+  issue lizardsystem/lizard-portal#18.
 
 
 1.9 (2012-02-24)

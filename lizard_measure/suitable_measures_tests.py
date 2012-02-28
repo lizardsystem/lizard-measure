@@ -12,6 +12,12 @@ from mock import Mock
 from lizard_measure.suitable_measures import SuitableMeasures
 
 
+class SimpleSuitableMeasureInfoFactory(object):
+
+    def create(self, esf_pattern, measure):
+        return measure
+
+
 class SimplePatternMeasuresRetriever(object):
 
     def __init__(self, measures_map):
@@ -26,26 +32,32 @@ class SimplePatternMatcher(object):
 
 class SuitableMeasures_get_TestSuite(TestCase):
 
+    def create_esf_pattern(self, pattern):
+        return Mock(pattern=pattern)
+
     def test_a(self):
         """Test when there are no ESF patterns."""
-        area = Mock(esf_pattern='---------', data_set="don't care")
+        area = Mock(pattern='---------', data_set="don't care")
         suitable_measures = \
-            SuitableMeasures(SimplePatternMeasuresRetriever({}),
+            SuitableMeasures(SimpleSuitableMeasureInfoFactory(),
+                             SimplePatternMeasuresRetriever({}),
                              SimplePatternMatcher())
         self.assertEqual([], suitable_measures.get(area))
 
     def test_b(self):
         """Test when there is a single ESF pattern that is not suitable."""
-        area = Mock(esf_pattern='---------', data_set="don't care")
+        area = Mock(pattern='---------', data_set="don't care")
         suitable_measures = \
-            SuitableMeasures(SimplePatternMeasuresRetriever({'XX-------': ['dummy measure']}),
+            SuitableMeasures(SimpleSuitableMeasureInfoFactory(),
+                             SimplePatternMeasuresRetriever({Mock(pattern='XX-------'): ['dummy measure']}),
                              SimplePatternMatcher())
         self.assertEqual([], suitable_measures.get(area))
 
     def test_c(self):
         """Test when there is a single ESF pattern that is suitable."""
-        area = Mock(esf_pattern='XX-------', data_set="don't care")
+        area = Mock(pattern='XX-------', data_set="don't care")
         suitable_measures = \
-            SuitableMeasures(SimplePatternMeasuresRetriever({'XX-------': ['dummy measure']}),
+            SuitableMeasures(SimpleSuitableMeasureInfoFactory(),
+                             SimplePatternMeasuresRetriever({Mock(pattern='XX-------'): ['dummy measure']}),
                              SimplePatternMatcher())
         self.assertEqual(["dummy measure"], suitable_measures.get(area))

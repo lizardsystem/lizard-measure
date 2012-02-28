@@ -33,8 +33,6 @@ class PatternMeasuresRetriever(object):
 
         """
         watertype_group = self.retrieve_watertype_group(area)
-        if watertype_group is None:
-            logger.debug('unable to retrieve a watertype group for the given area')
         return self.retrieve_from_database(watertype_group, area.water_manager)
 
     def retrieve_watertype_group(self, area):
@@ -48,6 +46,8 @@ class PatternMeasuresRetriever(object):
             waterbody = WaterBody.objects.get(area=area)
             if waterbody.krw_watertype is None:
                 watertype = Mock(watertype_group=None)
+            else:
+                watertype = waterbody.krw_watertype
         except ObjectDoesNotExist:
             watertype = Mock(watertype_group=None)
         return watertype.watertype_group
@@ -55,9 +55,8 @@ class PatternMeasuresRetriever(object):
     def retrieve_from_database(self, watertype_group, water_manager):
         pattern_measures = {}
         esf_patterns = self.retrieve_esf_patterns(watertype_group, water_manager)
-        logger.debug("retrieved %d ESF patterns", len(esf_patterns))
         for esf_pattern in esf_patterns:
-            pattern_measures[esf_pattern.pattern] = esf_pattern.get_measures()
+            pattern_measures[esf_pattern] = esf_pattern.measures
         return pattern_measures
 
     def retrieve_esf_patterns(self, watertype_group, water_manager):
