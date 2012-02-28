@@ -536,6 +536,11 @@ class SteerParameterGraphs(View):
                 'detail_link': 'ekr-score',
             })
 
+        if area.area_class == Area.AREA_CLASS_KRW_WATERLICHAAM:
+            detail_link = 'maatregelen_krw'
+        else:
+            detail_link = 'maatregelen'
+
         graphs.append({
             'id': prefix + '100',
             'name': 'maatregelen',
@@ -545,9 +550,7 @@ class SteerParameterGraphs(View):
             'location': None,
             'predefined_graph': None,
             'extra_params': {},
-            'detail_link': 'maatregelen',
+            'detail_link': detail_link
         })
-
-
 
         return graphs

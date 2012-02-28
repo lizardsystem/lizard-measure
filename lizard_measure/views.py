@@ -165,7 +165,7 @@ def krw_waterbody_measures(request, area_ident,
     area = get_object_or_404(Area, ident=area_ident)
     # Obsolete: use MeasureCollections instead
     # get measures without parent: main measures
-    main_measures = Measure.objects.filter(Q(waterbodies__area=area)|Q(areas=area))
+    main_measures = Measure.objects.filter(Q(waterbodies__area=area)|Q(areas=area)).distinct()
     # print "aantal maatregelen: %i"%main_measures.count()
     return render_to_response(
         template,
