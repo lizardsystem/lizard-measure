@@ -5,7 +5,8 @@ Changelog of lizard-measure
 1.11 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Implements management command ``create_esf_patterns`` to create the
+  country-wide ESF patterns.
 
 
 1.10 (2012-02-27)
