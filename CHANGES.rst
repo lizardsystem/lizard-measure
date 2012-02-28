@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.10.3 (unreleased)
+1.10.3 (2012-02-28)
 -------------------
 
 - Implements management command ``create_esf_patterns`` to create each
