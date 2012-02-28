@@ -2,12 +2,30 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.11 (unreleased)
------------------
+1.10.3 (unreleased)
+-------------------
 
 - Implements management command ``create_esf_patterns`` to create each
   WatertypeGroup, connect each KRWWatertype to the appropriate WatertypeGroup
   and connect each country-wide ESF patterns.
+
+
+1.10.2 (2012-02-28)
+-------------------
+
+- Require higher lizard-history version.
+
+- Fix date representation in history view.
+
+
+1.10.1 (2012-02-28)
+-------------------
+
+- distinct on measure list
+
+- different link for KRW an aan/afvoer measures
+
+- implementation of free steeringparameter graphs
 
 
 1.10 (2012-02-27)

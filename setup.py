@@ -1,6 +1,6 @@
 from setuptools import setup
 
-version = '1.11dev'
+version = '1.10.3dev'
 
 long_description = '\n\n'.join([
     open('README.rst').read(),
@@ -15,7 +15,7 @@ install_requires = [
     'django-staticfiles',
     'django-extensions',
     'lizard-area',
-    'lizard-history',
+    'lizard-history >= 0.2.3',
     'lizard-graph',
     'lizard-geo',
     'lizard-map >= 1.71',

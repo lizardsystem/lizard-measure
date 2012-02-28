@@ -1,3 +1,4 @@
+import json
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from djangorestframework.views import View
@@ -434,7 +435,7 @@ class SteerParameterGraphs(View):
 
     def _get_free_graphsettings(self, graph):
             #todo: locaties goed en doel scores toevoegen
-        return {
+        output = {
             'id': self._get_graph_id,
             'name': graph.name,
             'visible': True,
@@ -443,6 +444,42 @@ class SteerParameterGraphs(View):
             'location': None,
             'extra_params': {}
         }
+        items = []
+
+        for item in graph.location_modulinstance_string.split(';'):
+            part = item.split(',')
+            setting = {
+                'fews_norm_source_slug': 'waternet', #todo: make dynamic
+                'location': part[0],
+                'parameter': graph.parameter_code,
+                'type': 'line'
+            }
+            if len(part) > 1:
+                setting['moduleinstance'] = part[1]
+            if len(part) > 2:
+                setting['timestep'] = part[2]
+            if len(part) > 3:
+                setting['qualifierset'] = part[3]
+
+
+
+            items.append(json.dumps(setting))
+
+        if graph.has_target:
+            items.append(json.dumps({
+                'label': 'Doel',
+                'value': graph.target_value,
+                'type': 'horizontal-line',
+                'layout': {
+                    'color': 'black',
+                    'line-style': '--'
+                }
+            }))
+
+        output['extra_params'] = {
+            'item': items
+        }
+        return output
 
 
     def _get_predefined_graphsettings(self, graph):
@@ -496,8 +533,13 @@ class SteerParameterGraphs(View):
                 'location': None,
                 'predefined_graph': 'ekr',
                 'extra_params': {},
-                'detail_link': 'ekr',
+                'detail_link': 'ekr-score',
             })
+
+        if area.area_class == Area.AREA_CLASS_KRW_WATERLICHAAM:
+            detail_link = 'maatregelen_krw'
+        else:
+            detail_link = 'maatregelen'
 
         graphs.append({
             'id': prefix + '100',
@@ -508,9 +550,7 @@ class SteerParameterGraphs(View):
             'location': None,
             'predefined_graph': None,
             'extra_params': {},
-            'detail_link': 'maatregelen',
+            'detail_link': detail_link
         })
-
-
 
         return graphs

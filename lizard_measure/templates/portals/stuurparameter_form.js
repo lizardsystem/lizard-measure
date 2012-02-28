@@ -33,10 +33,13 @@
             {name: 'has_target', title: 'heeft doel', editable: true, visible: true, width: 70, type: 'boolean'},
             {name: 'target_value', title: 'doel waarde', editable: true, visible: true, width: 70, type: 'float'},
             {name: 'parameter_code', title: 'parameter code', editable: true, visible: true, width: 100, type: 'text'},
-            {name: 'location_modulinstance_string', title: 'locatie module instance, etc code', editable: true, visible: true, width: 330, type: 'text'}
+            {name: 'location_modulinstance_string', title: 'locatie id, moduleinstance id, timestep id, qualifierset id vanuit Fews', editable: true, visible: true, width: 330, type: 'text'}
         ]
     },{
-        html: '<br><br>'
+        html: 'Vul voor het veld "locatie id, moduleinstance id, timestep id, qualifierset id" per tijdserie deze ' +
+        'gegevens in, gescheiden door een comma (,). Alleen de locatie is verplicht, de overige instellingen niet (als er ' +
+        'meerdere tijdseries worden gevonden, dan wordt een willekeurige gekozen).<br> Voor meerdere locaties dienen de ' +
+        'tijdseries geschieden te worden door een punt-comma (;). <br><br><br>'
     },{
         title: 'Samengestelde grafieken',
   
