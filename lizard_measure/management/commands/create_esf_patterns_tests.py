@@ -5,6 +5,8 @@
 
 # Copyright (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.rst.
 
+from UserList import UserList
+
 from django.utils.unittest import TestCase
 
 from lizard_area.models import Area
@@ -188,6 +190,15 @@ class WatertypeGroupsTestSuite(TestCase):
         self.assertEqual(WatertypeGroup.objects.get(code='K&O'), watertype.watertype_group)
 
 
+class MockQuerySet(UserList):
+
+    def __init__(*args, **kwargs):
+        UserList.__init__(*args, **kwargs)
+
+    def count(self):
+        return len(self.data)
+
+
 class AreaWaterBodies(object):
 
     def __init__(self):
@@ -197,7 +208,7 @@ class AreaWaterBodies(object):
     def create(self):
         for area in self.areas:
             if area.area_class != Area.AREA_CLASS_KRW_WATERLICHAAM:
-                if len(area.water_bodies) == 0:
+                if area.water_bodies.count() == 0:
                     water_body = WaterBody()
                     water_body.area = area
                     self.save_water_body(water_body)
@@ -219,7 +230,7 @@ class AreaWaterBodiesTestSuite(TestCase):
 
         area = Area()
         area.area_class = Area.AREA_CLASS_AAN_AFVOERGEBIED
-        area.water_bodies = []
+        area.water_bodies = MockQuerySet()
         area_water_bodies.save_area(area)
 
         area_water_bodies.create()
@@ -234,11 +245,11 @@ class AreaWaterBodiesTestSuite(TestCase):
         areas = [0] * 2
         areas[0] = Area()
         areas[0].area_class = Area.AREA_CLASS_AAN_AFVOERGEBIED
-        areas[0].water_bodies = []
+        areas[0].water_bodies = MockQuerySet()
         area_water_bodies.save_area(areas[0])
         areas[1] = Area()
         areas[1].area_class = Area.AREA_CLASS_AAN_AFVOERGEBIED
-        areas[1].water_bodies = []
+        areas[1].water_bodies = MockQuerySet()
         area_water_bodies.save_area(areas[1])
 
         area_water_bodies.create()
@@ -256,7 +267,7 @@ class AreaWaterBodiesTestSuite(TestCase):
 
         area = Area()
         area.area_class = Area.AREA_CLASS_AAN_AFVOERGEBIED
-        area.water_bodies = []
+        area.water_bodies = MockQuerySet()
         area_water_bodies.save_area(area)
 
         water_body = WaterBody()
