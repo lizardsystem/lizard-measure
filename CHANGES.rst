@@ -7,6 +7,8 @@ Changelog of lizard-measure
 
 - Require higher lizard-history version.
 
+- Fix date representation in history view.
+
 
 1.10.1 (2012-02-28)
 -------------------
