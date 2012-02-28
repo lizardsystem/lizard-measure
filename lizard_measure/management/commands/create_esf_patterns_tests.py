@@ -9,16 +9,13 @@ from UserList import UserList
 
 from django.utils.unittest import TestCase
 
-from mock import Mock
-
 from lizard_area.models import Area
-
 from lizard_measure.models import EsfPattern
 from lizard_measure.models import KRWWatertype
 from lizard_measure.models import MeasureType
 from lizard_measure.models import WaterBody
 from lizard_measure.models import WatertypeGroup
-
+from lizard_measure.management.commands.create_esf_patterns import AreaWaterBodies
 from lizard_measure.management.commands.create_esf_patterns import EsfPatterns
 from lizard_measure.management.commands.create_esf_patterns import WatertypeGroups
 
@@ -200,7 +197,6 @@ class MockQuerySet(UserList):
     def count(self):
         return len(self.data)
 
-
 class MockDatabase(object):
 
     def __init__(self):
@@ -215,7 +211,7 @@ class MockDatabase(object):
 
     def WaterBody(self):
         water_body = WaterBody()
-        water_body.save = lambda wb=water_body: self.save_water_body(wb)
+        water_body.save = lambda w=water_body: self.save_water_body(w)
         return water_body
 
     def save_water_body(self, water_body):
@@ -279,9 +275,9 @@ class AreaWaterBodiesTestSuite(TestCase):
         area.area_class = Area.AREA_CLASS_AAN_AFVOERGEBIED
         area.save()
 
-        water_body = WaterBody()
+        water_body = self.db.WaterBody()
         water_body.area = area
-        self.db.save_water_body(water_body)
+        water_body.save()
 
         AreaWaterBodies(self.db).create()
 
