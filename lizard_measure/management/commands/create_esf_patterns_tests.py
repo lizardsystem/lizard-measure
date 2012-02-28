@@ -7,9 +7,12 @@
 
 from django.utils.unittest import TestCase
 
+from lizard_area.models import Area
+
 from lizard_measure.models import EsfPattern
 from lizard_measure.models import KRWWatertype
 from lizard_measure.models import MeasureType
+from lizard_measure.models import WaterBody
 from lizard_measure.models import WatertypeGroup
 
 from lizard_measure.management.commands.create_esf_patterns import EsfPatterns
@@ -183,3 +186,97 @@ class WatertypeGroupsTestSuite(TestCase):
 
         watertype = KRWWatertype.objects.get(code='O1')
         self.assertEqual(WatertypeGroup.objects.get(code='K&O'), watertype.watertype_group)
+
+
+class AreaWaterBodies(object):
+
+    def __init__(self):
+        self.areas = []
+        self.water_bodies = []
+
+    def create(self):
+        for area in self.areas:
+            if area.area_class != Area.AREA_CLASS_KRW_WATERLICHAAM:
+                if len(area.water_bodies) == 0:
+                    water_body = WaterBody()
+                    water_body.area = area
+                    self.save_water_body(water_body)
+
+    def save_area(self, area):
+        self.areas.append(area)
+
+    def save_water_body(self, water_body):
+        self.water_bodies.append(water_body)
+        if water_body.area is not None:
+            water_body.area.water_bodies.append(water_body)
+
+
+class AreaWaterBodiesTestSuite(TestCase):
+
+    def test_a(self):
+        """Test the creation of a WaterBody for a single aan-/afvoergebied."""
+        area_water_bodies = AreaWaterBodies()
+
+        area = Area()
+        area.area_class = Area.AREA_CLASS_AAN_AFVOERGEBIED
+        area.water_bodies = []
+        area_water_bodies.save_area(area)
+
+        area_water_bodies.create()
+
+        water_body = area_water_bodies.water_bodies[0]
+        self.assertEqual(area, water_body.area)
+
+    def test_aa(self):
+        """Test the creation of a WaterBody for multiple aan-/afvoergebieden."""
+        area_water_bodies = AreaWaterBodies()
+
+        areas = [0] * 2
+        areas[0] = Area()
+        areas[0].area_class = Area.AREA_CLASS_AAN_AFVOERGEBIED
+        areas[0].water_bodies = []
+        area_water_bodies.save_area(areas[0])
+        areas[1] = Area()
+        areas[1].area_class = Area.AREA_CLASS_AAN_AFVOERGEBIED
+        areas[1].water_bodies = []
+        area_water_bodies.save_area(areas[1])
+
+        area_water_bodies.create()
+
+        referenced_areas = set([water_body.area for water_body in area_water_bodies.water_bodies])
+        self.assertEqual(set(areas), set(referenced_areas))
+
+    def test_b(self):
+        """Test no WaterBody is created for a single aan-/afvoergebied.
+
+        The aan-/afvoergebied already has a WaterBody.
+
+        """
+        area_water_bodies = AreaWaterBodies()
+
+        area = Area()
+        area.area_class = Area.AREA_CLASS_AAN_AFVOERGEBIED
+        area.water_bodies = []
+        area_water_bodies.save_area(area)
+
+        water_body = WaterBody()
+        water_body.area = area
+        area_water_bodies.save_water_body(water_body)
+
+        area_water_bodies.create()
+
+        self.assertEqual(1, len(area_water_bodies.water_bodies))
+        self.assertEqual(water_body, area_water_bodies.water_bodies[0])
+
+    def test_c(self):
+        """Test no WaterBody is created for a KRW waterlichaam."""
+        area_water_bodies = AreaWaterBodies()
+
+        area = Area()
+        area.area_class = Area.AREA_CLASS_KRW_WATERLICHAAM
+        area.water_bodies = []
+        area_water_bodies.save_area(area)
+
+        area_water_bodies.create()
+
+        self.assertEqual(0, len(area_water_bodies.water_bodies))
