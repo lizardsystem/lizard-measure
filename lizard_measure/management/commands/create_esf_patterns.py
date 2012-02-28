@@ -95,8 +95,21 @@ PATTERNS = [
     ]
 
 class EsfPatterns(object):
+    """Implements the fucntionality to insert ESF patterns in the database."""
 
     def insert(self, patterns):
+        """Insert the specified ESF patterns in the database.
+
+        Parameter ``patterns`` is a list of patterns, where each pattern is
+        specified by a list of 10 strings. Let p be such a pattern, then
+
+          - p[0] specifies the code of the WatertypeGroup,
+          - p[i], where 0 < i < 10, is a string that specifies whether ESF i
+            should be critical (value 'X'), not critical (value '-') or does
+            not care (value '?'), and
+          - p[10] specifies the code of the MeasureType.
+
+        """
         for pattern in patterns:
             watertype_group_code = pattern[0]
             string_pattern = ''.join(pattern[1:10])
