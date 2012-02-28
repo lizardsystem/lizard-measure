@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.10.2 (unreleased)
+1.10.2 (2012-02-28)
 -------------------
 
 - Require higher lizard-history version.
