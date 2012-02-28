@@ -5,7 +5,11 @@ Changelog of lizard-measure
 1.11 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- distinct on measure list
+
+- different link for KRW an aan/afvoer measures
+
+- implementation of free steeringparameter graphs
 
 
 1.10 (2012-02-27)
