@@ -116,7 +116,9 @@ class WatertypeGroups(object):
              code of a WatertypeGroup
 
         """
+        print codes
         for code in codes:
+            print code
             watertype_group, _= WatertypeGroup.objects.get_or_create(code=code)
             for watertype in KRWWatertype.objects.all():
                 if len(watertype.code) > 0 and watertype.code[0] in code:
@@ -170,7 +172,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         logger.info('Create each WatertypeGroup %s and connect each '
                     'KRWWatertype', ', '.join(WATERTYPE_GROUP_CODES))
-        WatertypeGroups().create(WATERTYPE_GROUP_CODES)
+        WatertypeGroups().create(*WATERTYPE_GROUP_CODES)
         logger.info('Create each EsfPattern')
         EsfPatterns().insert(PATTERNS)
         logger.info('Done.')
