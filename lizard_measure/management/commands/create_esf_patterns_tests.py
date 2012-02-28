@@ -220,20 +220,6 @@ class MockDatabase(object):
             water_body.area.water_bodies.append(water_body)
 
 
-class AreaWaterBodies(object):
-
-    def __init__(self, database):
-        self.db = database
-
-    def create(self):
-        for area in self.db.areas:
-            if area.area_class != Area.AREA_CLASS_KRW_WATERLICHAAM:
-                if area.water_bodies.count() == 0:
-                    water_body = self.db.WaterBody()
-                    water_body.area = area
-                    water_body.save()
-
-
 class AreaWaterBodiesTestSuite(TestCase):
 
     def setUp(self):
