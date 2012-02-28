@@ -9,6 +9,8 @@ from UserList import UserList
 
 from django.utils.unittest import TestCase
 
+from mock import Mock
+
 from lizard_area.models import Area
 
 from lizard_measure.models import EsfPattern
@@ -205,8 +207,16 @@ class MockDatabase(object):
         self.areas = []
         self.water_bodies = []
 
-    def save_area(self, area):
-        self.areas.append(area)
+    def Area(self):
+        area = Area()
+        area.water_bodies = MockQuerySet()
+        area.save = lambda a=area: self.areas.append(a)
+        return area
+
+    def WaterBody(self):
+        water_body = WaterBody()
+        water_body.save = lambda wb=water_body: self.save_water_body(wb)
+        return water_body
 
     def save_water_body(self, water_body):
         self.water_bodies.append(water_body)
@@ -223,9 +233,9 @@ class AreaWaterBodies(object):
         for area in self.db.areas:
             if area.area_class != Area.AREA_CLASS_KRW_WATERLICHAAM:
                 if area.water_bodies.count() == 0:
-                    water_body = WaterBody()
+                    water_body = self.db.WaterBody()
                     water_body.area = area
-                    self.db.save_water_body(water_body)
+                    water_body.save()
 
 
 class AreaWaterBodiesTestSuite(TestCase):
@@ -235,10 +245,9 @@ class AreaWaterBodiesTestSuite(TestCase):
 
     def test_a(self):
         """Test the creation of a WaterBody for a single aan-/afvoergebied."""
-        area = Area()
+        area = self.db.Area()
         area.area_class = Area.AREA_CLASS_AAN_AFVOERGEBIED
-        area.water_bodies = MockQuerySet()
-        self.db.save_area(area)
+        area.save()
 
         AreaWaterBodies(self.db).create()
 
@@ -248,14 +257,12 @@ class AreaWaterBodiesTestSuite(TestCase):
     def test_aa(self):
         """Test the creation of a WaterBody for multiple aan-/afvoergebieden."""
         areas = [0] * 2
-        areas[0] = Area()
+        areas[0] = self.db.Area()
         areas[0].area_class = Area.AREA_CLASS_AAN_AFVOERGEBIED
-        areas[0].water_bodies = MockQuerySet()
-        self.db.save_area(areas[0])
-        areas[1] = Area()
+        areas[0].save()
+        areas[1] = self.db.Area()
         areas[1].area_class = Area.AREA_CLASS_AAN_AFVOERGEBIED
-        areas[1].water_bodies = MockQuerySet()
-        self.db.save_area(areas[1])
+        areas[1].save()
 
         AreaWaterBodies(self.db).create()
 
@@ -268,10 +275,9 @@ class AreaWaterBodiesTestSuite(TestCase):
         The aan-/afvoergebied already has a WaterBody.
 
         """
-        area = Area()
+        area = self.db.Area()
         area.area_class = Area.AREA_CLASS_AAN_AFVOERGEBIED
-        area.water_bodies = MockQuerySet()
-        self.db.save_area(area)
+        area.save()
 
         water_body = WaterBody()
         water_body.area = area
@@ -284,10 +290,9 @@ class AreaWaterBodiesTestSuite(TestCase):
 
     def test_c(self):
         """Test no WaterBody is created for a KRW waterlichaam."""
-        area = Area()
+        area = self.db.Area()
         area.area_class = Area.AREA_CLASS_KRW_WATERLICHAAM
-        area.water_bodies = []
-        self.db.save_area(area)
+        area.save()
 
         AreaWaterBodies(self.db).create()
 
