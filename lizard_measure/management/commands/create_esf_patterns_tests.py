@@ -9,6 +9,8 @@ from UserList import UserList
 
 from django.utils.unittest import TestCase
 
+from mock import Mock
+
 from lizard_area.models import Area
 from lizard_measure.models import EsfPattern
 from lizard_measure.models import KRWWatertype
@@ -230,13 +232,11 @@ class AreaWaterBodiesTestSuite(TestCase):
         area = self.db.Area()
         area.area_class = Area.AREA_CLASS_AAN_AFVOERGEBIED
         area.save()
-
         AreaWaterBodies(self.db).create()
-
         water_body = self.db.water_bodies[0]
         self.assertEqual(area, water_body.area)
 
-    def test_aa(self):
+    def test_b(self):
         """Test the creation of a WaterBody for multiple aan-/afvoergebieden."""
         areas = [0] * 2
         areas[0] = self.db.Area()
@@ -245,13 +245,11 @@ class AreaWaterBodiesTestSuite(TestCase):
         areas[1] = self.db.Area()
         areas[1].area_class = Area.AREA_CLASS_AAN_AFVOERGEBIED
         areas[1].save()
-
         AreaWaterBodies(self.db).create()
-
-        referenced_areas = set([water_body.area for water_body in self.db.water_bodies])
+        referenced_areas = set([w.area for w in self.db.water_bodies])
         self.assertEqual(set(areas), set(referenced_areas))
 
-    def test_b(self):
+    def test_c(self):
         """Test no WaterBody is created for a single aan-/afvoergebied.
 
         The aan-/afvoergebied already has a WaterBody.
@@ -260,22 +258,17 @@ class AreaWaterBodiesTestSuite(TestCase):
         area = self.db.Area()
         area.area_class = Area.AREA_CLASS_AAN_AFVOERGEBIED
         area.save()
-
         water_body = self.db.WaterBody()
         water_body.area = area
         water_body.save()
-
         AreaWaterBodies(self.db).create()
-
         self.assertEqual(1, len(self.db.water_bodies))
         self.assertEqual(water_body, self.db.water_bodies[0])
 
-    def test_c(self):
+    def test_d(self):
         """Test no WaterBody is created for a KRW waterlichaam."""
         area = self.db.Area()
         area.area_class = Area.AREA_CLASS_KRW_WATERLICHAAM
         area.save()
-
         AreaWaterBodies(self.db).create()
-
         self.assertEqual(0, len(self.db.water_bodies))

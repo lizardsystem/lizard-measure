@@ -9,9 +9,12 @@ import logging
 
 from django.core.management.base import BaseCommand
 
+from lizard_area.models import Area
+
 from lizard_measure.models import EsfPattern
 from lizard_measure.models import KRWWatertype
 from lizard_measure.models import MeasureType
+from lizard_measure.models import WaterBody
 from lizard_measure.models import WatertypeGroup
 
 logger = logging.getLogger(__name__)
@@ -116,9 +119,7 @@ class WatertypeGroups(object):
              code of a WatertypeGroup
 
         """
-        print codes
         for code in codes:
-            print code
             watertype_group, _= WatertypeGroup.objects.get_or_create(code=code)
             for watertype in KRWWatertype.objects.all():
                 if len(watertype.code) > 0 and watertype.code[0] in code:
@@ -167,9 +168,43 @@ class EsfPatterns(object):
             esf_pattern.save()
 
 
+class AreaWaterBodies(object):
+    """Provides the functionality to create a WaterBody for each aan-/afvoergebied.
+
+    Parameter:
+      *db*
+        interface to the database to ease unit testing
+
+    """
+    def __init__(self, database):
+        self.db = database
+
+    def create(self):
+        """Create and save a WaterBody for each aan-afvoergebied."""
+        for area in self.db.areas:
+            if area.area_class != Area.AREA_CLASS_KRW_WATERLICHAAM:
+                if area.water_bodies.count() == 0:
+                    water_body = self.db.WaterBody()
+                    water_body.area = area
+                    water_body.save()
+
+
+class Database(object):
+    """Provides a wrapper around the Django database."""
+
+    @property
+    def areas(self):
+        return Area.objects.all()
+
+    def WaterBody(self):
+        return WaterBody()
+
+
 class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
+        logger.info('Create a WaterBody for each aan-/afvoergebied.')
+        AreaWaterBodies(Database()).create()
         logger.info('Create each WatertypeGroup %s and connect each '
                     'KRWWatertype', ', '.join(WATERTYPE_GROUP_CODES))
         WatertypeGroups().create(*WATERTYPE_GROUP_CODES)

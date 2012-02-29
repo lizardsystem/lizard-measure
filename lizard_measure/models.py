@@ -157,7 +157,8 @@ class WaterBody(models.Model):
         verbose_name = _("Waterbody")
         verbose_name_plural = _("Waterbodies")
 
-    area = models.ForeignKey(Area, null=True, blank=True)
+    area = models.ForeignKey(Area, null=True, blank=True,
+        related_name='water_bodies')
     area_ident = models.CharField(
         max_length=32,
         null=True,
