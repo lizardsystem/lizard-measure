@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.10.4 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Renames ``create_esf_patterns`` to ``update_db_for_suitable_measures``.
 
 
 1.10.3 (2012-02-28)
