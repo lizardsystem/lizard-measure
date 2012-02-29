@@ -17,9 +17,9 @@ from lizard_measure.models import KRWWatertype
 from lizard_measure.models import MeasureType
 from lizard_measure.models import WaterBody
 from lizard_measure.models import WatertypeGroup
-from lizard_measure.management.commands.create_esf_patterns import AreaWaterBodies
-from lizard_measure.management.commands.create_esf_patterns import EsfPatterns
-from lizard_measure.management.commands.create_esf_patterns import WatertypeGroups
+from lizard_measure.management.commands.update_db_for_suitable_measures import AreaWaterBodies
+from lizard_measure.management.commands.update_db_for_suitable_measures import EsfPatterns
+from lizard_measure.management.commands.update_db_for_suitable_measures import WatertypeGroups
 
 
 class EsfPatternsTestSuite(TestCase):
@@ -206,13 +206,13 @@ class MockDatabase(object):
         self.water_bodies = []
 
     def Area(self):
-        area = Area()
+        area = Mock(spec=Area)
         area.water_bodies = MockQuerySet()
         area.save = lambda a=area: self.areas.append(a)
         return area
 
     def WaterBody(self):
-        water_body = WaterBody()
+        water_body = Mock(spec=WaterBody)
         water_body.save = lambda w=water_body: self.save_water_body(w)
         return water_body
 
