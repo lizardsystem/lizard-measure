@@ -397,7 +397,7 @@ class MeasureView(BaseApiView):
 
         return output
 
-    def update_many2many(self, record, model_field, name, linked_records):
+    def update_many2many(self, record, model_field, linked_records):
         """
         update specific part of manyToMany relations.
         input:
@@ -409,11 +409,11 @@ class MeasureView(BaseApiView):
             another object
         """
 
-        if name == 'funding_organizations':
+        if model_field.name == 'funding_organizations':
             record.set_fundingorganizations(linked_records)
-        elif name == 'status_moments':
+        elif model_field.name == 'status_moments':
             record.set_statusmoments(linked_records)
-        elif name == 'esflink_set':
+        elif model_field.name == 'esflink_set':
             record.set_esflinks(linked_records)
         else:
             #areas, waterbodies, category
