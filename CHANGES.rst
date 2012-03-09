@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.10.5 (unreleased)
+1.10.5 (2012-03-09)
 -------------------
 
 - Add judgement calculation to Score model.
