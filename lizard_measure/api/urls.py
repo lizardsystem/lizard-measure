@@ -10,6 +10,9 @@ from lizard_measure.api.views import ScoreView
 from lizard_measure.api.views import SteeringParameterFreeView
 from lizard_measure.api.views import SteeringParameterPredefinedGraphView
 from lizard_measure.api.views import SteerParameterGraphs
+from lizard_measure.api.views import EsfPattern
+from lizard_measure.api.views import SteerParameterOverview
+
 
 admin.autodiscover()
 
@@ -35,8 +38,16 @@ urlpatterns = patterns(
     url(r'^steer_predefined/$',
         SteeringParameterPredefinedGraphView.as_view(),
         name=NAME_PREFIX + 'steering_parameter_predefined'),
+    url(r'^steer_parameter_overview/$',
+        SteerParameterOverview.as_view(),
+        name=NAME_PREFIX + 'steer_parameter_overview'),
+
+
     url(r'^steer_parameter_graphs/$',
         SteerParameterGraphs.as_view(),
         name=NAME_PREFIX + 'steering_parameter_graphs'),
+    url(r'^esf_pattern/$',
+        EsfPattern.as_view(),
+        name=NAME_PREFIX + 'esf_pattern')
 
     )

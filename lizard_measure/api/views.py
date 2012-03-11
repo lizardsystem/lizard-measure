@@ -3,8 +3,11 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from djangorestframework.views import View
 from lizard_area.models import Area
+from lizard_security.models import DataSet
 
-from lizard_measure.models import Organization, Measure, Score, SteeringParameterPredefinedGraph, SteeringParameterFree
+from lizard_measure.models import Organization, Measure, Score, SteeringParameterPredefinedGraph, \
+    SteeringParameterFree, EsfPattern
+from lizard_measure.models import PredefinedGraphSelection
 from lizard_api.base import BaseApiView
 
 import logging
@@ -422,6 +425,41 @@ class MeasureView(BaseApiView):
                 linked_records,
             )
 
+class SteerParameterOverview(View):
+
+    def get(self, request):
+
+        areas = Area.objects.all()
+        #.select_related('steeringparameterpredefinedgraph_set') select related does not work
+        # because of one2one relation, see https://code.djangoproject.com/ticket/13839
+
+        predefined_graphs = PredefinedGraphSelection.objects.all().values('name')
+
+        parameters = SteeringParameterFree.objects.filter(area__in=areas).values('parameter_code')
+
+
+        data = []
+
+        for area in areas:
+            item = {
+                'code': area.ident,
+                'name': area.name
+            }
+            for steerp in area.steeringparameterpredefinedgraph_set.all():
+                item['st_'+ steerp.predefined_graph.name] = 'X'
+
+            for param in area.steeringparameterfree_set.values('parameter_code'):
+                item['stf_' + param['parameter_code']]  = 'X'
+
+            data.append(item)
+
+        return {'data': data, 'count': areas.count()}
+
+
+
+
+
+
 
 class SteerParameterGraphs(View):
     """
@@ -554,3 +592,95 @@ class SteerParameterGraphs(View):
         })
 
         return graphs
+
+
+
+
+
+
+
+
+
+
+class EsfPattern(BaseApiView):
+
+
+    model_class = EsfPattern
+    name_field = 'pattern'
+
+    #valid_field='valid'
+    #valid_value=True
+
+    field_mapping = {
+        'id': 'id',
+        'pattern': 'pattern',
+        'watertype_group': 'watertype_group__code',
+        'data_set': 'data_set',
+        'read_only': 'data_set'
+    }
+
+
+    def get_object_for_api(self,
+                           pattern,
+                           flat=True,
+                           size=BaseApiView.COMPLETE,
+                           include_geom=False):
+        """
+            create object of measure
+        """
+
+        output = {}
+
+        if size == self.ID_NAME:
+            output = {
+                'id': pattern.id,
+                'name': pattern.pattern,
+                }
+
+        if size >= self.SMALL:
+            output = {
+                'id': pattern.id,
+                'pattern': pattern.pattern[:8],
+                'watertype_group': self._get_related_object(pattern.watertype_group, flat),
+                'landelijk': pattern.data_set == None,
+                'read_only': pattern.data_set == None,
+                'measure_types': self._get_related_objects(pattern.measure_types, flat)
+            }
+
+        return output
+
+    def update_many2many(self, record, model_field, linked_records):
+        """
+        update specific part of manyToMany relations.
+        input:
+        - record: measure
+        - model_field. many2many field object
+        - linked_records. list with dictionaries with:
+            id: id of related objects
+            optional some relations in case the relation is through
+            another object
+        """
+
+        print 'save many2many'
+        print linked_records
+        if True:
+            #measure types
+            self.save_single_many2many_relation(
+                record,
+                model_field,
+                linked_records,
+            )
+
+    def create_objects(self, data, request):
+        """
+            overwrite of base api to append code
+        """
+        success, touched_objects =  super(EsfPattern, self).create_objects(data)
+
+        for object in touched_objects:
+            if len(request.allowed_data_set_ids) > 0:
+                object.data_set = DataSet.objects.get(list(request.allowed_data_set_ids)[0])
+                object.save()
+
+        return success, touched_objects
+

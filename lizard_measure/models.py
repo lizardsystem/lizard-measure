@@ -1606,6 +1606,7 @@ class EsfPattern(models.Model):
     class Meta:
         verbose_name = _("ESF pattern")
         verbose_name_plural = _("ESF patterns")
+        ordering = ['pattern', 'data_set', ]
 
     pattern = models.CharField(help_text="Pattern that specifies critical ESFs",
          default='-' * 16, max_length=16)

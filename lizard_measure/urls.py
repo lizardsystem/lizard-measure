@@ -98,6 +98,17 @@ urlpatterns = patterns(
      {},
      "lizard_measure.steering_parameter_form"),
 
+    (r'^steering_parameter_overview/$',
+     'lizard_measure.views.steerparameter_overview',
+         {},
+     "lizard_measure.steerparameter_overview"),
+
+
+
+    (r'^esf_pattern_form/$',
+     'lizard_measure.views.esfpattern_detailedit_portal',
+     {},
+     "lizard_measure.esfpattern_detailedit_portal"),
 
     # (r'^measure/(?P<measure_id>\d+)/graph/$',
     #  'lizard_measure.views.krw_measure_graph',
