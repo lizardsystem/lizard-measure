@@ -5,7 +5,10 @@ Changelog of lizard-measure
 1.10.6 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- add edit screen for esfPattern
+- add overview page for steer parameters
+- some improvements for measure editor
+
 
 
 1.10.5 (2012-03-09)

@@ -329,6 +329,23 @@ def measure_detailedit_portal(request):
 
     measure_id = request.GET.get('measure_id', None)
 
+    init_parent = request.GET.get('parent_id', None)
+    area_id = request.GET.get('area_id', None)
+
+    if init_parent:
+        init_parent = Measure.objects.get(pk=init_parent)
+
+    init_area = None
+    init_waterbody = None
+
+    if area_id:
+        area =  Area.objects.get(ident=area_id)
+
+        if area.area_class == Area.AREA_CLASS_AAN_AFVOERGEBIED:
+            init_area = area
+        else:
+            init_waterbody = area
+
     try:
         measure = Measure.objects.get(pk=measure_id)
     except Measure.DoesNotExist:
@@ -359,6 +376,9 @@ def measure_detailedit_portal(request):
                 [{'id': r.id, 'name': str(r)}
                  for r in Unit.objects.all()]
             ),
+            'init_parent': init_parent,
+            'init_area': init_area,
+            'init_waterbody': init_waterbody,
         })
 
     else:

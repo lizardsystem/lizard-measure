@@ -60,7 +60,6 @@
             actionEditIcon:function(record) {
                 var me = this
 
-
                 Ext.create('Ext.window.Window', {
                     title: 'Stuurparameters instellen',
                     width: 800,
@@ -88,7 +87,7 @@
            },
             dataConfig:[
                 //is_computed altijd 1 in en 1 uit en verder niet
-                {name: 'code', title: 'code', editable: false, visible: true, width: 80, type: 'number'},
+                {name: 'code', title: 'code', editable: false, visible: true, width: 80, type: 'text'},
                 {name: 'name', title: 'gebiedsnaam', editable: false, visible: true, width: 200, type: 'text'},
                 {% for graph in predefined_graphs %}
                     {name: 'st_{{ graph }}', title: '{{ graph }}', editable: false, visible: true, width: 80, type: 'text'},

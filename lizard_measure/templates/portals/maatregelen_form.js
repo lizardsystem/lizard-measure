@@ -30,6 +30,19 @@
             Ext.Msg.alert("Load failed", action.result.errorMessage);
         }
     },
+    {% else %}
+    loadData: {
+    {% if init_parent %}
+        parent: {id:{{ init_parent.id }}, name:'{{ init_parent.title }}'},
+    {% endif %}
+    {% if init_waterbody %}
+        waterbodies: {id:{{ init_waterbody.id }}, name:'{{ init_waterbody.name }}'},
+    {% endif %}
+    {% if init_area %}
+        areas: {id:{{ init_area.id }}, name:'{{ init_area.name }}'},
+    {% endif %}
+        test: 'extra for comma'
+    },
 {% endif %}
     items:[
         {
@@ -57,7 +70,8 @@
             width: 400,
             valueField: 'id',
             xtype: 'combodict',
-            forceSelection: false,
+            forceSelection: true,
+            allowBlank: true,
             store: {
                 fields: ['id', 'name'],
                 proxy: {
@@ -145,6 +159,7 @@
             allowBlank: false,
             width: 400
         },
+{% if measure %}
         {
             xtype: 'tablefield',
             fieldLabel: 'Effect op ESF',
@@ -177,12 +192,17 @@
                 }
             }]
         },
+    {% else %}
+    {
+        html: '<br>De link met ESFen kan ingevoerd worden nadat de maatregel voor de eerste keer is opgeslagen. <br><br>'
+    },
+    {% endif %}
         {
             fieldLabel: 'Waarde',
             name: 'value',
             xtype: 'numberfield',
             minValue: 0,
-            allowBlank: true,
+            allowBlank: false,
             width: 200
         },
         {
@@ -209,6 +229,7 @@
                 anchor: '100%'
             },
             items: [
+            {% if measure %}
             {
                 xtype: 'tablefield',
                 fieldLabel: 'planning en realisatie',
@@ -237,21 +258,12 @@
                     }
                 }]
 
-            }/*,
+            }
+            {% else %}
             {
-                fieldLabel: 'Aggregatie',
-                name: 'aggregation_type',
-                queryMode: 'local',
-                displayField: 'name',
-                valueField: 'id',
-                xtype: 'combodict',
-                store: {
-                    fields: ['id', 'name'],
-                    data: Ext.JSON.decode({% autoescape off %}'{{ aggregations }}'{% endautoescape %}),
-                },
-                forceSelection: true,
-                allowBlank: false
-            }*/
+                html: '<br>De planning kan ingevoerd worden nadat de maatregel voor de eerste keer is opgeslagen.<br><br>'
+            }
+            {% endif %}
         ]
         },
         {
@@ -388,7 +400,8 @@
                         }
                     }
                 }
-            }]
+            }
+        ]
         },
         {
             xtype:'fieldset',
@@ -443,12 +456,31 @@
             }]
         },
         {
-            fieldLabel: 'Geometrie',
+            fieldLabel: 'Geometrie (EPSG:900913)',
             name: 'geom',
             grow: true,
             anchor: '100%',
+            editable: false,
             xtype: 'textareafield',
             allowBlank: true
+        },
+        {
+            xtype: 'button',
+            text: 'edit geometry op kaart',
+            handler: function() {
+                panel = this.up('panel')
+                form = panel.getForm()
+                Lizard.window.MapWindow.show({
+                    callback: function(geometry) {
+                        form = panel.getForm();
+                        form.findField('geom').setValue(geometry);
+                    },
+                    start_geometry: form.findField('geom').getValue()
+
+
+                })
+
+            }
         },
         {
             xtype:'fieldset',
@@ -496,13 +528,31 @@
                 /* todo: de waarden zelf gaan rangschikken en verzenden */
                 var values = form.getValues()
 
+                var validation_text = ''
+
                 if (!values['is_KRW_measure']) {
                     values['is_KRW_measure'] = false
                 }
                 if (!values['is_indicator']) {
                     values['is_indicator'] = false
                 }
+                if (!values['in_sgbp']) {
+                    values['in_sgbp'] = false
+                }
+                if (!values['parent']) {
+                    values['parent'] = null
+                }
 
+                if (!values['areas'] || values['areas'].length < 1) {
+                    validation_text += 'Selecteer minstens een aan-afvoergebied<br>'
+                }
+                if ((!values['waterbodies'] || values['waterbodies'].length < 1) && values['is_KRW_measure']) {
+                    validation_text += 'Selecteer minstens een KRW waterlichaam in geval van een KRW maatregel<br>'
+                }
+                if (validation_text) {
+                    Ext.Msg.alert('Validatie', validation_text)
+                    return false
+                }
 
                 Lizard.window.EditSummaryBox.show({
                     
@@ -523,11 +573,11 @@
                                     form_window.close();
                                     form_window.setLoading(false);
                                     if (form_window.finish_edit_function) {
-                                        form_window.finish_edit_function();
+                                        form_window.finish_edit_function({% if measure %}'update'{% else %}'create'{% endif%});
                                     }
                                 },
                                 failure: function(xhr) {
-                                    Ext.Msg.alert("Fout", "Server communication error");
+                                    Ext.Msg.alert("Fout", "Server error");
                                     form_window.setLoading(false);
                                 }
                             });
