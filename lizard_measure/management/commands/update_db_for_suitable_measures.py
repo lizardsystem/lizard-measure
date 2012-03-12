@@ -7,6 +7,7 @@
 
 import logging
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand
 
 from lizard_area.models import Area
@@ -20,6 +21,8 @@ from lizard_measure.models import WatertypeGroup
 logger = logging.getLogger(__name__)
 
 WATERTYPE_GROUP_CODES = ['M', 'R', 'K&O']
+
+DEFAULT_WATERTYPE_GROUP_CODE = 'M'
 
 PATTERNS = [
     ['M','X','?','?','?','?','?','?','?','?','BR01'],
@@ -127,6 +130,25 @@ class WatertypeGroups(object):
                     watertype.save()
 
 
+    @classmethod
+    def get_default(cls):
+        """Return the default WatertypeGroup.
+
+        When an area does not have a water body, or no watertype is known for
+        the given water body, the function returns the WatertypeGroup with code
+
+            DEFAULT_WATERTYPE_GROUP_CODE
+
+        If no such WatertypeGroup exists, this method creates one.
+
+        """
+        try:
+            group = WatertypeGroup.objects.get(code=DEFAULT_WATERTYPE_GROUP_CODE)
+        except ObjectDoesNotExist:
+            group, _ = WatertypeGroups().create(DEFAULT_WATERTYPE_GROUP_CODE)
+        return group
+
+
 class EsfPatterns(object):
     """Implements the functionality to insert EsfPattern(s)."""
 
@@ -211,3 +233,5 @@ class Command(BaseCommand):
         logger.info('Create each EsfPattern')
         EsfPatterns().insert(PATTERNS)
         logger.info('Done.')
+
+

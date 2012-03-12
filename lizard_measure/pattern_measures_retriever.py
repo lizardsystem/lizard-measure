@@ -13,6 +13,7 @@ from django.db.models import Q
 
 from mock import Mock
 
+from lizard_measure.management.commands.update_db_for_suitable_measures import WatertypeGroups
 from lizard_measure.models import EsfPattern
 from lizard_measure.models import WaterBody
 
@@ -38,19 +39,21 @@ class PatternMeasuresRetriever(object):
     def retrieve_watertype_group(self, area):
         """Return the water type group of the given area.
 
-        This method returns None when a WaterBody does not exist for the given
-        area or when the water type is not specified for the WaterBody.
+        This method returns the default WatertypeGroup when no WaterBody exists
+        for the given area or when no water type is specified for the
+        WaterBody.
 
         """
+        watertype_group = None
         try:
             waterbody = WaterBody.objects.get(area=area)
-            if waterbody.krw_watertype is None:
-                watertype = Mock(watertype_group=None)
-            else:
-                watertype = waterbody.krw_watertype
+            if waterbody.krw_watertype is not None:
+                watertype_group = waterbody.krw_watertype.watertype_group
         except ObjectDoesNotExist:
-            watertype = Mock(watertype_group=None)
-        return watertype.watertype_group
+            pass
+        if watertype_group is None:
+            watertype_group = WatertypeGroups.get_default()
+        return watertype_group
 
     def retrieve_from_database(self, watertype_group, water_manager):
         pattern_measures = {}

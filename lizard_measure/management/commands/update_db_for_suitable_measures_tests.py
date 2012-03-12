@@ -18,8 +18,10 @@ from lizard_measure.models import MeasureType
 from lizard_measure.models import WaterBody
 from lizard_measure.models import WatertypeGroup
 from lizard_measure.management.commands.update_db_for_suitable_measures import AreaWaterBodies
+from lizard_measure.management.commands.update_db_for_suitable_measures import DEFAULT_WATERTYPE_GROUP_CODE
 from lizard_measure.management.commands.update_db_for_suitable_measures import EsfPatterns
 from lizard_measure.management.commands.update_db_for_suitable_measures import WatertypeGroups
+from lizard_measure.management.commands.update_db_for_suitable_measures import WATERTYPE_GROUP_CODES
 
 
 class EsfPatternsTestSuite(TestCase):
@@ -189,6 +191,17 @@ class WatertypeGroupsTestSuite(TestCase):
 
         watertype = KRWWatertype.objects.get(code='O1')
         self.assertEqual(WatertypeGroup.objects.get(code='K&O'), watertype.watertype_group)
+
+    def test_h(self):
+        """Test the retrieval of the default WatertypeGroup when one exists."""
+        WatertypeGroups().create(WATERTYPE_GROUP_CODES)
+        watertype_group = WatertypeGroups.get_default()
+        self.assertEqual(DEFAULT_WATERTYPE_GROUP_CODE, watertype_group.code)
+
+    def test_i(self):
+        """Test the retrieval of the default WatertypeGroup when none exists."""
+        watertype_group = WatertypeGroups.get_default()
+        self.assertEqual(DEFAULT_WATERTYPE_GROUP_CODE, watertype_group.code)
 
 
 class MockQuerySet(UserList):
