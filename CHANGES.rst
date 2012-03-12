@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.10.8 (unreleased)
+1.10.8 (2012-03-12)
 -------------------
 
 - Add management command to add dummy geometries to measures.
