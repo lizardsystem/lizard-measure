@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.10.6 (unreleased)
+1.10.6 (2012-03-12)
 -------------------
 
 - add edit screen for esfPattern
