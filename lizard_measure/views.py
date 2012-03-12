@@ -31,6 +31,9 @@ from lizard_measure.suitable_measures import get_suitable_measures
 from lizard_measure.models import SteeringParameterFree
 from lizard_measure.models import SteeringParameterPredefinedGraph
 from lizard_measure.models import PredefinedGraphSelection
+from lizard_measure.models import WatertypeGroup
+from lizard_measure.models import EsfPattern
+
 from lizard_area.models import Area
 
 from nens_graph.common import DateGridGraph
@@ -326,6 +329,23 @@ def measure_detailedit_portal(request):
 
     measure_id = request.GET.get('measure_id', None)
 
+    init_parent = request.GET.get('parent_id', None)
+    area_id = request.GET.get('area_id', None)
+
+    if init_parent:
+        init_parent = Measure.objects.get(pk=init_parent)
+
+    init_area = None
+    init_waterbody = None
+
+    if area_id:
+        area =  Area.objects.get(ident=area_id)
+
+        if area.area_class == Area.AREA_CLASS_AAN_AFVOERGEBIED:
+            init_area = area
+        else:
+            init_waterbody = area
+
     try:
         measure = Measure.objects.get(pk=measure_id)
     except Measure.DoesNotExist:
@@ -356,6 +376,9 @@ def measure_detailedit_portal(request):
                 [{'id': r.id, 'name': str(r)}
                  for r in Unit.objects.all()]
             ),
+            'init_parent': init_parent,
+            'init_area': init_area,
+            'init_waterbody': init_waterbody,
         })
 
     else:
@@ -462,10 +485,69 @@ def steering_parameter_form(request):
     return HttpResponse(t.render(c),  mimetype="text/plain")
 
 
+def esfpattern_detailedit_portal(request):
+    """
+    Return JSON for request.
+    """
+    c = RequestContext(request)
+
+    pattern_id = request.GET.get('esfpattern_id', None)
+
+    try:
+        pattern = EsfPattern.objects.get(pk=pattern_id)
+    except EsfPattern.DoesNotExist:
+        pattern = None
+
+    if request.user.is_authenticated():
+
+        t = get_template('portals/esfpattern_form.js')
+        c = RequestContext(request, {
+            'pattern': pattern,
+            'measure_types': json.dumps(
+                [{'id': r.id, 'name': str(r)}
+                for r in MeasureType.objects.all()]
+            ),
+            'watertype_group': json.dumps(
+                [{'id': r.id, 'name': str(r)}
+                for r in WatertypeGroup.objects.all()]
+            ),
+            })
+
+    else:
+        t = get_template('portals/geen_toegang.js')
+
+    return HttpResponse(t.render(c),  mimetype="text/plain")
 
 
 
+def steerparameter_overview(request):
+    """
+    Return JSON for request.
+    """
+    c = RequestContext(request)
 
+    areas = Area.objects.all()
+
+    predefined_graphs = PredefinedGraphSelection.objects.all().values_list('name', flat=True)
+    #predefined_graphs = ['testa', 'testb']
+
+    parameters = SteeringParameterFree.objects.filter(area__in=areas).distinct().values_list('parameter_code', flat=True)
+    #parameters = ['test','test2']
+
+
+
+    if request.user.is_authenticated():
+
+        t = get_template('portals/stuurparameter-overzicht.js')
+        c = RequestContext(request, {
+            'predefined_graphs': predefined_graphs,
+            'parameters': parameters
+            })
+
+    else:
+        t = get_template('portals/geen_toegang.js')
+
+    return HttpResponse(t.render(c),  mimetype="text/plain")
 
 
 

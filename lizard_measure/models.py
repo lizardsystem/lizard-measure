@@ -261,7 +261,7 @@ class MeasuringRod(models.Model):
     )
 
     def __unicode__(self):
-        return u'%s' % self.measuring_rod
+        return u'%s - %s' % (self.code, self.measuring_rod)
 
     @classmethod
     def get_synchronizer(cls):
@@ -347,6 +347,59 @@ class Score(models.Model):
                 self.limit_insufficient_moderate,
                 self.gep,
                 self.mep)
+
+    def _zone_from_limits(self, value, borders):
+        """
+        Return zero based zone index.
+
+        Value and borders assumed to be between 0 and 1. Return lowest
+        value if borders coincide.
+        """
+        # Determine in which zone
+        lower_limits = [0] + list(borders)
+        upper_limits = list(borders) + [1.001]  # Include values of 1!
+        result = [l <= value < u for l, u in zip(lower_limits, upper_limits)]
+        try:
+            return result.index(True)
+        except ValueError:
+            # No True in list
+            return None
+
+    def judgement(self, value, target):
+        """
+        Return judgment for this score for value.
+
+        Assumed is 5 zones between the four borders. Judgement is done
+        as follows:
+
+        Value in same zone as target: Goal reached (1)
+        Value in higher zone than target: Goal more than achieved (2)
+        Value in lower zone than target: Goal not reached (-1)
+        Value more than one zone lower than target: Goal still not reached
+        (-2)
+        """
+        target_zone = self._zone_from_limits(
+            value=target,
+            borders=self.borders
+        )
+        value_zone = self._zone_from_limits(
+            value=value,
+            borders=self.borders,
+        )
+
+        if value_zone is None or target_zone is None:
+            return None
+
+        zonedif = value_zone - target_zone
+        
+        if zonedif > 0:
+            return 2
+        if zonedif == 0:
+            return 1
+        if zonedif == -1:
+            return -1
+        if zonedif < -1:
+            return -2
 
 
 class PredefinedGraphSelection(models.Model):
@@ -1553,6 +1606,7 @@ class EsfPattern(models.Model):
     class Meta:
         verbose_name = _("ESF pattern")
         verbose_name_plural = _("ESF patterns")
+        ordering = ['pattern', 'data_set', ]
 
     pattern = models.CharField(help_text="Pattern that specifies critical ESFs",
          default='-' * 16, max_length=16)

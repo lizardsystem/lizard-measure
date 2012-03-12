@@ -20,6 +20,19 @@
             flex:1,
             xtype: 'leditgrid',
             columnLines: true,
+            store: {
+                fields: ['id','name','code','test'],
+                remoteSort: false,
+                proxy: {
+                    type: 'ajax',
+                    url:'/measure/api/steer_parameter_overview/',
+                    reader: {
+                        type: 'json',
+                        root: 'data'
+                    }
+                }
+            },
+
 
 
             plugins: [
@@ -34,31 +47,21 @@
                     this.store.load();
                 }
             },
-            //proxyUrl: '/portal/wbstructures.json',
-            proxyUrl: '/measure/api/measure/',
+            addEditIcon: true,
+            addDeleteIcon: false,
+            proxyUrl: '/measure/api/steer_parameter_overview/',
             proxyParams: {
                 flat: false,
                 size: 'small',
                 include_geom: false
             },
-            addEditIcon: true,
-            addDeleteIcon: false,
+            editable: false,
+            usePagination: false,
             actionEditIcon:function(record) {
                 var me = this
-                console.log(this.store.getNewRecords())
-                if (this.store.getNewRecords().length >0 ||
-                    this.store.getUpdatedRecords().length >0 ||
-                    this.store.getRemovedRecords().length >0) {
-
-                    Ext.Msg.alert("Let op", 'Sla eerst de bewerking(en) in het grid op, voordat een enkel record kan worden bewerkt');
-                    return
-                }
-
-                console.log('edit record:');
-                console.log(record);
 
                 Ext.create('Ext.window.Window', {
-                    title: 'Stuurparameter',
+                    title: 'Stuurparameters instellen',
                     width: 800,
                     height: 600,
                     modal: true,
@@ -66,26 +69,33 @@
                         me.store.load();
                     },
                     editpopup: true,
+
                     loader:{
                         loadMask: true,
                         autoLoad: true,
-                        url: '/measure/stuurparameter_detailedit_portal/',
+                        model: true,
+                        url: '/measure/steering_parameter_form/',
+                        params: {
+                            object_id: record.get('code')
+                        },
                         ajaxOptions: {
                             method: 'GET'
-                        },
-                        params: {
-                            measure_id: record.data.id
                         },
                         renderer: 'component'
                     }
                 }).show();
-            },
+           },
             dataConfig:[
                 //is_computed altijd 1 in en 1 uit en verder niet
-                {name: 'id', title: 'id', editable: false, visible: false, width: 30, type: 'number'},
-                {name: 'name', title: 'name', editable: true, visible: true, width: 200, type: 'text'},
-                {name: 'waterbodies', title: 'KRW waterlichamen', editable: false, visible: true, width: 100, type: 'gridcombobox'},
-                {name: 'areas', title: 'Aan/ afvoergebieden', editable: false, visible: true, width: 100, type: 'gridcombobox'}
+                {name: 'code', title: 'code', editable: false, visible: true, width: 80, type: 'text'},
+                {name: 'name', title: 'gebiedsnaam', editable: false, visible: true, width: 200, type: 'text'},
+                {% for graph in predefined_graphs %}
+                    {name: 'st_{{ graph }}', title: '{{ graph }}', editable: false, visible: true, width: 80, type: 'text'},
+                {% endfor %}
+                {% for graph in parameters %}
+                    {name: 'stf_{{ graph }}', title: '{{ graph }}', editable: false, visible: true, width: 80, type: 'text'},
+                {% endfor %}
+                {name: 'id', title: 'id', editable: false, visible: false, width: 200, type: 'text'}
            ]
         }]
 	}]

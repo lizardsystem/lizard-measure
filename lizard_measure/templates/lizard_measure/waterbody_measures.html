@@ -50,6 +50,15 @@
                   'component',
                   true
                 ],
+                plus: [
+                  'deelmaatregel toevoegen',
+                  '/measure/measure_detailedit_portal/',
+                  {parent_id: {{ measure.id }}, area_id: Lizard.CM.getContext().object.id},
+                  null,
+                  false,
+                  'component',
+                  true
+                ],
                 search: [
                   'Geschiedenis',
                   '/measure/history/{{measure.id}}',
