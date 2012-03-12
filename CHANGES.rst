@@ -8,20 +8,13 @@ Changelog of lizard-measure
 - add edit screen for esfPattern
 - add overview page for steer parameters
 - some improvements for measure editor
-
+- implements the use of a default WatertypeGroup (when none has been supplied).
 
 
 1.10.5 (2012-03-09)
 -------------------
 
 - Add judgement calculation to Score model.
-
-
-1.10.5 (2012-03-12)
--------------------
-
-- Implements the use of a default WatertypeGroup (when none has been supplied).
-
 
 1.10.4 (2012-02-29)
 -------------------
