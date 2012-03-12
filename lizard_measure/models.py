@@ -980,6 +980,7 @@ class Measure(models.Model):
     geom = models.GeometryField(
         null=True,
         blank=True,
+        srid=4326,
     )
 
     measure_type = models.ForeignKey(
