@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.10.5 (unreleased)
+1.10.5 (2012-03-12)
 -------------------
 
 - Implements the use of a default WatertypeGroup (when none has been supplied).
