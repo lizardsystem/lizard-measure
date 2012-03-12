@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.10.7 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Implements the use of a default WatertypeGroup (when none has been supplied).
 
 
 1.10.6 (2012-03-12)
@@ -14,7 +14,6 @@ Changelog of lizard-measure
 - add edit screen for esfPattern
 - add overview page for steer parameters
 - some improvements for measure editor
-- implements the use of a default WatertypeGroup (when none has been supplied).
 
 
 1.10.5 (2012-03-09)
