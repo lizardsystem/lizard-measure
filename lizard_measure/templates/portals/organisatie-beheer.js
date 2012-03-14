@@ -44,9 +44,9 @@
             dataConfig:[
                 //is_computed altijd 1 in en 1 uit en verder niet
                 {name: 'id', title: 'id', editable: false, visible: false, width: 30, type: 'number'},
-                {name: 'code', title: 'code', editable: true, visible: true, width: 100, type: 'number'},
+                {name: 'code', title: 'code', editable: false, visible: true, width: 100, type: 'number'},
                 {name: 'description', title: 'beschrijving', editable: true, visible: true, width: 200, type: 'text'},
-                {name: 'group', title: 'groep', editable: true, visible: true, width: 200, type: 'text'},
+                {name: 'group', title: 'groep', editable: false, visible: true, width: 200, type: 'text'},
                 {name: 'source', title: 'bron', editable: false, visible: true, width: 200, type: 'gridcombobox'},
                 {name: 'read_only', title: 'Alleen lezen', editable: false, visible: true, width: 50, type: 'boolean'}
            ]

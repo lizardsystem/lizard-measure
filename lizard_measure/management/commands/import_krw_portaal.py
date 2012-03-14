@@ -338,7 +338,7 @@ def import_waterbodies(wb_import_settings):
         for rec in _records(f):
             geometry = GEOSGeometry(
                 rec['wkb_geometry'],
-                srid=28992,
+                #srid=28992,
             )
             geometry.transform(coordtransform)
             owa_geometry[rec['owaident']] = geometry
