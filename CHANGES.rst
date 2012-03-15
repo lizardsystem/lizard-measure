@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.11.1 (unreleased)
+1.11.1 (2012-03-15)
 -------------------
 
 - edit optie weggehaald bij aantal kolommen organisatie beheer
