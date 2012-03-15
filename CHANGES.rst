@@ -5,7 +5,9 @@ Changelog of lizard-measure
 1.11.1 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- edit optie weggehaald bij aantal kolommen organisatie beheer
+
+- bij import_krw_portaal de projectie weggehaald (controleren of projectie zo beter gaat)
 
 
 1.11 (2012-03-12)
