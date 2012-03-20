@@ -49,6 +49,13 @@ logger = logging.getLogger(__name__)
 # HOMEPAGE_KEY = 1  # Primary key of the Workspace for rendering the homepage.
 CRUMB_HOMEPAGE = {'name': 'home', 'url': '/'}
 
+# EKR Colors
+COLOR_1 = '#ff0000'
+COLOR_2 = '#ffaa00'
+COLOR_3 = '#ffff00'
+COLOR_4 = '#00ff00'
+COLOR_5 = '#0000ff'
+
 
 # def waterbody_shapefile_search(request):
 #     """Return url to redirect to if a waterbody is found.
@@ -190,6 +197,58 @@ def suited_measures(request, area_ident,
         context_instance=RequestContext(request))
 
 
+def krw_waterbody_ekr_scores(
+    request, area_ident,
+    template='lizard_measure/waterbody_ekr_scores.html'):
+    """
+    Show screen for ekr scores.
+
+    A HorizontalBarGraph with slug 'ekr' must be defined.
+    """
+    area = get_object_or_404(Area, ident=area_ident)
+    # Obsolete: use MeasureCollections instead (??? what's this?)
+
+    hor_bar_graph = HorizontalBarGraph.objects.get(slug='ekr')
+    graph_items = hor_bar_graph.horizontalbargraphitem_set.all()
+    ekr_scores = [(graph_item.time_series(),
+                   Score.from_graph_item(graph_item),
+                   graph_item)
+                  for graph_item in graph_items]
+
+    score_tables = []
+    for ts, score, graph_item in ekr_scores:
+        new_score_table = {
+            'title': str(graph_item),
+            'score': score,
+            'data': []}
+        # We assume there is only one.
+        len_ts_values = len(ts.values())
+        if len_ts_values != 1:
+            logger.error('Number of TimeSeries for HorizontalBarGraphItem %s is %d' % (
+                    graph_item, len_ts_values))
+        if len_ts_values == 0:
+            new_score_table['data'] = [{'timestamp': 'Geen tijdreeks beschikbaar', 'value': None}]
+
+        for single_ts in ts.values():
+            data_table = []
+            for timestamp, (value, flag, comment) in single_ts.get_events():
+                data_table.append({'timestamp': timestamp, 'value': value, 'comment': comment})
+            new_score_table['data'] = data_table
+        score_tables.append(new_score_table)
+
+    return render_to_response(
+        template,
+        {'waterbody': area,
+         'score_tables': score_tables,
+         'COLOR_1': COLOR_1,
+         'COLOR_2': COLOR_2,
+         'COLOR_3': COLOR_3,
+         'COLOR_4': COLOR_4,
+         'COLOR_5': COLOR_5,
+         },
+        context_instance=RequestContext(request))
+
+
 def _image_measures(graph, measures, start_date, end_date,
                     end_date_realized=None, legend_location=-1,
                     title=None):
@@ -284,6 +343,7 @@ def measure_graph_api(request):
     filter = request.GET.get('filter', 'all')
 
     return measure_graph(request, area_ident, filter)
+
 
 def measure_graph(request, area_ident, filter='all'):
     """
@@ -559,11 +619,6 @@ def steerparameter_overview(request):
 
 ################ EKR GRAPHS
 
-COLOR_1 = '#ff0000'
-COLOR_2 = '#ffaa00'
-COLOR_3 = '#ffff00'
-COLOR_4 = '#00ff00'
-COLOR_5 = '#0000ff'
 
 def value_to_html_color(value, a=None, b=None, c=None, d=None):
     """
@@ -637,30 +692,6 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
         """
         Draw the EKR graph
         """
-        def score_from_graph_item(graph_item):
-            """
-            Return a score from graph_item.
-
-            When a corresponding Score cannot be found, return empty
-            memory score.
-            """
-            try:
-                # TODO: test with correct database
-                score = Score.objects.get(
-                    area__ident=graph_item.location.ident,
-                    measuring_rod=graph_item.measuring_rod)
-            except Score.DoesNotExist:
-                score = Score()
-                # These are dummy values.
-                score.mep = 0.8
-                score.gep = 0.6
-                score.limit_insufficient_moderate = 0.4
-                score.limit_bad_insufficient = 0.2
-                logger.warn('HorizontalBarGraphView: Score could '
-                            'not be found using %s, %s' %
-                            (graph_item.location.ident,
-                             graph_item.measuring_rod))
-            return score
 
         dt_start, dt_end = self._dt_from_request()
         graph_items, graph_settings = self._graph_items_from_request()
@@ -688,7 +719,7 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
                 graph_item.location = graph_settings['location']
 
             # Find the corresponding Score.
-            score = score_from_graph_item(graph_item)
+            score = Score.from_graph_item(graph_item)
             if score.id is None:
                 graph_item.label = '(%s)' % graph_item.label
 
@@ -761,7 +792,7 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
             for graph_item_index, graph_item in enumerate(graph_items):
                 # TODO: make more efficient; score is retrieved twice
                 # in this function.
-                score = score_from_graph_item(graph_item)
+                score = Score.from_graph_item(graph_item)
                 a, b, c, d = score.borders
                 goal = score.targets[index]
                 if goal is not None:

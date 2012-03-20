@@ -5,7 +5,10 @@ Changelog of lizard-measure
 1.11.2 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Moved score_from_graph_item from HorizontalBarGraphView to model
+  Score.
+
+- Added view for ekr scores.
 
 
 1.11.1 (2012-03-15)

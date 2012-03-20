@@ -289,6 +289,8 @@ class MeasuringRod(models.Model):
 class Score(models.Model):
     """
     Scores / GoalScore
+
+    Define area, borders, targets.
     """
     measuring_rod = models.ForeignKey(MeasuringRod)
     area = models.ForeignKey(Area, null=True, blank=True)
@@ -327,11 +329,14 @@ class Score(models.Model):
             area = self.area_ident
         else:
             area = self.area.name
-        return '%s - %s: %s' % (
-            area,
-            self.measuring_rod.measuring_rod,
-            self.measuring_rod.sub_measuring_rod,
-        )
+        try:
+            return '%s - %s: %s' % (
+                area,
+                self.measuring_rod.measuring_rod,
+                self.measuring_rod.sub_measuring_rod,
+                )
+        except:
+            return '%s' % area
 
     class Meta:
         verbose_name = _("Score")
@@ -391,7 +396,7 @@ class Score(models.Model):
             return None
 
         zonedif = value_zone - target_zone
-        
+
         if zonedif > 0:
             return 2
         if zonedif == 0:
@@ -400,6 +405,32 @@ class Score(models.Model):
             return -1
         if zonedif < -1:
             return -2
+
+    @classmethod
+    def from_graph_item(cls, graph_item):
+        """
+        Return a score from graph_item.
+
+        When a corresponding Score cannot be found, return empty
+        memory score.
+        """
+        try:
+            # TODO: test with correct database
+            score = cls.objects.get(
+                area__ident=graph_item.location.ident,
+                measuring_rod=graph_item.measuring_rod)
+        except Score.DoesNotExist:
+            score = cls()
+            # These are dummy values.
+            score.mep = 0.8
+            score.gep = 0.6
+            score.limit_insufficient_moderate = 0.4
+            score.limit_bad_insufficient = 0.2
+            logger.warn('Score.from_graph_item: Score could '
+                        'not be found using %s, %s' %
+                        (graph_item.location.ident,
+                         graph_item.measuring_rod))
+        return score
 
 
 class PredefinedGraphSelection(models.Model):
