@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.13 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Improved EKR details screen.
 
 
 1.12 (2012-03-20)

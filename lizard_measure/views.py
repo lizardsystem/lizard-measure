@@ -3,6 +3,7 @@
 import json
 import logging
 import datetime
+import math
 
 import iso8601
 
@@ -197,6 +198,36 @@ def suited_measures(request, area_ident,
         context_instance=RequestContext(request))
 
 
+def value_to_judgement(value, a=None, b=None, c=None, d=None):
+    """
+    Simple classifier for judgements.
+    """
+    if value < a:
+        return "slecht"
+    if value < b:
+        return "ontoereikend"
+    if value < c:
+        return "matig"
+    if value < d:
+        return "goed"
+    return "zeer goed"
+
+
+def value_to_html_color(value, a=None, b=None, c=None, d=None):
+    """
+    Simple classifier for colors. All values will return a color.
+    """
+    if value < a:
+        return COLOR_1
+    if value < b:
+        return COLOR_2
+    if value < c:
+        return COLOR_3
+    if value < d:
+        return COLOR_4
+    return COLOR_5
+
+
 def krw_waterbody_ekr_scores(
     request, area_ident,
     template='lizard_measure/waterbody_ekr_scores.html'):
@@ -229,10 +260,16 @@ def krw_waterbody_ekr_scores(
         if len_ts_values == 0:
             new_score_table['data'] = [{'timestamp': 'Geen tijdreeks beschikbaar', 'value': None}]
 
+        a, b, c, d = score.borders
         for single_ts in ts.values():
             data_table = []
             for timestamp, (value, flag, comment) in single_ts.get_events():
-                data_table.append({'timestamp': timestamp, 'value': value, 'comment': comment})
+                # value = math.trunc(10 * value) / 10.0  # Floor at 1 decimal
+                data_table.append({'timestamp': timestamp,
+                                   'value': value,
+                                   'judgement': value_to_judgement(value, a=a, b=b, c=c, d=d),
+                                   'color': value_to_html_color(value, a=a, b=b, c=c, d=d),
+                                   'comment': comment})
             new_score_table['data'] = data_table
         score_tables.append(new_score_table)
 
@@ -618,21 +655,6 @@ def steerparameter_overview(request):
 
 
 ################ EKR GRAPHS
-
-
-def value_to_html_color(value, a=None, b=None, c=None, d=None):
-    """
-    Simple classifier for colors. All values will return a color.
-    """
-    if value < a:
-        return COLOR_1
-    if value < b:
-        return COLOR_2
-    if value < c:
-        return COLOR_3
-    if value < d:
-        return COLOR_4
-    return COLOR_5
 
 
 class HorizontalBarGraphView(View, TimeSeriesViewMixin):

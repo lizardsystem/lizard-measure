@@ -382,6 +382,8 @@ class Score(models.Model):
         Value in lower zone than target: Goal not reached (-1)
         Value more than one zone lower than target: Goal still not reached
         (-2)
+
+        Where it this used?
         """
         target_zone = self._zone_from_limits(
             value=target,

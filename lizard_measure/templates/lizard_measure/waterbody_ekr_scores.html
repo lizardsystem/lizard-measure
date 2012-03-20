@@ -14,27 +14,27 @@
     </thead>
     <tbody>
       <tr>
-        <td>limit_bad_insufficient</td>
+        <td>slecht</td>
         <td>&lt; {{ score_table.score.limit_bad_insufficient }}</td>
         <td><div style="width: 15px; height: 15px; background: {{ COLOR_1 }}">&nbsp;</div></td>
       </tr>
       <tr>
-        <td>limit_insufficient_moderate</td>
-        <td>&lt; {{ score_table.score.limit_insufficient_moderate }}</td>
+        <td>ontoereikend</td>
+        <td>{{ score_table.score.limit_bad_insufficient }} - {{ score_table.score.limit_insufficient_moderate }}</td>
         <td><div style="width: 15px; height: 15px; background: {{ COLOR_2 }}">&nbsp;</div></td>
       </tr>
       <tr>
-        <td>gep</td>
-        <td>&lt; {{ score_table.score.gep }}</td>
+        <td>matig</td>
+        <td>{{ score_table.score.limit_insufficient_moderate }} - {{ score_table.score.gep }}</td>
         <td><div style="width: 15px; height: 15px; background: {{ COLOR_3 }}">&nbsp;</div></td>
       </tr>
       <tr>
-        <td>mep</td>
-        <td>&lt; {{ score_table.score.mep }}</td>
+        <td>goed: gep</td>
+        <td>{{ score_table.score.gep }} - {{ score_table.score.mep }}</td>
         <td><div style="width: 15px; height: 15px; background: {{ COLOR_4 }}">&nbsp;</div></td>
       </tr>
       <tr>
-        <td></td>
+        <td>zeer goed: mep</td>
         <td>>= {{ score_table.score.mep }}</td>
         <td><div style="width: 15px; height: 15px; background: {{ COLOR_5 }}">&nbsp;</div></td>
       </tr>
@@ -54,11 +54,16 @@
   <h2>Tijdreeks EKR scores</h2>
   <table>
     <thead>
-      <tr><th>Tijd</th><th>Waarde</th></tr>
+      <tr><th>Tijd</th><th>Waarde</th><th>Oordeel</th><th>Kleur</th></tr>
     </thead>
     <tbody>
       {% for row in score_table.data %}
-      <tr><td>{{ row.timestamp }}</td><td>{{ row.value|floatformat }}</td></tr>
+      <tr>
+        <td>{{ row.timestamp }}</td>
+        <td>{{ row.value|floatformat }}</td>
+        <td>{{ row.judgement }}</td>
+        <td><div style="width: 15px; height: 15px; background: {{ row.color }}">&nbsp;</div></td>
+      </tr>
       {% endfor %}
     </tbody>
   </table>
