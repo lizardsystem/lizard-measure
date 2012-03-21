@@ -7,11 +7,14 @@ from django.db import transaction
 from django.utils import simplejson
 from django.template.defaultfilters import slugify
 
-from django.contrib.gis.geos import GEOSGeometry
-from django.contrib.gis.geos import LineString
-from django.contrib.gis.geos import MultiLineString
-from django.contrib.gis.geos import Polygon
-from django.contrib.gis.geos import MultiPolygon
+from django.contrib.gis.geos import (
+    GEOSGeometry,
+    LineString,
+    MultiLineString,
+    Polygon,
+    MultiPolygon,
+)
+
 from django.contrib.gis.gdal import SpatialReference
 from django.contrib.gis.gdal import CoordTransform
 
@@ -21,7 +24,9 @@ from lizard_map.coordinates import WGS84
 from django.contrib.auth.models import User
 from lxml import etree
 
+import optparse
 import datetime
+import logging
 import os
 
 from lizard_area.models import Area
@@ -32,26 +37,31 @@ from lizard_geo.models import GeoObjectGroup
 
 from lizard_security.models import DataSet
 
-from lizard_measure.models import KRWStatus
-from lizard_measure.models import KRWWatertype
-from lizard_measure.models import WaterBody
-from lizard_measure.models import Organization
-from lizard_measure.models import Unit
-from lizard_measure.models import MeasuringRod
-from lizard_measure.models import Score
-from lizard_measure.models import Measure
-from lizard_measure.models import MeasureCategory
-from lizard_measure.models import MeasureType
-from lizard_measure.models import MeasurePeriod
-from lizard_measure.models import MeasureStatus
-from lizard_measure.models import MeasureStatusMoment
-from lizard_measure.models import FundingOrganization
+from lizard_measure.models import (
+    FundingOrganization,
+    KRWStatus,
+    KRWWatertype,
+    Measure,
+    MeasureCategory,
+    MeasurePeriod,
+    MeasureStatus,
+    MeasureStatusMoment,
+    MeasureType,
+    MeasuringRod,
+    Organization,
+    Score,
+    Unit,
+    WaterBody,
+)
+
+logger = logging.getLogger(__name__) 
 
 
 def _clear_all():
     """
     Clear all objects related to measures.
     """
+    print 'Deleting many measure-related objects.'
     KRWStatus.objects.all().delete()
     KRWWatertype.objects.all().delete()
     WaterBody.objects.all().delete()
@@ -600,23 +610,50 @@ def import_measures(filename):
             )
             funding_organization.save()
 
+def update_measures(filename):
+    # Fast retrieval instead of separate get() calls
+    original_measures = dict([(m.ident, m) for m in Measure.objects.all()])
+
+    amount_of_updates = 0
+    for rec in _records(filename):
+        
+        corresponding_measure = original_measures[rec['matident']]
+        corresponding_measure.import_raw = simplejson.dumps(
+            rec,
+            indent=4,
+        )
+        corresponding_measure.save()
+        amount_of_updates += 1
+
+    logger.info(
+        'Updated %s out of %s measures',
+        amount_of_updates,
+        len(original_measures),
+    )
+        
 
 class Command(BaseCommand):
     args = ''
-    help = 'Import KRW portaal xml files'
+    help = 'Import KRW portaal xml files.'
+    option_list = BaseCommand.option_list + (
+        optparse.make_option(
+            '--reset',
+            action='store_true',
+            dest='reset',
+            default=False,
+            help='Remove any old objects and do a full import'
+        ),
+        optparse.make_option(
+            '--update',
+            action='store_true',
+            dest='update',
+            default=False,
+            help='Try to update only'
+        ),
+    )
 
-    @transaction.commit_on_success
-    def handle(self, *args, **options):
-        if args:
-            rel_path = args[0]
-        else:
-            rel_path = 'import_krw_portaal'
-        import_path = os.path.join(settings.BUILDOUT_DIR, rel_path)
 
-        print 'Deleting many measure-related objects.'
-        _clear_all()
-
-        print 'Importing KRW portaal xml files from %s.' % import_path
+    def _init(self, import_path):
 
         user = User.objects.get(pk=1)
 
@@ -684,3 +721,33 @@ class Command(BaseCommand):
 
         # Import measures
         import_measures(os.path.join(import_path, 'maatregelen.xml'))
+
+    def _update(self, import_path):
+        
+        # Update measures
+        update_measures(os.path.join(import_path, 'maatregelen_update.xml'))
+        
+
+
+    @transaction.commit_on_success
+    def handle(self, *args, **options):
+        if args:
+            rel_path = args[0]
+        else:
+            rel_path = 'import_krw_portaal'
+        import_path = os.path.join(settings.BUILDOUT_DIR, rel_path)
+        logger.info('Importing KRW portaal xml files from %s.', import_path)
+
+        if options.get('reset') and options.get('update'):
+            print 'Cannot reset and update at the same time.'
+            
+        if options.get('reset'):
+            self._clear_all()
+
+        elif not options.get('update'):
+            self._init(import_path=import_path)
+            logger.info('running init!')
+
+        self._update(import_path=import_path)
+
+
