@@ -2,10 +2,28 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.11.2 (unreleased)
--------------------
+1.14 (unreleased)
+-----------------
 
 - Nothing changed yet.
+
+
+1.13 (2012-03-20)
+-----------------
+
+- Improved EKR details screen.
+
+
+1.12 (2012-03-20)
+-----------------
+
+- Moved score_from_graph_item from HorizontalBarGraphView to model
+  Score.
+
+- Added view for ekr scores.
+
+- Removed graph from maatregelen view, the graph is now accessed
+  directly from lizard-portal.
 
 
 1.11.1 (2012-03-15)
