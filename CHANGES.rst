@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.15 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Make import script update a number of existing fields as well when updating.
 
 
 1.14 (2012-03-22)
