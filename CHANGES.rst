@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.16 (unreleased)
+1.16 (2012-03-22)
 -----------------
 
 - Made HorizontalBarView more robust to ignore failing
