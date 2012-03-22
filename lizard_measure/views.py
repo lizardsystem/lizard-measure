@@ -229,19 +229,24 @@ def value_to_html_color(value, a=None, b=None, c=None, d=None):
 
 
 def krw_waterbody_ekr_scores(
-    request, area_ident,
+    request, area_ident, horizontal_bar_graph_slug='ekr-extended',
     template='lizard_measure/waterbody_ekr_scores.html'):
     """
     Show screen for ekr scores.
 
-    A HorizontalBarGraph with slug 'ekr' must be defined.
+    A HorizontalBarGraph with slug 'ekr-extended' must be defined.
     """
     area = get_object_or_404(Area, ident=area_ident)
+    location = GeoLocationCache.objects.get(ident=area_ident)
     # Obsolete: use MeasureCollections instead (??? what's this?)
 
-    hor_bar_graph = HorizontalBarGraph.objects.get(slug='ekr')
+    hor_bar_graph = HorizontalBarGraph.objects.get(
+        slug=horizontal_bar_graph_slug)
     graph_items = hor_bar_graph.horizontalbargraphitem_set.all()
-    ekr_scores = [(graph_item.time_series(),
+    for graph_item in graph_items:
+        if not graph_item.location:
+            graph_item.location = location
+    ekr_scores = [(graph_item.time_series(with_comments=True),
                    Score.from_graph_item(graph_item),
                    graph_item)
                   for graph_item in graph_items]
@@ -749,7 +754,13 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
 
             # We want to draw a shadow past the end of the last
             # event. That's why we ignore dt_start.
-            ts = graph_item.time_series(dt_end=dt_end)
+            try:
+                ts = graph_item.time_series(dt_end=dt_end)
+            except:
+                logger.exception(
+                    'HorizontalBarView crashed on graph_item.time_series of %s' %
+                    graph_item)
+                ts = {}
             if len(ts) != 1:
                 logger.warn('Warning: drawing %d timeseries on a single bar '
                             'HorizontalBarView', len(ts))

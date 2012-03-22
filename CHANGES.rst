@@ -5,7 +5,12 @@ Changelog of lizard-measure
 1.14 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Made HorizontalBarView more robust to ignore failing
+  graph_item.time_series.
+
+- Updated krw_waterbody_ekr_scores view with flexible location and
+  HorizontalBarGraph slug. It now shows the comments of events as
+  well.
 
 
 1.13 (2012-03-20)

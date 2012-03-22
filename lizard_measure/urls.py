@@ -64,7 +64,7 @@ urlpatterns = patterns(
      'lizard_measure.views.suited_measures',
      {},
      "lizard_measure.suited_measures"),
-    (r'^summary/(?P<area_ident>.*)/ekr_scores/$',
+    (r'^summary/(?P<area_ident>.*)/tables/(?P<horizontal_bar_graph_slug>.*)/$',
      'lizard_measure.views.krw_waterbody_ekr_scores',
      {},
      "lizard_measure.krw_waterbody_ekr_scores"),

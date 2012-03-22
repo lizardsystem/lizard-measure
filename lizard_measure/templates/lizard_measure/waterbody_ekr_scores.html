@@ -54,15 +54,14 @@
   <h2>Tijdreeks EKR scores</h2>
   <table>
     <thead>
-      <tr><th>Tijd</th><th>Waarde</th><th>Oordeel</th><th>Kleur</th></tr>
+      <tr><th>Tijd</th><th>Waarde</th><th></th></tr>
     </thead>
     <tbody>
       {% for row in score_table.data %}
       <tr>
         <td>{{ row.timestamp }}</td>
         <td>{{ row.value|floatformat }}</td>
-        <td>{{ row.judgement }}</td>
-        <td><div style="width: 15px; height: 15px; background: {{ row.color }}">&nbsp;</div></td>
+        <td>{{ row.comment }}</td>
       </tr>
       {% endfor %}
     </tbody>
