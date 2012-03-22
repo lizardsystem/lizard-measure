@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.14 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Adapt krw portal import script for doing updates.
 
 
 1.13 (2012-03-20)
