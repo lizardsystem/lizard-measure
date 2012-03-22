@@ -610,6 +610,7 @@ def import_measures(filename):
             )
             funding_organization.save()
 
+
 def update_measures(filename):
     # Fast retrieval instead of separate get() calls
     original_measures = dict([(m.ident, m) for m in Measure.objects.all()])
@@ -618,10 +619,17 @@ def update_measures(filename):
     for rec in _records(filename):
         
         corresponding_measure = original_measures[rec['matident']]
+
+        # Specific fields
         corresponding_measure.import_raw = simplejson.dumps(
             rec,
             indent=4,
         )
+        unit, unit_created = Unit.objects.get_or_create(
+            code=rec['mateenhbrus'],
+        )
+        corresponding_measure.unit = unit
+        corresponding_measure.value = rec['matomvbrus']
         corresponding_measure.save()
         amount_of_updates += 1
 
@@ -634,21 +642,21 @@ def update_measures(filename):
 
 class Command(BaseCommand):
     args = ''
-    help = 'Import KRW portaal xml files.'
+    help = 'Import and update from KRW portaal xml files.'
     option_list = BaseCommand.option_list + (
         optparse.make_option(
             '--reset',
             action='store_true',
             dest='reset',
             default=False,
-            help='Remove any old objects and do a full import'
+            help='Remove any old objects and do a full import and update'
         ),
         optparse.make_option(
             '--update',
             action='store_true',
             dest='update',
             default=False,
-            help='Try to update only'
+            help='Update only'
         ),
     )
 
@@ -740,13 +748,13 @@ class Command(BaseCommand):
 
         if options.get('reset') and options.get('update'):
             print 'Cannot reset and update at the same time.'
-            
+            return None
+   
         if options.get('reset'):
-            self._clear_all()
+            _clear_all()
 
-        elif not options.get('update'):
+        if not options.get('update'):
             self._init(import_path=import_path)
-            logger.info('running init!')
 
         self._update(import_path=import_path)
 
