@@ -906,9 +906,20 @@ class MeasureStatusMoment(models.Model):
 class MeasurePeriod(models.Model):
     """Period"""
 
-    start_date = models.DateField()
-    end_date = models.DateField()
-    description = models.TextField(null=True, blank=True)
+    start_date = models.DateField(
+        default=datetime.date(year=2016, month=1, day=1),
+        null=True,
+        blank=True,
+    )
+    end_date = models.DateField(
+        default=datetime.date(year=2027, month=1, day=1),
+        null=True,
+        blank=True,
+    )
+    description = models.TextField(
+        null=True,
+        blank=True,
+    )
     valid = models.BooleanField(
         default=True,
         verbose_name=_('Valid'),
@@ -920,7 +931,7 @@ class MeasurePeriod(models.Model):
         verbose_name_plural = _("Measure periods")
 
     def __unicode__(self):
-        return '%d - %d' % (self.start_date.year, self.end_date.year)
+        return self.description
 
 
 class EsfLink(models.Model):
@@ -1101,6 +1112,8 @@ class Measure(models.Model):
     )
 
     value = models.FloatField(
+        blank=True,
+        null=True,
         help_text="Omvang van maatregel, inhoud afhankelijk van eenheid",
         verbose_name='Omvang van maatregel.',
     )

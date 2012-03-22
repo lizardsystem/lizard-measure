@@ -2,13 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.15 (unreleased)
------------------
-
-- Nothing changed yet.
-
-
-1.14 (2012-03-22)
+1.16 (unreleased)
 -----------------
 
 - Made HorizontalBarView more robust to ignore failing
@@ -17,6 +11,18 @@ Changelog of lizard-measure
 - Updated krw_waterbody_ekr_scores view with flexible location and
   HorizontalBarGraph slug. It now shows the comments of events as
   well.
+
+
+1.15 (2012-03-22)
+-----------------
+
+- Make import script update a number of existing fields as well when updating.
+
+
+1.14 (2012-03-22)
+-----------------
+
+- Adapt krw portal import script for doing updates.
 
 
 1.13 (2012-03-20)

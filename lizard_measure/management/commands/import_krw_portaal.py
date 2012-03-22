@@ -57,6 +57,10 @@ from lizard_measure.models import (
 logger = logging.getLogger(__name__) 
 
 
+MSM_DESCRIPTION_IMPORT = 'Import KRW portaal'
+MSM_DESCRIPTION_UPDATE = 'Import KRW portaal - update'
+
+
 def _clear_all():
     """
     Clear all objects related to measures.
@@ -156,6 +160,15 @@ def _area_or_none(area_ident):
 
 
 def _dates_from_xml(description):
+    if not '-' in description:
+        # It will be 'voor yyyy' or 'na yyyy'
+        prepo, year_str = description.split()
+        date = datetime.date(year=int(year_str), month=1, day=1)
+        if prepo == 'na':
+            return date, None
+        elif prepo == 'voor':
+            return None, Date
+         
     start_year, end_year = [int(y) for y in description.split('-')]
     start_date = datetime.date(year=start_year, month=1, day=1)
     end_date = datetime.date(year=end_year, month=1, day=1)
@@ -592,7 +605,7 @@ def import_measures(filename):
             measure=measure,
             status=measure_status,
             planning_date=measure_status_date,
-            description='Import KRW portaal',
+            description=MSM_DESCRIPTION_IMPORT,
         )
         measure_status_moment.save()
 
@@ -610,6 +623,7 @@ def import_measures(filename):
             )
             funding_organization.save()
 
+
 def update_measures(filename):
     # Fast retrieval instead of separate get() calls
     original_measures = dict([(m.ident, m) for m in Measure.objects.all()])
@@ -618,11 +632,60 @@ def update_measures(filename):
     for rec in _records(filename):
         
         corresponding_measure = original_measures[rec['matident']]
+
+        # Specific fields
         corresponding_measure.import_raw = simplejson.dumps(
             rec,
             indent=4,
         )
+        unit, unit_created = Unit.objects.get_or_create(
+            code=rec['mateenhbrus'],
+        )
+        if rec['tijdvak'] == 'onbekend':
+            measure_period = None
+        else:
+            start_date, end_date = _dates_from_xml(rec['tijdvak'])
+            (
+                measure_period,
+                measure_period_created,
+            ) = MeasurePeriod.objects.get_or_create(
+                start_date=start_date,
+                end_date=end_date,
+                defaults={'description': rec['tijdvak']},
+            )
+
+        corresponding_measure.unit = unit
+        corresponding_measure.value = rec['matomvbrus']
+        corresponding_measure.period = measure_period
         corresponding_measure.save()
+
+        # Add a new measurestatusmoment for the update
+        if (rec['maatregelstatus'] == 'onbekend' or
+            rec['maatregelstatus'] is None):
+            measure_status = MeasureStatus.objects.get(
+                name='Onbekend',
+            )
+        else:
+            measure_status = MeasureStatus.objects.get(
+                name=rec['maatregelstatus'],
+            )
+        measure_status_date = datetime.date(year=2010, month=1, day=2)
+        (
+            measure_status_moment,
+            measure_status_moment_created,
+        ) = MeasureStatusMoment.objects.get_or_create(
+            measure=corresponding_measure,
+            description=MSM_DESCRIPTION_UPDATE,
+            defaults=dict(
+                status=measure_status,
+                planning_date=measure_status_date,
+            )
+        )
+        if not measure_status_moment_created:
+            measure_status_moment.status=measure_status
+            measure_status_moment.planning_date=measure_status_date
+            measure_status_moment.save()
+        
         amount_of_updates += 1
 
     logger.info(
@@ -634,21 +697,21 @@ def update_measures(filename):
 
 class Command(BaseCommand):
     args = ''
-    help = 'Import KRW portaal xml files.'
+    help = 'Import and update from KRW portaal xml files.'
     option_list = BaseCommand.option_list + (
         optparse.make_option(
             '--reset',
             action='store_true',
             dest='reset',
             default=False,
-            help='Remove any old objects and do a full import'
+            help='Remove any old objects and do a full import and update'
         ),
         optparse.make_option(
             '--update',
             action='store_true',
             dest='update',
             default=False,
-            help='Try to update only'
+            help='Update only'
         ),
     )
 
@@ -740,13 +803,13 @@ class Command(BaseCommand):
 
         if options.get('reset') and options.get('update'):
             print 'Cannot reset and update at the same time.'
-            
+            return None
+   
         if options.get('reset'):
-            self._clear_all()
+            _clear_all()
 
-        elif not options.get('update'):
+        if not options.get('update'):
             self._init(import_path=import_path)
-            logger.info('running init!')
 
         self._update(import_path=import_path)
 
