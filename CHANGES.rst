@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.17 (unreleased)
+1.17 (2012-03-26)
 -----------------
 
 - EKR graph and summary now uses comment as the input to calculate
