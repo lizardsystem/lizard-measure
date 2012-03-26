@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.19 (unreleased)
+1.19 (2012-03-26)
 -----------------
 
 - Updated EKR summary again to make it slightly less ugly.
