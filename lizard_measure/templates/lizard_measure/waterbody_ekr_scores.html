@@ -3,11 +3,10 @@
 <div id="textual" class='lizard'>
   {% for score_table in score_tables %}
   <h1>{{ score_table.title }}</h1>
-  <h2>Instellingen EKR scores</h2>
   <table>
     <thead>
       <tr>
-        <th>Instelling</th>
+        <th>Instellingen</th>
         <th>Waarde</th>
         <th>Kleur</th>
       </tr>
@@ -26,10 +25,9 @@
     </tbody>
   </table>
   <br />
-  <h2>Tijdreeks EKR scores</h2>
   <table>
     <thead>
-      <tr><th>Tijd</th><th>Waarde</th><th></th><th></th></tr>
+      <tr><th>Tijdreeks</th><th>Waarde</th><th></th><th></th></tr>
     </thead>
     <tbody>
       {% for row in score_table.data %}
