@@ -232,14 +232,14 @@ def comment_to_html_color(comment):
     """
     Lookup the EKR color for a fewsnorm comment.
 
-    Defaults to black.
+    Defaults to grey.
     """
     return {
         'slecht': COLOR_1,
         'ontoereikend': COLOR_2,
         'matig': COLOR_3,
         'goed': COLOR_4,
-        'zeer goed': COLOR_5}.get(comment, '#000000')
+        'zeer goed': COLOR_5}.get(comment, '#cccccc')
 
 
 def krw_waterbody_ekr_scores(

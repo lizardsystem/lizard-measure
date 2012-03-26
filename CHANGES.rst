@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.19 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Updated EKR summary again to make it slightly less ugly.
 
 
 1.18 (2012-03-26)

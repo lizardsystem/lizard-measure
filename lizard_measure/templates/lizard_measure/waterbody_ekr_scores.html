@@ -6,9 +6,7 @@
   <table>
     <thead>
       <tr>
-        <th>Instellingen</th>
-        <th>Waarde</th>
-        <th>Kleur</th>
+        <th colspan="3">Instellingen</th>
       </tr>
     </thead>
     <tbody>
@@ -23,18 +21,14 @@
         <td><div style="width: 15px; height: 15px; background: {{ score_table.color_target_2027 }}">&nbsp;</div></td>
       </tr>
     </tbody>
-  </table>
-  <br />
-  <table>
     <thead>
-      <tr><th>Tijdreeks</th><th>Waarde</th><th></th><th></th></tr>
+      <tr><th colspan="3">Tijdreeks</th></tr>
     </thead>
     <tbody>
       {% for row in score_table.data %}
       <tr>
         <td>{{ row.timestamp }}</td>
-        <td>{{ row.value|floatformat }}</td>
-        <td>{{ row.comment }}</td>
+        <td>{{ row.value|floatformat }} {{ row.comment }}</td>
         <td><div style="width: 15px; height: 15px; background: {{ row.color }}">&nbsp;</div></td>
       </tr>
       {% endfor %}
