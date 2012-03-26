@@ -38,7 +38,7 @@ from lizard_measure.models import EsfPattern
 from lizard_area.models import Area
 
 from nens_graph.common import DateGridGraph
-from nens_graph.common import dates_values
+from nens_graph.common import dates_values_comments
 from lizard_map.views import AppView
 from lizard_graph.views import TimeSeriesViewMixin
 from lizard_fewsnorm.models import GeoLocationCache
@@ -228,6 +228,20 @@ def value_to_html_color(value, a=None, b=None, c=None, d=None):
     return COLOR_5
 
 
+def comment_to_html_color(comment):
+    """
+    Lookup the EKR color for a fewsnorm comment.
+
+    Defaults to black.
+    """
+    return {
+        'slecht': COLOR_1,
+        'ontoereikend': COLOR_2,
+        'matig': COLOR_3,
+        'goed': COLOR_4,
+        'zeer goed': COLOR_5}.get(comment, '#000000')
+
+
 def krw_waterbody_ekr_scores(
     request, area_ident, horizontal_bar_graph_slug='ekr-extended',
     template='lizard_measure/waterbody_ekr_scores.html'):
@@ -265,17 +279,18 @@ def krw_waterbody_ekr_scores(
         if len_ts_values == 0:
             new_score_table['data'] = [{'timestamp': 'Geen tijdreeks beschikbaar', 'value': None}]
 
-        a, b, c, d = score.borders
+        # a, b, c, d = score.borders
         for single_ts in ts.values():
             data_table = []
             for timestamp, (value, flag, comment) in single_ts.get_events():
                 # value = math.trunc(10 * value) / 10.0  # Floor at 1 decimal
                 data_table.append({'timestamp': timestamp,
                                    'value': value,
-                                   'judgement': value_to_judgement(value, a=a, b=b, c=c, d=d),
-                                   'color': value_to_html_color(value, a=a, b=b, c=c, d=d),
+                                   'color': comment_to_html_color(comment),
                                    'comment': comment})
             new_score_table['data'] = data_table
+            new_score_table['color_target_2015'] = comment_to_html_color(score.target_2015)
+            new_score_table['color_target_2027'] = comment_to_html_color(score.target_2027)
         score_tables.append(new_score_table)
 
     return render_to_response(
@@ -755,7 +770,7 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
             # We want to draw a shadow past the end of the last
             # event. That's why we ignore dt_start.
             try:
-                ts = graph_item.time_series(dt_end=dt_end)
+                ts = graph_item.time_series(dt_end=dt_end, with_comments=True)
             except:
                 logger.exception(
                     'HorizontalBarView crashed on graph_item.time_series of %s' %
@@ -766,8 +781,8 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
                             'HorizontalBarView', len(ts))
             # We assume there is only one timeseries.
             for (loc, par), single_ts in ts.items():
-                dates, values, flag_dates, flag_values = dates_values(
-                    single_ts)
+                dates, values, comments, flag_dates, flag_values, flag_comments = (
+                    dates_values_comments(single_ts))
                 if not dates:
                     logger.warning('Tried to draw empty timeseries %s %s',
                                    loc, par)
@@ -793,8 +808,8 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
                      (date2num(dt_end) - date2num(dt_start))))
 
                 a, b, c, d = score.borders
-                block_colors = [value_to_html_color(value, a=a, b=b, c=c, d=d)
-                                for value in values]
+                block_colors = [comment_to_html_color(comment)
+                                for comment in comments]
 
                 # Block shadow
                 graph.axes.broken_barh(

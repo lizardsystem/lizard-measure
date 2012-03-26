@@ -5,7 +5,8 @@ Changelog of lizard-measure
 1.17 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- EKR graph and summary now uses comment as the input to calculate
+  color.
 
 
 1.16 (2012-03-22)

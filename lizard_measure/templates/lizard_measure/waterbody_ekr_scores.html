@@ -7,46 +7,21 @@
   <table>
     <thead>
       <tr>
-        <th>Betekenis</th>
+        <th>Instelling</th>
         <th>Waarde</th>
         <th>Kleur</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>slecht</td>
-        <td>&lt; {{ score_table.score.limit_bad_insufficient }}</td>
-        <td><div style="width: 15px; height: 15px; background: {{ COLOR_1 }}">&nbsp;</div></td>
-      </tr>
-      <tr>
-        <td>ontoereikend</td>
-        <td>{{ score_table.score.limit_bad_insufficient }} - {{ score_table.score.limit_insufficient_moderate }}</td>
-        <td><div style="width: 15px; height: 15px; background: {{ COLOR_2 }}">&nbsp;</div></td>
-      </tr>
-      <tr>
-        <td>matig</td>
-        <td>{{ score_table.score.limit_insufficient_moderate }} - {{ score_table.score.gep }}</td>
-        <td><div style="width: 15px; height: 15px; background: {{ COLOR_3 }}">&nbsp;</div></td>
-      </tr>
-      <tr>
-        <td>goed: gep</td>
-        <td>{{ score_table.score.gep }} - {{ score_table.score.mep }}</td>
-        <td><div style="width: 15px; height: 15px; background: {{ COLOR_4 }}">&nbsp;</div></td>
-      </tr>
-      <tr>
-        <td>zeer goed: mep</td>
-        <td>>= {{ score_table.score.mep }}</td>
-        <td><div style="width: 15px; height: 15px; background: {{ COLOR_5 }}">&nbsp;</div></td>
-      </tr>
-      <tr>
         <td>Doel 2015</td>
         <td>{{ score_table.score.target_2015|default_if_none:"-" }}</td>
-        <td></td>
+        <td><div style="width: 15px; height: 15px; background: {{ score_table.color_target_2015 }}">&nbsp;</div></td>
       </tr>
       <tr>
         <td>Doel 2027</td>
         <td>{{ score_table.score.target_2027|default_if_none:"-" }}</td>
-        <td></td>
+        <td><div style="width: 15px; height: 15px; background: {{ score_table.color_target_2027 }}">&nbsp;</div></td>
       </tr>
     </tbody>
   </table>
@@ -54,7 +29,7 @@
   <h2>Tijdreeks EKR scores</h2>
   <table>
     <thead>
-      <tr><th>Tijd</th><th>Waarde</th><th></th></tr>
+      <tr><th>Tijd</th><th>Waarde</th><th></th><th></th></tr>
     </thead>
     <tbody>
       {% for row in score_table.data %}
@@ -62,6 +37,7 @@
         <td>{{ row.timestamp }}</td>
         <td>{{ row.value|floatformat }}</td>
         <td>{{ row.comment }}</td>
+        <td><div style="width: 15px; height: 15px; background: {{ row.color }}">&nbsp;</div></td>
       </tr>
       {% endfor %}
     </tbody>
