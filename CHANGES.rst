@@ -2,10 +2,16 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.20 (unreleased)
+1.21 (unreleased)
 -----------------
 
 - Made more robust when requested location does not exist.
+
+
+1.20 (2012-03-27)
+-----------------
+
+- Update measure graph to only show the valid labels in the legend.
 
 
 1.19 (2012-03-26)
