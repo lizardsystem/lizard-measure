@@ -1,4 +1,5 @@
 import json
+
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from djangorestframework.views import View
@@ -51,8 +52,6 @@ class ScoreView(BaseApiView):
         """
         model_class = Score
         name_field = 'measuring_rod__description'
-
-
 
         output = {
             'id': score.id,
@@ -661,8 +660,8 @@ class EsfPattern(BaseApiView):
             another object
         """
 
-        print 'save many2many'
-        print linked_records
+        #print 'save many2many'
+        #print linked_records
         if True:
             #measure types
             self.save_single_many2many_relation(
@@ -683,4 +682,3 @@ class EsfPattern(BaseApiView):
                 object.save()
 
         return success, touched_objects
-

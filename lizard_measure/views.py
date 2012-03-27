@@ -251,19 +251,30 @@ def krw_waterbody_ekr_scores(
     A HorizontalBarGraph with slug 'ekr-extended' must be defined.
     """
     area = get_object_or_404(Area, ident=area_ident)
-    location = GeoLocationCache.objects.get(ident=area_ident)
-    # Obsolete: use MeasureCollections instead (??? what's this?)
+
+    location = None
+    try:
+        location = GeoLocationCache.objects.get(ident=area_ident)
+    except GeoLocationCache.DoesNotExist:
+        pass
 
     hor_bar_graph = HorizontalBarGraph.objects.get(
         slug=horizontal_bar_graph_slug)
     graph_items = hor_bar_graph.horizontalbargraphitem_set.all()
     for graph_item in graph_items:
-        if not graph_item.location:
+        if not graph_item.location and location:
             graph_item.location = location
-    ekr_scores = [(graph_item.time_series(with_comments=True),
-                   Score.from_graph_item(graph_item),
-                   graph_item)
-                  for graph_item in graph_items]
+
+    ekr_scores = []
+    try:
+        ekr_scores = [(graph_item.time_series(with_comments=True),
+                       Score.from_graph_item(graph_item),
+                       graph_item)
+                      for graph_item in graph_items]
+    except AttributeError:
+        # Occurs when above location =
+        # GeoLocationCache... fails... just return nothing.
+        pass
 
     score_tables = []
     for ts, score, graph_item in ekr_scores:

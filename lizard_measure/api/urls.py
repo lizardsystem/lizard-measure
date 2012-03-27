@@ -48,6 +48,6 @@ urlpatterns = patterns(
         name=NAME_PREFIX + 'steering_parameter_graphs'),
     url(r'^esf_pattern/$',
         EsfPattern.as_view(),
-        name=NAME_PREFIX + 'esf_pattern')
+        name=NAME_PREFIX + 'esf_pattern'),
 
     )

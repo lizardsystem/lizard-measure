@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.20 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Made more robust when requested location does not exist.
 
 
 1.19 (2012-03-26)
