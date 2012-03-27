@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.21 (unreleased)
+1.21 (2012-03-27)
 -----------------
 
 - Made more robust when requested location does not exist.
