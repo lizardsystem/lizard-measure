@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.20 (unreleased)
+1.20 (2012-03-27)
 -----------------
 
 - Update measure graph to only show the valid labels in the legend.
