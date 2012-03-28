@@ -1503,10 +1503,18 @@ class Measure(models.Model):
 
         if end_date is not None:
             if is_planning:
-                msm_dates = msm_dates.filter(planning_date__lte=end_date)
+                msm_dates = msm_dates.filter(
+                    planning_date__lte=end_date,
+                ).order_by(
+                    'planning_date',
+                )
                 return msm_dates
             else:
-                msm_dates = msm_dates.filter(realisation_date__lte=end_date)
+                msm_dates = msm_dates.filter(
+                    realisation_date__lte=end_date,
+                ).order_by(
+                    'realisation_date',
+                )
 
         return msm_dates
 
