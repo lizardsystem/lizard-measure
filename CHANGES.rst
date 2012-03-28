@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.22 (unreleased)
+1.22 (2012-03-28)
 -----------------
 
 - Add ordering to measurestatusmoments function.
