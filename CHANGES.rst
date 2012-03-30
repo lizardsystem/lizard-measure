@@ -5,14 +5,15 @@ Changelog of lizard-measure
 1.24 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Fixes an exception when the user views scores that refer to 'hidden'
+  areas. (Projectplace issue 167).
 
 
 1.23 (2012-03-30)
 -----------------
 
 - Translates multiple english terms in the ESF Pattern management screen
-  (Project place issue 143).
+  (Projectplace issue 143).
 - Uses the full number of ESF characters .. in the ESF Pattern management screen
   (Projectplace issue 143).
 
