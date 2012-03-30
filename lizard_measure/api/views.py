@@ -53,21 +53,29 @@ class ScoreView(BaseApiView):
         model_class = Score
         name_field = 'measuring_rod__description'
 
-        output = {
-            'id': score.id,
-            'mep': score.mep,
-            'gep': score.gep,
-            'limit_insufficient_moderate': score.limit_insufficient_moderate,
-            'limit_bad_insufficient': score.limit_bad_insufficient,
-            'target_2015': score.target_2015,
-            'target_2027': score.target_2027,
-            'measuring_rod': self._get_related_object(
-                score.measuring_rod,
-                flat,
-            ),
-            'area': self._get_related_object(score.area, flat),
-        }
+        try:
+            output = {
+        	'id': score.id,
+                'mep': score.mep,
+        	'gep': score.gep,
+        	'limit_insufficient_moderate': score.limit_insufficient_moderate,
+        	'limit_bad_insufficient': score.limit_bad_insufficient,
+                'target_2015': score.target_2015,
+        	'target_2027': score.target_2027,
+                'measuring_rod': self._get_related_object(
+                    score.measuring_rod,
+                    flat,
+                    ),
+                'area': self._get_related_object(score.area, flat),
+                }
+        except:
+            output = None
         return output
+
+    def get(self, request):
+        output_dict = BaseApiView.get(self, request)
+        output_dict['data'] = [o for o in output_dict['data'] if o is not None]
+        return output_dict
 
 
 class SteeringParameterPredefinedGraphView(BaseApiView):
