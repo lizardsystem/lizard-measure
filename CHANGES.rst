@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.24 (unreleased)
+1.24 (2012-03-30)
 -----------------
 
 - Fixes an exception when the user views scores that refer to 'hidden'
