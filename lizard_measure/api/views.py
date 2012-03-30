@@ -639,7 +639,7 @@ class EsfPattern(BaseApiView):
         if size >= self.SMALL:
             output = {
                 'id': pattern.id,
-                'pattern': pattern.pattern[:8],
+                'pattern': pattern.pattern,
                 'watertype_group': self._get_related_object(pattern.watertype_group, flat),
                 'landelijk': pattern.data_set == None,
                 'read_only': pattern.data_set == None,
