@@ -37,7 +37,7 @@
             xtype: 'hiddenfield'
         },
         {
-            fieldLabel: 'Pattern',
+            fieldLabel: 'ESF patroon',
             name: 'pattern',
             width: 200,
             xtype: 'textfield',
@@ -45,7 +45,7 @@
         },
 
         {
-            fieldLabel: 'Watertype group',
+            fieldLabel: 'Watertype groep',
             name: 'watertype_group',
             displayField: 'name',
             valueField: 'id',
