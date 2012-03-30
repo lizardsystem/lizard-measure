@@ -5,10 +5,11 @@ Changelog of lizard-measure
 1.23 (unreleased)
 -----------------
 
-- Uses 'ESF patroon' instead of 'pattern' in the ESF Pattern management screen
+- Translates multiple english terms in the ESF Pattern management screen
   (Project place issue 143).
-- Uses the full number of ESF characters in the ESF Pattern management screen
-  (Projectplace issue 143).
+- Uses the full number of ESF characters .. in the ESF Pattern management screen
+  .. (Projectplace issue 143).
+
 
 1.22 (2012-03-28)
 -----------------
