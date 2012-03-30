@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.23 (unreleased)
+1.23 (2012-03-30)
 -----------------
 
 - Translates multiple english terms in the ESF Pattern management screen
