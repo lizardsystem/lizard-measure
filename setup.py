@@ -15,6 +15,7 @@ install_requires = [
     'django-staticfiles',
     'django-extensions',
     'lizard-area',
+    'lizard-esf',
     'lizard-history >= 0.2.3',
     'lizard-graph',
     'lizard-geo',

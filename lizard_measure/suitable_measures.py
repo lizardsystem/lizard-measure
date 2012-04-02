@@ -7,6 +7,7 @@
 
 import logging
 
+from lizard_esf.models import get_data_main_esf
 from lizard_measure.pattern_matcher import PatternMatcher
 from lizard_measure.pattern_measures_retriever import PatternMeasuresRetriever
 
@@ -38,12 +39,23 @@ class SuitableMeasures(object):
     def get(self, area):
         """Return the list of suitable measures for the given area."""
         suitable_measures = []
+        area_pattern = self._get_area_pattern(area)
         measures_dict = self.pattern_measures_retriever.retrieve(area)
         for esf_pattern, measures in measures_dict.items():
-            print area.pattern, esf_pattern.pattern
-            if self.pattern_matcher.matches(area.pattern, esf_pattern.pattern):
+            if self.pattern_matcher.matches(area_pattern, esf_pattern.pattern):
                 suitable_measures += self.suitable_measure_info_factory.create(esf_pattern, measures)
         return suitable_measures
+
+    def _get_area_pattern(self, area):
+        """Return the string that specifies the critical ESFs of the given area."""
+        result = ''
+        esf_data = get_data_main_esf(area)
+        for e in esf_data:
+            if e['judgment'] == 'critical':
+                result += 'X'
+            else:
+                result += '-'
+        return result
 
 
 def get_suitable_measures(area):

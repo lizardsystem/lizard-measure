@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.26 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Computation of the suitable measures uses the actual ESF pattern of the area.
 
 
 1.25 (2012-04-02)

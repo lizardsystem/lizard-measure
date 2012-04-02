@@ -27,6 +27,8 @@ class SimplePatternMeasuresRetriever(object):
 class SimplePatternMatcher(object):
 
     def matches(self, area_pattern, pattern):
+        if area_pattern is None:
+            assert False
         return area_pattern == pattern
 
 
@@ -37,7 +39,7 @@ class SuitableMeasures_get_TestSuite(TestCase):
 
     def test_a(self):
         """Test when there are no ESF patterns."""
-        area = Mock(pattern='---------', data_set="don't care")
+        area = Mock(data_set="don't care")
         suitable_measures = \
             SuitableMeasures(SimpleSuitableMeasureInfoFactory(),
                              SimplePatternMeasuresRetriever({}),
@@ -46,18 +48,20 @@ class SuitableMeasures_get_TestSuite(TestCase):
 
     def test_b(self):
         """Test when there is a single ESF pattern that is not suitable."""
-        area = Mock(pattern='---------', data_set="don't care")
+        area = Mock(data_set="don't care")
         suitable_measures = \
             SuitableMeasures(SimpleSuitableMeasureInfoFactory(),
                              SimplePatternMeasuresRetriever({Mock(pattern='XX-------'): ['dummy measure']}),
                              SimplePatternMatcher())
+        suitable_measures._get_area_pattern = (lambda a: '---------')
         self.assertEqual([], suitable_measures.get(area))
 
     def test_c(self):
         """Test when there is a single ESF pattern that is suitable."""
-        area = Mock(pattern='XX-------', data_set="don't care")
+        area = Mock(data_set="don't care")
         suitable_measures = \
             SuitableMeasures(SimpleSuitableMeasureInfoFactory(),
                              SimplePatternMeasuresRetriever({Mock(pattern='XX-------'): ['dummy measure']}),
                              SimplePatternMatcher())
+        suitable_measures._get_area_pattern = (lambda a: 'XX-------')
         self.assertEqual(["dummy measure"], suitable_measures.get(area))
