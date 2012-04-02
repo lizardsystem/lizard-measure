@@ -647,7 +647,6 @@ def esfpattern_detailedit_portal(request):
     return HttpResponse(t.render(c),  mimetype="text/plain")
 
 
-
 def steerparameter_overview(request):
     """
     Return JSON for request.
@@ -661,10 +660,8 @@ def steerparameter_overview(request):
 
     parameters = SteeringParameterFree.objects.filter(area__in=areas).distinct().values_list('parameter_code', flat=True)
     #parameters = ['test','test2']
-
-
-
-    if request.user.is_authenticated():
+    if (request.user.has_perm('auth.is_analyst', SteeringParameterFree) and
+        request.user.has_perm('auth.is_analyst', PredefinedGraphSelection)):
 
         t = get_template('portals/stuurparameter-overzicht.js')
         c = RequestContext(request, {

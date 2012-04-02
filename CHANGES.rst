@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.25 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Change authentication for steering parameter overview.
 
 
 1.24 (2012-03-30)

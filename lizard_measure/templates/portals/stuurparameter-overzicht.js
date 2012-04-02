@@ -1,8 +1,5 @@
 {% load get_grid %}
 {% load get_portal_template %}
-
-{% if perms.auth.is_analyst %}
-
 {
     itemId: 'stuurparameter-overzicht',
     title: 'stuurparameter-overzicht',
@@ -100,6 +97,3 @@
         }]
 	}]
 }
-{% else %}
-    {% get_portal_template geen_toegang %}
-{% endif %}
