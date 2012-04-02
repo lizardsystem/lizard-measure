@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.26 (unreleased)
+1.26 (2012-04-02)
 -----------------
 
 - Computation of the suitable measures uses the actual ESF pattern of the area.
