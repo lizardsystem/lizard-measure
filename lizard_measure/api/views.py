@@ -42,6 +42,18 @@ class ScoreView(BaseApiView):
         'measuring_rod':'measuring_rod__description',
         'area': 'area__name'
     }
+
+    # Force get_filtered_model instead of model.objects.all()
+    use_filtered_model = True
+
+    def get_filtered_model(self, request):
+        """
+        Return score objects that you may see
+        """
+        # Automagically filtered using lizard-security
+        available_areas = Area.objects.all()
+        return Score.objects.filter(area__in=available_areas)
+
     def get_object_for_api(self,
                            score,
                            flat=True,

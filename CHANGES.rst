@@ -5,7 +5,8 @@ Changelog of lizard-measure
 1.27 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Added get_filtered_model to api ScoreView, so you only get objects
+  that you can see.
 
 
 1.26 (2012-04-02)
