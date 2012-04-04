@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.28 (unreleased)
+1.28 (2012-04-04)
 -----------------
 
 - Put get_filtered_model in AreaFiltered. Applied AreaFiltered to
