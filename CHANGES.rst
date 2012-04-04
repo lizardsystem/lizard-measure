@@ -5,7 +5,9 @@ Changelog of lizard-measure
 1.28 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Put get_filtered_model in AreaFiltered. Applied AreaFiltered to
+  ScoreView, SteeringParameterPredefinedGraph and
+  SteeringParameterFreeView.
 
 
 1.27 (2012-04-04)

@@ -25,7 +25,28 @@ class RootView(View):
             }
 
 
-class ScoreView(BaseApiView):
+class AreaFiltered(object):
+    """
+    Filter objects using areas where you have the permission.
+
+    Usage: put in front of BaseApiView class definition
+
+    i.e. class ScoreView(AreaFiltered, BaseApiView):
+    """
+
+    # Force get_filtered_model instead of model.objects.all()
+    use_filtered_model = True
+
+    def get_filtered_model(self, request):
+        """
+        Return score objects that you may see
+        """
+        # Automagically filtered using lizard-security
+        available_areas = Area.objects.all()
+        return self.model_class.objects.filter(area__in=available_areas)
+
+
+class ScoreView(AreaFiltered, BaseApiView):
     """
     Show organisations for selection and edit
     """
@@ -42,17 +63,6 @@ class ScoreView(BaseApiView):
         'measuring_rod':'measuring_rod__description',
         'area': 'area__name'
     }
-
-    # Force get_filtered_model instead of model.objects.all()
-    use_filtered_model = True
-
-    def get_filtered_model(self, request):
-        """
-        Return score objects that you may see
-        """
-        # Automagically filtered using lizard-security
-        available_areas = Area.objects.all()
-        return Score.objects.filter(area__in=available_areas)
 
     def get_object_for_api(self,
                            score,
@@ -90,9 +100,8 @@ class ScoreView(BaseApiView):
         return output_dict
 
 
-class SteeringParameterPredefinedGraphView(BaseApiView):
+class SteeringParameterPredefinedGraphView(AreaFiltered, BaseApiView):
     """
-        Show organisations for selection and edit
     """
     model_class = SteeringParameterPredefinedGraph
     name_field = 'name'
@@ -148,9 +157,8 @@ class SteeringParameterPredefinedGraphView(BaseApiView):
         return output
 
 
-class SteeringParameterFreeView(BaseApiView):
+class SteeringParameterFreeView(AreaFiltered, BaseApiView):
     """
-        Show organisations for selection and edit
     """
     model_class = SteeringParameterFree
     name_field = 'name'
