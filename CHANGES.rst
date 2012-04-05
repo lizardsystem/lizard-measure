@@ -2,12 +2,18 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.29 (unreleased)
+1.30 (unreleased)
 -----------------
 
 - Fixed bug that could crash while saving an EsfPattern.
 
 - Renamed view EsfPattern to EsfPatternView.
+
+
+1.29 (2012-04-05)
+-----------------
+
+- Modified steeringparameter form to include examples and clearer instructions
 
 
 1.28 (2012-04-04)
