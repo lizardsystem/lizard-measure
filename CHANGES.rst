@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.30 (unreleased)
+1.30 (2012-04-05)
 -----------------
 
 - Fixed bug that could crash while saving an EsfPattern.
