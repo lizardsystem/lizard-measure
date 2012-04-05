@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.31 (unreleased)
+1.31 (2012-04-05)
 -----------------
 
 - Added API view for WaterBody
