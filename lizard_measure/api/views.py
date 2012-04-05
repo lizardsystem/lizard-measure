@@ -621,15 +621,7 @@ class SteerParameterGraphs(View):
         return graphs
 
 
-
-
-
-
-
-
-
-
-class EsfPattern(BaseApiView):
+class EsfPatternView(BaseApiView):
 
 
     model_class = EsfPattern
@@ -643,8 +635,13 @@ class EsfPattern(BaseApiView):
         'pattern': 'pattern',
         'watertype_group': 'watertype_group__code',
         'data_set': 'data_set',
-        'read_only': 'data_set'
+        'read_only': 'data_set'  # Huh??
     }
+
+    read_only_fields = [
+        'is_KRW_measure', # No idea why this parameter is passed
+        'is_indicator', # No idea why this parameter is passed
+        ]
 
 
     def get_object_for_api(self,
@@ -702,11 +699,13 @@ class EsfPattern(BaseApiView):
         """
             overwrite of base api to append code
         """
-        success, touched_objects =  super(EsfPattern, self).create_objects(data)
+        success, touched_objects =  super(EsfPatternView, self).create_objects(data)
 
+        # Bound a "random" dataset to the object.
         for object in touched_objects:
             if len(request.allowed_data_set_ids) > 0:
-                object.data_set = DataSet.objects.get(list(request.allowed_data_set_ids)[0])
+                object.data_set = DataSet.objects.get(
+                    pk=list(request.allowed_data_set_ids)[0])
                 object.save()
 
         return success, touched_objects
