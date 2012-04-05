@@ -6,7 +6,7 @@
     bodyPadding: '10 25 10 10',//padding on the right side 25 for scrollbar
     height: '100%',
     items:[{
-        html: '<h1>{{ area.name }}</h1><br> '
+        html: '<h1>{{ area.name }}</h1><br /><i>Aanwijzingen bij het toevoegen van enkelvoudige grafieken:</i><p>Vul in het veld "locaties" een of meer locaties in, gescheiden door een punt-komma.</p><p>Eventueel kunnen de locaties ook worden opgegeven in de vorm &lt;locatie_id,moduleinstance_id,timestep_id,qualifieriset_id&gt; om een specifieke tijdreeks te benaderen.</p><p>Een aantal voorbeelden:</p><div class="lizard"><table><tr><th>naam</th><th>volgorde</th><th>type</th><th>heeft doel</th><th>doel waarde</th><th>parameter code</th><th>locaties</th></tr><tr><td>Voorbeeld1</td><td>10</td><td>toestand</td><td>ja</td><td>1</td><td>chloride</td><td>3201</td></tr><tr><td>Voorbeeld2</td><td>20</td><td>evaluatie</td><td>ja</td><td>1</td><td>SO4</td><td>SAP010;HAP010</td></tr><tr><td>Voorbeeld3</td><td>30</td><td>evaluatie</td><td>nee</td><td>0</td><td>PO4.bodem</td><td>SAP010,Import_Reeksen,NETS</td></tr></table></div><br />'
     },{
         title: 'Enkelvoudige grafieken',
         anchor:'100%',
@@ -33,13 +33,8 @@
             {name: 'has_target', title: 'heeft doel', editable: true, visible: true, width: 70, type: 'boolean'},
             {name: 'target_value', title: 'doel waarde', editable: true, visible: true, width: 70, type: 'float'},
             {name: 'parameter_code', title: 'parameter code', editable: true, visible: true, width: 100, type: 'text'},
-            {name: 'location_modulinstance_string', title: 'locatie id, moduleinstance id, timestep id, qualifierset id vanuit Fews', editable: true, visible: true, width: 330, type: 'text'}
+            {name: 'location_modulinstance_string', title: 'locaties', editable: true, visible: true, width: 330, type: 'text'}
         ]
-    },{
-        html: 'Vul voor het veld "locatie id, moduleinstance id, timestep id, qualifierset id" per tijdserie deze ' +
-        'gegevens in, gescheiden door een comma (,). Alleen de locatie is verplicht, de overige instellingen niet (als er ' +
-        'meerdere tijdseries worden gevonden, dan wordt een willekeurige gekozen).<br> Voor meerdere locaties dienen de ' +
-        'tijdseries geschieden te worden door een punt-comma (;). <br><br><br>'
     },{
         title: 'Samengestelde grafieken',
   
