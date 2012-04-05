@@ -5,7 +5,11 @@ Changelog of lizard-measure
 1.31 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Added API view for WaterBody
+
+- The maatregelen_form now uses the WaterBody API view for choosing
+  krw waterbody. Before the krw waterbody combobox had Areas from
+  lizard-area and that would lead to a crash.
 
 
 1.30 (2012-04-05)

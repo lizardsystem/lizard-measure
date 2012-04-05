@@ -9,6 +9,7 @@ from lizard_security.models import DataSet
 from lizard_measure.models import Organization, Measure, Score, SteeringParameterPredefinedGraph, \
     SteeringParameterFree, EsfPattern
 from lizard_measure.models import PredefinedGraphSelection
+from lizard_measure.models import WaterBody
 from lizard_api.base import BaseApiView
 
 import logging
@@ -212,6 +213,42 @@ class SteeringParameterFreeView(AreaFiltered, BaseApiView):
         return output
 
 
+class WaterBodyView(AreaFiltered, BaseApiView):
+    """
+    Water bodies that you can see
+    """
+    model_class = WaterBody
+    name_field = 'area__name'
+
+    valid_field=None
+
+    field_mapping = {
+        'id': 'id',
+        'name': 'area__name',
+    }
+
+    read_only_fields = [
+    ]
+
+    def get_object_for_api(self,
+                           obj,
+                           flat=True,
+                           size=BaseApiView.COMPLETE,
+                           include_geom=False):
+        """
+        Create dict from object.
+        """
+        if size == self.ID_NAME:
+            output = {
+                'id': obj.id,
+                'name': obj.area.name,
+            }
+        else:
+            output = {
+                'id': obj.id,
+                'name': obj.area.name,
+            }
+        return output
 
 
 class OrganizationView(BaseApiView):
@@ -452,6 +489,7 @@ class MeasureView(BaseApiView):
                 linked_records,
             )
 
+
 class SteerParameterOverview(View):
 
     def get(self, request):
@@ -481,11 +519,6 @@ class SteerParameterOverview(View):
             data.append(item)
 
         return {'data': data, 'count': areas.count()}
-
-
-
-
-
 
 
 class SteerParameterGraphs(View):

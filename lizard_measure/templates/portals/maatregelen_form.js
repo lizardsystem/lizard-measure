@@ -446,10 +446,10 @@
                     ],
                     proxy: {
                         type: 'ajax',
-                        url: '/area/api/krw-areas/?node=root&_accept=application%2Fjson&size=id_name',
+                        url: '/measure/api/waterbody/?node=root&_accept=application%2Fjson&size=id_name',
                         reader: {
                             type: 'json',
-                            root: 'areas'
+                            root: 'data'
                         }
                     }
                 }
@@ -555,7 +555,7 @@
                 }
 
                 Lizard.window.EditSummaryBox.show({
-                    
+
                     fn: function (btn, text) {
                         if (btn=='ok') {
                             values.edit_summary = text;

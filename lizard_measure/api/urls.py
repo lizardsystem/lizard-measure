@@ -5,6 +5,7 @@ from django.contrib import admin
 
 from lizard_measure.api.views import RootView
 from lizard_measure.api.views import MeasureView
+from lizard_measure.api.views import WaterBodyView
 from lizard_measure.api.views import OrganizationView
 from lizard_measure.api.views import ScoreView
 from lizard_measure.api.views import SteeringParameterFreeView
@@ -26,6 +27,9 @@ urlpatterns = patterns(
     url(r'^measure/$',
         MeasureView.as_view(),
         name=NAME_PREFIX + 'measure'),
+    url(r'^waterbody/$',
+        WaterBodyView.as_view(),
+        name=NAME_PREFIX + 'water_body'),
     url(r'^organization/$',
         OrganizationView.as_view(),
         name=NAME_PREFIX + 'organization'),

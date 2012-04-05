@@ -156,6 +156,7 @@ class WaterBody(models.Model):
     class Meta:
         verbose_name = _("Waterbody")
         verbose_name_plural = _("Waterbodies")
+        ordering = ('area', )
 
     area = models.ForeignKey(Area, null=True, blank=True,
         related_name='water_bodies')
