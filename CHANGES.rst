@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.32 (unreleased)
+1.32 (2012-04-05)
 -----------------
 
 - Remove restriction of only analists allowed to view steering parameters
