@@ -660,8 +660,7 @@ def steerparameter_overview(request):
 
     parameters = SteeringParameterFree.objects.filter(area__in=areas).distinct().values_list('parameter_code', flat=True)
     #parameters = ['test','test2']
-    if (request.user.has_perm('auth.is_analyst', SteeringParameterFree) and
-        request.user.has_perm('auth.is_analyst', PredefinedGraphSelection)):
+    if request.user.is_authenticated():
 
         t = get_template('portals/stuurparameter-overzicht.js')
         c = RequestContext(request, {
