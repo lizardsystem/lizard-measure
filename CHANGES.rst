@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.29 (unreleased)
+1.29 (2012-04-05)
 -----------------
 
 - Modified steeringparameter form to include examples and clearer instructions
