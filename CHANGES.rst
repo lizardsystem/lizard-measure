@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.33 (unreleased)
+1.33 (2012-04-10)
 -----------------
 
 - When adding a measure, you can now also choose deel aan-afvoergebieden.
