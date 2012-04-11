@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.34 (unreleased)
+1.34 (2012-04-11)
 -----------------
 
 - Fixed error displaying steering parameter overview
