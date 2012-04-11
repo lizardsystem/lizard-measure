@@ -659,6 +659,8 @@ def steerparameter_overview(request):
     #predefined_graphs = ['testa', 'testb']
 
     parameters = SteeringParameterFree.objects.filter(area__in=areas).distinct().values_list('parameter_code', flat=True)
+
+    parameters = [{'org': par, 'no_point': par.replace('.','_')} for par in parameters]
     #parameters = ['test','test2']
     if request.user.is_authenticated():
 

@@ -514,7 +514,7 @@ class SteerParameterOverview(View):
                 item['st_'+ steerp.predefined_graph.name] = 'X'
 
             for param in area.steeringparameterfree_set.values('parameter_code'):
-                item['stf_' + param['parameter_code']]  = 'X'
+                item['stf_' + param['parameter_code'].replace('.', '_')]  = 'X'
 
             data.append(item)
 
