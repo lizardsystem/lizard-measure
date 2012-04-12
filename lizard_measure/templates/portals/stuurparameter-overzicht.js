@@ -90,7 +90,7 @@
                     {name: 'st_{{ graph }}', title: '{{ graph }}', editable: false, visible: true, width: 80, type: 'text'},
                 {% endfor %}
                 {% for graph in parameters %}
-                    {name: 'stf_{{ graph }}', title: '{{ graph }}', editable: false, visible: true, width: 80, type: 'text'},
+                    {name: 'stf_{{ graph.no_point }}', title: '{{ graph.org }}', editable: false, visible: true, width: 80, type: 'text'},
                 {% endfor %}
                 {name: 'id', title: 'id', editable: false, visible: false, width: 200, type: 'text'}
            ]

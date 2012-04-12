@@ -9,6 +9,7 @@ from lizard_security.models import DataSet
 from lizard_measure.models import Organization, Measure, Score, SteeringParameterPredefinedGraph, \
     SteeringParameterFree, EsfPattern
 from lizard_measure.models import PredefinedGraphSelection
+from lizard_measure.models import WaterBody
 from lizard_api.base import BaseApiView
 
 import logging
@@ -25,7 +26,28 @@ class RootView(View):
             }
 
 
-class ScoreView(BaseApiView):
+class AreaFiltered(object):
+    """
+    Filter objects using areas where you have the permission.
+
+    Usage: put in front of BaseApiView class definition
+
+    i.e. class ScoreView(AreaFiltered, BaseApiView):
+    """
+
+    # Force get_filtered_model instead of model.objects.all()
+    use_filtered_model = True
+
+    def get_filtered_model(self, request):
+        """
+        Return score objects that you may see
+        """
+        # Automagically filtered using lizard-security
+        available_areas = Area.objects.all()
+        return self.model_class.objects.filter(area__in=available_areas)
+
+
+class ScoreView(AreaFiltered, BaseApiView):
     """
     Show organisations for selection and edit
     """
@@ -42,6 +64,7 @@ class ScoreView(BaseApiView):
         'measuring_rod':'measuring_rod__description',
         'area': 'area__name'
     }
+
     def get_object_for_api(self,
                            score,
                            flat=True,
@@ -78,9 +101,8 @@ class ScoreView(BaseApiView):
         return output_dict
 
 
-class SteeringParameterPredefinedGraphView(BaseApiView):
+class SteeringParameterPredefinedGraphView(AreaFiltered, BaseApiView):
     """
-        Show organisations for selection and edit
     """
     model_class = SteeringParameterPredefinedGraph
     name_field = 'name'
@@ -136,9 +158,8 @@ class SteeringParameterPredefinedGraphView(BaseApiView):
         return output
 
 
-class SteeringParameterFreeView(BaseApiView):
+class SteeringParameterFreeView(AreaFiltered, BaseApiView):
     """
-        Show organisations for selection and edit
     """
     model_class = SteeringParameterFree
     name_field = 'name'
@@ -192,6 +213,42 @@ class SteeringParameterFreeView(BaseApiView):
         return output
 
 
+class WaterBodyView(AreaFiltered, BaseApiView):
+    """
+    Water bodies that you can see
+    """
+    model_class = WaterBody
+    name_field = 'area__name'
+
+    valid_field=None
+
+    field_mapping = {
+        'id': 'id',
+        'name': 'area__name',
+    }
+
+    read_only_fields = [
+    ]
+
+    def get_object_for_api(self,
+                           obj,
+                           flat=True,
+                           size=BaseApiView.COMPLETE,
+                           include_geom=False):
+        """
+        Create dict from object.
+        """
+        if size == self.ID_NAME:
+            output = {
+                'id': obj.id,
+                'name': obj.area.name,
+            }
+        else:
+            output = {
+                'id': obj.id,
+                'name': obj.area.name,
+            }
+        return output
 
 
 class OrganizationView(BaseApiView):
@@ -432,6 +489,7 @@ class MeasureView(BaseApiView):
                 linked_records,
             )
 
+
 class SteerParameterOverview(View):
 
     def get(self, request):
@@ -456,16 +514,11 @@ class SteerParameterOverview(View):
                 item['st_'+ steerp.predefined_graph.name] = 'X'
 
             for param in area.steeringparameterfree_set.values('parameter_code'):
-                item['stf_' + param['parameter_code']]  = 'X'
+                item['stf_' + param['parameter_code'].replace('.', '_')]  = 'X'
 
             data.append(item)
 
         return {'data': data, 'count': areas.count()}
-
-
-
-
-
 
 
 class SteerParameterGraphs(View):
@@ -601,15 +654,7 @@ class SteerParameterGraphs(View):
         return graphs
 
 
-
-
-
-
-
-
-
-
-class EsfPattern(BaseApiView):
+class EsfPatternView(BaseApiView):
 
 
     model_class = EsfPattern
@@ -623,8 +668,13 @@ class EsfPattern(BaseApiView):
         'pattern': 'pattern',
         'watertype_group': 'watertype_group__code',
         'data_set': 'data_set',
-        'read_only': 'data_set'
+        'read_only': 'data_set'  # Huh??
     }
+
+    read_only_fields = [
+        'is_KRW_measure', # No idea why this parameter is passed
+        'is_indicator', # No idea why this parameter is passed
+        ]
 
 
     def get_object_for_api(self,
@@ -682,11 +732,13 @@ class EsfPattern(BaseApiView):
         """
             overwrite of base api to append code
         """
-        success, touched_objects =  super(EsfPattern, self).create_objects(data)
+        success, touched_objects =  super(EsfPatternView, self).create_objects(data)
 
+        # Bound a "random" dataset to the object.
         for object in touched_objects:
             if len(request.allowed_data_set_ids) > 0:
-                object.data_set = DataSet.objects.get(list(request.allowed_data_set_ids)[0])
+                object.data_set = DataSet.objects.get(
+                    pk=list(request.allowed_data_set_ids)[0])
                 object.save()
 
         return success, touched_objects

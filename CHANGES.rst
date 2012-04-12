@@ -2,10 +2,67 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.27 (unreleased)
+1.35 (unreleased)
 -----------------
 
 - Nothing changed yet.
+
+
+1.34 (2012-04-11)
+-----------------
+
+- Fixed error displaying steering parameter overview
+
+
+1.33 (2012-04-10)
+-----------------
+
+- When adding a measure, you can now also choose deel aan-afvoergebieden.
+
+
+1.32 (2012-04-05)
+-----------------
+
+- Remove restriction of only analists allowed to view steering parameters
+
+
+1.31 (2012-04-05)
+-----------------
+
+- Added API view for WaterBody
+
+- The maatregelen_form now uses the WaterBody API view for choosing
+  krw waterbody. Before the krw waterbody combobox had Areas from
+  lizard-area and that would lead to a crash.
+
+
+1.30 (2012-04-05)
+-----------------
+
+- Fixed bug that could crash while saving an EsfPattern.
+
+- Renamed view EsfPattern to EsfPatternView.
+
+
+1.29 (2012-04-05)
+-----------------
+
+- Modified steeringparameter form to include examples and clearer instructions
+
+
+1.28 (2012-04-04)
+-----------------
+
+- Put get_filtered_model in AreaFiltered. Applied AreaFiltered to
+  ScoreView, SteeringParameterPredefinedGraph and
+  SteeringParameterFreeView.
+
+
+1.27 (2012-04-04)
+-----------------
+
+- Added get_filtered_model to api ScoreView, so you only get objects
+  that you can see.
 
 
 1.26 (2012-04-02)
