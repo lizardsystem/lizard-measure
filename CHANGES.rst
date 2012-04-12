@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.34 (unreleased)
+1.35 (unreleased)
 -----------------
 
 - code behind waterbodies (pp issue 73)
@@ -13,6 +13,12 @@ Changelog of lizard-measure
 
 - improvements for esf pattern editor (solving issues 229 en 230)
 
+
+
+1.34 (2012-04-11)
+-----------------
+
+- Fixed error displaying steering parameter overview
 
 
 1.33 (2012-04-10)
