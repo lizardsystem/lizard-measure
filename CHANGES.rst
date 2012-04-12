@@ -5,7 +5,14 @@ Changelog of lizard-measure
 1.34 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- code behind waterbodies (pp issue 73)
+
+- focus added to measure table (pp issue 168)
+
+- bug fix for saving related esf's for measure (pp issue 187)
+
+- improvements for esf pattern editor (solving issues 229 en 230)
+
 
 
 1.33 (2012-04-10)

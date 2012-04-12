@@ -19,6 +19,9 @@
             KRW maatregel
         </td>
         <td>
+            Focus maatregel
+        </td>
+        <td>
             Initiatiefnemer
         </td>
         <td>
@@ -89,6 +92,12 @@
             {% endif %}
         </td>
         <td>
+            {% if measure.is_indicator %}
+                Ja
+            {% else %}
+                Nee
+            {% endif %}
+        </td>        <td>
             {{ measure.initiator }}
         </td>
         <td>

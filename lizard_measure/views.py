@@ -34,6 +34,7 @@ from lizard_measure.models import SteeringParameterPredefinedGraph
 from lizard_measure.models import PredefinedGraphSelection
 from lizard_measure.models import WatertypeGroup
 from lizard_measure.models import EsfPattern
+from lizard_security.models import DataSet
 
 from lizard_area.models import Area
 
@@ -628,6 +629,14 @@ def esfpattern_detailedit_portal(request):
 
     if request.user.is_authenticated():
 
+        data_sets = [{'id': r.id, 'name': str(r)} for r in DataSet.objects.filter(
+            pk__in=list(request.allowed_data_set_ids))]
+
+        if request.user.is_superuser:
+            data_sets = [{'id': r.id, 'name': str(r)} for r in DataSet.objects.all()]
+
+            data_sets.append({'id':None, 'name': 'landelijk'})
+
         t = get_template('portals/esfpattern_form.js')
         c = RequestContext(request, {
             'pattern': pattern,
@@ -638,6 +647,8 @@ def esfpattern_detailedit_portal(request):
             'watertype_group': json.dumps(
                 [{'id': r.id, 'name': str(r)}
                 for r in WatertypeGroup.objects.all()]
+            ),
+            'data_sets': json.dumps(data_sets
             ),
             })
 
