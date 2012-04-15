@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.35 (unreleased)
+1.35 (2012-04-15)
 -----------------
 
 - code behind waterbodies (pp issue 73)
