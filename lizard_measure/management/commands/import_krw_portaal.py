@@ -54,7 +54,9 @@ from lizard_measure.models import (
     WaterBody,
 )
 
-logger = logging.getLogger(__name__) 
+from lizard_measure.management.commands.import_krw_portaal_scores import import_scores
+
+logger = logging.getLogger(__name__)
 
 
 MSM_DESCRIPTION_IMPORT = 'Import KRW portaal'
@@ -168,7 +170,7 @@ def _dates_from_xml(description):
             return date, None
         elif prepo == 'voor':
             return None, Date
-         
+
     start_year, end_year = [int(y) for y in description.split('-')]
     start_date = datetime.date(year=start_year, month=1, day=1)
     end_date = datetime.date(year=end_year, month=1, day=1)
@@ -438,56 +440,6 @@ def import_measuring_rods(filename):
             mr.save()
 
 
-def import_scores(filename):
-    for rec in _records(filename):
-
-        # Only import if MeasuringRod is imported
-        if not MeasuringRod.objects.filter(
-            measuring_rod_id=rec['maatlat'],
-        ).exists():
-            continue
-
-        # Try to get Area
-        area_ident = rec['owmident'].strip()
-        area = Area.objects.get(ident=area_ident)
-
-        measuring_rod = MeasuringRod.objects.get(
-            measuring_rod_id=rec['maatlat'],
-        )
-        mep = _to_float_or_none(rec['mep'])
-        gep = _to_float_or_none(rec['gep'])
-        limit_bad_insufficient = _to_float_or_none(rec['ontoereikend'])
-        limit_insufficient_moderate = _to_float_or_none(rec['matig'])
-
-        ascending = _ascending_or_none(
-            limit_bad_insufficient,
-            limit_insufficient_moderate,
-        )
-
-        target_2015 = _to_float_or_none(rec['doel2015'])
-        target_2027 = _to_float_or_none(rec['doel2027'])
-
-        #  Note that I assume that area and measuring_rod together
-        #  uniquely define the score.
-        score, score_created = _get_or_create(
-            model=Score,
-            get_kwargs={
-                'measuring_rod': measuring_rod,
-                'area_ident': area_ident,
-            },
-            extra_kwargs={
-                'area': area,
-                'mep': mep,
-                'gep': gep,
-                'limit_insufficient_moderate': limit_insufficient_moderate,
-                'limit_bad_insufficient': limit_bad_insufficient,
-                'ascending': ascending,
-                'target_2015': target_2015,
-                'target_2027': target_2027,
-            },
-        )
-
-
 def import_measures(filename):
     for rec in _records(filename):
 
@@ -630,7 +582,7 @@ def update_measures(filename):
 
     amount_of_updates = 0
     for rec in _records(filename):
-        
+
         corresponding_measure = original_measures[rec['matident']]
 
         # Specific fields
@@ -685,7 +637,7 @@ def update_measures(filename):
             measure_status_moment.status=measure_status
             measure_status_moment.planning_date=measure_status_date
             measure_status_moment.save()
-        
+
         amount_of_updates += 1
 
     logger.info(
@@ -693,7 +645,7 @@ def update_measures(filename):
         amount_of_updates,
         len(original_measures),
     )
-        
+
 
 class Command(BaseCommand):
     args = ''
@@ -786,10 +738,10 @@ class Command(BaseCommand):
         import_measures(os.path.join(import_path, 'maatregelen.xml'))
 
     def _update(self, import_path):
-        
+
         # Update measures
         update_measures(os.path.join(import_path, 'maatregelen_update.xml'))
-        
+
 
 
     @transaction.commit_on_success
@@ -804,7 +756,7 @@ class Command(BaseCommand):
         if options.get('reset') and options.get('update'):
             print 'Cannot reset and update at the same time.'
             return None
-   
+
         if options.get('reset'):
             _clear_all()
 

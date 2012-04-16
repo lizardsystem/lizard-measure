@@ -322,8 +322,8 @@ class Score(models.Model):
         help_text=_('True if higher is better'),
     )
 
-    target_2015 = models.FloatField(null=True, blank=True)
-    target_2027 = models.FloatField(null=True, blank=True)
+    target_2015 = models.CharField(max_length=40, null=True, blank=True)
+    target_2027 = models.CharField(max_length=40, null=True, blank=True)
 
     def __unicode__(self):
         if self.area is None:

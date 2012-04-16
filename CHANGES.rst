@@ -2,11 +2,25 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.36 (unreleased)
+1.37 (unreleased)
 -----------------
 
-- suitable measures (geschikte maatregelen) returns list of measure typse instead of measures (PP#133)
+- Nothing changed yet.
 
+
+1.36 (2012-04-16)
+-----------------
+
+- Added target_2015 and 2027 to ScoreAdmin.
+
+- Added import_krw_portaal_scores, splitted import_scores from
+  import_krw_portaal.
+
+- Changed Score.target_* from FloatField to CharField.
+
+- EKR graphs now use textual targets.
+
+- suitable measures (geschikte maatregelen) returns list of measure typse instead of measures (PP#133)
 
 
 1.35 (2012-04-15)
