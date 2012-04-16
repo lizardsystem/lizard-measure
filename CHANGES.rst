@@ -5,7 +5,14 @@ Changelog of lizard-measure
 1.36 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Added target_2015 and 2027 to ScoreAdmin.
+
+- Added import_krw_portaal_scores, splitted import_scores from
+  import_krw_portaal.
+
+- Changed Score.target_* from FloatField to CharField.
+
+- EKR graphs now use textual targets.
 
 
 1.35 (2012-04-15)

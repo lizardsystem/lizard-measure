@@ -860,13 +860,16 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
             for graph_item_index, graph_item in enumerate(graph_items):
                 # TODO: make more efficient; score is retrieved twice
                 # in this function.
+
                 score = Score.from_graph_item(graph_item)
-                a, b, c, d = score.borders
+                #print 'score: %s' % score
+                #print 'doel scores: %s' % str(score.targets)
+                #a, b, c, d = score.borders
                 goal = score.targets[index]
                 if goal is not None:
                     axes_goal.broken_barh(
                         [(-0.5, 1)], (graph_item_index - 0.4, 0.8),
-                        facecolors=value_to_html_color(goal),
+                        facecolors=comment_to_html_color(goal),
                         edgecolors='grey')
                 # # 0 or 1 items
                 # goals = graph_item.goals.filter(timestamp=goal_timestamp)
