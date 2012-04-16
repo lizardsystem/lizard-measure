@@ -5,7 +5,8 @@ Changelog of lizard-measure
 1.36 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- suitable measures (geschikte maatregelen) returns list of measure typse instead of measures (PP#133)
+
 
 
 1.35 (2012-04-15)
