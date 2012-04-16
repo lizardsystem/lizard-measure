@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.36 (unreleased)
+1.36 (2012-04-16)
 -----------------
 
 - Added target_2015 and 2027 to ScoreAdmin.
