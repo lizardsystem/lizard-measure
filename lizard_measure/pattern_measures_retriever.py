@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 class PatternMeasuresRetriever(object):
-    """Defines an interface to retrieve the candidate measures for an area.
+    """Defines an interface to retrieve the candidate esf patterns.
 
     This class also implements the interface.
 
@@ -34,7 +34,7 @@ class PatternMeasuresRetriever(object):
 
         """
         watertype_group = self.retrieve_watertype_group(area)
-        return self.retrieve_from_database(watertype_group, area.water_manager)
+        return self.retrieve_esf_patterns(watertype_group, area.data_set.name)
 
     def retrieve_watertype_group(self, area):
         """Return the water type group of the given area.
@@ -54,13 +54,6 @@ class PatternMeasuresRetriever(object):
         if watertype_group is None:
             watertype_group = WatertypeGroups.get_default()
         return watertype_group
-
-    def retrieve_from_database(self, watertype_group, water_manager):
-        pattern_measures = {}
-        esf_patterns = self.retrieve_esf_patterns(watertype_group, water_manager)
-        for esf_pattern in esf_patterns:
-            pattern_measures[esf_pattern] = esf_pattern.measures
-        return pattern_measures
 
     def retrieve_esf_patterns(self, watertype_group, water_manager):
         """Return the ESF patterns of the specified parameters."""

@@ -191,11 +191,11 @@ def suited_measures(request, area_ident,
                     template='lizard_measure/suited_measures.html'):
     # for testing purposes, we retrieve all measures
     area = get_object_or_404(Area, ident=area_ident)
-    suitable_measures = get_suitable_measures(area)
-    logger.debug("found %d suitable measures", len(suitable_measures))
+    suitable_measure_types = get_suitable_measures(area)
+    logger.debug("found %d suitable measures", len(suitable_measure_types))
     return render_to_response(
         template,
-        {'suitable_measures': suitable_measures},
+        {'suitable_measure_types': suitable_measure_types},
         context_instance=RequestContext(request))
 
 
