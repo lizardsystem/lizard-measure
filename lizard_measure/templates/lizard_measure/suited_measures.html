@@ -1,7 +1,7 @@
 {# info on suited KRW measures for a specific waterbody #}
 
 <div id="textual" class='lizard'>
-  <h2>Groslijst geschikte maatregelen</h2>
+  <h2>Geschikte maatregeltypes</h2>
   <table class="generic-table">
     <thead>
       <tr>
@@ -9,9 +9,9 @@
       </tr>
     </thead>
     <tbody>
-      {% for info in suitable_measures %}
+      {% for info in suitable_measure_types %}
       <tr>
-        <td>{{info.measure.ident}}</td><td>{{info.measure.title}}</td><td>{{info.is_country_wide}}</td>
+        <td>{{info.code}}</td><td>{{info.name}}</td><td>{{info.matches}}</td>
       </tr>
       {% endfor %}
     </tbody>

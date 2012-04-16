@@ -14,6 +14,8 @@ Changelog of lizard-measure
 
 - EKR graphs now use textual targets.
 
+- suitable measures (geschikte maatregelen) returns list of measure typse instead of measures (PP#133)
+
 
 1.35 (2012-04-15)
 -----------------
