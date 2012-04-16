@@ -1141,6 +1141,8 @@ class Measure(models.Model):
     )
 
     responsible_department = models.CharField(
+        null=True,
+        blank=True,
         max_length=256,
         verbose_name='Verantwoordelijke afdeling',
         help_text='Verantwoordelijke afdeling binnen initiatiefnemer',
