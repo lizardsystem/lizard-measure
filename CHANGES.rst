@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.38 (unreleased)
+1.38 (2012-04-17)
 -----------------
 
 - Removed import scores from import_krw_portaal: run
