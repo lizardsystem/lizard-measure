@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.37 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Changed model to prevent saving errors.
 
 
 1.36 (2012-04-16)
