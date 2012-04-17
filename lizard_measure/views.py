@@ -187,7 +187,9 @@ def krw_waterbody_measures(request, area_ident,
     result_measures = []
     for p in parent_measures:
         result_measures.append(p)
-        result_measures.extend(p.measure_set.all())
+        result_measures.extend(p.measure_set.order_by(
+            'title',
+        ).all())
 
     return render_to_response(
         template,
