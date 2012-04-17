@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.42 (unreleased)
+1.42 (2012-04-17)
 -----------------
 
 - Change order of submeasures as well.
