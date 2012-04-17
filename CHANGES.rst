@@ -2,10 +2,19 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.39 (unreleased)
+1.40 (unreleased)
 -----------------
 
 - Added comments.
+
+- Add class to widen measure summary table
+
+
+1.39 (2012-04-17)
+-----------------
+
+- Adds a missing database migration step to support a change to one of the
+  Measure fields.
 
 
 1.38 (2012-04-17)
