@@ -320,7 +320,7 @@ class OrganizationView(BaseApiView):
 
 class MeasureView(BaseApiView):
     """
-    Area configuration.
+
     """
     model_class = Measure
     name_field = 'title'
@@ -484,6 +484,9 @@ class MeasureView(BaseApiView):
         if model_field.name == 'funding_organizations':
             record.set_fundingorganizations(linked_records)
         elif model_field.name == 'status_moments':
+            # Fields: realisation_date, planning_date, id, name.
+            # dates in YYYY-MM-DD format.
+            # id is StatusMoment id.
             record.set_statusmoments(linked_records)
         else:
             #areas, waterbodies, category

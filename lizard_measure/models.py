@@ -1246,6 +1246,10 @@ class Measure(models.Model):
     def set_statusmoments(self, statusmoments):
         """
         updates the many2many relation with the MeasureStatusMoments
+
+        constraints by code: each status can occur only once for a
+        measure.
+
         input:
             id = StatusMoment.id
             name = StatusMoment.name
@@ -1270,6 +1274,8 @@ class Measure(models.Model):
                     if first:
                         first = False
                     else:
+                        logger.warning(
+                            'Multiple same statuses in database: %s' % str(msm))
                         msm.delete()
 
                 msm, newDimim = self.measurestatusmoment_set.get_or_create(
