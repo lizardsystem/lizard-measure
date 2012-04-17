@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.41 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Change 'Titel' into 'Naam'
 
 
 1.40 (2012-04-17)
