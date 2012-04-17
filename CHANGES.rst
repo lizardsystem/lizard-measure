@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.39 (unreleased)
+1.39 (2012-04-17)
 -----------------
 
 - Adds a missing database migration step to support a change to one of the
