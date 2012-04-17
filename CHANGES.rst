@@ -5,7 +5,8 @@ Changelog of lizard-measure
 1.39 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Adds a missing database migration step to support a change to one of the
+  Measure fields.
 
 
 1.38 (2012-04-17)
