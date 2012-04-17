@@ -5,7 +5,8 @@ Changelog of lizard-measure
 1.38 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Removed import scores from import_krw_portaal: run
+  import_krw_portaal_scores separately to update the scores.
 
 
 1.37 (2012-04-17)

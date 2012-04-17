@@ -721,18 +721,18 @@ class Command(BaseCommand):
             os.path.join(import_path, 'maatlatten_corrected.xml'),
         )
 
-        # Import scores
-        Score.objects.all().delete()
-        score_sources = [
-            'doelenhhnk.xml',
-            'doelenrijnland.xml',
-            'doelenwaternet.xml',
-        ]
+        # Import scores: run import_krw_portaal_scores
+        # Score.objects.all().delete()
+        # score_sources = [
+        #     'doelenhhnk.xml',
+        #     'doelenrijnland.xml',
+        #     'doelenwaternet.xml',
+        # ]
 
-        for xml_file in score_sources:
-            import_scores(
-                filename=os.path.join(import_path, xml_file),
-            )
+        # for xml_file in score_sources:
+        #     import_scores(
+        #         filename=os.path.join(import_path, xml_file),
+        #     )
 
         # Import measures
         import_measures(os.path.join(import_path, 'maatregelen.xml'))
