@@ -5,7 +5,17 @@ Changelog of lizard-measure
 1.40 (unreleased)
 -----------------
 
-- Add class to widen measure summary table
+- Add class to widen measure summary table Pp#146
+- Implement method to get latest realised status for measure
+- krw measure summary changes:
+    - Fix status field
+    - Remove initiator
+    - Rename headings
+    - Indent sub-measures
+    - Change order of measures to put submeasures directly under parents
+    - Replace 'no' by '-' for boolean fields
+
+- Remove colum
 
 
 1.39 (2012-04-17)

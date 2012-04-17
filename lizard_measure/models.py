@@ -1658,7 +1658,21 @@ class Measure(models.Model):
                 output += '(-)'
             output += ', '
         return output
-
+    
+    @property
+    def latest_realised_status(self):
+        """
+        Return latest realised status
+        """
+        try:
+            return MeasureStatusMoment.objects.filter(
+                measure=self,
+                realisation_date__isnull=False,
+            ).latest(
+                field_name='realisation_date'
+            ).status
+        except MeasureStatusMoment.DoesNotExist:
+            return None
 
 class EsfPattern(models.Model):
 

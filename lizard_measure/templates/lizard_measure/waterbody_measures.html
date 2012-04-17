@@ -4,6 +4,9 @@
   <table>
     <tr>
         <td>
+            Deel
+        </td>
+        <td>
             Titel
         </td>
         <td>
@@ -13,16 +16,10 @@
             Status
         </td>
         <td>
-            Deelmaatregel
+            Focus
         </td>
         <td>
-            KRW maatregel
-        </td>
-        <td>
-            Focus maatregel
-        </td>
-        <td>
-            Initiatiefnemer
+            KRW
         </td>
         <td>
             Bron
@@ -31,6 +28,9 @@
     {% for measure in main_measures %}
     <tr>
         <td>
+          {{ measure.parent|yesno:"Ja,-,-" }}
+        </td>
+        <td{% if measure.parent %} class="padleft"{% endif %}>
             <a href="javascript:Ext.getCmp('portalWindow').linkToPopup(
               'maatregel {{ measure.title }}',
               '/measure/measure/{{ measure.id }}/',
@@ -75,30 +75,13 @@
             {{ measure.measure_type }}
         </td>
         <td>
-            {% if measure.status_moment %} {{ measure.status_moment.status }}{% endif %}
+          {{ measure.latest_realised_status|default:"-" }}
         </td>
         <td>
-            {% if measure.parent %}
-            Ja
-            {% else %}
-            Nee
-            {% endif %}
-        </td>
+            {{ measure.is_indicator|yesno:"Ja,-,-" }}
+        </td>        
         <td>
-            {% if measure.is_KRW_measure %}
-            Ja
-            {% else %}
-            Nee
-            {% endif %}
-        </td>
-        <td>
-            {% if measure.is_indicator %}
-                Ja
-            {% else %}
-                Nee
-            {% endif %}
-        </td>        <td>
-            {{ measure.initiator }}
+            {{ measure.is_indicator|yesno:"Ja,-,-" }}
         </td>
         <td>
             {{ measure.get_import_source_display }}
