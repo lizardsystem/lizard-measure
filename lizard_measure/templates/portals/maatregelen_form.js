@@ -456,7 +456,7 @@
             }]
         },
         {
-            fieldLabel: 'Geometrie (EPSG:900913)',
+            fieldLabel: 'Geometrie (EPSG:4362)',
             name: 'geom',
             grow: true,
             anchor: '100%',
