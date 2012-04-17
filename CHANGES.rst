@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.39 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Add class to widen measure summary table
 
 
 1.38 (2012-04-17)
