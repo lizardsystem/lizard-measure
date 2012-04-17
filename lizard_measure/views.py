@@ -293,6 +293,7 @@ def krw_waterbody_ekr_scores(
             'title': str(graph_item),
             'score': score,
             'data': []}
+
         # We assume there is only one.
         len_ts_values = len(ts.values())
         if len_ts_values != 1:

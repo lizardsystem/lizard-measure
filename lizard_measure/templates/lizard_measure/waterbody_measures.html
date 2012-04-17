@@ -31,6 +31,18 @@
           {{ measure.parent|yesno:"Ja,-,-" }}
         </td>
         <td{% if measure.parent %} class="padleft"{% endif %}>
+            {% comment %}
+            This JS call below ends in
+            lizard.window.Screen.linkToPopup, with parameters:
+            title,url,params,window_options={},
+            add_active_object_to_request=true,renderer='html',
+            modal=false,reloadme=false
+
+            save, plus, search: type save, search, plus with given
+            options. Options are also calls to linkToPopup??
+
+            the reloadme option does not work??
+            {% endcomment %}
             <a href="javascript:Ext.getCmp('portalWindow').linkToPopup(
               'maatregel {{ measure.title }}',
               '/measure/measure/{{ measure.id }}/',

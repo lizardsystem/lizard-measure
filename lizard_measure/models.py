@@ -349,56 +349,75 @@ class Score(models.Model):
 
     @property
     def borders(self):
+        """OLD, TO BE DELETED"""
         return (self.limit_bad_insufficient,
                 self.limit_insufficient_moderate,
                 self.gep,
                 self.mep)
 
-    def _zone_from_limits(self, value, borders):
-        """
-        Return zero based zone index.
+    # def _zone_from_limits(self, value, borders):
+    #     """
+    #     Return zero based zone index.
 
-        Value and borders assumed to be between 0 and 1. Return lowest
-        value if borders coincide.
-        """
-        # Determine in which zone
-        lower_limits = [0] + list(borders)
-        upper_limits = list(borders) + [1.001]  # Include values of 1!
-        result = [l <= value < u for l, u in zip(lower_limits, upper_limits)]
-        try:
-            return result.index(True)
-        except ValueError:
-            # No True in list
-            return None
+    #     Value and borders assumed to be between 0 and 1. Return lowest
+    #     value if borders coincide.
+    #     """
+    #     # Determine in which zone
+    #     lower_limits = [0] + list(borders)
+    #     upper_limits = list(borders) + [1.001]  # Include values of 1!
+    #     result = [l <= value < u for l, u in zip(lower_limits, upper_limits)]
+    #     try:
+    #         return result.index(True)
+    #     except ValueError:
+    #         # No True in list
+    #         return None
 
     def judgement(self, value, target):
         """
         Return judgment for this score for value.
 
-        Assumed is 5 zones between the four borders. Judgement is done
-        as follows:
+        value = alphanumeric: slecht, ontoereikend, ...
+        target = alphanumeric: slecht, ontoereikend, ...
 
-        Value in same zone as target: Goal reached (1)
-        Value in higher zone than target: Goal more than achieved (2)
-        Value in lower zone than target: Goal not reached (-1)
-        Value more than one zone lower than target: Goal still not reached
+        Value is same as target: Goal reached (1)
+        Value is higher than target: Goal more than achieved (2)
+        Value is lower than target: Goal not reached (-1)
+        Value is more than one zone lower than target: Goal still not reached (-2)
         (-2)
 
-        Where it this used?
+        Used in lizard-layers when calculating AreaValues for EKR-DOELSCORE
+
+        See also GS060
         """
-        target_zone = self._zone_from_limits(
-            value=target,
-            borders=self.borders
-        )
-        value_zone = self._zone_from_limits(
-            value=value,
-            borders=self.borders,
-        )
+        def numeric(v):
+            """Easy to calculate number of steps difference
+            """
+            return {'slecht': 1,
+                    'ontoereikend': 2,
+                    'matig': 3,
+                    'goed': 4,
+                    'zeer goed': 5}.get(v, None)
 
-        if value_zone is None or target_zone is None:
+        # target_zone = self._zone_from_limits(
+        #     value=target,
+        #     borders=self.borders
+        # )
+        # value_zone = self._zone_from_limits(
+        #     value=value,
+        #     borders=self.borders,
+        # )
+
+        # if value_zone is None or target_zone is None:
+        #     return None
+
+        #zonedif = value_zone - target_zone
+        try:
+            zonedif = numeric(target) - numeric(value)
+        except:
+            logger.debug(
+                'target or value not in slecht, ontoereikend, ...:target, value = "%s", "%s"' % (
+                    target, value))
             return None
-
-        zonedif = value_zone - target_zone
 
         if zonedif > 0:
             return 2
@@ -1246,6 +1265,10 @@ class Measure(models.Model):
     def set_statusmoments(self, statusmoments):
         """
         updates the many2many relation with the MeasureStatusMoments
+
+        constraints by code: each status can occur only once for a
+        measure.
+
         input:
             id = StatusMoment.id
             name = StatusMoment.name
@@ -1270,6 +1293,8 @@ class Measure(models.Model):
                     if first:
                         first = False
                     else:
+                        logger.warning(
+                            'Multiple same statuses in database: %s' % str(msm))
                         msm.delete()
 
                 msm, newDimim = self.measurestatusmoment_set.get_or_create(

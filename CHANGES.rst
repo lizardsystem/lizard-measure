@@ -15,7 +15,8 @@ Changelog of lizard-measure
     - Change order of measures to put submeasures directly under parents
     - Replace 'no' by '-' for boolean fields
 
-- Remove colum
+- Added comments.
+- Implemented new experimental Score.judgement function based on comment.
 
 
 1.39 (2012-04-17)

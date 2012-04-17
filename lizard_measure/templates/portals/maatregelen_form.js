@@ -522,8 +522,8 @@
         //formBind: true, //only enabled once the form is valid
         //disabled: true,
         handler: function() {
-            var form = this.up('form').getForm();
-            var form_window = this.up('window')
+            var form = this.up('form').getForm();  // View-only form??
+            var form_window = this.up('window');  // Edit form
             if (form.isValid()) {
                 /* todo: de waarden zelf gaan rangschikken en verzenden */
                 var values = form.getValues()
@@ -570,9 +570,13 @@
                                 method: 'POST',
                                 success: function(xhr) {
                                     Ext.Msg.alert("Opgeslagen", "Opslaan gelukt");
+                                    var parent_window = form_window.up('window');
                                     form_window.close();
                                     form_window.setLoading(false);
                                     if (form_window.finish_edit_function) {
+                                        // Will never go into this if the
+                                        // form is called using
+                                        // Screen.linkToPopup.
                                         form_window.finish_edit_function({% if measure %}'update'{% else %}'create'{% endif%});
                                     }
                                 },
