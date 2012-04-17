@@ -9,6 +9,8 @@ Changelog of lizard-measure
 
 - Add class to widen measure summary table
 
+- Implemented new experimental Score.judgement function based on comment.
+
 
 1.39 (2012-04-17)
 -----------------

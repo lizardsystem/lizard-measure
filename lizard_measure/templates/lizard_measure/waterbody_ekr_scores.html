@@ -9,7 +9,7 @@
         <th colspan="3">Instellingen</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody title="{% if score_table.score %}Score beschikbaar{% else %}Geen Score beschikbaar{% endif %}">
       <tr>
         <td>Doel 2015</td>
         <td>{{ score_table.score.target_2015|default_if_none:"-" }}</td>
@@ -37,4 +37,3 @@
   <br />
   {% endfor %}
 </div>
-
