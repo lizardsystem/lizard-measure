@@ -2,10 +2,51 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.35 (unreleased)
+1.39 (unreleased)
 -----------------
 
 - Nothing changed yet.
+
+
+1.38 (2012-04-17)
+-----------------
+
+- Removed import scores from import_krw_portaal: run
+  import_krw_portaal_scores separately to update the scores.
+
+
+1.37 (2012-04-17)
+-----------------
+
+- Changed model to prevent saving errors.
+
+
+1.36 (2012-04-16)
+-----------------
+
+- Added target_2015 and 2027 to ScoreAdmin.
+
+- Added import_krw_portaal_scores, splitted import_scores from
+  import_krw_portaal.
+
+- Changed Score.target_* from FloatField to CharField.
+
+- EKR graphs now use textual targets.
+
+- suitable measures (geschikte maatregelen) returns list of measure typse instead of measures (PP#133)
+
+
+1.35 (2012-04-15)
+-----------------
+
+- code behind waterbodies (pp issue 73)
+
+- focus added to measure table (pp issue 168)
+
+- bug fix for saving related esf's for measure (pp issue 187)
+
+- improvements for esf pattern editor (solving issues 229 en 230)
+
 
 
 1.34 (2012-04-11)

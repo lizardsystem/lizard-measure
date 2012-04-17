@@ -175,7 +175,7 @@ class WaterBody(models.Model):
         if self.area is None:
             return 'area_ident: %s (No geometry)' % self.area_ident
         else:
-            return u'%s' % self.area.name
+            return u'%s (%s)' % (self.area.name, self.area.ident)
 
 
 class MeasuringRodManager(models.Manager):
@@ -322,8 +322,8 @@ class Score(models.Model):
         help_text=_('True if higher is better'),
     )
 
-    target_2015 = models.FloatField(null=True, blank=True)
-    target_2027 = models.FloatField(null=True, blank=True)
+    target_2015 = models.CharField(max_length=40, null=True, blank=True)
+    target_2027 = models.CharField(max_length=40, null=True, blank=True)
 
     def __unicode__(self):
         if self.area is None:
@@ -1141,6 +1141,8 @@ class Measure(models.Model):
     )
 
     responsible_department = models.CharField(
+        null=True,
+        blank=True,
         max_length=256,
         verbose_name='Verantwoordelijke afdeling',
         help_text='Verantwoordelijke afdeling binnen initiatiefnemer',
@@ -1189,8 +1191,9 @@ class Measure(models.Model):
         help_text=('Wanneer een maatregel read-only is, is hij geimporteerd '
                    'en dient hij niet met de hand gewijzigd te worden'))
 
-    # Is this different from is_KRW_measure?
-    is_indicator = models.BooleanField(default=False)
+    #
+    is_indicator = models.BooleanField(default=False,
+        help_text='focus maatregel')
 
     data_set = models.ForeignKey(DataSet,
                                  null=True,
@@ -1337,13 +1340,12 @@ class Measure(models.Model):
             id = EsfLink.id
             and other fields of esflink
         """
+
         for esflink in esflinks:
 
             esf = self.esflink_set.get(
                 pk=esflink['id']
             )
-
-            print esflink
 
             esf.is_target_esf = esflink['is_target_esf']
             esf.positive = esflink['positive']
@@ -1363,6 +1365,7 @@ class Measure(models.Model):
             positive
             negative
         """
+
         output = []
 
         if auto_create_missing_states:

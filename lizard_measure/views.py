@@ -34,6 +34,7 @@ from lizard_measure.models import SteeringParameterPredefinedGraph
 from lizard_measure.models import PredefinedGraphSelection
 from lizard_measure.models import WatertypeGroup
 from lizard_measure.models import EsfPattern
+from lizard_security.models import DataSet
 
 from lizard_area.models import Area
 
@@ -190,11 +191,11 @@ def suited_measures(request, area_ident,
                     template='lizard_measure/suited_measures.html'):
     # for testing purposes, we retrieve all measures
     area = get_object_or_404(Area, ident=area_ident)
-    suitable_measures = get_suitable_measures(area)
-    logger.debug("found %d suitable measures", len(suitable_measures))
+    suitable_measure_types = get_suitable_measures(area)
+    logger.debug("found %d suitable measures", len(suitable_measure_types))
     return render_to_response(
         template,
-        {'suitable_measures': suitable_measures},
+        {'suitable_measure_types': suitable_measure_types},
         context_instance=RequestContext(request))
 
 
@@ -628,6 +629,14 @@ def esfpattern_detailedit_portal(request):
 
     if request.user.is_authenticated():
 
+        data_sets = [{'id': r.id, 'name': str(r)} for r in DataSet.objects.filter(
+            pk__in=list(request.allowed_data_set_ids))]
+
+        if request.user.is_superuser:
+            data_sets = [{'id': r.id, 'name': str(r)} for r in DataSet.objects.all()]
+
+            data_sets.append({'id':None, 'name': 'landelijk'})
+
         t = get_template('portals/esfpattern_form.js')
         c = RequestContext(request, {
             'pattern': pattern,
@@ -638,6 +647,8 @@ def esfpattern_detailedit_portal(request):
             'watertype_group': json.dumps(
                 [{'id': r.id, 'name': str(r)}
                 for r in WatertypeGroup.objects.all()]
+            ),
+            'data_sets': json.dumps(data_sets
             ),
             })
 
@@ -849,13 +860,16 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
             for graph_item_index, graph_item in enumerate(graph_items):
                 # TODO: make more efficient; score is retrieved twice
                 # in this function.
+
                 score = Score.from_graph_item(graph_item)
-                a, b, c, d = score.borders
+                #print 'score: %s' % score
+                #print 'doel scores: %s' % str(score.targets)
+                #a, b, c, d = score.borders
                 goal = score.targets[index]
                 if goal is not None:
                     axes_goal.broken_barh(
                         [(-0.5, 1)], (graph_item_index - 0.4, 0.8),
-                        facecolors=value_to_html_color(goal),
+                        facecolors=comment_to_html_color(goal),
                         edgecolors='grey')
                 # # 0 or 1 items
                 # goals = graph_item.goals.filter(timestamp=goal_timestamp)

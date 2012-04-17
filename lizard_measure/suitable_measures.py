@@ -30,6 +30,8 @@ class SuitableMeasureInfoFactory(object):
 class SuitableMeasures(object):
     """Implements the retrieval of the suitable measures of an area."""
 
+    matching_measure_types = []
+
     def __init__(self, suitable_measure_info_factory, pattern_measures_retriever,
         pattern_matcher):
         self.suitable_measure_info_factory = suitable_measure_info_factory
@@ -38,13 +40,40 @@ class SuitableMeasures(object):
 
     def get(self, area):
         """Return the list of suitable measures for the given area."""
-        suitable_measures = []
+        matching_measure_types = {}
+        matching_esf_patterns = []
         area_pattern = self._get_area_pattern(area)
-        measures_dict = self.pattern_measures_retriever.retrieve(area)
-        for esf_pattern, measures in measures_dict.items():
+        esf_patterns = self.pattern_measures_retriever.retrieve(area)
+        for esf_pattern in esf_patterns:
             if self.pattern_matcher.matches(area_pattern, esf_pattern.pattern):
-                suitable_measures += self.suitable_measure_info_factory.create(esf_pattern, measures)
-        return suitable_measures
+                for measure_type in esf_pattern.measure_types.all():
+                    if not measure_type.id in matching_measure_types:
+                        matching_measure_types[measure_type.id] = {
+                            'code': measure_type.code,
+                            'name': measure_type.description,
+                            'landelijk': 0,
+                            'regional': 0,
+                        }
+                        if esf_pattern.data_set is None:
+                            matching_measure_types[measure_type.id]['landelijk'] += 1
+                        else:
+                            matching_measure_types[measure_type.id]['regional'] += 1
+
+        #sort
+        matching_measure_types = sorted(matching_measure_types.values(), key=lambda k: k['code'])
+
+        result = []
+        for measure_type in matching_measure_types:
+            measure_type['matches'] = ''
+            if measure_type['landelijk'] > 0:
+                measure_type['matches'] += 'landelijk (%i) '% measure_type['landelijk']
+
+            if measure_type['regional'] > 0:
+                measure_type['matches'] += 'lokaal (%i)'% measure_type['regional']
+
+            result.append(measure_type)
+
+        return result
 
     def _get_area_pattern(self, area):
         """Return the string that specifies the critical ESFs of the given area."""
@@ -55,6 +84,7 @@ class SuitableMeasures(object):
                 result += 'X'
             else:
                 result += '-'
+
         return result
 
 

@@ -19,8 +19,7 @@
             flex:1,
             xtype: 'leditgrid',
             columnLines: true,
-
-
+            read_only_field: 'read_only',
             plugins: [
                 'applycontext'
             ],
@@ -95,7 +94,7 @@
                 {name: 'id', title: 'id', editable: false, visible: false, width: 30, type: 'number'},
                 {name: 'pattern', title: 'ESF patroon', editable: false, visible: true, width: 110, type: 'gridcombobox'},
                 {name: 'watertype_group', title: 'watertype groep', editable: false, visible: true, width: 110, type: 'gridcombobox'},
-                {name: 'landelijk', title: 'landelijk', editable: false, visible: true, width: 70, type: 'boolean'},
+                {name: 'data_set', title: 'data_set', editable: false, visible: true, width: 110, type: 'gridcombobox'},
                 {name: 'measure_types', title: 'maatregelen types', editable: false, visible: true, width:600, type: 'gridcombobox'},
                 {name: 'read_only', title: 'read_only', editable: false, visible: false, width: 70, type: 'boolean'}
            ]

@@ -464,6 +464,11 @@ class MeasureView(BaseApiView):
 
         return output
 
+    def update_one2many(self, record, key, linked_records):
+
+        if key == 'esflink_set':
+            record.set_esflinks(linked_records)
+
     def update_many2many(self, record, model_field, linked_records):
         """
         update specific part of manyToMany relations.
@@ -480,8 +485,6 @@ class MeasureView(BaseApiView):
             record.set_fundingorganizations(linked_records)
         elif model_field.name == 'status_moments':
             record.set_statusmoments(linked_records)
-        elif model_field.name == 'esflink_set':
-            record.set_esflinks(linked_records)
         else:
             #areas, waterbodies, category
             self.save_single_many2many_relation(record,
@@ -668,13 +671,23 @@ class EsfPatternView(BaseApiView):
         'pattern': 'pattern',
         'watertype_group': 'watertype_group__code',
         'data_set': 'data_set',
-        'read_only': 'data_set'  # Huh??
+        'read_only': 'data_set'  # for sort on read_only, use data_set (None == read_only)
     }
 
     read_only_fields = [
-        'is_KRW_measure', # No idea why this parameter is passed
-        'is_indicator', # No idea why this parameter is passed
+        'read_only',
         ]
+
+
+    def get_data_set_description(self, data_set):
+        """
+        return dictiopnary with id, name. for None, the label 'landelijk' is used
+
+        """
+        if data_set is None:
+            return {'id': None, 'name': 'landelijk'}
+        else:
+            return {'id': data_set.id, 'name': data_set.__unicode__()}
 
 
     def get_object_for_api(self,
@@ -683,8 +696,9 @@ class EsfPatternView(BaseApiView):
                            size=BaseApiView.COMPLETE,
                            include_geom=False):
         """
-            create object of measure
+            create object of pattern
         """
+        #todo: improve read_only, so superuser can also edit 'landelijke' records
 
         output = {}
 
@@ -699,7 +713,7 @@ class EsfPatternView(BaseApiView):
                 'id': pattern.id,
                 'pattern': pattern.pattern,
                 'watertype_group': self._get_related_object(pattern.watertype_group, flat),
-                'landelijk': pattern.data_set == None,
+                'data_set': self.get_data_set_description(pattern.data_set),
                 'read_only': pattern.data_set == None,
                 'measure_types': self._get_related_objects(pattern.measure_types, flat)
             }
@@ -718,8 +732,6 @@ class EsfPatternView(BaseApiView):
             another object
         """
 
-        #print 'save many2many'
-        #print linked_records
         if True:
             #measure types
             self.save_single_many2many_relation(
@@ -730,15 +742,12 @@ class EsfPatternView(BaseApiView):
 
     def create_objects(self, data, request):
         """
-            overwrite of base api to append code
+            overwrite of base api to modify data_set
         """
-        success, touched_objects =  super(EsfPatternView, self).create_objects(data)
+        for rec in data:
+            if rec['data_set'][0]['id'] == None:
+                del rec['data_set']
 
-        # Bound a "random" dataset to the object.
-        for object in touched_objects:
-            if len(request.allowed_data_set_ids) > 0:
-                object.data_set = DataSet.objects.get(
-                    pk=list(request.allowed_data_set_ids)[0])
-                object.save()
+        success, touched_objects =  super(EsfPatternView, self).create_objects(data)
 
         return success, touched_objects

@@ -91,9 +91,12 @@ class MeasureTypeAdmin(admin.ModelAdmin):
 
 
 class ScoreAdmin(admin.ModelAdmin):
+    list_filter = ['measuring_rod', 'area',]
     list_display = [
         'measuring_rod',
         'area',
+        'target_2015',
+        'target_2027',
         'mep',
         'gep',
         'limit_insufficient_moderate',

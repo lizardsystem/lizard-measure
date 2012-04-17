@@ -41,9 +41,11 @@
             name: 'pattern',
             width: 200,
             xtype: 'textfield',
-            allowBlank: false
+            allowBlank: false,
+            maxLength: 9,
+            regex: /[?\-X]+/,
+            maskRe: /([?\-X]+)$/
         },
-
         {
             fieldLabel: 'Watertype groep',
             name: 'watertype_group',
@@ -54,6 +56,21 @@
             store: {
                 fields: ['id', 'name'],
                 data: Ext.JSON.decode({% autoescape off %}'{{ watertype_group }}'{% endautoescape %})
+            },
+            multiSelect: false,
+            forceSelection: true,
+            allowBlank: false
+        },
+        {
+            fieldLabel: 'Voor gebieden in',
+            name: 'data_set',
+            displayField: 'name',
+            valueField: 'id',
+            width: 400,
+            xtype: 'combodict',
+            store: {
+                fields: ['id', 'name'],
+                data: Ext.JSON.decode({% autoescape off %}'{{ data_sets }}'{% endautoescape %})
             },
             multiSelect: false,
             forceSelection: true,
@@ -93,14 +110,6 @@
             if (form.isValid()) {
                 /* todo: de waarden zelf gaan rangschikken en verzenden */
                 var values = form.getValues()
-
-                if (!values['is_KRW_measure']) {
-                    values['is_KRW_measure'] = false
-                }
-                if (!values['is_indicator']) {
-                    values['is_indicator'] = false
-                }
-
 
                 Lizard.window.EditSummaryBox.show({
                     
