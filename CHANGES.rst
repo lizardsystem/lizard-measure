@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.37 (unreleased)
+1.37 (2012-04-17)
 -----------------
 
 - Changed model to prevent saving errors.
