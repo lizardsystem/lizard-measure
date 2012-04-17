@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.40 (unreleased)
+1.40 (2012-04-17)
 -----------------
 
 - Add class to widen measure summary table Pp#146
