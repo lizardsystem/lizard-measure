@@ -2,13 +2,38 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.40 (unreleased)
+1.43 (unreleased)
 -----------------
 
+- Nothing changed yet.
+
+
+1.42 (2012-04-17)
+-----------------
+
+- Change order of submeasures as well.
+
+
+1.41 (2012-04-17)
+-----------------
+
+- Change 'Titel' into 'Naam'
+
+
+1.40 (2012-04-17)
+-----------------
+
+- Add class to widen measure summary table Pp#146
+- Implement method to get latest realised status for measure
+- krw measure summary changes:
+    - Fix status field
+    - Remove initiator
+    - Rename headings
+    - Indent sub-measures
+    - Change order of measures to put submeasures directly under parents
+    - Replace 'no' by '-' for boolean fields
+
 - Added comments.
-
-- Add class to widen measure summary table
-
 - Implemented new experimental Score.judgement function based on comment.
 
 - Added dependencies on lizard-layers. We need lizard_layers.AreaValue
