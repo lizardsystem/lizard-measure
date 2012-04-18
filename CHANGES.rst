@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.43 (unreleased)
+1.43 (2012-04-18)
 -----------------
 
 - Added latest value/comment/timestamp to doelen-beheer.
