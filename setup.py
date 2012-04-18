@@ -22,6 +22,7 @@ install_requires = [
     'lizard-map >= 1.71',
     'lizard-ui',
     'lizard-security',
+    'lizard-layers >= 0.4.2',
     'iso8601',
     'lxml',
     'south',

@@ -11,6 +11,11 @@ Changelog of lizard-measure
 
 - Implemented new experimental Score.judgement function based on comment.
 
+- Added dependencies on lizard-layers. We need lizard_layers.AreaValue
+  for a Score view.
+
+- Added latest value/comment/timestamp to doelen-beheer.
+
 
 1.39 (2012-04-17)
 -----------------

@@ -191,6 +191,8 @@ class MeasuringRod(models.Model):
 
     This model must be synchronized with the Aquo domain table
     'KRWKwaliteitselement'.
+
+    Note: when using natural keys, "code" is sufficient.
     """
     objects = MeasuringRodManager()
 

@@ -12,6 +12,8 @@ from lizard_measure.models import PredefinedGraphSelection
 from lizard_measure.models import WaterBody
 from lizard_api.base import BaseApiView
 
+from lizard_layers.models import AreaValue
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -62,7 +64,7 @@ class ScoreView(AreaFiltered, BaseApiView):
         'target_2015': 'target_2015',
         'target_2027': 'target_2027',
         'measuring_rod':'measuring_rod__description',
-        'area': 'area__name'
+        'area': 'area__name',
     }
 
     def get_object_for_api(self,
@@ -90,9 +92,27 @@ class ScoreView(AreaFiltered, BaseApiView):
                     flat,
                     ),
                 'area': self._get_related_object(score.area, flat),
+                'latest_value': None,
+                'latest_comment': None,
+                'latest_timestamp': None,
                 }
+            # Try to add most recent values
+            try:
+                # print 'yeah values'
+                area_value = AreaValue.objects.get(
+                    area=score.area,
+                    value_type__parametertype__measuring_rod_code=score.measuring_rod.code)
+                output['latest_value'] = area_value.value
+                output['latest_comment'] = area_value.comment
+                output['latest_timestamp'] = area_value.timestamp
+            except AreaValue.DoesNotExist:
+                pass
+            except AreaValue.MultipleObjectsReturned:
+                logger.warning('Multiple AreaValues found area:%s measuring_rod_code:%s' % (
+                        score.area, score.measuring_rod.code))
         except:
             output = None
+
         return output
 
     def get(self, request):
