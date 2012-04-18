@@ -5,7 +5,10 @@ Changelog of lizard-measure
 1.43 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Added latest value/comment/timestamp to doelen-beheer.
+
+- Added dependencies on lizard-layers. We need lizard_layers.AreaValue
+  for a Score view.
 
 
 1.42 (2012-04-17)
@@ -34,12 +37,8 @@ Changelog of lizard-measure
     - Replace 'no' by '-' for boolean fields
 
 - Added comments.
+
 - Implemented new experimental Score.judgement function based on comment.
-
-- Added dependencies on lizard-layers. We need lizard_layers.AreaValue
-  for a Score view.
-
-- Added latest value/comment/timestamp to doelen-beheer.
 
 
 1.39 (2012-04-17)
