@@ -7,6 +7,9 @@ Changelog of lizard-measure
 
 - Renamed measure graph to "maatregel(en)".
 
+- Fixed inconsistencies between focus measures of
+  krw_waterbody_measures and measure graph.
+
 
 1.44 (2012-04-19)
 -----------------

@@ -175,11 +175,15 @@ def measure_detail(request, measure_id,
 def krw_waterbody_measures(request, area_ident,
                            template='lizard_measure/waterbody_measures.html'):
     area = get_object_or_404(Area, ident=area_ident)
-    # Obsolete: use MeasureCollections instead
-    # get measures without parent: main measures
-    related_measures = Measure.objects.filter(Q(waterbodies__area=area)|Q(areas=area)
+
+    # These must all occur in the list. Also related child measures
+    # whose parent are with a different area.
+    all_related_measures = Measure.objects.filter(Q(waterbodies__area=area)|Q(areas=area)
         ).distinct()
-    parent_measures = related_measures.filter(
+    all_related_measures_dict = dict([(m.id, m) for m in all_related_measures])
+
+    # get measures without parent: main measures
+    parent_measures = all_related_measures.filter(
         parent__isnull=True,
     ).order_by(
         'title',
@@ -187,9 +191,22 @@ def krw_waterbody_measures(request, area_ident,
     result_measures = []
     for p in parent_measures:
         result_measures.append(p)
-        result_measures.extend(p.measure_set.order_by(
-            'title',
-        ).all())
+        child_measures = p.measure_set.all().order_by('title')
+        result_measures.extend(child_measures)
+
+        # Keep track of added measures
+        if p.id in all_related_measures_dict:
+            del all_related_measures_dict[p.id]
+        for child_measure in child_measures:
+            if child_measure.id in all_related_measures_dict:
+                del all_related_measures_dict[child_measure.id]
+
+    # Now all_related_measures_dict contains only the left-over measures
+    left_over_measures = all_related_measures_dict.values()
+    sorted(left_over_measures, key=lambda m: m.title)
+    for measure in left_over_measures:
+        measure.parent_other_area = True
+        result_measures.append(measure)
 
     return render_to_response(
         template,
@@ -438,12 +455,14 @@ def measure_graph(request, area_ident, filter='all'):
     """
 
     if filter == 'measure':
-        measures = Measure.objects.filter(Q(pk=area_ident)|Q(parent__id=area_ident))
+        measures = Measure.objects.filter(
+            Q(pk=area_ident)|Q(parent__id=area_ident)).order_by('title')
     else:
         area = get_object_or_404(Area, ident=area_ident)
-        # Obsolete: use MeasureCollections instead
+
         # get measures without parent: main measures
-        measures = Measure.objects.filter(Q(waterbodies__area=area)|Q(areas=area)).distinct()
+        measures = Measure.objects.filter(
+            Q(waterbodies__area=area)|Q(areas=area)).distinct().order_by('title')
 
         if filter == 'focus':
             measures = measures.filter(is_indicator=True)

@@ -81,7 +81,7 @@
               'html',
               false,
               true
-              )">{{ measure.title }}</a>
+              )">{{ measure.title }}{% if measure.parent_other_area %} (hoofdmaatregel is van een ander gebied){% endif %}</a>
         </td>
         <td>
             {{ measure.measure_type }}
@@ -91,7 +91,7 @@
         </td>
         <td>
             {{ measure.is_indicator|yesno:"Ja,-,-" }}
-        </td>        
+        </td>
         <td>
             {{ measure.is_indicator|yesno:"Ja,-,-" }}
         </td>
