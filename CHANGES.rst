@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.45 (unreleased)
+1.45 (2012-04-19)
 -----------------
 
 - Renamed measure graph to "maatregel(en)".
