@@ -379,7 +379,7 @@ def _image_measures(graph, measures, start_date, end_date,
     if end_date_realized is None:
         end_date_realized = min(end_date, datetime.datetime.now().date())
     if title is None:
-        title = "krw maatregel(en)"
+        title = "maatregel(en)"
     graph.figure.suptitle(title, x=0.5, y=1, horizontalalignment='center', verticalalignment='top')
     for index, measure in enumerate(measures):
         # realized

@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.45 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Renamed measure graph to "maatregel(en)".
 
 
 1.44 (2012-04-19)
