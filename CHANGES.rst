@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.44 (unreleased)
+1.44 (2012-04-19)
 -----------------
 
 - Improved performance of admin HorizontalBarGraphAdmin.
