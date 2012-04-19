@@ -5,7 +5,9 @@ Changelog of lizard-measure
 1.44 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Improved performance of admin HorizontalBarGraphAdmin.
+
+- Added migrations for changes in GraphItemMixin.
 
 
 1.43 (2012-04-18)
