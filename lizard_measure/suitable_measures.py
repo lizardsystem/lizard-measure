@@ -80,7 +80,7 @@ class SuitableMeasures(object):
         result = ''
         esf_data = get_data_main_esf(area)
         for e in esf_data:
-            if e['judgment'] == 'critical':
+            if e['judgement'] == 'critical':
                 result += 'X'
             else:
                 result += '-'

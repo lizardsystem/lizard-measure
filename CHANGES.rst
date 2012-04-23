@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.46 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Fixed suitable_measures: judgment -> judgement.
 
 
 1.45 (2012-04-19)
