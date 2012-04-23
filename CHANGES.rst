@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.48 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Make realisation bar smaller.
 
 
 1.47 (2012-04-23)
