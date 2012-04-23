@@ -94,6 +94,8 @@
                 {name: 'id', title: 'id', editable: false, visible: false, width: 30, type: 'number'},
                 {name: 'ident', title: 'ident', editable: false, visible: false, width: 100, type: 'text'},
                 {name: 'title', title: 'titel', editable: true, visible: true, width: 200, type: 'text'},
+                {name: 'waterbodies', title: 'KRW waterlichamen', editable: false, sortable: false, visible: true, width: 100, type: 'gridcombobox'},
+                {name: 'areas', title: 'Aan/ afvoergebieden', editable: false, sortable: false, visible: true, width: 100, type: 'gridcombobox'},
                 {name: 'import_source', title: 'bron', editable: false, sortable: false, visible: true, width: 100, type: 'text'},
                 {name: 'status_planned', title: 'planning', editable: false, visible: true, sortable: false, width: 100, type: 'text'},
                 {name: 'status_realisation', title: 'realisatie', editable: false, sortable: false, visible: true, width: 100, type: 'text'},
@@ -138,10 +140,7 @@
                 {name: 'exploitation_costs', title: 'exploitatiekosten', editable: true, visible: true, width: 75, type: 'number'},
                 {name: 'land_costs', title: 'grondkosten', editable: true, visible: true, width: 75, type: 'number'},
                 {name: 'target_esf', title: 'Doel ESF', editable: false, sortable: false, visible: true, width: 100, type: 'text'},
-                {name: 'effect_esf', title: 'Effect op ESF', editable: false, sortable: false, visible: true, width: 100, type: 'text'},
-
-                {name: 'waterbodies', title: 'KRW waterlichamen', editable: false, sortable: false, visible: true, width: 100, type: 'gridcombobox'},
-                {name: 'areas', title: 'Aan/ afvoergebieden', editable: false, sortable: false, visible: true, width: 100, type: 'gridcombobox'}
+                {name: 'effect_esf', title: 'Effect op ESF', editable: false, sortable: false, visible: true, width: 100, type: 'text'}
            ]
         }]
 	}]
