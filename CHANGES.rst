@@ -4,6 +4,9 @@ Changelog of lizard-measure
 
 1.50 (unreleased)
 -----------------
+- changed name of column in organisation management screen (pp 243)
+
+- changed order columns measure table (pp 304)
 
 - added ordering of steeringparameter graphs in management screen (pp 256)
 
