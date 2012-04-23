@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.50 (unreleased)
+1.50 (2012-04-23)
 -----------------
 
 - added aan/afvoergebied in steeringparameter admin screen pp 255
