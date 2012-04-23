@@ -403,7 +403,7 @@ def _image_measures(graph, measures, start_date, end_date,
         measure_bar, measure_colors = calc_bar_colors(
             measure, end_date_realized, False)
         graph.axes.broken_barh(measure_bar,
-                               (-index - 0.3, 0.6),
+                               (-index - 0.2, 0.4),
                                facecolors=measure_colors,
                                edgecolors=measure_colors)
         # planning

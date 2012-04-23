@@ -2,12 +2,18 @@ Changelog of lizard-measure
 ===================================================
 
 
+<<<<<<< HEAD
 1.48 (unreleased)
 -----------------
+=======
+1.47.2 (unreleased)
+--------------
+>>>>>>> e88478188581f0b0775d7415ebef6d477535e4d2
 
 - Nothing changed yet.
 
 
+<<<<<<< HEAD
 1.47 (2012-04-23)
 -----------------
 
@@ -18,6 +24,18 @@ Changelog of lizard-measure
 - Removed 'fews_norm_source_slug' from SteerParameterGraphs. The
   option is not needed anymore, the source is determined automatically
   in lizard_graph.
+=======
+1.47.1 (2012-04-23)
+-------------------
+
+- Make realisation bar smaller.
+
+
+1.47 (2012-04-23)
+-----------------
+
+- Make api measureview show invalid statuses when in use.
+>>>>>>> e88478188581f0b0775d7415ebef6d477535e4d2
 
 
 1.46 (2012-04-23)
