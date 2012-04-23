@@ -2,10 +2,10 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.48.2 (unreleased)
--------------------
+1.49 (2012-04-23)
+-----------------
 
-- Nothing changed yet.
+- Added legend to ekr graph.
 
 
 1.48.1 (2012-04-23)

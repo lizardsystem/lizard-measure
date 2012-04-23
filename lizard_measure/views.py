@@ -808,6 +808,24 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
         yticklabels = []
         block_width = (date2num(dt_end) - date2num(dt_start)) / 50
 
+        # Legend
+        #graph.margin_right_extra += 90  # Room for legend. See also nens_graph.
+        legend_handles = [
+            Line2D([], [], color=COLOR_1, lw=10),
+            Line2D([], [], color=COLOR_2, lw=10),
+            Line2D([], [], color=COLOR_3, lw=10),
+            Line2D([], [], color=COLOR_4, lw=10),
+            Line2D([], [], color=COLOR_5, lw=10),
+            ]
+        legend_labels = [
+            'slecht',
+            'ontoereikend',
+            'matig',
+            'goed',
+            'zeer goed',
+            ]
+        graph.legend(legend_handles, legend_labels, legend_location=7)
+
         for index, graph_item in enumerate(graph_items):
             if not graph_item.location:
                 graph_item.location = graph_settings['location']
