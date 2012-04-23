@@ -463,7 +463,8 @@ class MeasureView(BaseApiView):
                 ),
                 'status_moments': measure.get_statusmoments(
                     auto_create_missing_states=True,
-                    only_valid=True,
+                    only_valid=False,
+                    only_valid_or_present=True,
                 ),
                 'esflink_set': measure.get_esflinks(
                     auto_create_missing_states=True
