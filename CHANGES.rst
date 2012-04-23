@@ -2,8 +2,8 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.49 (unreleased)
------------------
+1.48.1 (2012-04-23)
+-------------------
 
 - Bugfix ekr graph after updating fewsnorm.
 
