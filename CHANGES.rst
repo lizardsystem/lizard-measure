@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.47 (unreleased)
+1.47 (2012-04-23)
 -----------------
 
 - Make api measureview show invalid statuses when in use.
