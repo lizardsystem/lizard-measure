@@ -25,6 +25,7 @@ Changelog of lizard-measure
   option is not needed anymore, the source is determined automatically
   in lizard_graph.
 
+
 1.47.1 (2012-04-23)
 -------------------
 
