@@ -832,7 +832,7 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
                 logger.warn('Warning: drawing %d timeseries on a single bar '
                             'HorizontalBarView', len(ts))
             # We assume there is only one timeseries.
-            for (loc, par), single_ts in ts.items():
+            for (loc, par, unit), single_ts in ts.items():
                 dates, values, comments, flag_dates, flag_values, flag_comments = (
                     dates_values_comments(single_ts))
                 if not dates:

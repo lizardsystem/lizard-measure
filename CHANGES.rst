@@ -2,25 +2,13 @@ Changelog of lizard-measure
 ===================================================
 
 
-<<<<<<< HEAD
 1.49 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Bugfix ekr graph after updating fewsnorm.
 
 
 1.48 (2012-04-23)
------------------
-=======
-1.47.2 (unreleased)
---------------
->>>>>>> e88478188581f0b0775d7415ebef6d477535e4d2
-
-- Nothing changed yet.
-
-
-<<<<<<< HEAD
-1.47 (2012-04-23)
 -----------------
 
 - Added legend_location to SteerParameterGraphs.
@@ -30,7 +18,7 @@ Changelog of lizard-measure
 - Removed 'fews_norm_source_slug' from SteerParameterGraphs. The
   option is not needed anymore, the source is determined automatically
   in lizard_graph.
-=======
+
 1.47.1 (2012-04-23)
 -------------------
 
@@ -41,7 +29,6 @@ Changelog of lizard-measure
 -----------------
 
 - Make api measureview show invalid statuses when in use.
->>>>>>> e88478188581f0b0775d7415ebef6d477535e4d2
 
 
 1.46 (2012-04-23)
