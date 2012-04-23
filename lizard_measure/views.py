@@ -628,12 +628,14 @@ def steering_parameter_form(request):
             predefined_graphs = PredefinedGraphSelection.objects.filter(
                 Q(for_area_type=Area.AREA_CLASS_AAN_AFVOERGEBIED)|Q(for_area_type=None))
 
-            related_areas = Area.objects.filter(Q(arealink_a__area_b=area)|Q(arealink_b__area_a=area)).distinct()
+            related_areas = Area.objects.filter(Q(arealink_a__area_b=area)|Q(arealink_b__area_a=area)|Q(id=area.id)).distinct()
+
+
 
         c = RequestContext(request, {
             'area': area,
             'predefined_graphs': json.dumps(
-                [{'id': r.id, 'name': r.name}
+                [{'id': r.id, 'name': r.name, 'for_area_type': r.for_area_type}
                  for r in predefined_graphs]),
             'related_areas': json.dumps(
                 [{'id': r.id, 'name': r.name}

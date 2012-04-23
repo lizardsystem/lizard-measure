@@ -1317,12 +1317,9 @@ class Measure(models.Model):
 
             msm.save()
 
-    def get_statusmoments(
-        self,
-        auto_create_missing_states=False,
-        only_valid=True,
-        only_valid_or_present=False,
-    ):
+    def get_statusmoments(self,
+                          auto_create_missing_states=False,
+                          only_valid=True):
         """
         updates the many2many relation with the MeasureStatusMoments
         return :
@@ -1339,23 +1336,11 @@ class Measure(models.Model):
         if auto_create_missing_states:
             self.create_empty_statusmoments()
 
-        measure_status_moments = self.measurestatusmoment_set.all().order_by(
-            'status__value'
-        )
+        measure_status_moments = self.measurestatusmoment_set.filter(
+            status__valid=only_valid,
+        ).order_by('status__value')
 
-        if only_valid:
-            msm_subset = measure_status_moments.filter(
-                status__valid=True,
-            )
-        
-        if only_valid_or_present:
-            msm_subset = measure_status_moments.filter(
-                Q(status__valid=True) |
-                Q(planning_date__isnull=False) |
-                Q(realisation_date__isnull=False)
-            )
-
-        for measure_status_moment in msm_subset:
+        for measure_status_moment in measure_status_moments:
             output.append({
                 'id': measure_status_moment.status_id,
                 'name': measure_status_moment.status.name,

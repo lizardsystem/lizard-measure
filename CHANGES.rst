@@ -5,7 +5,11 @@ Changelog of lizard-measure
 1.48.2 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- added aan/afvoergebied in steeringparameter admin screen pp 255
+
+- added toestand/evaluation in name pp 257
+
+- fixed samengestelde grafieken support pp 258
 
 
 1.48.1 (2012-04-23)

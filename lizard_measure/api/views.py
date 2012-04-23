@@ -560,9 +560,16 @@ class SteerParameterGraphs(View):
 
     def _get_free_graphsettings(self, graph):
             #todo: locaties goed en doel scores toevoegen
+
+        if graph.for_evaluation:
+            name = name + ' (evaluatie)'
+        else:
+            name = name + ' (toestand)'
+
+
         output = {
             'id': self._get_graph_id,
-            'name': graph.name,
+            'name': name,
             'visible': True,
             'base_url': '/graph/',
             'use_context_location': True,
@@ -613,14 +620,23 @@ class SteerParameterGraphs(View):
         else:
             location_ident = None
 
+        name = graph.name
+
+        if graph.for_evaluation:
+            name = name + ' (evaluatie)'
+        else:
+            name = name + ' (toestand)'
+
         return {
             'id': self._get_graph_id,
-            'name': graph.name,
+            'name': name,
             'visible': True,
             'base_url': graph.predefined_graph.url,
             'use_context_location': graph.area_of_predefined_graph == None,
             'location': location_ident,
-            'extra_params': {},
+            'extra_params': {
+                'graph': graph.predefined_graph.code
+            },
         }
 
 
