@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-n (unreleased)
+1.47.2 (unreleased)
 --------------
 
 - Nothing changed yet.
