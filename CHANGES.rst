@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.46 (unreleased)
+1.46 (2012-04-23)
 -----------------
 
 - Fixed suitable_measures: judgment -> judgement.
