@@ -471,7 +471,7 @@ def measure_graph(request, area_ident, filter='all'):
     end_date = iso8601.parse_date(request.GET.get('dt_end', '2013-1-1T00:00:00')).date()
     width = int(request.GET.get('width', 380))
     height = int(request.GET.get('height', 170))
-    legend_location = int(request.GET.get('legend_location', -1))
+    legend_location = int(request.GET.get('legend-location', -1))
 
     graph = DateGridGraph(width=width, height=height)
 

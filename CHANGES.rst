@@ -2,10 +2,16 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.47 (unreleased)
+1.47 (2012-04-23)
 -----------------
 
-- Nothing changed yet.
+- Added legend_location to SteerParameterGraphs.
+
+- Renamed legend_location to legend-location in measure_graph.
+
+- Removed 'fews_norm_source_slug' from SteerParameterGraphs. The
+  option is not needed anymore, the source is determined automatically
+  in lizard_graph.
 
 
 1.46 (2012-04-23)
