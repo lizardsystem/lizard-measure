@@ -3,6 +3,12 @@ Changelog of lizard-measure
 
 
 <<<<<<< HEAD
+1.49 (unreleased)
+-----------------
+
+- Nothing changed yet.
+
+
 1.48 (2012-04-23)
 -----------------
 =======
