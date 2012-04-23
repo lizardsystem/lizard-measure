@@ -476,6 +476,9 @@ class PredefinedGraphSelection(models.Model):
 
     valid = models.BooleanField(default=True)
 
+    class META:
+        ordering = ('name', )
+
     def __unicode__(self):
         return self.name
 
@@ -507,6 +510,7 @@ class SteeringParameterPredefinedGraph(models.Model):
     class Meta:
         verbose_name = _("Steering parameter predefined graph ")
         verbose_name_plural = _("Steering parameters predefined graph")
+        ordering = ('order', )
 
 class SteeringParameterFree(models.Model):
     """
@@ -542,6 +546,7 @@ class SteeringParameterFree(models.Model):
     class Meta:
         verbose_name = _("Steering parameter free selection")
         verbose_name_plural = _("Steering parameters free selection")
+        ordering = ('order', )
 
 
 # Measures

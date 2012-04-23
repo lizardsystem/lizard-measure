@@ -5,6 +5,8 @@ Changelog of lizard-measure
 1.50 (unreleased)
 -----------------
 
+- added ordering of steeringparameter graphs in management screen (pp 256)
+
 - added aan/afvoergebied in steeringparameter admin screen pp 255
 
 - added toestand/evaluation in name pp 257
