@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.52 (unreleased)
+1.52 (2012-04-24)
 -----------------
 
 - Change order of graph measures.
