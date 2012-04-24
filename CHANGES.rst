@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.53 (unreleased)
+1.53 (2012-04-24)
 -----------------
 
 - Make krw_portaal update invalidate old periods.
