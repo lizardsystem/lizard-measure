@@ -5,6 +5,8 @@ Changelog of lizard-measure
 1.51 (unreleased)
 -----------------
 
+- bugfix: api steering parameter would crash in some cases.
+
 - changed name of column in organisation management screen (pp 243)
 
 - changed order columns measure table (pp 304)

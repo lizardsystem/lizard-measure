@@ -553,19 +553,20 @@ class SteerParameterGraphs(View):
         Api for toestand and krw-overzicht screen settings
     """
     graph_count = 0
+
     def _get_graph_id(self):
         self.graph_count += 1
-        return 'gr%i'%self.graph_count
-
+        return 'gr%i' % self.graph_count
 
     def _get_free_graphsettings(self, graph):
-            #todo: locaties goed en doel scores toevoegen
+        #todo: locaties goed en doel scores toevoegen
+
+        name = graph.name
 
         if graph.for_evaluation:
             name = name + ' (evaluatie)'
         else:
             name = name + ' (toestand)'
-
 
         output = {
             'id': self._get_graph_id,
