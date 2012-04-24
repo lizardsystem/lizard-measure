@@ -581,6 +581,10 @@ def update_measures(filename):
     original_measures = dict([(m.ident, m) for m in Measure.objects.all()])
 
     amount_of_updates = 0
+    
+    logger.info('Invalidating old measure periods.')
+    MeasurePeriod.objects.all().update(valid=False)
+
     for rec in _records(filename):
 
         corresponding_measure = original_measures[rec['matident']]
@@ -605,11 +609,16 @@ def update_measures(filename):
                 end_date=end_date,
                 defaults={'description': rec['tijdvak']},
             )
+            if not measure_period_created:
+                measure_period.valid = True
+                measure_period.save()
 
         corresponding_measure.unit = unit
         corresponding_measure.value = rec['matomvbrus']
         corresponding_measure.period = measure_period
         corresponding_measure.save()
+
+    
 
         # Add a new measurestatusmoment for the update
         if (rec['maatregelstatus'] == 'onbekend' or
