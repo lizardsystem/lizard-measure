@@ -8,7 +8,7 @@
 	xtype: 'portalpanel',
     breadcrumbs: [
         {
-            name: 'doelen-beheer'
+            name: 'EKR overzicht'
         }
     ],
 	items:[{
