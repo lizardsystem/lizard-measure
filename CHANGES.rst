@@ -2,11 +2,57 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.47.2 (unreleased)
---------------
+1.52 (unreleased)
+-----------------
 
 - Change order of graph measures.
 - Fix error in template showing focus instead of krw.
+
+
+1.51 (2012-04-24)
+-----------------
+
+- bugfix: api steering parameter would crash in some cases.
+
+- changed name of column in organisation management screen (pp 243)
+
+- changed order columns measure table (pp 304)
+
+
+1.50 (2012-04-23)
+-----------------
+
+- added ordering of steeringparameter graphs in management screen (pp 256)
+
+- added aan/afvoergebied in steeringparameter admin screen pp 255
+
+- added toestand/evaluation in name pp 257
+
+- fixed samengestelde grafieken support pp 258
+
+
+1.49 (2012-04-23)
+-----------------
+
+- Added legend to ekr graph.
+
+
+1.48.1 (2012-04-23)
+-------------------
+
+- Bugfix ekr graph after updating fewsnorm.
+
+
+1.48 (2012-04-23)
+-----------------
+
+- Added legend_location to SteerParameterGraphs.
+
+- Renamed legend_location to legend-location in measure_graph.
+
+- Removed 'fews_norm_source_slug' from SteerParameterGraphs. The
+  option is not needed anymore, the source is determined automatically
+  in lizard_graph.
 
 
 1.47.1 (2012-04-23)

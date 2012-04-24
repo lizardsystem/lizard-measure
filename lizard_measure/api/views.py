@@ -553,28 +553,36 @@ class SteerParameterGraphs(View):
         Api for toestand and krw-overzicht screen settings
     """
     graph_count = 0
+
     def _get_graph_id(self):
         self.graph_count += 1
-        return 'gr%i'%self.graph_count
-
+        return 'gr%i' % self.graph_count
 
     def _get_free_graphsettings(self, graph):
-            #todo: locaties goed en doel scores toevoegen
+        #todo: locaties goed en doel scores toevoegen
+
+        name = graph.name
+
+        if graph.for_evaluation:
+            name = name + ' (evaluatie)'
+        else:
+            name = name + ' (toestand)'
+
         output = {
             'id': self._get_graph_id,
-            'name': graph.name,
+            'name': name,
             'visible': True,
             'base_url': '/graph/',
             'use_context_location': True,
             'location': None,
-            'extra_params': {}
+            #'extra_params': {},
+            'legend_location': 7,  # Legend on right side
         }
         items = []
 
         for item in graph.location_modulinstance_string.split(';'):
             part = item.split(',')
             setting = {
-                'fews_norm_source_slug': 'waternet', #todo: make dynamic
                 'location': part[0],
                 'parameter': graph.parameter_code,
                 'type': 'line'
@@ -586,8 +594,6 @@ class SteerParameterGraphs(View):
             if len(part) > 3:
                 setting['qualifierset'] = part[3]
 
-
-
             items.append(json.dumps(setting))
 
         if graph.has_target:
@@ -598,11 +604,12 @@ class SteerParameterGraphs(View):
                 'layout': {
                     'color': 'black',
                     'line-style': '--'
-                }
+                },
             }))
 
         output['extra_params'] = {
-            'item': items
+            'item': items,
+            'unit-as-y-label': True,
         }
         return output
 
@@ -614,14 +621,23 @@ class SteerParameterGraphs(View):
         else:
             location_ident = None
 
+        name = graph.name
+
+        if graph.for_evaluation:
+            name = name + ' (evaluatie)'
+        else:
+            name = name + ' (toestand)'
+
         return {
             'id': self._get_graph_id,
-            'name': graph.name,
+            'name': name,
             'visible': True,
             'base_url': graph.predefined_graph.url,
             'use_context_location': graph.area_of_predefined_graph == None,
             'location': location_ident,
-            'extra_params': {},
+            'extra_params': {
+                'graph': graph.predefined_graph.code
+            },
         }
 
 
@@ -651,14 +667,15 @@ class SteerParameterGraphs(View):
         if area.area_class == Area.AREA_CLASS_KRW_WATERLICHAAM:
             graphs.append({
                'id': prefix + '99',
-                'name': 'EKR scores',
-                'visible': True,
-                'base_url': '/measure/bar/?',
-                'use_context_location': True,
-                'location': None,
-                'predefined_graph': 'ekr',
-                'extra_params': {},
-                'detail_link': 'ekr-score',
+               'name': 'EKR scores',
+               'visible': True,
+               'base_url': '/measure/bar/?',
+               'use_context_location': True,
+               'location': None,
+               'predefined_graph': 'ekr',
+               'extra_params': {},
+               'detail_link': 'ekr-score',
+               'legend_location': 7,  # Legend on right side
             })
 
         if area.area_class == Area.AREA_CLASS_KRW_WATERLICHAAM:
@@ -675,7 +692,8 @@ class SteerParameterGraphs(View):
             'location': None,
             'predefined_graph': None,
             'extra_params': {},
-            'detail_link': detail_link
+            'detail_link': detail_link,
+            'legend_location': 7,  # Legend on right side
         })
 
         return graphs

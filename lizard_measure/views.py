@@ -481,7 +481,7 @@ def measure_graph(request, area_ident, filter='all'):
     end_date = iso8601.parse_date(request.GET.get('dt_end', '2013-1-1T00:00:00')).date()
     width = int(request.GET.get('width', 380))
     height = int(request.GET.get('height', 170))
-    legend_location = int(request.GET.get('legend_location', -1))
+    legend_location = int(request.GET.get('legend-location', -1))
 
     graph = DateGridGraph(width=width, height=height)
 
@@ -638,12 +638,14 @@ def steering_parameter_form(request):
             predefined_graphs = PredefinedGraphSelection.objects.filter(
                 Q(for_area_type=Area.AREA_CLASS_AAN_AFVOERGEBIED)|Q(for_area_type=None))
 
-            related_areas = Area.objects.filter(Q(arealink_a__area_b=area)|Q(arealink_b__area_a=area)).distinct()
+            related_areas = Area.objects.filter(Q(arealink_a__area_b=area)|Q(arealink_b__area_a=area)|Q(id=area.id)).distinct()
+
+
 
         c = RequestContext(request, {
             'area': area,
             'predefined_graphs': json.dumps(
-                [{'id': r.id, 'name': r.name}
+                [{'id': r.id, 'name': r.name, 'for_area_type': r.for_area_type}
                  for r in predefined_graphs]),
             'related_areas': json.dumps(
                 [{'id': r.id, 'name': r.name}
@@ -818,6 +820,24 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
         yticklabels = []
         block_width = (date2num(dt_end) - date2num(dt_start)) / 50
 
+        # Legend
+        #graph.margin_right_extra += 90  # Room for legend. See also nens_graph.
+        legend_handles = [
+            Line2D([], [], color=COLOR_1, lw=10),
+            Line2D([], [], color=COLOR_2, lw=10),
+            Line2D([], [], color=COLOR_3, lw=10),
+            Line2D([], [], color=COLOR_4, lw=10),
+            Line2D([], [], color=COLOR_5, lw=10),
+            ]
+        legend_labels = [
+            'slecht',
+            'ontoereikend',
+            'matig',
+            'goed',
+            'zeer goed',
+            ]
+        graph.legend(legend_handles, legend_labels, legend_location=7)
+
         for index, graph_item in enumerate(graph_items):
             if not graph_item.location:
                 graph_item.location = graph_settings['location']
@@ -842,7 +862,7 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
                 logger.warn('Warning: drawing %d timeseries on a single bar '
                             'HorizontalBarView', len(ts))
             # We assume there is only one timeseries.
-            for (loc, par), single_ts in ts.items():
+            for (loc, par, unit), single_ts in ts.items():
                 dates, values, comments, flag_dates, flag_values, flag_comments = (
                     dates_values_comments(single_ts))
                 if not dates:
