@@ -533,7 +533,7 @@ def measure_detailedit_portal(request):
             ),
             'periods': json.dumps(
                 [{'id': r.id, 'name': str(r)}
-                 for r in MeasurePeriod.objects.all()]
+                 for r in MeasurePeriod.objects.filter(valid=True)]
             ),
             'aggregations': json.dumps(
                 [{'id': r[0], 'name': r[1]}
