@@ -2,7 +2,13 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.50 (unreleased)
+1.51 (unreleased)
+-----------------
+
+- Nothing changed yet.
+
+
+1.50 (2012-04-23)
 -----------------
 - changed name of column in organisation management screen (pp 243)
 
