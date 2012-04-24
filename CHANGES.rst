@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.54 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Fix wrong id prefilled in form for submeasures.
 
 
 1.53 (2012-04-24)

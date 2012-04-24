@@ -22,6 +22,7 @@ from matplotlib.lines import Line2D
 
 from lizard_area.models import Area
 from lizard_measure.models import Measure, MeasureStatus
+from lizard_measure.models import WaterBody
 from lizard_measure.models import MeasureType
 from lizard_measure.models import MeasurePeriod
 from lizard_measure.models import MeasureCategory
@@ -515,7 +516,7 @@ def measure_detailedit_portal(request):
         if area.area_class == Area.AREA_CLASS_AAN_AFVOERGEBIED:
             init_area = area
         else:
-            init_waterbody = area
+            init_waterbody = WaterBody.objects.get(area=area)
 
     try:
         measure = Measure.objects.get(pk=measure_id)
