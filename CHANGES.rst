@@ -6,6 +6,7 @@ Changelog of lizard-measure
 -----------------
 
 - Make krw_portaal update invalidate old periods.
+- Redo undone edit of get_statusmoments.
 
 
 1.52 (2012-04-24)
