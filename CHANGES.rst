@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.51 (unreleased)
+1.51 (2012-04-24)
 -----------------
 
 - bugfix: api steering parameter would crash in some cases.
