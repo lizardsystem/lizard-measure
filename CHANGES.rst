@@ -5,7 +5,8 @@ Changelog of lizard-measure
 1.47.2 (unreleased)
 --------------
 
-- Nothing changed yet.
+- Change order of graph measures.
+- Fix error in template showing focus instead of krw.
 
 
 1.47.1 (2012-04-23)
