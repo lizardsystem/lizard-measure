@@ -5,7 +5,8 @@ Changelog of lizard-measure
 1.57 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Restrict waterbody api to real waterbodies, whose areas have the
+  area_class AREA_CLASS_KRW_WATERLICHAAM.
 
 
 1.56 (2012-04-25)
