@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.56 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Added textual names to ESF links.
 
 
 1.55 (2012-04-25)
