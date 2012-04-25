@@ -6,16 +6,6 @@
     trackResetOnLoad: true,
     bodyPadding: '10 25 10 10',//padding on the right side 25 for scrollbar
     height: '100%',
-    finish_edit_function: function() {
-            var portalpanel = Ext.getCmp('portalWindow');
-            portalWindow.applyParams();
-
-            Ext.WindowManager.each(function(window) {
-                if (window.loader) {
-                    window.loader.load();
-                }
-            })
-    },
     url: '/measure/api/measure/?_accept=application/json&include_geom=true&action={% if measure %}update{% else %}create{% endif %}',
 {% if measure %}
     loadProxy: {
@@ -588,6 +578,14 @@
                                         // form is called using
                                         // Screen.linkToPopup.
                                         form_window.finish_edit_function({% if measure %}'update'{% else %}'create'{% endif%});
+                                    } else {
+                                        Lizard.CM.fireEvent('contextchange', {}, {}, Lizard.CM.getContext(), Lizard.CM);
+
+                                        Ext.WindowManager.each(function(window) {
+                                            if (window.loader) {
+                                                window.loader.load();
+                                            }
+                                        })
                                     }
                                 },
                                 failure: function(xhr) {

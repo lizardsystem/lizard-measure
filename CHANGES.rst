@@ -5,7 +5,10 @@ Changelog of lizard-measure
 1.55 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- removed area name in measure screen titles (pp 232)
+
+- fixed refresh for measure screen after edit (pp 66, pp 200, pp 234, pp 237, pp 300)
+
 
 
 1.54 (2012-04-24)
