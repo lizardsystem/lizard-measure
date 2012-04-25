@@ -1413,6 +1413,19 @@ class Measure(models.Model):
             negative
         """
 
+        # Names can be treated as constants
+        esf_names = {
+            1: 'Productiviteit water',
+            2: 'Licht',
+            3: 'Productiviteit bodem',
+            4: 'Habitatgeschiktheid',
+            5: 'Verspreiding',
+            6: 'Verwijdering',
+            7: 'Organische belasting',
+            8: 'Toxiciteit',
+            9: 'Beleving',
+            }
+
         output = []
 
         if auto_create_missing_states:
@@ -1423,7 +1436,7 @@ class Measure(models.Model):
         for esflink in esflinks:
             output.append({
                 'id': esflink.id,
-                'name': 'ESF %i'%esflink.esf,
+                'name': 'ESF %i: %s' % (esflink.esf, esf_names.get(esflink.esf, '-')),
                 'is_target_esf': esflink.is_target_esf,
                 'positive': esflink.positive,
                 'negative': esflink.negative
@@ -1705,7 +1718,7 @@ class Measure(models.Model):
                 output += '(-)'
             output += ', '
         return output
-    
+
     @property
     def latest_realised_status(self):
         """

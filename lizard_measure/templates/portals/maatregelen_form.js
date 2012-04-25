@@ -167,7 +167,7 @@
             field_name: 'Effect',
             editable: true,
             extra_fields:[{
-                text: 'is doel',
+                text: 'is gericht op',
                 dataIndex: 'is_target_esf',
                 width:100,
                 xtype: 'checkcolumn',
@@ -327,7 +327,7 @@
                 }
             },
             {
-                fieldLabel: 'Totale kosten',
+                fieldLabel: 'Totale kosten (incl. btw)',
                 name: 'total_costs',
                 minValue: 0,
                 allowDecimals: false,
@@ -335,7 +335,7 @@
                 xtype: 'numberfield'
             },
             {
-                fieldLabel: 'Investeringskosten',
+                fieldLabel: 'Investeringskosten (incl. btw)',
                 name: 'investment_costs',
                 minValue: 0,
                 allowDecimals: false,
@@ -343,7 +343,7 @@
                 xtype: 'numberfield'
             },
             {
-                fieldLabel: 'Exploitatiekosten',
+                fieldLabel: 'Exploitatiekosten (incl. btw)',
                 name: 'exploitation_costs',
                 minValue: 0,
                 allowDecimals: false,
@@ -351,7 +351,7 @@
                 xtype: 'numberfield'
             },
             {
-                fieldLabel: 'Grondkosten',
+                fieldLabel: 'Grondkosten (incl. btw)',
                 name: 'land_costs',
                 minValue: 0,
                 allowDecimals: false,
@@ -377,7 +377,7 @@
                         minValue: 0
                     }
                 },{
-                    text: 'comment',
+                    text: 'opmerking',
                     dataIndex: 'comment',
                     width:200,
                     field: {

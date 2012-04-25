@@ -2,13 +2,53 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.55 (unreleased)
+1.61 (unreleased)
 -----------------
 
 - removed area name in measure screen titles (pp 232)
 
 - fixed refresh for measure screen after edit (pp 66, pp 200, pp 234, pp 237, pp 300)
 
+
+
+1.60 (2012-04-25)
+-----------------
+
+- Added messagebox when removing a measure in maatregelen-beheer.
+
+
+1.59 (2012-04-25)
+-----------------
+
+- Renamed english field name comment to opmerking in measure
+  form. Name has to me renamed in lizard_portal.combomultiselect.
+
+
+1.58 (2012-04-25)
+-----------------
+
+- Added "incl. btw" to maatregelen form fields.
+
+
+1.57 (2012-04-25)
+-----------------
+
+- Restrict waterbody api to real waterbodies, whose areas have the
+  area_class AREA_CLASS_KRW_WATERLICHAAM.
+
+
+1.56 (2012-04-25)
+-----------------
+
+- Added textual names to ESF links.
+
+
+1.55 (2012-04-25)
+-----------------
+
+- Renamed field in measure form: is doel -> is gericht op.
+
+- Renamed field in measure summary from Deelgebied to Gebied.
 
 
 1.54 (2012-04-24)
