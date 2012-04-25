@@ -10,6 +10,8 @@ Changelog of lizard-measure
 
 - Added option wide_left_ticks for measure graph.
 
+- Changed order of fields in maatregelen_form.
+
 
 1.61 (2012-04-25)
 -----------------

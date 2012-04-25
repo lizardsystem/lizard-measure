@@ -57,7 +57,7 @@
             allowBlank: false
         },
         {
-            fieldLabel: 'Titel',
+            fieldLabel: 'Naam',
             name: 'title',
             anchor: '100%',
             xtype: 'textfield',
@@ -100,7 +100,7 @@
             allowBlank: true
         },
         {
-            fieldLabel: 'In sgbp',
+            fieldLabel: 'In SGBP',
             name: 'in_sgbp',
             inputValue: true,
             xtype: 'checkbox',
@@ -128,6 +128,28 @@
             multiSelect: false,
             forceSelection: true,
             allowBlank: false
+        },
+        {
+            fieldLabel: 'Waarde',
+            name: 'value',
+            xtype: 'numberfield',
+            minValue: 0,
+            allowBlank: false,
+            width: 200
+        },
+        {
+            fieldLabel: 'Eenheid',
+            name: 'unit',
+            displayField: 'name',
+            valueField: 'id',
+            xtype: 'combodict',
+            store: {
+                fields: ['id', 'name'],
+                data: Ext.JSON.decode({% autoescape off %}'{{ units }}'{% endautoescape %})
+            },
+            forceSelection: true,
+            allowBlank: false,
+            width: 200
         },
         {
             fieldLabel: 'Periode',
@@ -197,28 +219,6 @@
         html: '<br>De link met ESFen kan ingevoerd worden nadat de maatregel voor de eerste keer is opgeslagen. <br><br>'
     },
     {% endif %}
-        {
-            fieldLabel: 'Waarde',
-            name: 'value',
-            xtype: 'numberfield',
-            minValue: 0,
-            allowBlank: false,
-            width: 200
-        },
-        {
-            fieldLabel: 'Eenheid',
-            name: 'unit',
-            displayField: 'name',
-            valueField: 'id',
-            xtype: 'combodict',
-            store: {
-                fields: ['id', 'name'],
-                data: Ext.JSON.decode({% autoescape off %}'{{ units }}'{% endautoescape %})
-            },
-            forceSelection: true,
-            allowBlank: false,
-            width: 200
-        },
         {
             xtype:'fieldset',
             collapsible: true,
