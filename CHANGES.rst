@@ -5,7 +5,8 @@ Changelog of lizard-measure
 1.62 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Measure overview: order of columns changes, "bron" is wider, changed
+  text.
 
 
 1.61 (2012-04-25)
@@ -14,7 +15,6 @@ Changelog of lizard-measure
 - removed area name in measure screen titles (pp 232)
 
 - fixed refresh for measure screen after edit (pp 66, pp 200, pp 234, pp 237, pp 300)
-
 
 
 1.60 (2012-04-25)

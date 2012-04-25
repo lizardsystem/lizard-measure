@@ -10,18 +10,18 @@
             Naam
         </td>
         <td>
-            Type Maatregel
+            Focus
         </td>
         <td>
             Status
         </td>
         <td>
-            Focus
-        </td>
-        <td>
             KRW
         </td>
         <td>
+            Type Maatregel
+        </td>
+        <td width="80px">
             Bron
         </td>
     </tr>
@@ -81,19 +81,19 @@
               'html',
               false,
               true
-              )">{{ measure.title }}{% if measure.parent_other_area %} (hoofdmaatregel is van een ander gebied){% endif %}</a>
-        </td>
-        <td>
-            {{ measure.measure_type }}
-        </td>
-        <td>
-          {{ measure.latest_realised_status|default:"-" }}
+              )">{{ measure.title }}{% if measure.parent_other_area %} (bovenliggende maatregel hoort bij een ander gebied){% endif %}</a>
         </td>
         <td>
             {{ measure.is_indicator|yesno:"Ja,-,-" }}
         </td>
         <td>
+          {{ measure.latest_realised_status|default:"-" }}
+        </td>
+        <td>
             {{ measure.is_KRW_measure|yesno:"Ja,-,-" }}
+        </td>
+        <td>
+            {{ measure.measure_type }}
         </td>
         <td>
             {{ measure.get_import_source_display }}
