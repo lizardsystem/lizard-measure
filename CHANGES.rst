@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.58 (unreleased)
+1.58 (2012-04-25)
 -----------------
 
 - Added "incl. btw" to maatregelen form fields.
