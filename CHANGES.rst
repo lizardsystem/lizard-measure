@@ -12,6 +12,8 @@ Changelog of lizard-measure
 
 - Changed order of fields in maatregelen_form.
 
+- Added aan- afvoergebieden and KRW gebieden to measure detail view.
+
 
 1.61 (2012-04-25)
 -----------------

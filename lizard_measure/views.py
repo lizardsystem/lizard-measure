@@ -131,6 +131,7 @@ def _sorted_measures(area):
 
     return result_measures
 
+
 class MeasureDetailView(AppView):
     """
     Show measure details
@@ -203,18 +204,21 @@ class MeasureHistoryDetailView(MeasureDetailView):
             request, *args, **kwargs)
 
 
-def measure_detail(request, measure_id,
-                   template='lizard_measure/measure.html'):
-    measure = get_object_or_404(Measure, pk=measure_id)
+# def measure_detail(request, measure_id,
+#                    template='lizard_measure/measure.html'):
+#     measure = get_object_or_404(Measure, pk=measure_id)
 
-    return render_to_response(
-        template,
-        {'measure': measure},
-        context_instance=RequestContext(request))
+#     return render_to_response(
+#         template,
+#         {'measure': measure},
+#         context_instance=RequestContext(request))
 
 
 def krw_waterbody_measures(request, area_ident,
                            template='lizard_measure/waterbody_measures.html'):
+    """
+    Show list of measures for an area_ident.
+    """
     area = get_object_or_404(Area, ident=area_ident)
 
     result_measures = _sorted_measures(area)
