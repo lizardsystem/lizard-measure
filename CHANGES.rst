@@ -5,7 +5,8 @@ Changelog of lizard-measure
 1.59 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Renamed english field name comment to opmerking in measure
+  form. Name has to me renamed in lizard_portal.combomultiselect.
 
 
 1.58 (2012-04-25)

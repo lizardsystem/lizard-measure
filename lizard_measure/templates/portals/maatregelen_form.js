@@ -377,7 +377,7 @@
                         minValue: 0
                     }
                 },{
-                    text: 'comment',
+                    text: 'opmerking',
                     dataIndex: 'comment',
                     width:200,
                     field: {
