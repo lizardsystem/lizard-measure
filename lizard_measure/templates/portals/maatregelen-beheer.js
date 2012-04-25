@@ -42,6 +42,7 @@
             },
             addEditIcon: true,
             addDeleteIcon: false,
+            msgDeleteSelectedRecord: 'U verwijdert een maatregel. Weet U het zeker? U moet nog wel de wijzigingen opslaan om de maatregel werkelijk te verwijderen.',  // New feature of EditableGrid
             actionEditIcon:function(record) {
                 var me = this
                 console.log(this.store.getNewRecords())
