@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.61 (unreleased)
+1.61 (2012-04-25)
 -----------------
 
 - removed area name in measure screen titles (pp 232)
