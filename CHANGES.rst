@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.57 (unreleased)
+1.57 (2012-04-25)
 -----------------
 
 - Restrict waterbody api to real waterbodies, whose areas have the
