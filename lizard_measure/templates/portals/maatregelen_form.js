@@ -167,7 +167,7 @@
             field_name: 'Effect',
             editable: true,
             extra_fields:[{
-                text: 'is doel',
+                text: 'is gericht op',
                 dataIndex: 'is_target_esf',
                 width:100,
                 xtype: 'checkcolumn',
