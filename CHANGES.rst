@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.55 (unreleased)
+1.55 (2012-04-25)
 -----------------
 
 - Renamed field in measure form: is doel -> is gericht op.
