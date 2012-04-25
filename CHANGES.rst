@@ -2,10 +2,31 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.52 (unreleased)
+1.55 (unreleased)
 -----------------
 
 - Renamed field in measure form: is doel -> is gericht op.
+
+
+1.54 (2012-04-24)
+-----------------
+
+- Fix wrong id prefilled in form for submeasures.
+
+
+1.53 (2012-04-24)
+-----------------
+
+- Make krw_portaal update invalidate old periods.
+- Redo undone edit of get_statusmoments.
+- Only allow for valid periods in measure detail edit portal.
+
+
+1.52 (2012-04-24)
+-----------------
+
+- Change order of graph measures.
+- Fix error in template showing focus instead of krw.
 
 
 1.51 (2012-04-24)

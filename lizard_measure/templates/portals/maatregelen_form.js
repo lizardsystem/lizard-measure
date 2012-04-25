@@ -36,7 +36,7 @@
         parent: {id:{{ init_parent.id }}, name:'{{ init_parent.title }}'},
     {% endif %}
     {% if init_waterbody %}
-        waterbodies: {id:{{ init_waterbody.id }}, name:'{{ init_waterbody.name }}'},
+        waterbodies: {id:{{ init_waterbody.id }}, name:'{{ init_waterbody.area.name }}'},
     {% endif %}
     {% if init_area %}
         areas: {id:{{ init_area.id }}, name:'{{ init_area.name }}'},

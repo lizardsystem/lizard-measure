@@ -22,6 +22,7 @@ from matplotlib.lines import Line2D
 
 from lizard_area.models import Area
 from lizard_measure.models import Measure, MeasureStatus
+from lizard_measure.models import WaterBody
 from lizard_measure.models import MeasureType
 from lizard_measure.models import MeasurePeriod
 from lizard_measure.models import MeasureCategory
@@ -89,6 +90,46 @@ COLOR_5 = '#0000ff'
 #     # will fire.
 #     return HttpResponse('')
 
+
+def _sorted_measures(area):
+    """
+    Return list of measures that relate to area. Parent measures ordered
+    alphabetically, child measures directly after parent measures,
+    and loose child measures (parent not in list) at the end.
+    """
+    # These must all occur in the list. Also related child measures
+    # whose parent are with a different area.
+    all_related_measures = Measure.objects.filter(Q(waterbodies__area=area)|Q(areas=area)
+        ).distinct()
+    all_related_measures_dict = dict([(m.id, m) for m in all_related_measures])
+
+    # get measures without parent: main measures
+    parent_measures = all_related_measures.filter(
+        parent__isnull=True,
+    ).order_by(
+        'title',
+    )
+    result_measures = []
+    for p in parent_measures:
+        result_measures.append(p)
+        child_measures = p.measure_set.all().order_by('title')
+        result_measures.extend(child_measures)
+
+        # Keep track of added measures
+        if p.id in all_related_measures_dict:
+            del all_related_measures_dict[p.id]
+        for child_measure in child_measures:
+            if child_measure.id in all_related_measures_dict:
+                del all_related_measures_dict[child_measure.id]
+
+    # Now all_related_measures_dict contains only the left-over measures
+    left_over_measures = all_related_measures_dict.values()
+    sorted(left_over_measures, key=lambda m: m.title)
+    for measure in left_over_measures:
+        measure.parent_other_area = True
+        result_measures.append(measure)
+
+    return result_measures
 
 class MeasureDetailView(AppView):
     """
@@ -175,38 +216,8 @@ def measure_detail(request, measure_id,
 def krw_waterbody_measures(request, area_ident,
                            template='lizard_measure/waterbody_measures.html'):
     area = get_object_or_404(Area, ident=area_ident)
-
-    # These must all occur in the list. Also related child measures
-    # whose parent are with a different area.
-    all_related_measures = Measure.objects.filter(Q(waterbodies__area=area)|Q(areas=area)
-        ).distinct()
-    all_related_measures_dict = dict([(m.id, m) for m in all_related_measures])
-
-    # get measures without parent: main measures
-    parent_measures = all_related_measures.filter(
-        parent__isnull=True,
-    ).order_by(
-        'title',
-    )
-    result_measures = []
-    for p in parent_measures:
-        result_measures.append(p)
-        child_measures = p.measure_set.all().order_by('title')
-        result_measures.extend(child_measures)
-
-        # Keep track of added measures
-        if p.id in all_related_measures_dict:
-            del all_related_measures_dict[p.id]
-        for child_measure in child_measures:
-            if child_measure.id in all_related_measures_dict:
-                del all_related_measures_dict[child_measure.id]
-
-    # Now all_related_measures_dict contains only the left-over measures
-    left_over_measures = all_related_measures_dict.values()
-    sorted(left_over_measures, key=lambda m: m.title)
-    for measure in left_over_measures:
-        measure.parent_other_area = True
-        result_measures.append(measure)
+    
+    result_measures = _sorted_measures(area)
 
     return render_to_response(
         template,
@@ -460,12 +471,12 @@ def measure_graph(request, area_ident, filter='all'):
     else:
         area = get_object_or_404(Area, ident=area_ident)
 
-        # get measures without parent: main measures
-        measures = Measure.objects.filter(
-            Q(waterbodies__area=area)|Q(areas=area)).distinct().order_by('title')
-
         if filter == 'focus':
-            measures = measures.filter(is_indicator=True)
+            measures = [m for m in _sorted_measures(area) 
+                        if m.is_indicator == True]
+        else:
+            measures = _sorted_measures(area)
+
 
     start_date = iso8601.parse_date(request.GET.get('dt_start', '2008-1-1T00:00:00')).date()
     end_date = iso8601.parse_date(request.GET.get('dt_end', '2013-1-1T00:00:00')).date()
@@ -505,7 +516,7 @@ def measure_detailedit_portal(request):
         if area.area_class == Area.AREA_CLASS_AAN_AFVOERGEBIED:
             init_area = area
         else:
-            init_waterbody = area
+            init_waterbody = WaterBody.objects.get(area=area)
 
     try:
         measure = Measure.objects.get(pk=measure_id)
@@ -523,7 +534,7 @@ def measure_detailedit_portal(request):
             ),
             'periods': json.dumps(
                 [{'id': r.id, 'name': str(r)}
-                 for r in MeasurePeriod.objects.all()]
+                 for r in MeasurePeriod.objects.filter(valid=True)]
             ),
             'aggregations': json.dumps(
                 [{'id': r[0], 'name': r[1]}
