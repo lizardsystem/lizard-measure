@@ -5,13 +5,14 @@ Changelog of lizard-measure
 1.58 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Added "incl. btw" to maatregelen form fields.
 
 
 1.57 (2012-04-25)
 -----------------
 
-- Added "incl. btw" to maatregelen form fields.
+- Restrict waterbody api to real waterbodies, whose areas have the
+  area_class AREA_CLASS_KRW_WATERLICHAAM.
 
 
 1.56 (2012-04-25)

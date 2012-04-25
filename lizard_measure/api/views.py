@@ -6,10 +6,17 @@ from djangorestframework.views import View
 from lizard_area.models import Area
 from lizard_security.models import DataSet
 
-from lizard_measure.models import Organization, Measure, Score, SteeringParameterPredefinedGraph, \
-    SteeringParameterFree, EsfPattern
-from lizard_measure.models import PredefinedGraphSelection
-from lizard_measure.models import WaterBody
+from lizard_measure.models import (
+    EsfPattern,
+    Measure,
+    Organization,
+    PredefinedGraphSelection,
+    Score, 
+    SteeringParameterFree, 
+    SteeringParameterPredefinedGraph,
+    WaterBody,
+)
+
 from lizard_api.base import BaseApiView
 
 from lizard_layers.models import AreaValue
@@ -42,11 +49,30 @@ class AreaFiltered(object):
 
     def get_filtered_model(self, request):
         """
-        Return score objects that you may see
+        Return objects with area attribute that you may see
         """
         # Automagically filtered using lizard-security
         available_areas = Area.objects.all()
         return self.model_class.objects.filter(area__in=available_areas)
+
+
+class AreaFilteredOnlyWaterBodies(AreaFiltered):
+    """
+    Like AreaFiltered, but return only objects whose area is of the
+    waterbody class.
+    """
+    def get_filtered_model(self, request):
+        """
+        Return only objects whose area is a waterbody.
+        """
+        return super(
+            AreaFilteredOnlyWaterBodies,
+            self,
+        ).get_filtered_model(
+            request,
+        ).filter(
+            area__area_class=Area.AREA_CLASS_KRW_WATERLICHAAM,
+        )
 
 
 class ScoreView(AreaFiltered, BaseApiView):
@@ -233,7 +259,7 @@ class SteeringParameterFreeView(AreaFiltered, BaseApiView):
         return output
 
 
-class WaterBodyView(AreaFiltered, BaseApiView):
+class WaterBodyView(AreaFilteredOnlyWaterBodies, BaseApiView):
     """
     Water bodies that you can see
     """
