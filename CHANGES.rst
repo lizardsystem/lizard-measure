@@ -7,6 +7,8 @@ Changelog of lizard-measure
 
 - Renamed field in measure form: is doel -> is gericht op.
 
+- Renamed field in measure summary from Deelgebied to Gebied.
+
 
 1.54 (2012-04-24)
 -----------------
