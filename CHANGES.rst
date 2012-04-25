@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.60 (unreleased)
+1.60 (2012-04-25)
 -----------------
 
 - Added messagebox when removing a measure in maatregelen-beheer.
