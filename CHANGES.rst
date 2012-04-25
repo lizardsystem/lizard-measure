@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.59 (unreleased)
+1.59 (2012-04-25)
 -----------------
 
 - Renamed english field name comment to opmerking in measure
