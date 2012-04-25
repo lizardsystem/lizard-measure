@@ -1237,7 +1237,13 @@ class Measure(models.Model):
 
     @property
     def shortname(self):
+        """
+        OBSOLETE: use short_name instead.
+        """
         return short_string(self.title, 17)
+
+    def short_name(self, max_length=17):
+        return short_string(self.title, max_length)
 
     @property
     def deleted(self):

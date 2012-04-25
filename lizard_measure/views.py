@@ -216,7 +216,7 @@ def measure_detail(request, measure_id,
 def krw_waterbody_measures(request, area_ident,
                            template='lizard_measure/waterbody_measures.html'):
     area = get_object_or_404(Area, ident=area_ident)
-    
+
     result_measures = _sorted_measures(area)
 
     return render_to_response(
@@ -361,7 +361,7 @@ def krw_waterbody_ekr_scores(
 
 def _image_measures(graph, measures, start_date, end_date,
                     end_date_realized=None, legend_location=-1,
-                    title=None):
+                    title=None, wide_left_ticks=False):
     """Function to draw measures
 
     TODO: when a single measure is drawn, sometimes the whole
@@ -408,7 +408,15 @@ def _image_measures(graph, measures, start_date, end_date,
         end_date_realized = min(end_date, datetime.datetime.now().date())
     if title is None:
         title = "maatregel(en)"
-    graph.figure.suptitle(title, x=0.5, y=1, horizontalalignment='center', verticalalignment='top')
+
+    if wide_left_ticks:
+        graph.margin_left_extra = 200
+        measure_name_length = 55
+    else:
+        measure_name_length = 17
+    graph.figure.suptitle(
+        title, x=0.5, y=1,
+        horizontalalignment='center', verticalalignment='top')
     for index, measure in enumerate(measures):
         # realized
         measure_bar, measure_colors = calc_bar_colors(
@@ -426,7 +434,8 @@ def _image_measures(graph, measures, start_date, end_date,
                                edgecolors=measure_colors_p)
 
     # Y ticks
-    yticklabels = [measure.shortname for measure in measures]
+    yticklabels = [measure.short_name(max_length=measure_name_length)
+                   for measure in measures]
     yticklabels.reverse()
     graph.axes.set_yticks(range(int(-len(measures) + 0.5), 1))
     graph.axes.set_yticklabels(yticklabels)
@@ -472,21 +481,23 @@ def measure_graph(request, area_ident, filter='all'):
         area = get_object_or_404(Area, ident=area_ident)
 
         if filter == 'focus':
-            measures = [m for m in _sorted_measures(area) 
+            measures = [m for m in _sorted_measures(area)
                         if m.is_indicator == True]
         else:
             measures = _sorted_measures(area)
-
 
     start_date = iso8601.parse_date(request.GET.get('dt_start', '2008-1-1T00:00:00')).date()
     end_date = iso8601.parse_date(request.GET.get('dt_end', '2013-1-1T00:00:00')).date()
     width = int(request.GET.get('width', 380))
     height = int(request.GET.get('height', 170))
     legend_location = int(request.GET.get('legend-location', -1))
+    wide_left_ticks = request.GET.get('wide_left_ticks', 'false') == 'true'
 
     graph = DateGridGraph(width=width, height=height)
 
-    _image_measures(graph, measures, start_date, end_date, legend_location=legend_location)
+    _image_measures(graph, measures, start_date, end_date,
+                    legend_location=legend_location,
+                    wide_left_ticks=wide_left_ticks)
 
     graph.set_margins()
     return graph.png_response(

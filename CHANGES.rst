@@ -8,6 +8,8 @@ Changelog of lizard-measure
 - Measure overview: order of columns changes, "bron" is wider, changed
   text.
 
+- Added option wide_left_ticks for measure graph.
+
 
 1.61 (2012-04-25)
 -----------------
