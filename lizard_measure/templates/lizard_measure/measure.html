@@ -4,30 +4,32 @@
 
 <div id="textual" class="lizard">
   <div style="width: 100%; height: 130px;" class="img-use-my-size">
-
-   <a href="/measure/measure_graph/{{ view.measure.id }}/measure/?legend_location=7" class="replace-with-image">
+    <a href="/measure/measure_graph/{{ view.measure.id }}/measure/?legend-location=7" class="replace-with-image">
       afbeelding nog niet geladen
     </a>
-
   </div>
-  <table class="generic-table">
+  <table style="width: 100%;">
     <tbody>
       <tr>
-        <th>Ident</th><td>{% firstof view.measure.ident '(geen code)' %}</td>
+        <td>Ident</td>
+        <td>{% firstof view.measure.ident '(geen code)' %}</td>
       </tr>
 
       <tr>
-        <th>Naam maatregel</th><td>{{ view.measure.title }}</td>
+        <td>Naam maatregel</td>
+        <td>{{ view.measure.title }}</td>
       </tr>
 
       {% if view.measure.parent %}
       <tr>
-        <th>Onderdeel van maatregel</th><td>{{ view.measure.parent }}</td>
+        <td>Onderdeel van maatregel</td>
+        <td>{{ view.measure.parent }}</td>
       </tr>
       {% endif %}
 
       <tr>
-        <th>KRW maatregel</th><td>
+        <td>KRW maatregel</td>
+        <td>
           {% if view.measure.is_KRW_measure %}
           Ja
           {% else %}
@@ -37,7 +39,8 @@
       </tr>
 
       <tr>
-        <th>Focus maatregel</th><td>
+        <td>Focus maatregel</td>
+        <td>
           {% if view.measure.is_indicator %}
           Ja
           {% else %}
@@ -47,7 +50,8 @@
       </tr>
 
       <tr>
-        <th>in SGBP</th><td>
+        <td>In SGBP</td>
+        <td>
           {% if view.measure.in_sgbp %}
           Ja
           {% else %}
@@ -57,28 +61,28 @@
       </tr>
 
       <tr>
-        <th>Beschrijving</th><td>{{ view.measure.description }}</td>
+        <td>Beschrijving</td><td>{{ view.measure.description }}</td>
       </tr>
 
       <tr>
-        <th>Maatregel type</th><td>{{ view.measure.measure_type }}</td>
+        <td>Maatregel type</td><td>{{ view.measure.measure_type }}</td>
       </tr>
 
       <tr>
-        <th>Waarde en eenheid</th>
+        <td>Waarde en eenheid</td>
         <td>
-          {{ view.measure.value_sum }}
+          {% firstof view.measure.value_sum '-' %}
           {{ view.measure.unit }}
         </td>
       </tr>
 
       <tr>
-        <th>Periode</th>
+        <td>Periode</td>
         <td>{{ view.measure.period }}</td>
       </tr>
 
       <tr>
-        <th>Beleidsdoel</th>
+        <td>Beleidsdoelen</td>
         <td>
           {% for cat in view.measure.categories.all %}
           {{ cat }}
@@ -88,58 +92,102 @@
       </tr>
 
       <tr>
-        <th>Effect</th>
+        <td>Effect</td>
         <td>{{ view.measure.effect_esf_string }}</td>
       </tr>
 
       <tr>
-        <th>Initiatiefnemer</th><td>{{ view.measure.initiator|default_if_none:"-" }}</td>
-      </tr>
-
-      <tr>
-        <th>Verantwoordelijke afdeling</th>
-        <td>{{ view.measure.responsible_department|default:"-" }}</td>
-      </tr>
-
-      <tr>
-        <th>Uitvoerder</th><td>{{ view.measure.executive|default_if_none:"-" }}</td>
-      </tr>
-
-      <tr>
-        <th>Totale kosten</th>
-        <td>{{ view.measure.total_costs|euro }}</td>
-      </tr>
-
-      <tr>
-        <th>Investeringskosten</th>
-        <td>{{ view.measure.investment_costs|euro }}</td>
-      </tr>
-
-      <tr>
-        <th>Exploitatiekosten</th>
-        <td>{{ view.measure.exploitation_costs|euro }}</td>
-      </tr>
-
-      <tr>
-        <th>Grondkosten</th>
-        <td>{{ view.measure.land_costs|euro }}</td>
-      </tr>
-
-      <tr>
-        <th>Doel</th>
+        <td>ESF doel(en)</td>
         <td>{{ view.measure.target_esf_string }}</td>
       </tr>
 
       <tr>
-        <th>Aan- afvoergebied(en)</th><td>{{ view.measure.areas.all|join:", " }}</td>
+        <td colspan="2">
+          <fieldset class="x-fieldset x-fieldset-default">
+            <legend>Organisaties en kosten</legend>
+            <table style="width: 100%;">
+              <tr>
+                <td>Initiatiefnemer</td><td>{{ view.measure.initiator|default_if_none:"-" }}</td>
+              </tr>
+
+              <tr>
+                <td>Afdeling</td>
+                <td>{{ view.measure.responsible_department|default:"-" }}</td>
+              </tr>
+
+              <tr>
+                <td>Uitvoerder</td><td>{{ view.measure.executive|default_if_none:"-" }}</td>
+              </tr>
+
+              <tr>
+                <td>Totale kosten (incl. btw)</td>
+                <td>{{ view.measure.total_costs|euro }}</td>
+              </tr>
+
+              <tr>
+                <td>Investeringskosten (incl. btw)</td>
+                <td>{{ view.measure.investment_costs|euro }}</td>
+              </tr>
+
+              <tr>
+                <td>Exploitatiekosten (incl. btw)</td>
+                <td>{{ view.measure.exploitation_costs|euro }}</td>
+              </tr>
+
+              <tr>
+                <td>Grondkosten (incl. btw)</td>
+                <td>{{ view.measure.land_costs|euro }}</td>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+
+                  <fieldset class="x-fieldset x-fieldset-default">
+                    <legend>Kosten verdeling organisaties</legend>
+
+                    <table style="width: 100%;">
+                      <thead>
+                        <tr>
+                          <td>naam</td>
+                          <td>percentage</td>
+                          <td>opmerking</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for funding_organization in view.measure.fundingorganization_set.all %}
+                        <tr>
+                          <td>
+                            {{ funding_organization.organization }}
+                          </td>
+                          <td>
+                            {{ funding_organization.percentage|floatformat }}
+                          </td>
+                          <td>
+                            {% firstof funding_organization.comment '-' %}
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </fieldset>
+
+                </td>
+              </tr>
+            </table>
+          </fieldset>
+        </td>
       </tr>
 
       <tr>
-        <th>KRW gebied(en)</th><td>{{ view.measure.waterbodies.all|join:", " }}</td>
+        <td>Aan- afvoergebied(en)</td><td>{{ view.measure.areas.all|join:", " }}</td>
       </tr>
 
       <tr>
-        <th>Geometrie aanwezig</th>
+        <td>KRW gebied(en)</td><td>{{ view.measure.waterbodies.all|join:", " }}</td>
+      </tr>
+
+      <tr>
+        <td>Geometrie aanwezig</td>
         <td>{% if view.measure.geom %}ja{% else %}nee{% endif %}</td>
       </tr>
 
@@ -151,8 +199,8 @@
   <table class="generic-table">
     <thead>
       <tr>
-        <th>Code</th>
-        <th>Maatregel</th>
+        <td>Code</td>
+        <td>Maatregel</td>
       </tr>
     </thead>
     <tbody>
@@ -199,54 +247,4 @@
   </table>
   {% endif %}
 
-  <h2>Financierende organisaties</h2>
-  <table class="generic-table">
-    <thead>
-      <tr>
-        <th>Maatregel</th>
-        <th>Organisatie</th>
-        <th>Bedrag</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for funding_organization in view.measure.fundingorganization_set.all %}
-      <tr>
-        <td>
-          {{ view.measure.title }}
-        </td>
-        <td>
-          {{ funding_organization.organization }}
-        </td>
-        <td>
-          {{ funding_organization.cost|euro }}
-        </td>
-      </tr>
-      {% endfor %}
-      {% for measure_part in view.measure.get_parts %}
-        {% for funding_organization in measure_part.fundingorganization_set.all %}
-      <tr>
-        <td>
-          {{ measure_part.title }}
-        </td>
-        <td>
-          {{ funding_organization.organization }}
-        </td>
-        <td>
-          {{ funding_organization.cost|euro }}
-        </td>
-      </tr>
-        {% endfor %}
-      {% endfor %}
-    </tbody>
-    <tfoot>
-      <tr>
-        <td colspan="2">
-          Totaal
-        </td>
-        <td>
-          {{ view.measure.funding_organization_cost_sum|euro }}
-        </td>
-      </tr>
-    </tfoot>
-  </table>
 </div>
