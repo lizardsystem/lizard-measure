@@ -97,12 +97,12 @@
       </tr>
 
       <tr>
-        <td>ESF doel(en)</td>
-        <td>{{ view.measure.target_esf_string }}</td>
+        <th>ESF doel(en)</th>
+        <th>{{ view.measure.target_esf_string }}</th>
       </tr>
 
       <tr>
-        <td colspan="2">
+        <th colspan="2">
           <fieldset class="x-fieldset x-fieldset-default">
             <legend>Organisaties en kosten</legend>
             <table style="width: 100%;">
@@ -140,7 +140,7 @@
               </tr>
 
               <tr>
-                <td colspan="2">
+                <th colspan="2">
 
                   <fieldset class="x-fieldset x-fieldset-default">
                     <legend>Kosten verdeling organisaties</legend>
@@ -156,26 +156,26 @@
                       <tbody>
                         {% for funding_organization in view.measure.fundingorganization_set.all %}
                         <tr>
-                          <td>
+                          <th>
                             {{ funding_organization.organization }}
-                          </td>
-                          <td>
+                          </th>
+                          <th>
                             {{ funding_organization.percentage|floatformat }}
-                          </td>
-                          <td>
+                          </th>
+                          <th>
                             {% firstof funding_organization.comment '-' %}
-                          </td>
+                          </th>
                         </tr>
                         {% endfor %}
                       </tbody>
                     </table>
                   </fieldset>
 
-                </td>
+                </th>
               </tr>
             </table>
           </fieldset>
-        </td>
+        </th>
       </tr>
 
       <tr>
