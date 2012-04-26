@@ -5,7 +5,10 @@ Changelog of lizard-measure
 1.63 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Removed aggregation in 1.62 (forgot to mention).
+
+- Changed titles in measure detail of measure edit / history / sub
+  measure.
 
 
 1.62 (2012-04-26)
