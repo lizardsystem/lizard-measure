@@ -18,6 +18,8 @@ Changelog of lizard-measure
 
 - Improved ESF in measure detail view.
 
+- Improved layout in measure detail view.
+
 
 1.61 (2012-04-25)
 -----------------
