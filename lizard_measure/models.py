@@ -1716,16 +1716,28 @@ class Measure(models.Model):
         return ', '.join(['%i'%esf for esf in esf_list])
 
     def effect_esf_string(self):
-        esf_list = self.esflink_set.filter(Q(positive=True)|Q(negative=True)).order_by('esf')
-        output = ''
+        """
+        Used by measure detail view
+
+        ESF 1 ja ja ja, ESF 2 ja nee ja results in: "ESF 1 (-/+), ESF 2 (-)"
+        """
+        esf_list = self.esflink_set.filter(
+            Q(is_target_esf=True)|Q(positive=True)|Q(negative=True)).order_by('esf')
+        output = []
         for esf in esf_list:
-            output += '%i'% esf.esf
-            if esf.positive:
-                output += '(+)'
+            effects = []
             if esf.negative:
-                output += '(-)'
-            output += ', '
-        return output
+                effects.append('-')
+            if esf.positive:
+                effects.append('+')
+            esf_str = 'ESF %i' % esf.esf
+            if effects:
+                esf_str += ' (%s)' % ('/'.join(effects))
+            output.append(esf_str)
+        if output:
+            return ', '.join(output)
+        else:
+            return 'Geen effecten'
 
     @property
     def latest_realised_status(self):

@@ -16,6 +16,8 @@ Changelog of lizard-measure
 
 - Added parent to measure detail view.
 
+- Improved ESF in measure detail view.
+
 
 1.61 (2012-04-25)
 -----------------
