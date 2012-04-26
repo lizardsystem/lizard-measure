@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.63 (unreleased)
+1.63 (2012-04-26)
 -----------------
 
 - Removed aggregation in 1.62 (forgot to mention).
