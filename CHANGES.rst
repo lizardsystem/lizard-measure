@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.62 (unreleased)
+1.62 (2012-04-26)
 -----------------
 
 - Measure overview: order of columns changes, "bron" is wider, changed
