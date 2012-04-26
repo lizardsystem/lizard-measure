@@ -14,6 +14,8 @@ Changelog of lizard-measure
 
 - Added aan- afvoergebieden and KRW gebieden to measure detail view.
 
+- Added parent to measure detail view.
+
 
 1.61 (2012-04-25)
 -----------------

@@ -482,6 +482,7 @@ class PredefinedGraphSelection(models.Model):
     def __unicode__(self):
         return self.name
 
+
 class SteeringParameterPredefinedGraph(models.Model):
     """
         predefined graphs
@@ -511,6 +512,7 @@ class SteeringParameterPredefinedGraph(models.Model):
         verbose_name = _("Steering parameter predefined graph ")
         verbose_name_plural = _("Steering parameters predefined graph")
         ordering = ('order', )
+
 
 class SteeringParameterFree(models.Model):
     """

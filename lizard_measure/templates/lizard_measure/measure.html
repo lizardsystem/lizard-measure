@@ -20,6 +20,12 @@
         <th>Naam maatregel</th><td>{{ view.measure.title }}</td>
       </tr>
 
+      {% if view.measure.parent %}
+      <tr>
+        <th>Onderdeel van maatregel</th><td>{{ view.measure.parent }}</td>
+      </tr>
+      {% endif %}
+
       <tr>
         <th>Aan- afvoergebied(en)</th><td>{{ view.measure.areas.all|join:", " }}</td>
       </tr>
