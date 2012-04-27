@@ -36,7 +36,7 @@
         parent: {id:{{ init_parent.id }}, name:'{{ init_parent.title }}'},
     {% endif %}
     {% if init_waterbody %}
-        waterbodies: {id:{{ init_waterbody.id }}, name:'{{ init_waterbody.name }}'},
+        waterbodies: {id:{{ init_waterbody.id }}, name:'{{ init_waterbody.area.name }}'},
     {% endif %}
     {% if init_area %}
         areas: {id:{{ init_area.id }}, name:'{{ init_area.name }}'},
@@ -57,7 +57,7 @@
             allowBlank: false
         },
         {
-            fieldLabel: 'Titel',
+            fieldLabel: 'Naam',
             name: 'title',
             anchor: '100%',
             xtype: 'textfield',
@@ -100,7 +100,7 @@
             allowBlank: true
         },
         {
-            fieldLabel: 'In sgbp',
+            fieldLabel: 'In SGBP',
             name: 'in_sgbp',
             inputValue: true,
             xtype: 'checkbox',
@@ -128,6 +128,28 @@
             multiSelect: false,
             forceSelection: true,
             allowBlank: false
+        },
+        {
+            fieldLabel: 'Waarde',
+            name: 'value',
+            xtype: 'numberfield',
+            minValue: 0,
+            allowBlank: false,
+            width: 200
+        },
+        {
+            fieldLabel: 'Eenheid',
+            name: 'unit',
+            displayField: 'name',
+            valueField: 'id',
+            xtype: 'combodict',
+            store: {
+                fields: ['id', 'name'],
+                data: Ext.JSON.decode({% autoescape off %}'{{ units }}'{% endautoescape %})
+            },
+            forceSelection: true,
+            allowBlank: false,
+            width: 200
         },
         {
             fieldLabel: 'Periode',
@@ -167,7 +189,7 @@
             field_name: 'Effect',
             editable: true,
             extra_fields:[{
-                text: 'is doel',
+                text: 'is gericht op',
                 dataIndex: 'is_target_esf',
                 width:100,
                 xtype: 'checkcolumn',
@@ -197,28 +219,6 @@
         html: '<br>De link met ESFen kan ingevoerd worden nadat de maatregel voor de eerste keer is opgeslagen. <br><br>'
     },
     {% endif %}
-        {
-            fieldLabel: 'Waarde',
-            name: 'value',
-            xtype: 'numberfield',
-            minValue: 0,
-            allowBlank: false,
-            width: 200
-        },
-        {
-            fieldLabel: 'Eenheid',
-            name: 'unit',
-            displayField: 'name',
-            valueField: 'id',
-            xtype: 'combodict',
-            store: {
-                fields: ['id', 'name'],
-                data: Ext.JSON.decode({% autoescape off %}'{{ units }}'{% endautoescape %})
-            },
-            forceSelection: true,
-            allowBlank: false,
-            width: 200
-        },
         {
             xtype:'fieldset',
             collapsible: true,
@@ -327,7 +327,7 @@
                 }
             },
             {
-                fieldLabel: 'Totale kosten',
+                fieldLabel: 'Totale kosten (incl. btw)',
                 name: 'total_costs',
                 minValue: 0,
                 allowDecimals: false,
@@ -335,7 +335,7 @@
                 xtype: 'numberfield'
             },
             {
-                fieldLabel: 'Investeringskosten',
+                fieldLabel: 'Investeringskosten (incl. btw)',
                 name: 'investment_costs',
                 minValue: 0,
                 allowDecimals: false,
@@ -343,7 +343,7 @@
                 xtype: 'numberfield'
             },
             {
-                fieldLabel: 'Exploitatiekosten',
+                fieldLabel: 'Exploitatiekosten (incl. btw)',
                 name: 'exploitation_costs',
                 minValue: 0,
                 allowDecimals: false,
@@ -351,7 +351,7 @@
                 xtype: 'numberfield'
             },
             {
-                fieldLabel: 'Grondkosten',
+                fieldLabel: 'Grondkosten (incl. btw)',
                 name: 'land_costs',
                 minValue: 0,
                 allowDecimals: false,
@@ -377,7 +377,7 @@
                         minValue: 0
                     }
                 },{
-                    text: 'comment',
+                    text: 'opmerking',
                     dataIndex: 'comment',
                     width:200,
                     field: {
@@ -466,20 +466,43 @@
         },
         {
             xtype: 'button',
-            text: 'edit geometry op kaart',
+            text: 'Bewerk geometrie op kaart',
             handler: function() {
-                panel = this.up('panel')
-                form = panel.getForm()
-                Lizard.window.MapWindow.show({
-                    callback: function(geometry) {
-                        form = panel.getForm();
-                        form.findField('geom').setValue(geometry);
+                console.log('using new code');
+                var panel, form, ident
+                panel = this.up('panel');
+                form = panel.getForm();
+                ident = Lizard.CM.getContext().object.id;
+                // Get the extent for the current object via
+                // Request. Succes will open the editor
+                Ext.Ajax.request({
+                    url: '/area/api/area_special/'+ ident +'/',
+                    method: 'GET',
+                    params: {
+                        _accept: 'application/json'
                     },
-                    start_geometry: form.findField('geom').getValue()
-
-
+                    success: function(xhr) {
+                        var extent
+                        extent = Ext.JSON.decode(
+                          xhr.responseText
+                        ).area.extent;
+                        Lizard.window.MapWindow.show({
+                          callback: function(geometry) {
+                            var form
+                            form = panel.getForm();
+                            form.findField('geom').setValue(geometry);
+                          },
+                          start_geometry: form.findField('geom').getValue(),
+                          start_extent: extent
+                        })
+                    },
+                    failure: function() {
+                        Ext.Msg.alert(
+                          "portal creation failed",
+                          "Server communication failure"
+                        );
+                    }
                 })
-
             }
         },
         {
@@ -578,6 +601,14 @@
                                         // form is called using
                                         // Screen.linkToPopup.
                                         form_window.finish_edit_function({% if measure %}'update'{% else %}'create'{% endif%});
+                                    } else {
+                                        Lizard.CM.fireEvent('contextchange', {}, {}, Lizard.CM.getContext(), Lizard.CM);
+
+                                        Ext.WindowManager.each(function(window) {
+                                            if (window.loader) {
+                                                window.loader.load();
+                                            }
+                                        })
                                     }
                                 },
                                 failure: function(xhr) {

@@ -2,10 +2,113 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.52 (unreleased)
------------------
+1.63.2 (unreleased)
+-------------------
 
 - Added 'constrainHeader: true, heigth: 600' to all popup windows.
+
+
+1.63.1 (2012-04-27)
+-------------------
+
+- Let form pass extent to geometry editor.
+
+
+1.63 (2012-04-26)
+-----------------
+
+- Removed aggregation in 1.62 (forgot to mention).
+
+- Changed titles in measure detail of measure edit / history / sub
+  measure.
+
+
+1.62 (2012-04-26)
+-----------------
+
+- Measure overview: order of columns changes, "bron" is wider, changed
+  text.
+
+- Added option wide_left_ticks for measure graph.
+
+- Changed order of fields in maatregelen_form.
+
+- Added aan- afvoergebieden and KRW gebieden to measure detail view.
+
+- Added parent to measure detail view.
+
+- Improved ESF in measure detail view.
+
+- Improved layout in measure detail view.
+
+
+1.61 (2012-04-25)
+-----------------
+
+- removed area name in measure screen titles (pp 232)
+
+- fixed refresh for measure screen after edit (pp 66, pp 200, pp 234, pp 237, pp 300)
+
+
+1.60 (2012-04-25)
+-----------------
+
+- Added messagebox when removing a measure in maatregelen-beheer.
+
+
+1.59 (2012-04-25)
+-----------------
+
+- Renamed english field name comment to opmerking in measure
+  form. Name has to me renamed in lizard_portal.combomultiselect.
+
+
+1.58 (2012-04-25)
+-----------------
+
+- Added "incl. btw" to maatregelen form fields.
+
+
+1.57 (2012-04-25)
+-----------------
+
+- Restrict waterbody api to real waterbodies, whose areas have the
+  area_class AREA_CLASS_KRW_WATERLICHAAM.
+
+
+1.56 (2012-04-25)
+-----------------
+
+- Added textual names to ESF links.
+
+
+1.55 (2012-04-25)
+-----------------
+
+- Renamed field in measure form: is doel -> is gericht op.
+
+- Renamed field in measure summary from Deelgebied to Gebied.
+
+
+1.54 (2012-04-24)
+-----------------
+
+- Fix wrong id prefilled in form for submeasures.
+
+
+1.53 (2012-04-24)
+-----------------
+
+- Make krw_portaal update invalidate old periods.
+- Redo undone edit of get_statusmoments.
+- Only allow for valid periods in measure detail edit portal.
+
+
+1.52 (2012-04-24)
+-----------------
+
+- Change order of graph measures.
+- Fix error in template showing focus instead of krw.
 
 
 1.51 (2012-04-24)

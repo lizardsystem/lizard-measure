@@ -141,6 +141,14 @@ class KRWStatusAdmin(admin.ModelAdmin):
     ]
 
 
+class MeasurePeriodAdmin(admin.ModelAdmin):
+    list_display_links = ['description']
+    list_display = [
+        'description',
+        'valid',
+    ]
+
+
 class KRWWatertypeAdmin(admin.ModelAdmin):
     list_display_links = ['description']
     list_display = [
@@ -190,7 +198,7 @@ admin.site.register(KRWStatus, KRWStatusAdmin)
 admin.site.register(KRWWatertype, KRWWatertypeAdmin)
 admin.site.register(Measure, MeasureAdmin)
 admin.site.register(MeasureCategory)
-admin.site.register(MeasurePeriod)
+admin.site.register(MeasurePeriod, MeasurePeriodAdmin)
 admin.site.register(MeasureStatus, MeasureStatusAdmin)
 admin.site.register(MeasureStatusMoment)
 admin.site.register(MeasureType, MeasureTypeAdmin)

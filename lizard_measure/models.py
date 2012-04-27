@@ -482,6 +482,7 @@ class PredefinedGraphSelection(models.Model):
     def __unicode__(self):
         return self.name
 
+
 class SteeringParameterPredefinedGraph(models.Model):
     """
         predefined graphs
@@ -511,6 +512,7 @@ class SteeringParameterPredefinedGraph(models.Model):
         verbose_name = _("Steering parameter predefined graph ")
         verbose_name_plural = _("Steering parameters predefined graph")
         ordering = ('order', )
+
 
 class SteeringParameterFree(models.Model):
     """
@@ -1237,7 +1239,13 @@ class Measure(models.Model):
 
     @property
     def shortname(self):
+        """
+        OBSOLETE: use short_name instead.
+        """
         return short_string(self.title, 17)
+
+    def short_name(self, max_length=17):
+        return short_string(self.title, max_length)
 
     @property
     def deleted(self):
@@ -1322,9 +1330,12 @@ class Measure(models.Model):
 
             msm.save()
 
-    def get_statusmoments(self,
-                          auto_create_missing_states=False,
-                          only_valid=True):
+    def get_statusmoments(
+        self,
+        auto_create_missing_states=False,
+        only_valid=False,
+        only_valid_or_present=False,
+    ):
         """
         updates the many2many relation with the MeasureStatusMoments
         return :
@@ -1341,11 +1352,23 @@ class Measure(models.Model):
         if auto_create_missing_states:
             self.create_empty_statusmoments()
 
-        measure_status_moments = self.measurestatusmoment_set.filter(
-            status__valid=only_valid,
-        ).order_by('status__value')
+        measure_status_moments = self.measurestatusmoment_set.all().order_by(
+            'status__value'
+        )
 
-        for measure_status_moment in measure_status_moments:
+        if only_valid:
+            msm_subset = measure_status_moments.filter(
+                status__valid=True,
+            )
+
+        if only_valid_or_present:
+            msm_subset = measure_status_moments.filter(
+                Q(status__valid=True) |
+                Q(planning_date__isnull=False) |
+                Q(realisation_date__isnull=False)
+            )
+
+        for measure_status_moment in msm_subset:
             output.append({
                 'id': measure_status_moment.status_id,
                 'name': measure_status_moment.status.name,
@@ -1398,6 +1421,19 @@ class Measure(models.Model):
             negative
         """
 
+        # Names can be treated as constants
+        esf_names = {
+            1: 'Productiviteit water',
+            2: 'Licht',
+            3: 'Productiviteit bodem',
+            4: 'Habitatgeschiktheid',
+            5: 'Verspreiding',
+            6: 'Verwijdering',
+            7: 'Organische belasting',
+            8: 'Toxiciteit',
+            9: 'Beleving',
+            }
+
         output = []
 
         if auto_create_missing_states:
@@ -1408,7 +1444,7 @@ class Measure(models.Model):
         for esflink in esflinks:
             output.append({
                 'id': esflink.id,
-                'name': 'ESF %i'%esflink.esf,
+                'name': 'ESF %i: %s' % (esflink.esf, esf_names.get(esflink.esf, '-')),
                 'is_target_esf': esflink.is_target_esf,
                 'positive': esflink.positive,
                 'negative': esflink.negative
@@ -1470,23 +1506,20 @@ class Measure(models.Model):
         return None
 
 
-    def status_moment_string(self, dt=datetime.datetime.now(), is_planning=False, aggretation_of_childs=False):
+    def status_moment_string(self, dt=datetime.datetime.now(), is_planning=False):
         """
         String representation of status_moment function
 
         """
 
-        st = self.status_moment(dt=dt, is_planning=is_planning, aggretation_of_childs=aggretation_of_childs)
+        st = self.status_moment(dt=dt, is_planning=is_planning)
 
         if st == None:
             return '-'
         else:
             return st.status.name
 
-
-
-
-    def status_moment(self, dt=datetime.datetime.now(), is_planning=False, aggretation_of_childs=False):
+    def status_moment(self, dt=datetime.datetime.now(), is_planning=False):
         """
         Get status for a given datetime (defaults to today)
         returns MeasureStatusMoment or None.
@@ -1495,39 +1528,33 @@ class Measure(models.Model):
 
         """
         # Collect status_moments from children OR self.
-        if self.measure_set.all() and aggretation_of_childs:
-            measure_status_moments = [
-                m.status_moment(dt=dt, is_planning=is_planning)
-                for m in self.measure_set.all()]
-        else:
-            msm_self = self.status_moment_self(dt=dt, is_planning=is_planning)
-            measure_status_moments = [msm_self, ]
+        return self.status_moment_self(dt=dt, is_planning=is_planning)
+        # measure_status_moments = [msm_self, ]
 
-        # Apparently some directly related measures has no status
-        if (None in measure_status_moments and
-            self.aggregation_type == self.AGGREGATION_TYPE_MIN):
-            return None
+        # # Apparently some directly related measures has no status
+        # if (None in measure_status_moments and
+        #     self.aggregation_type == self.AGGREGATION_TYPE_MIN):
+        #     return None
 
-        # Remove Nones
-        measure_status_moments = filter(None, measure_status_moments)
+        # # Remove Nones
+        # measure_status_moments = filter(None, measure_status_moments)
 
-        # No status info at all.
-        if not measure_status_moments:
-            return None
+        # # No status info at all.
+        # if not measure_status_moments:
+        #     return None
 
-        #min, max or avg out of measure_status_moments
-        if self.aggregation_type == self.AGGREGATION_TYPE_MIN:
-            return min(measure_status_moments,
-                       key=lambda msm: msm.status.value)
-        elif self.aggregation_type == self.AGGREGATION_TYPE_MAX:
-            return max(measure_status_moments,
-                       key=lambda msm: msm.status.value)
-        else:
-            # self.aggregation_type == AGGREGATION_TYPE_AVG:
-            # TODO: implement
-            return min(measure_status_moments,
-                       key=lambda msm: msm.status.value)
-
+        # # #min, max or avg out of measure_status_moments
+        # # if self.aggregation_type == self.AGGREGATION_TYPE_MIN:
+        # #     return min(measure_status_moments,
+        # #                key=lambda msm: msm.status.value)
+        # # elif self.aggregation_type == self.AGGREGATION_TYPE_MAX:
+        # #     return max(measure_status_moments,
+        # #                key=lambda msm: msm.status.value)
+        # # else:
+        #     # self.aggregation_type == AGGREGATION_TYPE_AVG:
+        #     # TODO: implement
+        #     return min(measure_status_moments,
+        #                key=lambda msm: msm.status.value)
 
 
     def measure_status_moments(self, end_date=None, is_planning=False,
@@ -1555,142 +1582,157 @@ class Measure(models.Model):
         return msm_dates
 
 
-    def measure_status_moments_aggregate_children(self, end_date=None, is_planning=False,
-                               debug=False):
-        """
-            Else return calculated aggregated list
-            of status moments
-        """
-        if end_date is not None:
-            if is_planning:
-                msm_dates = msm_dates.filter(planning_date__lte=end_date)
-            else:
-                msm_dates = msm_dates.filter(realisation_date__lte=end_date)
+    # def measure_status_moments_aggregate_children(self, end_date=None, is_planning=False,
+    #                            debug=False):
+    #     """
+    #         Else return calculated aggregated list
+    #         of status moments
+    #     """
+    #     if end_date is not None:
+    #         if is_planning:
+    #             msm_dates = msm_dates.filter(planning_date__lte=end_date)
+    #         else:
+    #             msm_dates = msm_dates.filter(realisation_date__lte=end_date)
 
-        # With children:
-        # Collect all msms where the date is used to calculate statuses.
-        msm_dates = list(msm_dates)
-        for measure_child in self.measure_set.all():
-            msm_dates_children = measure_child.measure_status_moments(
-                is_planning=is_planning, end_date=end_date)
-            msm_dates_children = filter(None, msm_dates_children)
-            msm_dates.extend(list(msm_dates_children))
-        # For each date, calculate status and append to msm.
-        msm = []
-        for msm_date in msm_dates:
-            status_moment = self.status_moment(
-                dt=msm_date.datetime, is_planning=is_planning)
-            # Remove None's: they can only appear at 'the front' of
-            # the timeline and they are irrelevant.
-            if status_moment:
-                if is_planning:
-                    status_moment.datetime = msm_date.planning_date
-                else:
-                    status_moment.datetime = msn_date.realisation_date
-                msm.append(status_moment)
+    #     # With children:
+    #     # Collect all msms where the date is used to calculate statuses.
+    #     msm_dates = list(msm_dates)
+    #     for measure_child in self.measure_set.all():
+    #         msm_dates_children = measure_child.measure_status_moments(
+    #             is_planning=is_planning, end_date=end_date)
+    #         msm_dates_children = filter(None, msm_dates_children)
+    #         msm_dates.extend(list(msm_dates_children))
+    #     # For each date, calculate status and append to msm.
+    #     msm = []
+    #     for msm_date in msm_dates:
+    #         status_moment = self.status_moment(
+    #             dt=msm_date.datetime, is_planning=is_planning)
+    #         # Remove None's: they can only appear at 'the front' of
+    #         # the timeline and they are irrelevant.
+    #         if status_moment:
+    #             if is_planning:
+    #                 status_moment.datetime = msm_date.planning_date
+    #             else:
+    #                 status_moment.datetime = msn_date.realisation_date
+    #             msm.append(status_moment)
 
-        msm = sorted(msm, key=lambda m: m.datetime)
+    #     msm = sorted(msm, key=lambda m: m.datetime)
 
-        return msm
+    #     return msm
 
-    def value_sum(self):
-        """
-        Calculates sum of all children, where the unit is the same.
-        """
+    # def value_sum(self):
+    #     """
+    #     Calculates sum of all children, where the unit is the same.
+    #     """
 
-        result = self.value
-        descendants = self.measure_set.all()
-        for descendant in descendants:
-            if (descendant.unit ==
-                self.unit):
-                result += descendant.value
-        return result
+    #     result = self.value
+    #     descendants = self.measure_set.all()
+    #     for descendant in descendants:
+    #         if (descendant.unit ==
+    #             self.unit):
+    #             result += descendant.value
+    #     return result
 
-    def costs_sum(self):
-        """
-        Calculates sum of all children for total_costs. None=0
-        """
+    # def costs_sum(self):
+    #     """
+    #     Calculates sum of all children for total_costs. None=0
+    #     """
 
-        result = 0.0
-        children = self.measure_set.all()
-        if self.total_costs is not None:
-            result += self.total_costs
-        for child in children:
-            result += child.costs_sum()
-        return result
+    #     result = 0.0
+    #     children = self.measure_set.all()
+    #     if self.total_costs is not None:
+    #         result += self.total_costs
+    #     for child in children:
+    #         result += child.costs_sum()
+    #     return result
 
-    def investment_costs_sum(self):
-        """
-        Calculates sum of all children for investment_costs. None=0
-        """
+    # def investment_costs_sum(self):
+    #     """
+    #     Calculates sum of all children for investment_costs. None=0
+    #     """
 
-        result = 0.0
-        children = self.measure_set.all()
-        if self.investment_costs is not None:
-            result += self.investment_costs
-        for child in children:
-            result += child.investment_costs_sum()
-        return result
+    #     result = 0.0
+    #     children = self.measure_set.all()
+    #     if self.investment_costs is not None:
+    #         result += self.investment_costs
+    #     for child in children:
+    #         result += child.investment_costs_sum()
+    #     return result
 
-    def exploitation_costs_sum(self):
-        """
-        Calculates sum of all children for exploitation_costs. None=0
-        """
+    # def exploitation_costs_sum(self):
+    #     """
+    #     Calculates sum of all children for exploitation_costs. None=0
+    #     """
 
-        result = 0.0
-        children = self.measure_set.all()
-        if self.exploitation_costs is not None:
-            result += self.exploitation_costs
-        for child in children:
-            result += child.exploitation_costs_sum()
-        return result
+    #     result = 0.0
+    #     children = self.measure_set.all()
+    #     if self.exploitation_costs is not None:
+    #         result += self.exploitation_costs
+    #     for child in children:
+    #         result += child.exploitation_costs_sum()
+    #     return result
 
-    def obligation_end_date_min_max(self):
-        minimum = self.obligation_end_date
-        maximum = self.obligation_end_date
-        descendants = self.measure_set.all()
-        for descendant in descendants:
-            if descendant.oblication_end_date > maximum:
-                maximum = descendant.obligation_end_date
-            if descendant.oblication_end_date < minimum:
-                minimum = descendant.obligation_end_date
-        return minimum, maximum
+    # def obligation_end_date_min_max(self):
+    #     minimum = self.obligation_end_date
+    #     maximum = self.obligation_end_date
+    #     descendants = self.measure_set.all()
+    #     for descendant in descendants:
+    #         if descendant.oblication_end_date > maximum:
+    #             maximum = descendant.obligation_end_date
+    #         if descendant.oblication_end_date < minimum:
+    #             minimum = descendant.obligation_end_date
+    #     return minimum, maximum
 
-    def obligation_end_date_min(self):
-        minimum, maximum = self.obligation_end_date_min_max()
-        return minimum
+    # def obligation_end_date_min(self):
+    #     minimum, maximum = self.obligation_end_date_min_max()
+    #     return minimum
 
-    def obligation_end_date_max(self):
-        minimum, maximum = self.obligation_end_date_min_max()
-        return maximum
+    # def obligation_end_date_max(self):
+    #     minimum, maximum = self.obligation_end_date_min_max()
+    #     return maximum
 
-    def funding_organization_cost_sum(self):
-        result = 0.0
-        for funding_organization in self.fundingorganization_set.all():
-            result += funding_organization.cost
-        for descendant in self.measure_set.all():
-            funding_organizations = descendant.fundingorganization_set.all()
-            for funding_organization in funding_organizations:
-                result += funding_organization.cost
-        return result
+    # def funding_organization_cost_sum(self):
+    #     result = 0.0
+    #     for funding_organization in self.fundingorganization_set.all():
+    #         result += funding_organization.cost
+    #     for descendant in self.measure_set.all():
+    #         funding_organizations = descendant.fundingorganization_set.all()
+    #         for funding_organization in funding_organizations:
+    #             result += funding_organization.cost
+    #     return result
 
     def target_esf_string(self):
+        """
+        Used by measure detail view
+        """
         esf_list = self.esflink_set.filter(is_target_esf=True).order_by('esf').values_list('esf', flat=True)
 
-        return ', '.join(['%i'%esf for esf in esf_list])
+        return ', '.join(['ESF %i' % esf for esf in esf_list])
 
     def effect_esf_string(self):
-        esf_list = self.esflink_set.filter(Q(positive=True)|Q(negative=True)).order_by('esf')
-        output = ''
+        """
+        Used by measure detail view
+
+        ESF 1 ja ja ja, ESF 2 ja nee ja results in: "ESF 1 (-/+), ESF 2 (-)"
+        """
+        esf_list = self.esflink_set.filter(
+            Q(is_target_esf=True)|Q(positive=True)|Q(negative=True)).order_by('esf')
+        output = []
         for esf in esf_list:
-            output += '%i'% esf.esf
-            if esf.positive:
-                output += '(+)'
+            effects = []
             if esf.negative:
-                output += '(-)'
-            output += ', '
-        return output
-    
+                effects.append('-')
+            if esf.positive:
+                effects.append('+')
+            esf_str = 'ESF %i' % esf.esf
+            if effects:
+                esf_str += ' (%s)' % ('/'.join(effects))
+            output.append(esf_str)
+        if output:
+            return ', '.join(output)
+        else:
+            return 'Geen effecten'
+
     @property
     def latest_realised_status(self):
         """
