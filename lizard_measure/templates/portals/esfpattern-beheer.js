@@ -69,8 +69,9 @@
                 Ext.create('Ext.window.Window', {
                     title: 'Geschikte maatregelen patroon',
                     width: 600,
-                    height: 400,
+                    height: 600,
                     modal: true,
+                    constrainHeader: true,
                     finish_edit_function: function (updated_record) {
                         me.store.load();
                     },

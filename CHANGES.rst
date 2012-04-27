@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.52 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Added 'constrainHeader: true, heigth: 600' to all popup windows.
 
 
 1.51 (2012-04-24)
