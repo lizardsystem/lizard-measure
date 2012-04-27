@@ -2,8 +2,8 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.64 (unreleased)
------------------
+1.63.1 (2012-04-27)
+-------------------
 
 - Let form pass extent to geometry editor.
 
