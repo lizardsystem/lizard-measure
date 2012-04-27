@@ -466,20 +466,43 @@
         },
         {
             xtype: 'button',
-            text: 'edit geometry op kaart',
+            text: 'Bewerk geometrie op kaart',
             handler: function() {
-                panel = this.up('panel')
-                form = panel.getForm()
-                Lizard.window.MapWindow.show({
-                    callback: function(geometry) {
-                        form = panel.getForm();
-                        form.findField('geom').setValue(geometry);
+                console.log('using new code');
+                var panel, form, ident
+                panel = this.up('panel');
+                form = panel.getForm();
+                ident = Lizard.CM.getContext().object.id;
+                // Get the extent for the current object via
+                // Request. Succes will open the editor
+                Ext.Ajax.request({
+                    url: '/area/api/area_special/'+ ident +'/',
+                    method: 'GET',
+                    params: {
+                        _accept: 'application/json'
                     },
-                    start_geometry: form.findField('geom').getValue()
-
-
+                    success: function(xhr) {
+                        var extent
+                        extent = Ext.JSON.decode(
+                          xhr.responseText
+                        ).area.extent;
+                        Lizard.window.MapWindow.show({
+                          callback: function(geometry) {
+                            var form
+                            form = panel.getForm();
+                            form.findField('geom').setValue(geometry);
+                          },
+                          start_geometry: form.findField('geom').getValue(),
+                          start_extent: extent
+                        })
+                    },
+                    failure: function() {
+                        Ext.Msg.alert(
+                          "portal creation failed",
+                          "Server communication failure"
+                        );
+                    }
                 })
-
             }
         },
         {
