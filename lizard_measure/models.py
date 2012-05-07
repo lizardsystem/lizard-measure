@@ -1005,7 +1005,6 @@ class Measure(models.Model):
     For drawing the measure graph, we only need the fields:
     name, start_date, end_date, status
     """
-
     AGGREGATION_TYPE_CHOICES = (
         (1, _('Min')),
         (2, _('Max')),
@@ -1024,6 +1023,9 @@ class Measure(models.Model):
     SOURCE_KRW_PORTAAL = 1
     SOURCE_VSS_2010 = 2
     SOURCE_MANUAL = 3
+    
+    # View whose data to store via lizard_history.
+    HISTORY_DATA_VIEW = ('lizard_measure.api.views.MeasureView')
 
     parent = models.ForeignKey('self', blank=True, null=True)
 
@@ -1452,6 +1454,16 @@ class Measure(models.Model):
 
         return output
 
+    def get_funding_organisations(self):
+        """
+        Return funding organisation dict
+        """
+
+        return [{'id': fo.organization_id,
+                 'percentage': fo.percentage,
+                 'name': fo.organization.description,
+                 'comment': fo.comment}
+                for fo in self.fundingorganization_set.all()]
 
     def set_fundingorganizations(self, organizations):
         """
