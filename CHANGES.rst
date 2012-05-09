@@ -8,6 +8,7 @@ Changelog of lizard-measure
 - Move get_funding_organisations to Measure model.
 - Add attribute history_data_view to measure.
 - Add view and form to view archived measure.
+- Move templatetag to lizard-history.
 
 
 1.63.2 (2012-04-27)

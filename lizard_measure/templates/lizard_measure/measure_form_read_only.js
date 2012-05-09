@@ -5,7 +5,6 @@
     trackResetOnLoad: true,
     bodyPadding: '10 25 10 10',//padding on the right side 25 for scrollbar
     height: '100%',
-    url: '/history/api_object/{{view.log_entry_id}}?_accept=application/json',
     loadProxy: {
         url: '/history/api_object/{{view.log_entry_id}}',
         type: 'ajax',
