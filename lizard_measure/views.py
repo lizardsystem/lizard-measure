@@ -186,6 +186,42 @@ class MeasureHistoryDetailView(MeasureDetailView):
 
         return self._action
 
+
+class MeasureArchiveView(AppView):
+    """
+    Readonly measure form.
+    """
+
+    def get(self, request, *args, **kwargs):
+        """
+        Return read only form for measure corresponding to specific log_entry.
+        """
+        if request.user.is_authenticated():
+            self.template_name = 'lizard_measure/measure_form_read_only.js'
+            self.measure_id = kwargs.get('measure_id')
+            self.log_entry_id = kwargs.get('log_entry_id')
+        else:
+            self.template_name = 'portals/geen_toegang.js'
+        return super(MeasureArchiveView, self).get(request, *args, **kwargs)
+
+
+class MeasureHistoryDetailView(MeasureDetailView):
+    """
+    Show measure history details
+    """
+    template_name='lizard_measure/measure_history_details.html'
+
+    def action(self):
+        """
+        Return history details dict
+        """
+        if not hasattr(self, '_action'):
+            self._action = get_history(
+                log_entry_id=self.log_entry_id,
+            )
+
+        return self._action
+
     def changes(self):
         """
         Return list of changes using verbose names of fields
