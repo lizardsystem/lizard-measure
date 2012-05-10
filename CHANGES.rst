@@ -2,8 +2,8 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.63.3 (unreleased)
--------------------
+1.64 (2012-05-10)
+-----------------
 
 - Move get_funding_organisations to Measure model.
 - Add attribute history_data_view to measure.
