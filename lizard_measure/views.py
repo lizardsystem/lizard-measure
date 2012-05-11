@@ -485,7 +485,7 @@ def _image_measures(graph, measures, start_date, end_date,
     # Legend
     if legend_location >= 0:
         legend_handles, legend_labels = [], []
-        for measure_status in MeasureStatus.objects.filter(valid=True).order_by('value'):
+        for measure_status in MeasureStatus.objects.filter(valid=True):
             legend_handles.append(
                 Line2D([], [], color=measure_status.color.html, lw=10))
             legend_labels.append(measure_status.name)
@@ -875,18 +875,18 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
         # Legend
         #graph.margin_right_extra += 90  # Room for legend. See also nens_graph.
         legend_handles = [
-            Line2D([], [], color=COLOR_1, lw=10),
-            Line2D([], [], color=COLOR_2, lw=10),
-            Line2D([], [], color=COLOR_3, lw=10),
-            Line2D([], [], color=COLOR_4, lw=10),
             Line2D([], [], color=COLOR_5, lw=10),
+            Line2D([], [], color=COLOR_4, lw=10),
+            Line2D([], [], color=COLOR_3, lw=10),
+            Line2D([], [], color=COLOR_2, lw=10),
+            Line2D([], [], color=COLOR_1, lw=10),
             ]
         legend_labels = [
-            'slecht',
-            'ontoereikend',
-            'matig',
-            'goed',
             'zeer goed',
+            'goed',
+            'matig',
+            'ontoereikend',
+            'slecht',
             ]
         graph.legend(legend_handles, legend_labels, legend_location=7)
 
