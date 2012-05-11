@@ -5,7 +5,13 @@ Changelog of lizard-measure
 1.62 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- add ident to measure unicode string (pp 334)
+
+- columns area wider in measure table
+
+- repeated name in steeringparameter table (pp 333)
+
+- changed order of EKR graph legend (pp 337)
 
 
 1.61 (2012-04-25)
