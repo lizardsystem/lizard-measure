@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.62 (unreleased)
+1.65 (unreleased)
 -----------------
 
 - add ident to measure unicode string (pp 334)
@@ -14,13 +14,61 @@ Changelog of lizard-measure
 - changed order of EKR graph legend (pp 337)
 
 
+1.64 (2012-05-10)
+-----------------
+
+- Move get_funding_organisations to Measure model.
+- Add attribute history_data_view to measure.
+- Add view and form to view archived measure.
+- Move templatetag to lizard-history.
+
+
+1.63.2 (2012-04-27)
+-------------------
+
+- Added 'constrainHeader: true, heigth: 600' to all popup windows.
+
+
+1.63.1 (2012-04-27)
+-------------------
+
+- Let form pass extent to geometry editor.
+
+
+1.63 (2012-04-26)
+-----------------
+
+- Removed aggregation in 1.62 (forgot to mention).
+
+- Changed titles in measure detail of measure edit / history / sub
+  measure.
+
+
+1.62 (2012-04-26)
+-----------------
+
+- Measure overview: order of columns changes, "bron" is wider, changed
+  text.
+
+- Added option wide_left_ticks for measure graph.
+
+- Changed order of fields in maatregelen_form.
+
+- Added aan- afvoergebieden and KRW gebieden to measure detail view.
+
+- Added parent to measure detail view.
+
+- Improved ESF in measure detail view.
+
+- Improved layout in measure detail view.
+
+
 1.61 (2012-04-25)
 -----------------
 
 - removed area name in measure screen titles (pp 232)
 
 - fixed refresh for measure screen after edit (pp 66, pp 200, pp 234, pp 237, pp 300)
-
 
 
 1.60 (2012-04-25)

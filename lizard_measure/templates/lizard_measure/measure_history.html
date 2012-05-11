@@ -1,7 +1,6 @@
-{# KRW measure view: info and graphs on KRW measures #}
 {% load workspaces %}
 {% load utility %}
-{% load measure_extras %}
+{% load history_extras %}
 
 
 <div id="textual" class="lizard">
@@ -23,15 +22,17 @@
         <td>{{h.summary}}</td>
         <td>
           <a href="javascript:Ext.getCmp('portalWindow').linkToPopup(
-            'maatregel {{ view.measure.title }}',
-            '/measure/history_details/{{view.measure.id}}/{{h.log_entry_id}}',
+            'Archiefexemplaar:
+            {{ view.measure.title }}
+            ({{h.datetime|format_date_string}})',
+            '/measure/archive/{{view.measure.id}}/{{h.log_entry_id}}',
             {},
             {},
             false,
-            'html',
+            'component',
             false,
             true
-            )">Details</a>
+            )">Archiefexemplaar</a>
         </td>
       </tr>
       {% endfor %}

@@ -71,6 +71,7 @@
                     width: 800,
                     height: 600,
                     modal: true,
+                    constrainHeader: true,
                     finish_edit_function: function (updated_record) {
                         me.store.load();
                     },

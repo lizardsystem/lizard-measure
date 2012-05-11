@@ -1,4 +1,3 @@
-
 {
     xtype: 'formautoload',
     layout: 'anchor',
@@ -6,10 +5,8 @@
     trackResetOnLoad: true,
     bodyPadding: '10 25 10 10',//padding on the right side 25 for scrollbar
     height: '100%',
-    url: '/measure/api/measure/?_accept=application/json&include_geom=true&action={% if measure %}update{% else %}create{% endif %}',
-{% if measure %}
     loadProxy: {
-        url: '/measure/api/measure/',
+        url: '/history/api_object/{{view.log_entry_id}}',
         type: 'ajax',
         method: 'GET',
         reader: {
@@ -17,10 +14,7 @@
           type: 'json'
         },
         params: {
-            include_geom: true,
-            flat: false,
             _accept: 'application/json',
-            object_id: {{ measure.id }}
         },
         success: function(form, action) {
             console.log('success gives:');
@@ -30,20 +24,6 @@
             Ext.Msg.alert("Load failed", action.result.errorMessage);
         }
     },
-    {% else %}
-    loadData: {
-    {% if init_parent %}
-        parent: {id:{{ init_parent.id }}, name:'{{ init_parent.title }}'},
-    {% endif %}
-    {% if init_waterbody %}
-        waterbodies: {id:{{ init_waterbody.id }}, name:'{{ init_waterbody.area.name }}'},
-    {% endif %}
-    {% if init_area %}
-        areas: {id:{{ init_area.id }}, name:'{{ init_area.name }}'},
-    {% endif %}
-        test: 'extra for comma'
-    },
-{% endif %}
     items:[
         {
             name: 'id',
@@ -67,24 +47,17 @@
             fieldLabel: 'Onderdeel van maatregel',
             name: 'parent',
             displayField: 'name',
-            width: 400,
+            anchor: '100%',
             valueField: 'id',
             xtype: 'combodict',
             forceSelection: true,
             allowBlank: true,
             store: {
                 fields: ['id', 'name'],
-                proxy: {
-                    type: 'ajax',
-                    url: '/measure/api/measure/?_accept=application%2Fjson&query=parent:None&size=id_name',
-                    reader: {
-                        type: 'json',
-                        root: 'data'
-                    }
-                }
-            }
+                data: 'parent'
+            },
         },
-        {
+{
             fieldLabel: 'KRW maatregel',
             name: 'is_KRW_measure',
             xtype: 'checkbox',
@@ -119,15 +92,15 @@
             name: 'measure_type',
             displayField: 'name',
             valueField: 'id',
-            width: 400,
+            anchor: '100%',
             xtype: 'combodict',
             store: {
                 fields: ['id', 'name'],
-                data: Ext.JSON.decode({% autoescape off %}'{{ measure_types }}'{% endautoescape %})
+                data: 'measure_type'
             },
             multiSelect: false,
             forceSelection: true,
-            allowBlank: false
+            allowBlank: false,
         },
         {
             fieldLabel: 'Waarde',
@@ -145,7 +118,7 @@
             xtype: 'combodict',
             store: {
                 fields: ['id', 'name'],
-                data: Ext.JSON.decode({% autoescape off %}'{{ units }}'{% endautoescape %})
+                data: 'unit'
             },
             forceSelection: true,
             allowBlank: false,
@@ -159,13 +132,12 @@
             xtype: 'combodict',
             store: {
                 fields: ['id', 'name'],
-                data: Ext.JSON.decode({% autoescape off %}'{{ periods }}'{% endautoescape %})
+                data: 'period'
             },
             forceSelection: true,
             allowBlank: false,
             width: 400
         },
-
         {
             fieldLabel: 'Beleidsdoelen',
             name: 'categories',
@@ -174,14 +146,13 @@
             xtype: 'combodict',
             store: {
                 fields: ['id', 'name'],
-                data: Ext.JSON.decode({% autoescape off %}'{{ categories }}'{% endautoescape %})
+                data: 'categories'
             },
             multiSelect: true,
             forceSelection: true,
             allowBlank: false,
             width: 400
         },
-{% if measure %}
         {
             xtype: 'tablefield',
             fieldLabel: 'Effect op ESF',
@@ -214,11 +185,6 @@
                 }
             }]
         },
-    {% else %}
-    {
-        html: '<br>De link met ESFen kan ingevoerd worden nadat de maatregel voor de eerste keer is opgeslagen. <br><br>'
-    },
-    {% endif %}
         {
             xtype:'fieldset',
             collapsible: true,
@@ -229,7 +195,6 @@
                 anchor: '100%'
             },
             items: [
-            {% if measure %}
             {
                 xtype: 'tablefield',
                 fieldLabel: 'planning en realisatie',
@@ -259,11 +224,6 @@
                 }]
 
             }
-            {% else %}
-            {
-                html: '<br>De planning kan ingevoerd worden nadat de maatregel voor de eerste keer is opgeslagen.<br><br>'
-            }
-            {% endif %}
         ]
         },
         {
@@ -286,15 +246,8 @@
                 width: 400,
                 store: {
                     fields: ['id', 'name'],
-                    proxy: {
-                        type: 'ajax',
-                        url: '/measure/api/organization/?_accept=application%2Fjson&size=id_name',
-                        reader: {
-                            type: 'json',
-                            root: 'data'
-                        }
-                    }
-                }
+                    data: 'initiator'
+                },
             },
             {
                 fieldLabel: 'Afdeling',
@@ -316,15 +269,8 @@
                 width: 400,
                 store: {
                     fields: ['id', 'name'],
-                    proxy: {
-                        type: 'ajax',
-                        url: '/measure/api/organization/?_accept=application%2Fjson&size=id_name',
-                        reader: {
-                            type: 'json',
-                            root: 'data'
-                        }
-                    }
-                }
+                    data: 'executive'
+                },
             },
             {
                 fieldLabel: 'Totale kosten (incl. btw)',
@@ -391,14 +337,6 @@
                         {name: 'name', mapping: 'name'},
                         {name: 'comment', mapping: 'comment'}
                     ],
-                    proxy: {
-                        type: 'ajax',
-                        url: '/measure/api/organization/?_accept=application%2Fjson&size=id_name',
-                        reader: {
-                            type: 'json',
-                            root: 'data'
-                        }
-                    }
                 }
             }
         ]
@@ -424,14 +362,6 @@
                         {name: 'id', mapping: 'id' },
                         {name: 'name', mapping: 'name' }
                     ],
-                    proxy: {
-                        type: 'ajax',
-                        url: '/area/api/catchment-areas/?_accept=application%2Fjson&node=&size=id_name',
-                        reader: {
-                            type: 'json',
-                            root: 'areas'
-                        }
-                    }
                 }
             }, {
                 xtype: 'combomultiselect',
@@ -444,14 +374,6 @@
                         {name: 'id', mapping: 'id' },
                         {name: 'name', mapping: 'name' }
                     ],
-                    proxy: {
-                        type: 'ajax',
-                        url: '/measure/api/waterbody/?node=root&_accept=application%2Fjson&size=id_name',
-                        reader: {
-                            type: 'json',
-                            root: 'data'
-                        }
-                    }
                 }
             }]
         },
@@ -463,47 +385,6 @@
             editable: false,
             xtype: 'textareafield',
             allowBlank: true
-        },
-        {
-            xtype: 'button',
-            text: 'Bewerk geometrie op kaart',
-            handler: function() {
-                console.log('using new code');
-                var panel, form, ident
-                panel = this.up('panel');
-                form = panel.getForm();
-                ident = Lizard.CM.getContext().object.id;
-                // Get the extent for the current object via
-                // Request. Succes will open the editor
-                Ext.Ajax.request({
-                    url: '/area/api/area_special/'+ ident +'/',
-                    method: 'GET',
-                    params: {
-                        _accept: 'application/json'
-                    },
-                    success: function(xhr) {
-                        var extent
-                        extent = Ext.JSON.decode(
-                          xhr.responseText
-                        ).area.extent;
-                        Lizard.window.MapWindow.show({
-                          callback: function(geometry) {
-                            var form
-                            form = panel.getForm();
-                            form.findField('geom').setValue(geometry);
-                          },
-                          start_geometry: form.findField('geom').getValue(),
-                          start_extent: extent
-                        })
-                    },
-                    failure: function() {
-                        Ext.Msg.alert(
-                          "portal creation failed",
-                          "Server communication failure"
-                        );
-                    }
-                })
-            }
         },
         {
             xtype:'fieldset',
@@ -534,94 +415,4 @@
             ]
         }
     ],
-    buttons:[
-    {
-        text: 'Annuleren',
-        handler: function() {
-            this.up('window').close();
-        }
-    },{
-        text: 'Opslaan',
-        //formBind: true, //only enabled once the form is valid
-        //disabled: true,
-        handler: function() {
-            var form = this.up('form').getForm();  // View-only form??
-            var form_window = this.up('window');  // Edit form
-            if (form.isValid()) {
-                /* todo: de waarden zelf gaan rangschikken en verzenden */
-                var values = form.getValues()
-
-                var validation_text = ''
-
-                if (!values['is_KRW_measure']) {
-                    values['is_KRW_measure'] = false
-                }
-                if (!values['is_indicator']) {
-                    values['is_indicator'] = false
-                }
-                if (!values['in_sgbp']) {
-                    values['in_sgbp'] = false
-                }
-                if (!values['parent']) {
-                    values['parent'] = null
-                }
-
-                if (!values['areas'] || values['areas'].length < 1) {
-                    validation_text += 'Selecteer minstens een aan-afvoergebied<br>'
-                }
-                if ((!values['waterbodies'] || values['waterbodies'].length < 1) && values['is_KRW_measure']) {
-                    validation_text += 'Selecteer minstens een KRW waterlichaam in geval van een KRW maatregel<br>'
-                }
-                if (validation_text) {
-                    Ext.Msg.alert('Validatie', validation_text)
-                    return false
-                }
-
-                Lizard.window.EditSummaryBox.show({
-
-                    fn: function (btn, text) {
-                        if (btn=='ok') {
-                            values.edit_summary = text;
-                            form_window.setLoading(true);
-                            Ext.Ajax.request({
-                                url: '/measure/api/measure/?action={% if measure %}update{% else %}create{% endif %}&_accept=application/json&flat=false',
-                                params: {
-                                    object_id: values.id,
-                                    edit_message: text,
-                                    data:  Ext.JSON.encode(values)
-                                },
-                                method: 'POST',
-                                success: function(xhr) {
-                                    Ext.Msg.alert("Opgeslagen", "Opslaan gelukt");
-                                    var parent_window = form_window.up('window');
-                                    form_window.close();
-                                    form_window.setLoading(false);
-                                    if (form_window.finish_edit_function) {
-                                        // Will never go into this if the
-                                        // form is called using
-                                        // Screen.linkToPopup.
-                                        form_window.finish_edit_function({% if measure %}'update'{% else %}'create'{% endif%});
-                                    } else {
-                                        Lizard.CM.fireEvent('contextchange', {}, {}, Lizard.CM.getContext(), Lizard.CM);
-
-                                        Ext.WindowManager.each(function(window) {
-                                            if (window.loader) {
-                                                window.loader.load();
-                                            }
-                                        })
-                                    }
-                                },
-                                failure: function(xhr) {
-                                    Ext.Msg.alert("Fout", "Server error");
-                                    form_window.setLoading(false);
-                                }
-                            });
-
-                        }
-                        return true;
-                    }
-                })
-            }
-        }
-    }]
 }

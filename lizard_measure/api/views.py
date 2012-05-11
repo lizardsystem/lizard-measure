@@ -400,18 +400,6 @@ class MeasureView(BaseApiView):
         'import_source': 'import_source'
     }
 
-    def get_funding_organisations(self, measure):
-        """
-            returns funding organisation dict
-
-        """
-
-        return [{'id': obj.organization_id,
-                 'percentage': obj.percentage,
-                 'name': obj.organization.description,
-                 'comment': obj.comment}
-                for obj in measure.fundingorganization_set.all()]
-
     def get_object_for_api(self,
                            measure,
                            flat=True,
@@ -482,9 +470,7 @@ class MeasureView(BaseApiView):
                     measure.aggregation_type,
                     flat
                 ),
-                'funding_organizations': self.get_funding_organisations(
-                    measure,
-                ),
+                'funding_organizations': measure.get_funding_organisations(),
                 'status_moments': measure.get_statusmoments(
                     auto_create_missing_states=True,
                     only_valid=False,

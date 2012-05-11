@@ -5,11 +5,13 @@ from django.conf.urls.defaults import url
 from django.conf import settings
 from django.contrib import admin
 
-from lizard_measure.views import MeasureDetailView
-from lizard_measure.views import MeasureHistoryView
-from lizard_measure.views import MeasureHistoryDetailView
-from lizard_measure.views import HorizontalBarGraphView
-
+from lizard_measure.views import (
+    MeasureDetailView,
+    MeasureHistoryView,
+    MeasureHistoryDetailView,
+    MeasureArchiveView,
+    HorizontalBarGraphView,
+)
 
 API_URL_NAME = 'lizard_measure_api_root'
 
@@ -80,6 +82,10 @@ urlpatterns = patterns(
      MeasureHistoryDetailView.as_view(),
      {},
      "lizard_measure.history_details"),
+    (r'^archive/(?P<measure_id>\d+)/(?P<log_entry_id>\d+)/$',
+     MeasureArchiveView.as_view(),
+     {},
+     "lizard_measure.archive"),
     (r'^api/',
      include('lizard_measure.api.urls')),
     #edit screens measures
