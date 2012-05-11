@@ -89,6 +89,7 @@
                 {% for graph in predefined_graphs %}
                     {name: 'st_{{ graph }}', title: '{{ graph }}', editable: false, visible: true, width: 80, type: 'text'},
                 {% endfor %}
+                {name: 'name2', mapping: 'name', title: 'gebiedsnaam', editable: false, visible: true, width: 200, type: 'text'},
                 {% for graph in parameters %}
                     {name: 'stf_{{ graph.no_point }}', title: '{{ graph.org }}', editable: false, visible: true, width: 80, type: 'text'},
                 {% endfor %}

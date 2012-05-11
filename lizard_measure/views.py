@@ -436,7 +436,7 @@ def _image_measures(graph, measures, start_date, end_date,
     # Legend
     if legend_location >= 0:
         legend_handles, legend_labels = [], []
-        for measure_status in MeasureStatus.objects.filter(valid=True):
+        for measure_status in MeasureStatus.objects.filter(valid=True).order_by('value'):
             legend_handles.append(
                 Line2D([], [], color=measure_status.color.html, lw=10))
             legend_labels.append(measure_status.name)

@@ -1233,7 +1233,7 @@ class Measure(models.Model):
         ordering = ('id', )
 
     def __unicode__(self):
-        return self.title
+        return "%s (%s)"%(self.title, self.ident)
 
     @property
     def shortname(self):

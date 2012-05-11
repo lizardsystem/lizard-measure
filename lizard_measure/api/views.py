@@ -426,7 +426,7 @@ class MeasureView(BaseApiView):
         if size == self.ID_NAME:
             output = {
                 'id': measure.id,
-                'name': measure.title,
+                'name': '%s (%s)'%(measure.title, measure.ident),
             }
 
         if size >= self.SMALL:
@@ -473,8 +473,6 @@ class MeasureView(BaseApiView):
                 'effect_esf': measure.effect_esf_string(),
                 'status_planned': measure.status_moment_string(is_planning=True),
                 'status_realisation': measure.status_moment_string(is_planning=False),
-
-
             }
 
         if size >= self.MEDIUM:
