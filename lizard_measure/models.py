@@ -6,7 +6,6 @@ import logging
 from django.core.exceptions import MultipleObjectsReturned
 
 from django.contrib.gis.db import models
-from django.core.urlresolvers import reverse
 from django.db.models.query_utils import Q
 from django.utils.translation import ugettext as _
 
@@ -498,7 +497,7 @@ class SteeringParameterPredefinedGraph(models.Model):
                         help_text='volgorde van grafieken (binnen zelfde type)')
 
     for_evaluation = models.BooleanField(
-                        default= False,
+                        default=False,
                         help_text='Evaluatie stuurparameter, anders Toestand')
 
     predefined_graph = models.ForeignKey(PredefinedGraphSelection)
@@ -527,7 +526,7 @@ class SteeringParameterFree(models.Model):
                         help_text='volgorde van grafieken (binnen zelfde type)')
 
     for_evaluation = models.BooleanField(
-                        default= False,
+                        default=False,
                         help_text='Evaluatie stuurparameter, anders Toestand')
 
     parameter_code = models.CharField(max_length=256)
@@ -540,7 +539,7 @@ class SteeringParameterFree(models.Model):
         null=True,
     )
     location_modulinstance_string = models.TextField(
-        help_text = 'text string met "location_ident,moduleinstance_code,timestep_id,identifier_id".\
+        help_text='text string met "location_ident,moduleinstance_code,timestep_id,identifier_id".\
                     Als een deel wordt weggelaten, dan wordt indien de verwijzing naar meerdere is\
                     een willekeurige genomen. Meerdere locaties opdelen met een ";"'
     )
@@ -1024,7 +1023,7 @@ class Measure(models.Model):
     SOURCE_KRW_PORTAAL = 1
     SOURCE_VSS_2010 = 2
     SOURCE_MANUAL = 3
-    
+
     # View whose data to store via lizard_history.
     HISTORY_DATA_VIEW = ('lizard_measure.api.views.MeasureView')
 
@@ -1238,7 +1237,7 @@ class Measure(models.Model):
         ordering = ('id', )
 
     def __unicode__(self):
-        return "%s (%s)"%(self.title, self.ident)
+        return "%s (%s)" % (self.title, self.ident)
 
     @property
     def shortname(self):
@@ -1385,11 +1384,10 @@ class Measure(models.Model):
         """
         create esflinks for measure
         """
-        created = self.esflink_set.all().values_list('esf',flat=True)
-        for esf_nr in range(1,10):
+        created = self.esflink_set.all().values_list('esf', flat=True)
+        for esf_nr in range(1, 10):
             if esf_nr not in created:
                 self.esflink_set.create(esf=esf_nr)
-
 
     def set_esflinks(self, esflinks):
         """
@@ -1518,7 +1516,6 @@ class Measure(models.Model):
             return measure_status_moment_set[0]
         return None
 
-
     def status_moment_string(self, dt=datetime.datetime.now(), is_planning=False):
         """
         String representation of status_moment function
@@ -1569,7 +1566,6 @@ class Measure(models.Model):
         #     return min(measure_status_moments,
         #                key=lambda msm: msm.status.value)
 
-
     def measure_status_moments(self, end_date=None, is_planning=False,
                                debug=False):
         """If the measure has no children, take own
@@ -1593,7 +1589,6 @@ class Measure(models.Model):
                 )
 
         return msm_dates
-
 
     # def measure_status_moments_aggregate_children(self, end_date=None, is_planning=False,
     #                            debug=False):
@@ -1729,7 +1724,7 @@ class Measure(models.Model):
         ESF 1 ja ja ja, ESF 2 ja nee ja results in: "ESF 1 (-/+), ESF 2 (-)"
         """
         esf_list = self.esflink_set.filter(
-            Q(is_target_esf=True)|Q(positive=True)|Q(negative=True)).order_by('esf')
+            Q(is_target_esf=True) | Q(positive=True) | Q(negative=True)).order_by('esf')
         output = []
         for esf in esf_list:
             effects = []
@@ -1761,6 +1756,7 @@ class Measure(models.Model):
         except MeasureStatusMoment.DoesNotExist:
             return None
 
+
 class EsfPattern(models.Model):
 
     class Meta:
@@ -1768,8 +1764,9 @@ class EsfPattern(models.Model):
         verbose_name_plural = _("ESF patterns")
         ordering = ['pattern', 'data_set', ]
 
-    pattern = models.CharField(help_text="Pattern that specifies critical ESFs",
-         default='-' * 16, max_length=16)
+    pattern = models.CharField(
+        help_text="Pattern that specifies critical ESFs",
+        default='-' * 16, max_length=16)
 
     watertype_group = models.ForeignKey(WatertypeGroup,
         verbose_name=_('Watertype group'), blank=True, null=True,
@@ -1842,31 +1839,31 @@ class HorizontalBarGraphItem(GraphItemMixin):
     def __unicode__(self):
         return '%s' % self.label
 
-    @classmethod
-    def from_dict(cls, d):
-        """
-        Return a HorizontalBarGraphItem matching the provided dictionary.
+    #### Wordt dit gebruikt? geen import, zie pylint errors
+    # @classmethod
+    # def from_dict(cls, d):
+    #     """
+    #     Return a HorizontalBarGraphItem matching the provided dictionary.
 
-        Note that the objects are not saved.
+    #     Note that the objects are not saved.
 
-        The provided dictionary must have the following keys:
-        - label: label that you want to show.
-        - location: fews location id
-        - parameter: fews parameter id
-        - module: fews module id
-        """
-        try:
-            location = GeoLocationCache.objects.get(ident=d['location'])
-        except GeoLocationCache.DoesNotExist:
-            # TODO: see if "db_name" is provided, then add
-            # location anyway
-            location = GeoLocationCache(ident=d['location'])
-            logger.exception(
-                "Ignored not existing GeoLocationCache for ident=%s" %
-                d['location'])
+    #     The provided dictionary must have the following keys:
+    #     - label: label that you want to show.
+    #     - location: fews location id
+    #     - parameter: fews parameter id
+    #     - module: fews module id
+    #     """
+    #     try:
+    #         location = GeoLocationCache.objects.get(ident=d['location'])
+    #     except GeoLocationCache.DoesNotExist:
+    #         # TODO: see if "db_name" is provided, then add
+    #         # location anyway
+    #         location = GeoLocationCache(ident=d['location'])
+    #         logger.exception(
+    #             "Ignored not existing GeoLocationCache for ident=%s" %
+    #             d['location'])
 
-        graph_item = HorizotalBarGraphItem()
-        graph_item.location = location
-        graph_item.parameter = ParameterCache(ident=d['parameter'])
-        graph_item.module = ModuleCache(ident=d['module'])
-
+    #     graph_item = HorizotalBarGraphItem()
+    #     graph_item.location = location
+    #     graph_item.parameter = ParameterCache(ident=d['parameter'])
+    #     graph_item.module = ModuleCache(ident=d['module'])
