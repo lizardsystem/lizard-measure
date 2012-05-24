@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.65 (unreleased)
+1.65 (2012-05-24)
 -----------------
 
 - add ident to measure unicode string (pp 334)
