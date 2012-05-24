@@ -535,9 +535,9 @@ class SteerParameterOverview(View):
         #.select_related('steeringparameterpredefinedgraph_set') select related does not work
         # because of one2one relation, see https://code.djangoproject.com/ticket/13839
 
-        predefined_graphs = PredefinedGraphSelection.objects.all().values('name')
+        #predefined_graphs = PredefinedGraphSelection.objects.all().values('name')
 
-        parameters = SteeringParameterFree.objects.filter(area__in=areas).values('parameter_code')
+        #parameters = SteeringParameterFree.objects.filter(area__in=areas).values('parameter_code')
 
 
         data = []
@@ -650,17 +650,11 @@ class SteerParameterGraphs(View):
             },
         }
 
-
-
-    def get(self, request):
+    def get_data(self,area, only_configured_graphs=False):
 
         graphs = []
         prefix = ''
         count = 0
-        area_ident = request.GET.get('object_id')
-
-        area = get_object_or_404(Area, ident=area_ident)
-
 
         for graph in area.steeringparameterfree_set.filter(for_evaluation = False).order_by('order'):
             graphs.append(self._get_free_graphsettings(graph))
@@ -674,39 +668,54 @@ class SteerParameterGraphs(View):
         for graph in area.steeringparameterpredefinedgraph_set.filter(for_evaluation = True).order_by('order'):
             graphs.append(self._get_predefined_graphsettings(graph))
 
-        if area.area_class == Area.AREA_CLASS_KRW_WATERLICHAAM:
+        if not only_configured_graphs:
+
+            if area.area_class == Area.AREA_CLASS_KRW_WATERLICHAAM:
+                graphs.append({
+                    'id': prefix + '99',
+                    'name': 'EKR scores',
+                    'visible': True,
+                    'base_url': '/measure/bar/?',
+                    'use_context_location': True,
+                    'location': None,
+                    'predefined_graph': 'ekr',
+                    'extra_params': {},
+                    'detail_link': 'ekr-score',
+                    'legend_location': 7,  # Legend on right side
+                })
+
+            if area.area_class == Area.AREA_CLASS_KRW_WATERLICHAAM:
+                detail_link = 'maatregelen_krw'
+            else:
+                detail_link = 'maatregelen'
+
             graphs.append({
-               'id': prefix + '99',
-               'name': 'EKR scores',
-               'visible': True,
-               'base_url': '/measure/bar/?',
-               'use_context_location': True,
-               'location': None,
-               'predefined_graph': 'ekr',
-               'extra_params': {},
-               'detail_link': 'ekr-score',
-               'legend_location': 7,  # Legend on right side
+                'id': prefix + '100',
+                'name': 'maatregelen',
+                'visible': True,
+                'base_url': '/measure/measure_graph/?filter=focus',
+                'use_context_location': True,
+                'location': None,
+                'predefined_graph': None,
+                'extra_params': {},
+                'detail_link': detail_link,
+                'legend_location': 7,  # Legend on right side
             })
 
-        if area.area_class == Area.AREA_CLASS_KRW_WATERLICHAAM:
-            detail_link = 'maatregelen_krw'
-        else:
-            detail_link = 'maatregelen'
-
-        graphs.append({
-            'id': prefix + '100',
-            'name': 'maatregelen',
-            'visible': True,
-            'base_url': '/measure/measure_graph/?filter=focus',
-            'use_context_location': True,
-            'location': None,
-            'predefined_graph': None,
-            'extra_params': {},
-            'detail_link': detail_link,
-            'legend_location': 7,  # Legend on right side
-        })
-
         return graphs
+
+
+    def get(self, request):
+
+
+        area_ident = request.GET.get('object_id')
+
+        area = get_object_or_404(Area, ident=area_ident)
+
+        return self.get_data(area)
+
+
+
 
 
 class EsfPatternView(BaseApiView):
