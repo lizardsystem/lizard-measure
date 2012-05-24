@@ -170,8 +170,11 @@ class Synchronizer(object):
 
     AQUO_URL = 'http://domeintabellen-idsw-ws.rws.nl/DomainTableWS.svc?wsdl'
 
-    def __init__(self, sources):
+    def __init__(self, sources, log=None):
         self.sources = sources
+        self.logger = logger
+        if log is not None:
+            self.logger = log
 
     def _load_aquo_xml(self,
                        table,
@@ -249,7 +252,7 @@ class Synchronizer(object):
         """
         Return aquo data as list of dicts.
         """
-        logger.debug('Getting data for aquo table %s...' % table)
+        self.logger.debug('Getting data for aquo table %s...' % table)
         xml = self._load_aquo_xml(table)
         root = etree.fromstring(xml)
         namespaces = self._get_name_spaces(root=root)
@@ -280,7 +283,7 @@ class Synchronizer(object):
         """
         Filter and update, or create model objects from source data
         """
-        logger.debug('Updating database...')
+        self.logger.debug('Updating database...')
 
         source.synced = []
 
@@ -289,7 +292,7 @@ class Synchronizer(object):
             n = source.model.objects.filter(
                 **f_kwargs).update(valid=True, **u_kwargs)
             if n > 1:
-                logger.warn('Synced multiple items from '
+                self.logger.warn('Synced multiple items from '
                     'a single source record!')
             elif n == 0:
                 source.model.objects.create(valid=True, **c_kwargs)
@@ -312,7 +315,7 @@ class Synchronizer(object):
         """
         Set objects to invalid that were not synced.
         """
-        logger.debug('Invalidating out of sync objects...')
+        self.logger.debug('Invalidating out of sync objects...')
         for obj in source.model.objects.filter(**source.source_kwargs()):
             if not source.compare_kwargs(obj) in source.synced:
                 obj.valid = False

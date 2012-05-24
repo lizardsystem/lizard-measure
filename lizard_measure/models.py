@@ -59,7 +59,7 @@ class KRWStatus(models.Model):
         return u'%s - %s' % (self.code, self.description)
 
     @classmethod
-    def get_synchronizer(cls):
+    def get_synchronizer(cls, log=None):
         """
         Return a configured synchronizer object, tuned for this model.
         """
@@ -74,7 +74,7 @@ class KRWStatus(models.Model):
                             fields=fields,
                         )]
 
-        return Synchronizer(sources=sources)
+        return Synchronizer(sources=sources, log=log)
 
 
 class WatertypeGroup(models.Model):
@@ -131,7 +131,7 @@ class KRWWatertype(models.Model):
         return u'%s - %s' % (self.code, self.description)
 
     @classmethod
-    def get_synchronizer(cls):
+    def get_synchronizer(cls, log=None):
         """
         Return a configured synchronizer object, tuned for this model.
         """
@@ -147,7 +147,7 @@ class KRWWatertype(models.Model):
                             fields=fields,
                         )]
 
-        return Synchronizer(sources=sources)
+        return Synchronizer(sources=sources, log=log)
 
 
 class WaterBody(models.Model):
@@ -267,7 +267,7 @@ class MeasuringRod(models.Model):
         return u'%s - %s' % (self.code, self.measuring_rod)
 
     @classmethod
-    def get_synchronizer(cls):
+    def get_synchronizer(cls, log=None):
         """
         Return a configured synchronizer object, tuned for this model.
         """
@@ -283,7 +283,7 @@ class MeasuringRod(models.Model):
                             fields=fields,
                         )]
 
-        return Synchronizer(sources=sources)
+        return Synchronizer(sources=sources, log=log)
 
     def natural_key(self):
         return (self.code, self.measuring_rod, self.sub_measuring_rod, )
@@ -620,7 +620,7 @@ class Unit(models.Model):
         return u'%s' % self.code
 
     @classmethod
-    def get_synchronizer(cls):
+    def get_synchronizer(cls, log=None):
         """
         Return a configured synchronizer object, tuned for this model.
         """
@@ -638,7 +638,7 @@ class Unit(models.Model):
                             fields=fields,
                         )]
 
-        return Synchronizer(sources=sources)
+        return Synchronizer(sources=sources, log=log)
 
 
 class MeasureType(models.Model):
@@ -708,7 +708,7 @@ class MeasureType(models.Model):
         return u'%s - %s' % (self.code, self.description)
 
     @classmethod
-    def get_synchronizer(cls):
+    def get_synchronizer(cls, log=None):
         """
         Return a configured synchronizer object, tuned for this model.
         """
@@ -724,7 +724,7 @@ class MeasureType(models.Model):
                             fields=fields,
                         )]
 
-        return Synchronizer(sources=sources)
+        return Synchronizer(sources=sources, log=log)
 
 
 class Organization(models.Model):
@@ -801,7 +801,7 @@ class Organization(models.Model):
         return u'%s' % self.description
 
     @classmethod
-    def get_synchronizer(cls):
+    def get_synchronizer(cls, log=None):
         """
         Return a configured synchronizer object, tuned for this model.
         """
@@ -830,7 +830,8 @@ class Organization(models.Model):
         )
 
         return Synchronizer(sources=[watermanager_source,
-                                     measuring_authority_source])
+                                     measuring_authority_source],
+                            log=log)
 
 
 class FundingOrganization(models.Model):

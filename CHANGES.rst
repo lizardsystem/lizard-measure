@@ -13,6 +13,8 @@ Changelog of lizard-measure
 
 - changed order of EKR graph legend (pp 337)
 
+- added task to synchronize aquo domaintables
+
 
 1.64 (2012-05-10)
 -----------------
