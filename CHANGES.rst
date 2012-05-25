@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.66 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- fixed logging in runner for sync_aquo.
 
 
 1.65 (2012-05-24)

@@ -1,7 +1,6 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
 # -*- coding: utf-8 -*-
 
-import logging
 from django.db import transaction
 
 from lizard_measure.models import Unit
@@ -14,9 +13,6 @@ from lizard_measure.models import MeasuringRod
 @transaction.commit_on_success
 def run_sync_aquo(logger=None):
     """Synchronize domaintables to aquo standards."""
-
-    if logger is None:
-        logger = logging.getLogger(__name__)
     
     MeasuringRod.get_synchronizer(log=logger).synchronize()
     Unit.get_synchronizer(log=logger).synchronize()
