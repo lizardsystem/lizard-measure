@@ -2,7 +2,19 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.65 (unreleased)
+1.67 (unreleased)
+-----------------
+
+- Nothing changed yet.
+
+
+1.66 (2012-05-25)
+-----------------
+
+- fixed logging in runner for sync_aquo.
+
+
+1.65 (2012-05-24)
 -----------------
 
 - add ident to measure unicode string (pp 334)
@@ -12,6 +24,8 @@ Changelog of lizard-measure
 - repeated name in steeringparameter table (pp 333)
 
 - changed order of EKR graph legend (pp 337)
+
+- added task to synchronize aquo domaintables
 
 
 1.64 (2012-05-10)

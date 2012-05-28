@@ -10,6 +10,7 @@ from lizard_measure.models import KRWWatertype
 from lizard_measure.models import MeasureType
 from lizard_measure.models import Organization
 from lizard_measure.models import MeasuringRod
+from lizard_measure.runner import run_sync_aquo
 
 
 class Command(BaseCommand):
@@ -18,9 +19,4 @@ class Command(BaseCommand):
 
     @transaction.commit_on_success
     def handle(self, *args, **options):
-        MeasuringRod.get_synchronizer().synchronize()
-        Unit.get_synchronizer().synchronize()
-        KRWStatus.get_synchronizer().synchronize()
-        KRWWatertype.get_synchronizer().synchronize()
-        MeasureType.get_synchronizer().synchronize()
-        Organization.get_synchronizer().synchronize()
+        run_sync_aquo()
