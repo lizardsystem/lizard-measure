@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.67 (unreleased)
+1.67 (2012-05-29)
 -----------------
 
 - splitted api for steering parameter for use in reportgenerator
