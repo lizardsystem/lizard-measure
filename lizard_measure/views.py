@@ -532,7 +532,7 @@ def measure_graph(request, area_ident, filter='all'):
     height = int(request.GET.get('height', 170))
     legend_location = int(request.GET.get('legend-location', -1))
     wide_left_ticks = request.GET.get('wide_left_ticks', 'false') == 'true'
-
+    format = request.GET.get('format', None)
     graph = DateGridGraph(width=width, height=height)
 
     _image_measures(graph, measures, start_date, end_date,
@@ -540,8 +540,14 @@ def measure_graph(request, area_ident, filter='all'):
                     wide_left_ticks=wide_left_ticks)
 
     graph.set_margins()
-    return graph.png_response(
-        response=HttpResponse(content_type='image/png'))
+
+    if format == 'ps':                  
+        return graph.render(
+            response=HttpResponse(content_type='application/postscript'),
+            format='ps')
+    else:
+        return graph.png_response(
+            response=HttpResponse(content_type='image/png'))
 
 
 def measure_detailedit_portal(request):
@@ -810,7 +816,8 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
         graph_settings = {
             'width': 1200,
             'height': 500,
-            'location': None
+            'location': None,
+            'format': 'png',
             }
 
         location = get.get('location', None)
@@ -824,6 +831,10 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
                     location)
                 location = GeoLocationCache(ident=location)
         graph_settings['location'] = location
+
+
+        format = get.get('format', None)
+        graph_settings['format'] = format
 
         graph_items = []
         # Using the shortcut graph=<graph-slug>
@@ -1017,5 +1028,16 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
         # Set the margins, including legend.
         graph.set_margins()
 
-        return graph.png_response(
-            response=HttpResponse(content_type='image/png'))
+
+        print "HAAHAHAHAHAHAH"
+        print graph_settings['format']
+
+
+        response_format = graph_settings['format']
+        if response_format == 'ps':                  
+            return graph.render(
+                response=HttpResponse(content_type='application/postscript'),
+                format='ps')
+        else:
+            return graph.png_response(
+                response=HttpResponse(content_type='image/png'))
