@@ -609,7 +609,9 @@ def update_measures(filename):
                 end_date=end_date,
                 defaults={'description': rec['tijdvak']},
             )
-            if not measure_period_created:
+            if not (rec['tijdvak'] == '2016-2027' or measure_period_created):
+                # '2016-2027 is present in the update, but it is invalid
+                # according :to the use case.
                 measure_period.valid = True
                 measure_period.save()
 
