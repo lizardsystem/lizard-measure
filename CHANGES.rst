@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.72 (unreleased)
+1.72 (2012-05-30)
 -----------------
 
 - Organisation names must be a minimal length when edited (pp 78)
