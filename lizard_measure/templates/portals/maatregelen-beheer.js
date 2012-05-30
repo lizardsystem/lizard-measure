@@ -95,7 +95,7 @@
                 //is_computed altijd 1 in en 1 uit en verder niet
                 {name: 'id', title: 'id', editable: false, visible: false, width: 30, type: 'number'},
                 {name: 'ident', title: 'ident', editable: false, visible: false, width: 100, type: 'text'},
-                {name: 'title', title: 'titel', editable: true, visible: true, width: 200, type: 'text'},
+                {name: 'title', title: 'titel', editable: false, visible: true, width: 200, type: 'text'},
                 {name: 'waterbodies', title: 'KRW waterlichamen', editable: false, sortable: false, visible: true, width: 200, type: 'gridcombobox'},
                 {name: 'areas', title: 'Aan/ afvoergebieden', editable: false, sortable: false, visible: true, width: 200, type: 'gridcombobox'},
                 {name: 'import_source', title: 'bron', editable: false, sortable: false, visible: true, width: 100, type: 'text'},
