@@ -6,6 +6,7 @@ Changelog of lizard-measure
 -----------------
 
 - Organisation names must be a minimal length when edited (pp 78)
+- fix stuurparameter form for area's with '+' in names (pp ??)
 
 
 1.71 (2012-05-30)
