@@ -75,6 +75,10 @@ class MeasureStatusAdmin(admin.ModelAdmin):
     list_display = ['name', 'value', 'color', 'valid']
 
 
+class MeasureCategoryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'valid']
+
+
 class MeasureTypeAdmin(admin.ModelAdmin):
     filter_horizontal = ['units']
     list_display_links = ['description']
@@ -197,7 +201,7 @@ admin.site.register(HorizontalBarGraphItem)
 admin.site.register(KRWStatus, KRWStatusAdmin)
 admin.site.register(KRWWatertype, KRWWatertypeAdmin)
 admin.site.register(Measure, MeasureAdmin)
-admin.site.register(MeasureCategory)
+admin.site.register(MeasureCategory, MeasureCategoryAdmin)
 admin.site.register(MeasurePeriod, MeasurePeriodAdmin)
 admin.site.register(MeasureStatus, MeasureStatusAdmin)
 admin.site.register(MeasureStatusMoment)

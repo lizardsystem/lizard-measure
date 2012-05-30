@@ -5,7 +5,9 @@ Changelog of lizard-measure
 1.70 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Add manangement command to fix measure categories ('doelen').
+
+- Add MeasureCategoryAdmin class.
 
 
 1.69 (2012-05-30)
