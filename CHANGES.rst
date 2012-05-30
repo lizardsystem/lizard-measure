@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.68 (unreleased)
+1.68 (2012-05-30)
 -----------------
 
 - Nothing changed yet.
