@@ -1355,7 +1355,7 @@ class Measure(models.Model):
             self.create_empty_statusmoments()
 
         measure_status_moments = self.measurestatusmoment_set.all().order_by(
-            'status__value'
+            '-status__value'
         )
 
         if only_valid:

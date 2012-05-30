@@ -25,6 +25,18 @@
         success: function(form, action) {
             console.log('success gives:');
             console.log(arguments);
+            debugger;
+            try {
+                if (action.result.data.import_source == 'KRW-portaal') {
+                    var ident = form.findField('ident');
+                    ident.setDisabled(true);
+                    var title = form.findField('title');
+                    title.setDisabled(true);
+
+                }
+            } catch (e) {
+                console.log('fout bij interpreteren van geladen maatregel data: ' + e)
+            }
         },
         failure: function(form, action) {
             Ext.Msg.alert("Load failed", action.result.errorMessage);
