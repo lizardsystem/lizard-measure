@@ -689,12 +689,12 @@ def steering_parameter_form(request):
 
         if area.area_class == Area.AREA_CLASS_KRW_WATERLICHAAM:
             predefined_graphs = PredefinedGraphSelection.objects.filter(
-                Q(for_area_type=Area.AREA_CLASS_KRW_WATERLICHAAM)|Q(for_area_type=None))
+                Q(for_area_type=Area.AREA_CLASS_KRW_WATERLICHAAM)|Q(for_area_type=None)).distinct()
 
             related_areas = Area.objects.filter(Q(arealink_a__area_b=area)|Q(arealink_b__area_a=area)).distinct()
         elif  area.area_class == Area.AREA_CLASS_AAN_AFVOERGEBIED:
             predefined_graphs = PredefinedGraphSelection.objects.filter(
-                Q(for_area_type=Area.AREA_CLASS_AAN_AFVOERGEBIED)|Q(for_area_type=None))
+                Q(for_area_type=Area.AREA_CLASS_AAN_AFVOERGEBIED)|Q(for_area_type=None)).distinct()
 
             related_areas = Area.objects.filter(Q(arealink_a__area_b=area)|Q(arealink_b__area_a=area)|Q(id=area.id)).distinct()
 

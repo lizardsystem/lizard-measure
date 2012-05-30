@@ -159,6 +159,7 @@ class SteeringParameterPredefinedGraphView(AreaFiltered, BaseApiView):
        'id': 'id',
         'name': 'name',
         'area': 'area__name',
+        'area_ident': 'area__ident',
         'order': 'order',
         'for_evaluation': 'for_evaluation',
         'predefined_graph': 'predefined_graph__name',
@@ -216,6 +217,7 @@ class SteeringParameterFreeView(AreaFiltered, BaseApiView):
         'id': 'id',
         'name': 'name',
         'area': 'area__name',
+        'area_ident': 'area__ident',
         'order': 'order',
         'parameter_code': 'parameter_code',
         'has_target': 'has_target',
@@ -550,7 +552,7 @@ class SteerParameterOverview(View):
             for steerp in area.steeringparameterpredefinedgraph_set.all():
                 item['st_'+ steerp.predefined_graph.name] = 'X'
 
-            for param in area.steeringparameterfree_set.values('parameter_code'):
+            for param in area.steeringparameterfree_set.values('parameter_code').distinct():
                 item['stf_' + param['parameter_code'].replace('.', '_')]  = 'X'
 
             data.append(item)
