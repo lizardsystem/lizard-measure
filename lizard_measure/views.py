@@ -1028,11 +1028,6 @@ class HorizontalBarGraphView(View, TimeSeriesViewMixin):
         # Set the margins, including legend.
         graph.set_margins()
 
-
-        print "HAAHAHAHAHAHAH"
-        print graph_settings['format']
-
-
         response_format = graph_settings['format']
         if response_format == 'ps':                  
             return graph.render(

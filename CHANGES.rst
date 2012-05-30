@@ -5,13 +5,13 @@ Changelog of lizard-measure
 1.69 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Correct validation of measureperiods during import of update data.
 
 
 1.68 (2012-05-30)
 -----------------
 
-- Correct validation of measureperiods during import of update data.
+- No changes logged.
 
 
 1.67 (2012-05-29)
