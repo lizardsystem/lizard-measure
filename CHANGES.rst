@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.69 (unreleased)
+1.69 (2012-05-30)
 -----------------
 
 - Correct validation of measureperiods during import of update data.
