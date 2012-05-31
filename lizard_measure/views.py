@@ -599,7 +599,7 @@ def measure_detailedit_portal(request):
             ),
             'categories': json.dumps(
                 [{'id': r.id, 'name': str(r)}
-                 for r in MeasureCategory.objects.all()]
+                 for r in MeasureCategory.objects.filter(valid=True)]
             ),
             'units': json.dumps(
                 [{'id': r.id, 'name': str(r)}

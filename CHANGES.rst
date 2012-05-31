@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.72 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Only show valid MeasureCategories in form.
 
 
 1.71 (2012-05-30)
