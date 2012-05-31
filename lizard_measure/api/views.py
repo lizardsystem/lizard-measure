@@ -399,7 +399,9 @@ class MeasureView(BaseApiView):
         'aggregation_type':  'aggregation_type',
         'read_only': 'read_only',
         'import_raw': 'import_raw',
-        'import_source': 'import_source'
+        'import_source': 'import_source',
+        'waterbody_id': 'waterbodies__id',
+        'area_id': 'areas__id',
     }
 
     def get_object_for_api(self,
