@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.73 (unreleased)
+1.73 (2012-05-31)
 -----------------
 
 - filter for measure table (pp 312)
