@@ -1,8 +1,6 @@
 {% load get_grid %}
 {% load get_portal_template %}
 
-
-
 {
     itemId: 'organisatie-beheer',
     title: 'organisatie-beheer',
@@ -35,11 +33,35 @@
                     this.store.load();
                 }
             },
-            //proxyUrl: '/portal/wbstructures.json',
             enterEditSummary: false,
             proxyUrl: '/measure/api/organization/',
             proxyParams: {
                 flat: false
+            },
+            saveEdits: function() {
+                var do_alert = false;
+                Ext.each(this.store.getNewRecords(), function(record) {
+                    var description = record.get('description');
+                    if (description == undefined) {
+                        do_alert = true;
+                    } else if (description.length < 3) {
+                        do_alert = true;
+                    }
+                });
+                Ext.each(this.store.getUpdatedRecords(), function(record) {
+                    var description = record.get('description');
+                    if (description == undefined) {
+                        do_alert = true;
+                    } else if (description.length < 3) {
+                        do_alert = true;
+                    }
+                });
+                if (do_alert) {
+                    Ext.Msg.alert('Invoer fout', 'De organisatie naam moet minimaal 3 tekens langs zijn.');
+                } else {
+                    this.store.sync();
+                }
+
             },
             dataConfig:[
                 //is_computed altijd 1 in en 1 uit en verder niet

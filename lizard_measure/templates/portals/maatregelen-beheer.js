@@ -19,6 +19,87 @@
             flex:1,
             xtype: 'leditgrid',
             columnLines: true,
+            tbar:[
+            {
+                xtype: 'combo',
+                fieldLabel: 'aan/ afvoer gebieden',
+                width: 400,
+                name: 'area_filter',
+                displayField: 'name',
+                valueField: 'id',
+                //forceSelection: true,
+                queryMode: 'local',
+                typeAhead: true,
+                listeners: {
+                    //scope: me,
+                    'select': function (combobox, rec, scope) {
+                        grid = combobox.up('leditgrid');
+                        grid.store.clearFilter(true);
+                        grid.store.filter('area_id',rec[0].get('id'));
+                        Ext.each(grid.query('combo'), function(combo){
+                            if (combo.name == 'waterbody_filter') {
+                                combo.setValue('');
+                            }
+                        })
+
+                    }
+                },
+                store: {
+                    autoLoad:true,
+                    fields: [
+                        {name: 'id', mapping: 'id' },
+                        {name: 'name', mapping: 'name' }
+                    ],
+                    proxy: {
+                        type: 'ajax',
+                        url: '/area/api/catchment-areas/?_accept=application%2Fjson&node=&size=id_name',
+                        reader: {
+                            type: 'json',
+                            root: 'areas'
+                        }
+                    }
+                }
+            }, {
+                xtype: 'combo',
+                fieldLabel: 'KRW waterlichamen',
+                    name: 'waterbody_filter',
+                    width: 400,
+                    displayField: 'name',
+                    valueField: 'id',
+                    //forceSelection: true,
+                    queryMode: 'remote',
+                    typeAhead: true,
+                    listeners: {
+                        //scope: me,
+                        'select': function (combobox, rec, scope) {
+                            grid = combobox.up('leditgrid');
+                            grid.store.clearFilter(true);
+                            grid.store.filter('waterbody_id',rec[0].get('id'));
+                            Ext.each(grid.query('combo'), function(combo){
+                                if (combo.name == 'area_filter') {
+                                    combo.setValue('');
+                                }
+                            })
+
+                        }
+                    },
+
+                    store: {
+                        autoLoad:true,
+                        fields: [
+                            {name: 'id', mapping: 'id' },
+                            {name: 'name', mapping: 'name' }
+                        ],
+                        proxy: {
+                            type: 'ajax',
+                            url: '/measure/api/waterbody/?node=root&_accept=application%2Fjson&size=id_name',
+                            reader: {
+                                type: 'json',
+                                root: 'data'
+                            }
+                        }
+                    }
+            }],
 
 
             plugins: [

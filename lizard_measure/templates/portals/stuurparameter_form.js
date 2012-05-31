@@ -18,7 +18,7 @@
         //proxyUrl: '/portal/wbbuckets.json',
         proxyUrl: '/measure/api/steer_free/',
         proxyParams: {
-            filter: Ext.JSON.encode([{"property":"area","value":"{{ area.name }}"}])
+            filter: Ext.JSON.encode([{"property":"area_ident","value":"{{ area.ident }}"}])
         },
         dataConfig:[
             {name: 'id', title: 'id', editable: false, visible: false, width: 30, type: 'text'},//automatisch
@@ -46,7 +46,7 @@
         storeAutoLoad: true,
         proxyUrl: '/measure/api/steer_predefined/',
         proxyParams: {
-            filter: Ext.JSON.encode([{"property":"area","value":"{{ area.name }}"}])
+            filter: Ext.JSON.encode([{"property":"area_ident","value":"{{ area.ident }}"}])
         },
 
         dataConfig:[

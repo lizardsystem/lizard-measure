@@ -159,6 +159,7 @@ class SteeringParameterPredefinedGraphView(AreaFiltered, BaseApiView):
        'id': 'id',
         'name': 'name',
         'area': 'area__name',
+        'area_ident': 'area__ident',
         'order': 'order',
         'for_evaluation': 'for_evaluation',
         'predefined_graph': 'predefined_graph__name',
@@ -216,6 +217,7 @@ class SteeringParameterFreeView(AreaFiltered, BaseApiView):
         'id': 'id',
         'name': 'name',
         'area': 'area__name',
+        'area_ident': 'area__ident',
         'order': 'order',
         'parameter_code': 'parameter_code',
         'has_target': 'has_target',
@@ -351,7 +353,7 @@ class OrganizationView(BaseApiView):
             }
         return output
 
-    def create_objects(self, data):
+    def create_objects(self, data, request):
         """
             overwrite of base api to append code
         """
@@ -397,7 +399,9 @@ class MeasureView(BaseApiView):
         'aggregation_type':  'aggregation_type',
         'read_only': 'read_only',
         'import_raw': 'import_raw',
-        'import_source': 'import_source'
+        'import_source': 'import_source',
+        'waterbody_id': 'waterbodies__id',
+        'area_id': 'areas__id',
     }
 
     def get_object_for_api(self,
@@ -550,7 +554,7 @@ class SteerParameterOverview(View):
             for steerp in area.steeringparameterpredefinedgraph_set.all():
                 item['st_'+ steerp.predefined_graph.name] = 'X'
 
-            for param in area.steeringparameterfree_set.values('parameter_code'):
+            for param in area.steeringparameterfree_set.values('parameter_code').distinct():
                 item['stf_' + param['parameter_code'].replace('.', '_')]  = 'X'
 
             data.append(item)

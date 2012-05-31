@@ -2,10 +2,23 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.72 (unreleased)
+1.74 (unreleased)
 -----------------
 
 - Only show valid MeasureCategories in form.
+
+
+1.73 (2012-05-31)
+-----------------
+
+- filter for measure table (pp 312)
+
+
+1.72 (2012-05-30)
+-----------------
+
+- Organisation names must be a minimal length when edited (pp 78)
+- fix stuurparameter form for area's with '+' in names (pp ??)
 
 
 1.71 (2012-05-30)
