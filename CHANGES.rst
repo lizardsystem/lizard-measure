@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.74 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Fix filter measure table (pp 312)
 
 
 1.73 (2012-05-31)

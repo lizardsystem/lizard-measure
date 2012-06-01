@@ -34,7 +34,7 @@
                     //scope: me,
                     'select': function (combobox, rec, scope) {
                         grid = combobox.up('leditgrid');
-                        grid.store.clearFilter(true);
+                        grid.store.filters.clear();
                         grid.store.filter('area_id',rec[0].get('id'));
                         Ext.each(grid.query('combo'), function(combo){
                             if (combo.name == 'waterbody_filter') {
@@ -73,17 +73,15 @@
                         //scope: me,
                         'select': function (combobox, rec, scope) {
                             grid = combobox.up('leditgrid');
-                            grid.store.clearFilter(true);
+                            grid.store.filters.clear();
                             grid.store.filter('waterbody_id',rec[0].get('id'));
                             Ext.each(grid.query('combo'), function(combo){
                                 if (combo.name == 'area_filter') {
                                     combo.setValue('');
                                 }
                             })
-
                         }
                     },
-
                     store: {
                         autoLoad:true,
                         fields: [
@@ -100,8 +98,6 @@
                         }
                     }
             }],
-
-
             plugins: [
                 'applycontext'
             ],
