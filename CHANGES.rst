@@ -2,10 +2,16 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.74 (unreleased)
+1.75 (unreleased)
 -----------------
 
 - Fix filter measure table (pp 312)
+
+
+1.74 (2012-05-31)
+-----------------
+
+- Only show valid MeasureCategories in form.
 
 
 1.73 (2012-05-31)
