@@ -669,10 +669,12 @@ class MeasureType(models.Model):
     )
 
     # Other fields from KRW import
-    units = models.ManyToManyField(
+    unit = models.ForeignKey(
         Unit,
+        null=True,
         blank=True,
-        verbose_name=_('Units'),
+        help_text="Eenheid behorende bij omvang van maatregel",
+        verbose_name=_('Unit'),
     )
     klass = models.CharField(
         max_length=256,
@@ -1148,11 +1150,6 @@ class Measure(models.Model):
         help_text="Omvang van maatregel, inhoud afhankelijk van eenheid",
         verbose_name='Omvang van maatregel.',
     )
-    unit = models.ForeignKey(
-        Unit,
-        help_text="Eenheid behorende bij omvang van maatregel",
-        verbose_name='Eenheid',
-    )
 
     initiator = models.ForeignKey(
         Organization,
@@ -1248,6 +1245,12 @@ class Measure(models.Model):
 
     def short_name(self, max_length=17):
         return short_string(self.title, max_length)
+
+    def unit(self):
+        """
+        return the unit from the measuretype
+        """
+        return self.measure_type.unit
 
     @property
     def deleted(self):

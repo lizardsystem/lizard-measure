@@ -80,7 +80,6 @@ class MeasureCategoryAdmin(admin.ModelAdmin):
 
 
 class MeasureTypeAdmin(admin.ModelAdmin):
-    filter_horizontal = ['units']
     list_display_links = ['description']
     list_display = [
         'code',
