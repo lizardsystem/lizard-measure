@@ -611,7 +611,7 @@ def update_measures(filename):
             )
             if not (rec['tijdvak'] == '2016-2027' or measure_period_created):
                 # '2016-2027 is present in the update, but it is invalid
-                # according :to the use case.
+                # according to the use case.
                 measure_period.valid = True
                 measure_period.save()
 
@@ -619,8 +619,6 @@ def update_measures(filename):
         corresponding_measure.value = rec['matomvbrus']
         corresponding_measure.period = measure_period
         corresponding_measure.save()
-
-    
 
         # Add a new measurestatusmoment for the update
         if (rec['maatregelstatus'] == 'onbekend' or
@@ -656,6 +654,18 @@ def update_measures(filename):
         amount_of_updates,
         len(original_measures),
     )
+
+    # Reassignment of measure_categories:
+    wb21_old = MeasureCategory.objects.get(name='wb21')
+    wb21_new = MeasureCategory.objects.get(name='WB21')
+    n2000_old = MeasureCategory.objects.get(name='n2000')
+    n2000_new = MeasureCategory.objects.get(name='Natura 2000 (in KRW-portaal)')
+    for m in Measure.objects.filter(categories=wb21_old):
+        m.categories.remove(wb21_old)
+        m.categories.add(wb21_new)
+    for m in Measure.objects.filter(categories=n2000_old):
+        m.categories.remove(n2000_old)
+        m.categories.add(n2000_new)
 
 
 class Command(BaseCommand):

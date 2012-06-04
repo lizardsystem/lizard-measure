@@ -5,7 +5,8 @@ Changelog of lizard-measure
 1.76 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Add replacement of measurecategories because imported names didn't
+  map to use case names.
 
 
 1.75 (2012-06-01)
