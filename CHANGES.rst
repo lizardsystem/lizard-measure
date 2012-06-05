@@ -2,8 +2,8 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.77 (unreleased)
------------------
+1.76.1 (2012-06-05)
+-------------------
 
 - Move unit field from measure to measuretype and add method on measure
   to access it.
