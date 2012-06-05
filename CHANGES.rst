@@ -8,6 +8,8 @@ Changelog of lizard-measure
 - Move unit field from measure to measuretype and add method on measure
   to access it.
 
+- Remove unit from form and api.
+
 
 1.76 (2012-06-04)
 -----------------

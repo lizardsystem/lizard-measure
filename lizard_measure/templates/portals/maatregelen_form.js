@@ -150,20 +150,6 @@
             width: 200
         },
         {
-            fieldLabel: 'Eenheid',
-            name: 'unit',
-            displayField: 'name',
-            valueField: 'id',
-            xtype: 'combodict',
-            store: {
-                fields: ['id', 'name'],
-                data: Ext.JSON.decode({% autoescape off %}'{{ units }}'{% endautoescape %})
-            },
-            forceSelection: true,
-            allowBlank: false,
-            width: 200
-        },
-        {
             fieldLabel: 'Periode',
             name: 'period',
             displayField: 'name',
