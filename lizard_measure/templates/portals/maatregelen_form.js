@@ -25,7 +25,6 @@
         success: function(form, action) {
             console.log('success gives:');
             console.log(arguments);
-            debugger;
             try {
                 if (action.result.data.import_source == 'KRW-portaal') {
                     var ident = form.findField('ident');

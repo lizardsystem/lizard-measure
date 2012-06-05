@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.76.2 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Remove debugger from maatregelen_form.
 
 
 1.76.1 (2012-06-05)
