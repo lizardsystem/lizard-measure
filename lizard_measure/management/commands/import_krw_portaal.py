@@ -291,11 +291,11 @@ def import_measure_types(filename):
             extra_kwargs=extra_kwargs,
         )
 
-        # Add the units
-        units = rec['eenheid'].split(', ')
-        for u_str in units:
-            unit_obj = Unit.objects.get_or_create(code=u_str)[0]
-            measure_type.units.add(unit_obj)
+#       # Add the units
+#       units = rec['eenheid'].split(', ')
+#       for u_str in units:
+#           unit_obj = Unit.objects.get_or_create(code=u_str)[0]
+#           measure_type.units.add(unit_obj)
 
 
 def import_waterbodies(wb_import_settings):
@@ -483,7 +483,6 @@ def import_measures(filename):
             'aggregation_type': Measure.AGGREGATION_TYPE_MIN,
             'description': rec['toelichting'],
             'value': rec['matomv'],
-            'unit': unit,
             'investment_costs': rec['investkosten'],
             'exploitation_costs': rec['exploitkosten'],
             'executive': None,
@@ -576,7 +575,7 @@ def import_measures(filename):
             funding_organization.save()
 
 
-def update_measures(filename):
+def update_measures(filename, typefilename):
     # Fast retrieval instead of separate get() calls
     original_measures = dict([(m.ident, m) for m in Measure.objects.all()])
 
@@ -611,16 +610,13 @@ def update_measures(filename):
             )
             if not (rec['tijdvak'] == '2016-2027' or measure_period_created):
                 # '2016-2027 is present in the update, but it is invalid
-                # according :to the use case.
+                # according to the use case.
                 measure_period.valid = True
                 measure_period.save()
 
-        corresponding_measure.unit = unit
         corresponding_measure.value = rec['matomvbrus']
         corresponding_measure.period = measure_period
         corresponding_measure.save()
-
-    
 
         # Add a new measurestatusmoment for the update
         if (rec['maatregelstatus'] == 'onbekend' or
@@ -656,6 +652,35 @@ def update_measures(filename):
         amount_of_updates,
         len(original_measures),
     )
+
+    # Reassignment of measure_categories:
+    wb21_old = MeasureCategory.objects.get(name='wb21')
+    wb21_new = MeasureCategory.objects.get(name='WB21')
+    n2000_old = MeasureCategory.objects.get(name='n2000')
+    n2000_new = MeasureCategory.objects.get(name='Natura 2000 (in KRW-portaal)')
+    for m in Measure.objects.filter(categories=wb21_old):
+        m.categories.remove(wb21_old)
+        m.categories.add(wb21_new)
+    for m in Measure.objects.filter(categories=n2000_old):
+        m.categories.remove(n2000_old)
+        m.categories.add(n2000_new)
+    logger.info(
+        'Replaced measure categories by categories with correct names.',
+    )
+
+    # Adding correct units according to use case
+    typefile = open(typefilename)
+    unit_map = dict(line.split() for line in typefile.readlines())
+    typefile.close()
+    for k, v in unit_map.items():
+        measure_type = MeasureType.objects.get(code=k)
+        measure_type.unit = Unit.objects.get(code=v)
+        measure_type.save()
+    logger.info(
+        'Updated %s MeasureTypes with units from use case',
+        len(unit_map),
+    )
+    
 
 
 class Command(BaseCommand):
@@ -751,8 +776,10 @@ class Command(BaseCommand):
     def _update(self, import_path):
 
         # Update measures
-        update_measures(os.path.join(import_path, 'maatregelen_update.xml'))
-
+        update_measures(
+            filename=os.path.join(import_path, 'maatregelen_update.xml'),
+            typefilename=os.path.join(import_path, 'maatregeltype_eenheid.txt'),
+        )
 
 
     @transaction.commit_on_success

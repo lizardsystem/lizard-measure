@@ -25,7 +25,6 @@
         success: function(form, action) {
             console.log('success gives:');
             console.log(arguments);
-            debugger;
             try {
                 if (action.result.data.import_source == 'KRW-portaal') {
                     var ident = form.findField('ident');
@@ -146,20 +145,6 @@
             name: 'value',
             xtype: 'numberfield',
             minValue: 0,
-            allowBlank: false,
-            width: 200
-        },
-        {
-            fieldLabel: 'Eenheid',
-            name: 'unit',
-            displayField: 'name',
-            valueField: 'id',
-            xtype: 'combodict',
-            store: {
-                fields: ['id', 'name'],
-                data: Ext.JSON.decode({% autoescape off %}'{{ units }}'{% endautoescape %})
-            },
-            forceSelection: true,
             allowBlank: false,
             width: 200
         },

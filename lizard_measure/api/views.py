@@ -442,7 +442,6 @@ class MeasureView(BaseApiView):
                     flat
                 ),
                 'period': self._get_related_object(measure.period, flat),
-                'unit': self._get_related_object(measure.unit, flat),
                 'categories': self._get_related_objects(
                     measure.categories,
                     flat

@@ -2,10 +2,28 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.76 (unreleased)
+1.76.2 (unreleased)
+-------------------
+
+- Remove debugger from maatregelen_form.
+- ie issues (partly solve pp346)
+
+1.76.1 (2012-06-05)
+-------------------
+
+- Move unit field from measure to measuretype and add method on measure
+  to access it.
+
+- Remove unit from form and api.
+
+
+1.76 (2012-06-04)
 -----------------
 
-- ie issues (partly solve pp346)
+
+- Add replacement of measurecategories because imported names didn't
+  map to use case names.
+
 
 
 1.75 (2012-06-01)
