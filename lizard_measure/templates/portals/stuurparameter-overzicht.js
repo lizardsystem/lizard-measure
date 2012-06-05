@@ -54,6 +54,7 @@
             },
             editable: false,
             usePagination: false,
+            enterEditSummary: false,
             actionEditIcon:function(record) {
                 var me = this
 

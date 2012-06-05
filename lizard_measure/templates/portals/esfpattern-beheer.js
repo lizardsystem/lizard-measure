@@ -39,6 +39,8 @@
                 size: 'small',
                 include_geom: false
             },
+            editable: false,
+            useSaveBar: false,
             addEditIcon: true,
             addDeleteIcon: true,
             usePagination: false,

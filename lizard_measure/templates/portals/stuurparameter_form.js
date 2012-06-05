@@ -61,7 +61,7 @@
             {name: 'predefined_graph', title: 'grafiek', editable: true, visible: true, width: 100, type: 'gridcombobox',
                 choices: Ext.JSON.decode('{% autoescape off %}{{ predefined_graphs }}{% endautoescape %}')},//default invullen
             {name: 'area_of_predefined_graph', title: 'gebied', editable: true, visible: true, width: 330,
-                type: 'gridcombobox', choices: Ext.JSON.decode('{% autoescape off %}{{ related_areas }}{% endautoescape %}')}
+                type: 'gridcombobox', choices: Ext.JSON.decode('{% autoescape off %}{{ related_areas|addslashes }}{% endautoescape %}')}
        ]
     }],
     bbar:[
