@@ -22,7 +22,7 @@
                 remoteSort: false,
                 proxy: {
                     type: 'ajax',
-                    url:'/measure/api/steer_parameter_overview/',
+                    url:'/measure/api/steer_parameter_overview/?_accept=application%2Fjson',
                     reader: {
                         type: 'json',
                         root: 'data'

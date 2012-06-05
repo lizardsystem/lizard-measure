@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.76 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- ie issues (partly solve pp346)
 
 
 1.75 (2012-06-01)

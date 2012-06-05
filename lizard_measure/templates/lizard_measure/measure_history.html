@@ -21,7 +21,7 @@
         <td>{{h.datetime|format_date_string}}</td>
         <td>{{h.summary}}</td>
         <td>
-          <a href="javascript:Ext.getCmp('portalWindow').linkToPopup(
+          <a href="javascript:void(0)" onclick="javascript:Ext.getCmp('portalWindow').linkToPopup(
             'Archiefexemplaar:
             {{ view.measure.title }}
             ({{h.datetime|format_date_string}})',
