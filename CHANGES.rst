@@ -2,8 +2,8 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.76.2 (unreleased)
--------------------
+1.77 (2012-06-06)
+-----------------
 
 - Remove debugger from maatregelen_form.
 - ie issues (partly solve pp346)
