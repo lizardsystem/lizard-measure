@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.77.1 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Fix display of measure value in popup html.
 
 
 1.77 (2012-06-06)
