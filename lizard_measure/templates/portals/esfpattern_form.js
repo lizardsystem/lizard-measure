@@ -1,4 +1,6 @@
+{% load get_portal_template %}
 
+{% if perms.is_analyst %}
 {
     xtype: 'formautoload',
     layout: 'anchor',
@@ -97,11 +99,13 @@
     buttons:[
     {
         text: 'Annuleren',
+        iconCls: 'l-icon-cancel',
         handler: function() {
             this.up('window').close();
         }
     },{
         text: 'Opslaan',
+        iconCls: 'l-icon-disk',
         //formBind: true, //only enabled once the form is valid
         //disabled: true,
         handler: function() {
@@ -147,3 +151,6 @@
         }
     }]
 }
+{% else %}
+{% get_portal_template geen_toegang %}
+{% endif %}

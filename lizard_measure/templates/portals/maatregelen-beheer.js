@@ -19,6 +19,60 @@
             flex:1,
             xtype: 'leditgrid',
             columnLines: true,
+            {% if perms.is_beleidsmaker %}
+                editable: true,
+                addEditIcon: true,
+                actionEditIcon:function(record) {
+                    var me = this
+                    console.log(this.store.getNewRecords())
+                    if (this.store.getNewRecords().length >0 ||
+                        this.store.getUpdatedRecords().length >0 ||
+                        this.store.getRemovedRecords().length >0) {
+
+                        Ext.Msg.alert("Let op", 'Sla eerst de bewerking(en) in het grid op, voordat een enkel record kan worden bewerkt');
+                        return
+                    }
+
+                    console.log('edit record:');
+                    console.log(record);
+
+                    if (record) {
+                        params = {
+                            measure_id: record.data.id
+                        }
+
+                    } else {
+                        params = null
+                    }
+
+                    Ext.create('Ext.window.Window', {
+                        title: 'Maatregel',
+                        width: 800,
+                        height: 600,
+                        modal: true,
+                        constrainHeader: true,
+                        finish_edit_function: function (updated_record) {
+                            me.store.load();
+                        },
+                        editpopup: true,
+                        loader:{
+                            loadMask: true,
+                            autoLoad: true,
+                            url: '/measure/measure_detailedit_portal/',
+                            ajaxOptions: {
+                                method: 'GET'
+                            },
+                            params: params,
+                            renderer: 'component'
+                        }
+                    }).show();
+                },
+                addRecord: function() {
+                    this.actionEditIcon();
+                },
+            {% else %}
+                editable: false,
+            {% endif %}
             tbar:[
             {
                 xtype: 'combo',
@@ -117,57 +171,10 @@
                 size: 'small',
                 include_geom: false
             },
-            addEditIcon: true,
+
             addDeleteIcon: false,
             msgDeleteSelectedRecord: 'U verwijdert een maatregel. Weet U het zeker? U moet nog wel de wijzigingen opslaan om de maatregel werkelijk te verwijderen.',  // New feature of EditableGrid
-            actionEditIcon:function(record) {
-                var me = this
-                console.log(this.store.getNewRecords())
-                if (this.store.getNewRecords().length >0 ||
-                    this.store.getUpdatedRecords().length >0 ||
-                    this.store.getRemovedRecords().length >0) {
 
-                    Ext.Msg.alert("Let op", 'Sla eerst de bewerking(en) in het grid op, voordat een enkel record kan worden bewerkt');
-                    return
-                }
-
-                console.log('edit record:');
-                console.log(record);
-
-                if (record) {
-                    params = {
-                        measure_id: record.data.id
-                    }
-
-                } else {
-                    params = null
-                }
-
-                Ext.create('Ext.window.Window', {
-                    title: 'Maatregel',
-                    width: 800,
-                    height: 600,
-                    modal: true,
-                    constrainHeader: true,
-                    finish_edit_function: function (updated_record) {
-                        me.store.load();
-                    },
-                    editpopup: true,
-                    loader:{
-                        loadMask: true,
-                        autoLoad: true,
-                        url: '/measure/measure_detailedit_portal/',
-                        ajaxOptions: {
-                            method: 'GET'
-                        },
-                        params: params,
-                        renderer: 'component'
-                    }
-                }).show();
-            },
-            addRecord: function() {
-                this.actionEditIcon();
-           },
             dataConfig:[
                 //is_computed altijd 1 in en 1 uit en verder niet
                 {name: 'id', title: 'id', editable: false, visible: false, width: 30, type: 'number'},

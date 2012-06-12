@@ -534,11 +534,13 @@
     buttons:[
     {
         text: 'Annuleren',
+        iconCls: 'l-icon-cancel',
         handler: function() {
             this.up('window').close();
         }
     },{
         text: 'Opslaan',
+        iconCls: 'l-icon-disk',
         //formBind: true, //only enabled once the form is valid
         //disabled: true,
         handler: function() {

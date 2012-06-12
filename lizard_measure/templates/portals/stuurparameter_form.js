@@ -1,4 +1,6 @@
+{% load get_portal_template %}
 
+{% if perms.is_analyst %}
 {
     layout: 'anchor',
     autoScroll: true,
@@ -85,7 +87,7 @@
     },
     {
         xtype: 'button',
-        text: 'Save',
+        text: 'Opslaan',
         iconCls: 'l-icon-disk',
         handler: function (menuItem) {
             var panel = menuItem.up('panel');
@@ -97,3 +99,6 @@
         }
     }]
 }
+{% else %}
+{% get_portal_template geen_toegang %}
+{% endif %}

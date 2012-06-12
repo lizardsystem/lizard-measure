@@ -38,6 +38,7 @@
             proxyParams: {
                 flat: false
             },
+            {% if perms.is_beleidsmaker %}
             saveEdits: function() {
                 var do_alert = false;
                 Ext.each(this.store.getNewRecords(), function(record) {
@@ -61,8 +62,11 @@
                 } else {
                     this.store.sync();
                 }
-
             },
+    {% else %}
+            useSaveBar: false,
+                editable: false,
+    {% endif %}
             dataConfig:[
                 //is_computed altijd 1 in en 1 uit en verder niet
                 {name: 'id', title: 'id', editable: false, visible: false, width: 30, type: 'number'},

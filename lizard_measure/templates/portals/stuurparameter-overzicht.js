@@ -29,9 +29,6 @@
                     }
                 }
             },
-
-
-
             plugins: [
                 'applycontext'
             ],
@@ -44,7 +41,6 @@
                     this.store.load();
                 }
             },
-            addEditIcon: true,
             addDeleteIcon: false,
             proxyUrl: '/measure/api/steer_parameter_overview/',
             proxyParams: {
@@ -55,35 +51,39 @@
             editable: false,
             usePagination: false,
             enterEditSummary: false,
-            actionEditIcon:function(record) {
-                var me = this
+            {% if perms.is_analyst %}
+                addEditIcon: true,
+                actionEditIcon:function(record) {
+                    var me = this
 
-                Ext.create('Ext.window.Window', {
-                    title: 'Stuurparameters instellen',
-                    width: 800,
-                    height: 600,
-                    modal: true,
-                    constrainHeader: true,
-                    finish_edit_function: function (updated_record) {
-                        me.store.load();
-                    },
-                    editpopup: true,
+                    Ext.create('Ext.window.Window', {
+                        title: 'Stuurparameters instellen',
+                        width: 800,
+                        height: 600,
+                        modal: true,
+                        constrainHeader: true,
+                        finish_edit_function: function (updated_record) {
+                            me.store.load();
+                        },
+                        editpopup: true,
 
-                    loader:{
-                        loadMask: true,
-                        autoLoad: true,
-                        model: true,
-                        url: '/measure/steering_parameter_form/',
-                        params: {
-                            object_id: record.get('code')
-                        },
-                        ajaxOptions: {
-                            method: 'GET'
-                        },
-                        renderer: 'component'
-                    }
-                }).show();
-           },
+                        loader:{
+                            loadMask: true,
+                            autoLoad: true,
+                            model: true,
+                            url: '/measure/steering_parameter_form/',
+                            params: {
+                                object_id: record.get('code')
+                            },
+                            ajaxOptions: {
+                                method: 'GET'
+                            },
+                            renderer: 'component'
+                        }
+                    }).show();
+                },
+            {% endif %}
+
             dataConfig:[
                 //is_computed altijd 1 in en 1 uit en verder niet
                 {name: 'code', title: 'code', editable: false, visible: true, width: 80, type: 'text'},
