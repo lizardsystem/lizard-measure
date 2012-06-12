@@ -5,7 +5,8 @@ Changelog of lizard-measure
 1.77.2 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Show measure unit next to value input field. Will not update immediately
+  based on measure type.
 
 
 1.77.1 (2012-06-06)
