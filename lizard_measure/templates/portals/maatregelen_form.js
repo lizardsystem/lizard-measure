@@ -141,7 +141,7 @@
             allowBlank: false
         },
         {
-            fieldLabel: 'Waarde',
+            fieldLabel: 'Waarde ({{measure.unit}})',
             name: 'value',
             xtype: 'numberfield',
             minValue: 0,

@@ -2,10 +2,23 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.77.1 (unreleased)
+1.77.3 (unreleased)
 -------------------
 
 - Nothing changed yet.
+
+
+1.77.2 (2012-06-12)
+-------------------
+
+- Show measure unit next to value input field. Will not update immediately
+  based on measure type.
+
+
+1.77.1 (2012-06-06)
+-------------------
+
+- Fix display of measure value in popup html.
 
 
 1.77 (2012-06-06)
