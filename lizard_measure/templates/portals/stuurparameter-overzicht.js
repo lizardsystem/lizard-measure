@@ -51,7 +51,7 @@
             editable: false,
             usePagination: false,
             enterEditSummary: false,
-            {% if perms.is_analyst %}
+            {% if perm.is_analyst %}
                 addEditIcon: true,
                 actionEditIcon:function(record) {
                     var me = this

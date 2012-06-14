@@ -38,7 +38,7 @@
             proxyParams: {
                 flat: false
             },
-            {% if perms.is_beleidsmaker %}
+            {% if perm.is_funct_beheerder %}
             saveEdits: function() {
                 var do_alert = false;
                 Ext.each(this.store.getNewRecords(), function(record) {

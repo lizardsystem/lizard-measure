@@ -40,9 +40,11 @@
                 include_geom: false
             },
             editable: false,
-            useSaveBar: false,
+
             usePagination: false,
-            {% if perms.is_analyst %}
+            {% if perm.is_funct_beheerder %}
+                editable: true,
+                useSaveBar: true,
                 addEditIcon: true,
                 addDeleteIcon: true,
                 //read_only_field: 'read_only',
@@ -94,6 +96,8 @@
                 addRecord: function() {
                     this.actionEditIcon();
                },
+            {% else %}
+                useSaveBar: false,
             {% endif %}
             dataConfig:[
                 {name: 'id', title: 'id', editable: false, visible: false, width: 30, type: 'number'},

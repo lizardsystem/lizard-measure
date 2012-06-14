@@ -48,7 +48,8 @@
               '/measure/measure/{{ measure.id }}/',
               {},
               {
-                save: [
+                {% if perm.is_beleidsmaker %}
+                    save: [
                   'bewerk maatregel',
                   '/measure/measure_detailedit_portal/',
                   {measure_id: '{{ measure.id }}'},
@@ -66,6 +67,7 @@
                   'component',
                   true
                 ],
+                {% endif %}
                 search: [
                   'geschiedenis maatregel',
                   '/measure/history/{{measure.id}}',

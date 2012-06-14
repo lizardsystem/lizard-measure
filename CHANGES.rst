@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.77.3 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- added userrights to views (pp 367)
 
 
 1.77.2 (2012-06-12)

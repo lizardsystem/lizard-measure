@@ -1,6 +1,5 @@
 {% load get_portal_template %}
 
-{% if perms.is_analyst %}
 {
     xtype: 'formautoload',
     layout: 'anchor',
@@ -96,6 +95,7 @@
             }
         }
     }],
+{% if perm.is_funct_beheerder %}
     buttons:[
     {
         text: 'Annuleren',
@@ -150,7 +150,7 @@
             }
         }
     }]
+    {% else %}
+    editable: false
+    {% endif %}
 }
-{% else %}
-{% get_portal_template geen_toegang %}
-{% endif %}

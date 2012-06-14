@@ -35,6 +35,7 @@ from lizard_measure.models import SteeringParameterPredefinedGraph
 from lizard_measure.models import PredefinedGraphSelection
 from lizard_measure.models import WatertypeGroup
 from lizard_measure.models import EsfPattern
+from lizard_registration.utils import get_user_permissions_overall
 from lizard_security.models import DataSet
 
 from lizard_area.models import Area
@@ -259,10 +260,13 @@ def krw_waterbody_measures(request, area_ident,
 
     result_measures = _sorted_measures(area)
 
+    perms = dict(get_user_permissions_overall(request.user, 'user', as_list=True))
+
     return render_to_response(
         template,
         {'waterbody': area,
-         'main_measures': result_measures
+         'main_measures': result_measures,
+         'perm': perms
          },
         context_instance=RequestContext(request))
 
@@ -622,6 +626,9 @@ def measure_groupedit_portal(request):
     """
     c = RequestContext(request)
 
+    perms = dict(get_user_permissions_overall(request.user, 'user', as_list=True))
+
+
     if request.user.is_authenticated():
 
         t = get_template('portals/maatregelen-beheer.js')
@@ -646,6 +653,7 @@ def measure_groupedit_portal(request):
                 [{'id': r.id, 'name': str(r)}
                  for r in Unit.objects.all()],
             ),
+            'perm': perms
         })
 
     else:
@@ -661,9 +669,11 @@ def organization_groupedit_portal(request):
     c = RequestContext(request)
 
     if request.user.is_authenticated():
+        perms = dict(get_user_permissions_overall(request.user, 'user', as_list=True))
 
         t = get_template('portals/organisatie-beheer.js')
         c = RequestContext(request, {
+            'perm': perms
         })
 
     else:
@@ -677,6 +687,8 @@ def steering_parameter_form(request):
         Return JSON with editor for steering parameters .
     """
     c = RequestContext(request)
+
+    perms = dict(get_user_permissions_overall(request.user, 'user', as_list=True))
 
     object_id = request.GET.get('object_id', None)
 
@@ -708,6 +720,7 @@ def steering_parameter_form(request):
             'related_areas': json.dumps(
                 [{'id': r.id, 'name': r.name}
                  for r in related_areas]),
+            'perm': perms
         })
 
     else:
@@ -774,13 +787,16 @@ def steerparameter_overview(request):
     parameters = SteeringParameterFree.objects.filter(area__in=areas).distinct().values_list('parameter_code', flat=True)
 
     parameters = [{'org': par, 'no_point': par.replace('.','_')} for par in parameters]
+
+    perms = dict(get_user_permissions_overall(request.user, 'user', as_list=True))
     #parameters = ['test','test2']
     if request.user.is_authenticated():
 
         t = get_template('portals/stuurparameter-overzicht.js')
         c = RequestContext(request, {
             'predefined_graphs': predefined_graphs,
-            'parameters': parameters
+            'parameters': parameters,
+            'perm': perms
             })
 
     else:

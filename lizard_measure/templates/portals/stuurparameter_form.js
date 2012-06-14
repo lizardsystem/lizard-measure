@@ -1,6 +1,6 @@
 {% load get_portal_template %}
 
-{% if perms.is_analyst %}
+{% if perm.is_analyst %}
 {
     layout: 'anchor',
     autoScroll: true,

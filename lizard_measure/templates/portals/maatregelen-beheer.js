@@ -19,7 +19,7 @@
             flex:1,
             xtype: 'leditgrid',
             columnLines: true,
-            {% if perms.is_beleidsmaker %}
+            {% if perm.is_beleidsmaker %}
                 editable: true,
                 addEditIcon: true,
                 actionEditIcon:function(record) {
