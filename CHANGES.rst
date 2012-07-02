@@ -5,7 +5,8 @@ Changelog of lizard-measure
 1.78.1 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Added migration for HorizontalBarGraphItem because inherited class
+  has changed.
 
 
 1.78 (2012-06-14)
