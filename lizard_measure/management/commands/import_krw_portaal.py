@@ -313,30 +313,35 @@ def import_waterbodies(wb_import_settings):
         geo_object_group_name = ('measure::waterbody::%s' %
                                  os.path.basename(s['file']))
 
-        # Remove geoobject group by name if it exists
-        try:
-            print 'Finding existing geoobject group named %s' % (
-                geo_object_group_name,
-            )
-            geo_object_group = GeoObjectGroup.objects.get(
-                name=geo_object_group_name)
-            print 'Deleting existing geoobject group named %s' % (
-                geo_object_group_name,
-            )
-            geo_object_group.delete()
-        except GeoObjectGroup.DoesNotExist:
-            pass
+        # # Remove geoobject group by name if it exists
+        # try:
+        #     print 'Finding existing geoobject group named %s' % (
+        #         geo_object_group_name,
+        #     )
+        #     geo_object_group = GeoObjectGroup.objects.get(
+        #         name=geo_object_group_name)
+        #     print 'Deleting existing geoobject group named %s' % (
+        #         geo_object_group_name,
+        #     )
+        #     geo_object_group.delete()
+        # except GeoObjectGroup.DoesNotExist:
+        #     pass
 
         # Create new geoobject group with that name
-        geo_object_group = GeoObjectGroup(
+        geo_object_group, group_created = GeoObjectGroup.objects.get_or_create(
             name=geo_object_group_name,
             slug=slugify(os.path.basename(s['file']).split('.')[-2]),
-            created_by=s['user'],
+            defaults={'created_by': s['user']},
         )
+        if not group_created:
+            geo_object_group.created_by = s['user']
+            print 'Existing geo_object_group %s' % geo_object_group
         geo_object_group.save()
 
         # Add this geoobject group to lizard_area category of waterbodies
-        category.geo_object_groups.add(geo_object_group)
+        if group_created:
+            print 'New geo_object_group %s' % geo_object_group
+            category.geo_object_groups.add(geo_object_group)
 
         # Keep a dict of geo_object_groups for later assignment
         geogroups[s['data_administrator'].name] = geo_object_group
@@ -373,25 +378,48 @@ def import_waterbodies(wb_import_settings):
         for rec in _records(s['file']):
             owm_ident = rec['owmident'].strip()
             # Get or create area
-            try:
-                area = Area.objects.get(ident=owm_ident)
-            except Area.DoesNotExist:
-                owa_geometries = [owa_geometry[owa_ident]
-                                  for owa_ident in owa_idents[owm_ident]]
-                area = Area(
-                    # Fields from GeoObject
-                    ident=owm_ident,
-                    geometry=_combine(owa_geometries),
-                    geo_object_group=geogroups[s['data_administrator'].name],
-                    # Fields from Area
-                    area_class=Area.AREA_CLASS_KRW_WATERLICHAAM,
-                    data_administrator=s['data_administrator'],
-                    parent=None,
-                    # Fields from Communique
-                    name=rec['owmnaam'].strip(),
-                    code=None,
-                    description='',
-                )
+            # try:
+            #     area = Area.objects.get(ident=owm_ident)
+            # except Area.DoesNotExist:
+            #     owa_geometries = [owa_geometry[owa_ident]
+            #                       for owa_ident in owa_idents[owm_ident]]
+            #     area = Area(
+            #         # Fields from GeoObject
+            #         ident=owm_ident,
+            #         geometry=_combine(owa_geometries),
+            #         geo_object_group=geogroups[s['data_administrator'].name],
+            #         # Fields from Area
+            #         area_class=Area.AREA_CLASS_KRW_WATERLICHAAM,
+            #         data_administrator=s['data_administrator'],
+            #         parent=None,
+            #         # Fields from Communique
+            #         name=rec['owmnaam'].strip(),
+            #         code=None,
+            #         description='',
+            #     )
+            owa_geometries = [owa_geometry[owa_ident]
+                              for owa_ident in owa_idents[owm_ident]]
+            area_props = {
+                'geometry':_combine(owa_geometries),
+                'geo_object_group': geogroups[s['data_administrator'].name],
+                # Fields from Area
+                'area_class': Area.AREA_CLASS_KRW_WATERLICHAAM,
+                'data_administrator': s['data_administrator'],
+                'parent': None,
+                # Fields from Communique
+                'name':rec['owmnaam'].strip(),
+                'code':None,
+                'description':'',
+                }
+            area, area_created = Area.objects.get_or_create(
+                ident=owm_ident,
+                defaults=area_props)
+            if not area_created:
+                # Update existing
+                print 'Updating existing area %s...' % area
+                for k, v in area_props.items():
+                    area.__dict__[k] = v
+
             # Set data_set on area in any case, existing or imported here.
             area.data_set = s['data_set']
             area.save()
@@ -580,7 +608,7 @@ def update_measures(filename, typefilename):
     original_measures = dict([(m.ident, m) for m in Measure.objects.all()])
 
     amount_of_updates = 0
-    
+
     logger.info('Invalidating old measure periods.')
     MeasurePeriod.objects.all().update(valid=False)
 
@@ -680,12 +708,18 @@ def update_measures(filename, typefilename):
         'Updated %s MeasureTypes with units from use case',
         len(unit_map),
     )
-    
+
 
 
 class Command(BaseCommand):
     args = ''
-    help = 'Import and update from KRW portaal xml files.'
+    help = '''
+Import and update waterbodies from KRW portaal xml files.
+
+option 'reset': wipes out several lizard_measure models before starting. NOT RECOMMENDED.
+option 'measures': import measures
+option 'update_measures': update measures
+'''
     option_list = BaseCommand.option_list + (
         optparse.make_option(
             '--reset',
@@ -705,7 +739,9 @@ class Command(BaseCommand):
 
 
     def _init(self, import_path):
-
+	"""
+	Imports krw waterbodies from import_path
+	"""
         user = User.objects.get(pk=1)
 
         # Import Lookups
@@ -720,8 +756,8 @@ class Command(BaseCommand):
 
         wb_import_settings = {
             'geometry_files': [
-                os.path.join(import_path, 'owageovlakken.xml'),
                 os.path.join(import_path, 'owageolijnen.xml'),
+                os.path.join(import_path, 'owageovlakken.xml'),  # First lines
             ],
             'link_file': os.path.join(import_path, 'owa.xml'),
             'owm_sources': [],
@@ -743,6 +779,8 @@ class Command(BaseCommand):
 
         import_waterbodies(wb_import_settings=wb_import_settings)
 
+
+    def import_measures(self, import_path):
         # Maatregeltypes (SGBP)
         import_measure_types(
             filename=os.path.join(
@@ -801,6 +839,10 @@ class Command(BaseCommand):
         if not options.get('update'):
             self._init(import_path=import_path)
 
-        self._update(import_path=import_path)
+	if options.get('measures'):
+	    self.import_measures(import_path=import_path)
+
+	if options.get('update_measures'):
+            self._update(import_path=import_path)
 
 

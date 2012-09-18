@@ -5,7 +5,8 @@ Changelog of lizard-measure
 1.78.2 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Updated import_krw_portal to update existing Areas instead of
+  creating new ones.
 
 
 1.78.1 (2012-07-02)
