@@ -2,8 +2,8 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.80 (unreleased)
------------------
+1.79.1 (2012-09-18)
+-------------------
 
 - Hopefully removed dependency on Sentry.
 
