@@ -1131,8 +1131,7 @@ class Measure(models.Model):
         verbose_name=_('Area'),
     )
 
-    description = models.CharField(
-        max_length=512,
+    description = models.TextField(
         blank=True,
         null=True,
         verbose_name=_('Description'),

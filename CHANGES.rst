@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.79.2 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Changed the field 'description' of Measure model to TextField pp375.
 
 
 1.79.1 (2012-09-18)
