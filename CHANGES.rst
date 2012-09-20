@@ -5,7 +5,15 @@ Changelog of lizard-measure
 1.79.2 (unreleased)
 -------------------
 
-- Changed the field 'description' of Measure model to TextField pp375.
+- Changed the field 'description' of Measure model to TextField, pp375.
+
+- Added functionality to reset filters in 'Beheer/Maatregelen' form, pp370.
+
+- Removed limit for filters 'aan/ afvoer gebieden' and 'KRW waterlichamen' in 
+  'Beheer/Maatregelen' form, pp370.
+
+- Changed 'remote call' to 'local call' for the filters 'aan/ afvoer gebieden'
+  and 'KRW waterlichamen' in 'Beheer/Maatregelen' form, pp369.
 
 
 1.79.1 (2012-09-18)

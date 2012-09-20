@@ -77,13 +77,17 @@
             {
                 xtype: 'combo',
                 fieldLabel: 'aan/ afvoer gebieden',
+                labelWidth: 150,
                 width: 400,
                 name: 'area_filter',
                 displayField: 'name',
                 valueField: 'id',
-                //forceSelection: true,
                 queryMode: 'local',
+                forceSelection: true,
                 typeAhead: true,
+                minChars: 1,
+                triggerAction: 'all',
+                selectOnTab: true,
                 listeners: {
                     //scope: me,
                     'select': function (combobox, rec, scope) {
@@ -100,6 +104,7 @@
                 },
                 store: {
                     autoLoad:true,
+                    pageSize: 10000,
                     fields: [
                         {name: 'id', mapping: 'id' },
                         {name: 'name', mapping: 'name' }
@@ -116,19 +121,26 @@
             }, {
                 xtype: 'combo',
                 fieldLabel: 'KRW waterlichamen',
-                    name: 'waterbody_filter',
-                    width: 400,
-                    displayField: 'name',
-                    valueField: 'id',
-                    //forceSelection: true,
-                    queryMode: 'remote',
-                    typeAhead: true,
-                    listeners: {
+                name: 'waterbody_filter',
+                labelWidth: 150,
+                width: 400,
+                displayField: 'name',
+                valueField: 'id',
+                queryMode: 'remote',
+                typeAhead: true,
+                forceSelection: false,
+                minChars: 1,
+                triggerAction: 'all',
+                selectOnTab: true,
+                listeners: {
                         //scope: me,
                         'select': function (combobox, rec, scope) {
                             grid = combobox.up('leditgrid');
                             grid.store.filters.clear();
                             grid.store.filter('waterbody_id',rec[0].get('id'));
+                            if (combobox.getValue() == ''){
+                                combobox.setValue('');
+                            }
                             Ext.each(grid.query('combo'), function(combo){
                                 if (combo.name == 'area_filter') {
                                     combo.setValue('');
@@ -151,7 +163,20 @@
                             }
                         }
                     }
-            }],
+            },
+            { xtype: 'tbseparator' },
+            { xtype: 'button',
+	      text: "Reset filters",
+	      style: "marginLeft: 100",
+	      handler: function() {
+		  grid = this.up('leditgrid');
+		  Ext.each(grid.query('combo'), function(combo){
+		      combo.setValue('');
+                  })
+                  grid.store.filters.clear();
+		  grid.store.load();
+	      }}
+	    ],
             plugins: [
                 'applycontext'
             ],
