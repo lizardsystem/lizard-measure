@@ -5,7 +5,9 @@ Changelog of lizard-measure
 1.79.3 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Changed url parameter unit-as-y-label to unit_as_y_label.
+
+- Configured setup.py, testsettings.py to run test.
 
 
 1.79.2 (2012-09-20)

@@ -622,7 +622,7 @@ class SteerParameterGraphs(View):
 
         output['extra_params'] = {
             'item': items,
-            'unit-as-y-label': True,
+            'unit_as_y_label': True,
         }
         return output
 

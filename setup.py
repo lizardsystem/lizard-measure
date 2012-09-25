@@ -19,6 +19,7 @@ install_requires = [
     'lizard-history >= 0.2.3',
     'lizard-graph',
     'lizard-geo',
+    'lizard-fewsnorm',
     'lizard-map >= 1.71',
     'lizard-ui',
     'lizard-security',

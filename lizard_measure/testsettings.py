@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'lizard_graph',
     'lizard_history',
     'lizard_measure',
+    'lizard_fewsnorm',
     'django_extensions',
     'staticfiles',
     'compressor',
