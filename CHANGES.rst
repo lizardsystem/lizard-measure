@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.79.4 (unreleased)
+1.79.4 (2012-09-25)
 -------------------
 
 - Applied linebreaks filter to description field pp375.
