@@ -282,6 +282,7 @@
                 forceSelection: true,
                 width: 400,
                 store: {
+                    pageSize: 10000,
                     fields: ['id', 'name'],
                     proxy: {
                         type: 'ajax',
@@ -312,6 +313,7 @@
                 minChars:0,
                 width: 400,
                 store: {
+                    pageSize: 10000,
                     fields: ['id', 'name'],
                     proxy: {
                         type: 'ajax',
@@ -382,6 +384,7 @@
                     }
                 }],
                 combo_store: {
+		    pageSize: 10000,
                     fields: [
                         {name: 'id', mapping: 'id'},
                         {name: 'percentage', mapping: 'percentage', defaultValue: 0},
@@ -417,6 +420,7 @@
                 field_name: 'aan/ afvoer gebieden',
                 read_at_once: false,
                 combo_store: {
+                    pageSize: 10000,
                     fields: [
                         {name: 'id', mapping: 'id' },
                         {name: 'name', mapping: 'name' }
@@ -437,6 +441,7 @@
                 field_name: 'KRW waterlichamen',
                 read_at_once: false,
                 combo_store: {
+                    pageSize: 10000,
                     fields: [
                         {name: 'id', mapping: 'id' },
                         {name: 'name', mapping: 'name' }
