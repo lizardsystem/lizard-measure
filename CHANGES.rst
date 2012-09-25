@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.79.3 (unreleased)
+1.79.3 (2012-09-25)
 -------------------
 
 - Changed url parameter unit-as-y-label to unit_as_y_label.
