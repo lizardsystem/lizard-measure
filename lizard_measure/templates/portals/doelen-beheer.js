@@ -52,7 +52,7 @@
                 {name: 'mep', title: 'mep', editable: true, visible: true, width: 45, type: 'auto'},
                 {name: 'gep', title: 'gep', editable: true, visible: true, width: 45, type: 'auto'},
                 {name: 'limit_insufficient_moderate', title: 'matig', editable: true, visible: true, width: 45, type: 'auto'},
-                {name: 'limit_bad_insufficient', title: 'slecht', editable: true, visible: true, width: 45, type: 'auto'}
+                {name: 'limit_bad_insufficient', title: 'ontoereikend', editable: true, visible: true, width: 80, type: 'auto'}
 
            ]
         }]
