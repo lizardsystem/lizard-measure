@@ -113,7 +113,7 @@ def _sorted_measures(area):
     result_measures = []
     for p in parent_measures:
         result_measures.append(p)
-        child_measures = p.measure_set.all().order_by('title')
+        child_measures = p.measure_set.filter(Q(waterbodies__area=area)|Q(areas=area)).distinct().order_by('title')
         result_measures.extend(child_measures)
 
         # Keep track of added measures

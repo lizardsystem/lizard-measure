@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.79.5 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Fixed filter to select submeasures per area pp376.
 
 
 1.79.4 (2012-09-25)
