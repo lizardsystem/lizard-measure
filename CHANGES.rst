@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.79.6 (unreleased)
+1.79.6 (2012-09-26)
 -------------------
 
 - Changed field 'slecht' to 'ontoereikend' of 'ERK overzicht' overview pp381.
