@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.79.7 (unreleased)
+1.79.7 (2012-10-08)
 -------------------
 
 - Enabled field 'Naam' in 'Maatregel' form.
