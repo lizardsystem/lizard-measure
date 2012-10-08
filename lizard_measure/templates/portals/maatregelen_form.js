@@ -29,8 +29,6 @@
                 if (action.result.data.import_source == 'KRW-portaal') {
                     var ident = form.findField('ident');
                     ident.setDisabled(true);
-                    var title = form.findField('title');
-                    title.setDisabled(true);
 
                 }
             } catch (e) {
@@ -72,7 +70,7 @@
             name: 'title',
             anchor: '100%',
             xtype: 'textfield',
-            allowBlank: false
+	    allowBlank: true
         },
         {
             fieldLabel: 'Onderdeel van maatregel',

@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.79.7 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Enabled field 'Naam' in 'Maatregel' form.
 
 
 1.79.6 (2012-09-26)
