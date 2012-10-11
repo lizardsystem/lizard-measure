@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.79.8 (unreleased)
+1.79.8 (2012-10-11)
 -------------------
 
 - Fixed syntax errors.
