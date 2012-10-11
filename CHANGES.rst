@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.79.8 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Fixed syntax errors.
 
 
 1.79.7 (2012-10-08)
