@@ -70,7 +70,7 @@
             name: 'title',
             anchor: '100%',
             xtype: 'textfield',
-	    allowBlank: true
+            allowBlank: false
         },
         {
             fieldLabel: 'Onderdeel van maatregel',
