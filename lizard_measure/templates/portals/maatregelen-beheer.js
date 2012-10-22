@@ -150,6 +150,7 @@
                     },
                     store: {
                         autoLoad:true,
+                        pageSize: 10000,
                         fields: [
                             {name: 'id', mapping: 'id' },
                             {name: 'name', mapping: 'name' }
