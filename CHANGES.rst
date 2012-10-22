@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.79.9 (unreleased)
+1.79.9 (2012-10-22)
 -------------------
 
 - Replaced limit on 'KRW Waterlichamen' filter in 'Measure' form.
