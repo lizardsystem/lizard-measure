@@ -211,7 +211,7 @@
         </td>
         <td>
           <a href="javascript:Ext.getCmp('portalWindow').linkToPopup(
-            'maatregel {{ submeasure.title }}',
+            'maatregel {{ submeasure.title|addslashes }}',
             '/measure/measure/{{ submeasure.id }}/',
             {},
             {

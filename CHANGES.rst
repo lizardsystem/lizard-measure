@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.79.10 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Fixed error on open a 'maatregel' pp400, added filter 'addslashes' to measure.title. 
 
 
 1.79.9 (2012-10-22)
