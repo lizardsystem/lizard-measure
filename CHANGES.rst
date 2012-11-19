@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.79.10 (unreleased)
+1.79.10 (2012-11-19)
 --------------------
 
 - Fixed error on open a 'maatregel' pp400, added filter 'addslashes' to measure.title. 
