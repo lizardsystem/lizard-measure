@@ -4,15 +4,13 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from djangorestframework.views import View
 from lizard_area.models import Area
-from lizard_security.models import DataSet
 
 from lizard_measure.models import (
     EsfPattern,
     Measure,
     Organization,
-    PredefinedGraphSelection,
-    Score, 
-    SteeringParameterFree, 
+    Score,
+    SteeringParameterFree,
     SteeringParameterPredefinedGraph,
     WaterBody,
 )
@@ -30,9 +28,7 @@ class RootView(View):
     Startpoint.
     """
     def get(self, request):
-        return {
-            "measure": reverse("lizard_measure_api_measure"),
-            }
+        return {"measure": reverse("lizard_measure_api_measure")}
 
 
 class AreaFiltered(object):
@@ -89,7 +85,7 @@ class ScoreView(AreaFiltered, BaseApiView):
         'limit_bad_insufficient': 'limit_bad_insufficient',
         'target_2015': 'target_2015',
         'target_2027': 'target_2027',
-        'measuring_rod':'measuring_rod__description',
+        'measuring_rod': 'measuring_rod__description',
         'area': 'area__name',
     }
 
@@ -106,22 +102,19 @@ class ScoreView(AreaFiltered, BaseApiView):
 
         try:
             output = {
-        	'id': score.id,
+                'id': score.id,
                 'mep': score.mep,
-        	'gep': score.gep,
-        	'limit_insufficient_moderate': score.limit_insufficient_moderate,
-        	'limit_bad_insufficient': score.limit_bad_insufficient,
+                'gep': score.gep,
+                'limit_insufficient_moderate': score.limit_insufficient_moderate,
+                'limit_bad_insufficient': score.limit_bad_insufficient,
                 'target_2015': score.target_2015,
-        	'target_2027': score.target_2027,
+                'target_2027': score.target_2027,
                 'measuring_rod': self._get_related_object(
-                    score.measuring_rod,
-                    flat,
-                    ),
+                    score.measuring_rod, flat,),
                 'area': self._get_related_object(score.area, flat),
                 'latest_value': None,
                 'latest_comment': None,
-                'latest_timestamp': None,
-                }
+                'latest_timestamp': None}
             # Try to add most recent values
             try:
                 # print 'yeah values'
@@ -153,10 +146,10 @@ class SteeringParameterPredefinedGraphView(AreaFiltered, BaseApiView):
     model_class = SteeringParameterPredefinedGraph
     name_field = 'name'
 
-    valid_field=None
+    valid_field = None
 
     field_mapping = {
-       'id': 'id',
+        'id': 'id',
         'name': 'name',
         'area': 'area__name',
         'area_ident': 'area__ident',
@@ -211,7 +204,7 @@ class SteeringParameterFreeView(AreaFiltered, BaseApiView):
     model_class = SteeringParameterFree
     name_field = 'name'
 
-    valid_field=None
+    valid_field = None
 
     field_mapping = {
         'id': 'id',
@@ -268,7 +261,7 @@ class WaterBodyView(AreaFilteredOnlyWaterBodies, BaseApiView):
     model_class = WaterBody
     name_field = 'area__name'
 
-    valid_field=None
+    valid_field = None
 
     field_mapping = {
         'id': 'id',
@@ -306,8 +299,8 @@ class OrganizationView(BaseApiView):
     model_class = Organization
     name_field = 'description'
 
-    valid_field='valid'
-    valid_value=True
+    valid_field = 'valid'
+    valid_value = True
 
     field_mapping = {
         'id': 'id',
@@ -357,7 +350,7 @@ class OrganizationView(BaseApiView):
         """
             overwrite of base api to append code
         """
-        success, touched_objects =  super(OrganizationView, self).create_objects(data)
+        success, touched_objects = super(OrganizationView, self).create_objects(data)
 
         for object in touched_objects:
             object.code = object.id + 1000
@@ -373,8 +366,8 @@ class MeasureView(BaseApiView):
     model_class = Measure
     name_field = 'title'
 
-    valid_field='valid'
-    valid_value=True
+    valid_field = 'valid'
+    valid_value = True
 
     field_mapping = {
         'id': 'id',
@@ -404,6 +397,48 @@ class MeasureView(BaseApiView):
         'area_id': 'areas__id',
     }
 
+    def post(self, request):
+        """ """
+        #request params
+
+        action = request.GET.get('action', None)
+        size = request.GET.get('size', 'complete')
+        flat = self._str2bool_or_none(request.GET.get('flat', False))
+        include_geom = self._str2bool_or_none(request.GET.get('include_geom', True))
+        data = json.loads(self.CONTENT.get('data', []))
+        edit_message = self.CONTENT.get('edit_message', None)
+
+        size = self.size_dict[size.lower()]
+        return_dict = False
+
+        logger.debug("""input for api is:
+                action: %s
+                data: %s
+                edit_message: %s
+              """ % (str(action), str(data), str(edit_message)))
+
+        if type(data) == dict:
+            # get single object and return single object
+            return_dict = True
+            data = [data]
+
+        success, touched_objects = self.proceed_action(action, data)
+
+        if action == 'create':
+            self.set_dataset_object(touched_objects)
+        output = self.touched_object_to_dict(
+            touched_objects, flat, size, include_geom, return_dict)
+
+        return {'success': success,
+                'data': output}
+
+    def set_dataset_object(self, output):
+        """ Set DataSet object of first area to measures.
+        """
+        for measure in output:
+            measure.data_set = measure.areas.all()[0].data_set
+            measure.save()
+
     def get_object_for_api(self,
                            measure,
                            flat=True,
@@ -418,7 +453,7 @@ class MeasureView(BaseApiView):
         if size == self.ID_NAME:
             output = {
                 'id': measure.id,
-                'name': '%s (%s)'%(measure.title, measure.ident),
+                'name': '%s (%s)' % (measure.title, measure.ident),
             }
 
         if size >= self.SMALL:
@@ -486,9 +521,9 @@ class MeasureView(BaseApiView):
 
         if size >= self.COMPLETE:
             output.update({
-                'read_only': measure.read_only, #read only
-                'import_raw': measure.import_raw, #read only
-                'import_source': measure.get_import_source_display(), #read only
+                'read_only': measure.read_only,  # read only
+                'import_raw': measure.import_raw,  # read only
+                'import_source': measure.get_import_source_display(),  # read only
             })
 
         if include_geom:
@@ -524,7 +559,8 @@ class MeasureView(BaseApiView):
             record.set_statusmoments(linked_records)
         else:
             #areas, waterbodies, category
-            self.save_single_many2many_relation(record,
+            self.save_single_many2many_relation(
+                record,
                 model_field,
                 linked_records,
             )
@@ -542,7 +578,6 @@ class SteerParameterOverview(View):
 
         #parameters = SteeringParameterFree.objects.filter(area__in=areas).values('parameter_code')
 
-
         data = []
 
         for area in areas:
@@ -551,10 +586,10 @@ class SteerParameterOverview(View):
                 'name': area.name
             }
             for steerp in area.steeringparameterpredefinedgraph_set.all():
-                item['st_'+ steerp.predefined_graph.name] = 'X'
+                item['st_' + steerp.predefined_graph.name] = 'X'
 
             for param in area.steeringparameterfree_set.values('parameter_code').distinct():
-                item['stf_' + param['parameter_code'].replace('.', '_')]  = 'X'
+                item['stf_' + param['parameter_code'].replace('.', '_')] = 'X'
 
             data.append(item)
 
@@ -626,7 +661,6 @@ class SteerParameterGraphs(View):
         }
         return output
 
-
     def _get_predefined_graphsettings(self, graph):
 
         if graph.area_of_predefined_graph:
@@ -646,29 +680,29 @@ class SteerParameterGraphs(View):
             'name': name,
             'visible': True,
             'base_url': graph.predefined_graph.url,
-            'use_context_location': graph.area_of_predefined_graph == None,
+            'use_context_location': graph.area_of_predefined_graph is None,
             'location': location_ident,
             'extra_params': {
                 'graph': graph.predefined_graph.code
             },
         }
 
-    def get_data(self,area, only_configured_graphs=False):
+    def get_data(self, area, only_configured_graphs=False):
 
         graphs = []
         prefix = ''
         count = 0
 
-        for graph in area.steeringparameterfree_set.filter(for_evaluation = False).order_by('order'):
+        for graph in area.steeringparameterfree_set.filter(for_evaluation=False).order_by('order'):
             graphs.append(self._get_free_graphsettings(graph))
 
-        for graph in area.steeringparameterpredefinedgraph_set.filter(for_evaluation = False).order_by('order'):
+        for graph in area.steeringparameterpredefinedgraph_set.filter(for_evaluation=False).order_by('order'):
             graphs.append(self._get_predefined_graphsettings(graph))
 
-        for graph in area.steeringparameterfree_set.filter(for_evaluation = True).order_by('order'):
+        for graph in area.steeringparameterfree_set.filter(for_evaluation=True).order_by('order'):
             graphs.append(self._get_free_graphsettings(graph))
 
-        for graph in area.steeringparameterpredefinedgraph_set.filter(for_evaluation = True).order_by('order'):
+        for graph in area.steeringparameterpredefinedgraph_set.filter(for_evaluation=True).order_by('order'):
             graphs.append(self._get_predefined_graphsettings(graph))
 
         if not only_configured_graphs:
@@ -707,9 +741,7 @@ class SteerParameterGraphs(View):
 
         return graphs
 
-
     def get(self, request):
-
 
         area_ident = request.GET.get('object_id')
 
@@ -718,11 +750,7 @@ class SteerParameterGraphs(View):
         return self.get_data(area)
 
 
-
-
-
 class EsfPatternView(BaseApiView):
-
 
     model_class = EsfPattern
     name_field = 'pattern'
@@ -738,21 +766,17 @@ class EsfPatternView(BaseApiView):
         'read_only': 'data_set'  # for sort on read_only, use data_set (None == read_only)
     }
 
-    read_only_fields = [
-        'read_only',
-        ]
-
+    read_only_fields = ['read_only']
 
     def get_data_set_description(self, data_set):
         """
-        return dictiopnary with id, name. for None, the label 'landelijk' is used
-
+        return dictiopnary with id, name. for None, the label
+        'landelijk' is used
         """
         if data_set is None:
             return {'id': None, 'name': 'landelijk'}
         else:
             return {'id': data_set.id, 'name': data_set.__unicode__()}
-
 
     def get_object_for_api(self,
                            pattern,
@@ -769,8 +793,7 @@ class EsfPatternView(BaseApiView):
         if size == self.ID_NAME:
             output = {
                 'id': pattern.id,
-                'name': pattern.pattern,
-                }
+                'name': pattern.pattern}
 
         if size >= self.SMALL:
             output = {
@@ -778,7 +801,7 @@ class EsfPatternView(BaseApiView):
                 'pattern': pattern.pattern,
                 'watertype_group': self._get_related_object(pattern.watertype_group, flat),
                 'data_set': self.get_data_set_description(pattern.data_set),
-                'read_only': pattern.data_set == None,
+                'read_only': pattern.data_set is None,
                 'measure_types': self._get_related_objects(pattern.measure_types, flat)
             }
 
@@ -809,9 +832,9 @@ class EsfPatternView(BaseApiView):
             overwrite of base api to modify data_set
         """
         for rec in data:
-            if rec['data_set'][0]['id'] == None:
+            if rec['data_set'][0]['id'] is None:
                 del rec['data_set']
 
-        success, touched_objects =  super(EsfPatternView, self).create_objects(data)
+        success, touched_objects = super(EsfPatternView, self).create_objects(data)
 
         return success, touched_objects

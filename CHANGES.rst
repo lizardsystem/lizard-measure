@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.79.11 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Set DataSet object to measure on create pp397.
 
 
 1.79.10 (2012-11-19)
