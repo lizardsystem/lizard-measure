@@ -416,21 +416,20 @@ class MeasureView(BaseApiView):
                 data: %s
                 edit_message: %s
               """ % (str(action), str(data), str(edit_message)))
-
+        
         if type(data) == dict:
             # get single object and return single object
             return_dict = True
             data = [data]
 
         success, touched_objects = self.proceed_action(action, data)
-
         if action == 'create':
             self.set_dataset_object(touched_objects)
         output = self.touched_object_to_dict(
             touched_objects, flat, size, include_geom, return_dict)
 
         return {'success': success,
-                'data': output}
+                'data': [output]}
 
     def set_dataset_object(self, output):
         """ Set DataSet object of first area to measures.
