@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.80.2 (unreleased)
+1.80.2 (2012-12-11)
 -------------------
 
 - Fix error on update fixure.
