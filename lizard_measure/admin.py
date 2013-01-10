@@ -53,7 +53,7 @@ class PredefinedGraphSelectionAdmin(admin.ModelAdmin):
     list_display = ['name', 'code', 'url', 'for_area_type', 'valid']
 
 class SteeringParameterFreeAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['name', 'parameter_code', 'area']
 
 class MeasureAdmin(admin.ModelAdmin):
     filter_horizontal = [
