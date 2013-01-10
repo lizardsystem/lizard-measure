@@ -2,7 +2,7 @@ Changelog of lizard-measure
 ===================================================
 
 
-1.80.3 (unreleased)
+1.80.3 (2013-01-10)
 -------------------
 
 - Updated admin for SteerParameterFree model. pp.410.
