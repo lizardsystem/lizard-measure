@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.80.4 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Fix combobox to clear parent measure pp411.
 
 
 1.80.3 (2013-01-10)

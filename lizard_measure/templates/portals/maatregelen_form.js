@@ -78,8 +78,9 @@
             displayField: 'name',
             width: 400,
             valueField: 'id',
-            xtype: 'combodict',
+            xtype: 'clearablecombo',
             forceSelection: true,
+            emptyText:'Selecteer een maatregel ...',
             allowBlank: true,
             store: {
                 fields: ['id', 'name'],
