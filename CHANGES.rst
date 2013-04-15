@@ -5,7 +5,7 @@ Changelog of lizard-measure
 1.80.5 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Add scripts to import krw-scores, krw-measures for demo.
 
 
 1.80.4 (2013-01-24)
