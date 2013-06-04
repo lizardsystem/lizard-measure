@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!-- File: UMAquo2011-voorbeeld_labkenmerken.xml (test document) created by IHW (servicedesk@ihw.nl), version date: 20120302  -->
+<gml:FeatureCollection gml:id="id3"
+  xmlns:umam="http://www.aquo.nl/umam2011"
+  xmlns:gml="http://www.opengis.net/gml"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.opengis.net/gml http://schemas.opengis.net/gml/3.1.1/base/gml.xsd 
+	http://www.aquo.nl/umam2011 http://www.aquo.nl/aquo/schemas/uma2011.xsd">
+  <!--Dit is slechts een UMA-m voorbeeld van een XML bestand met oorspronkelijk daarin iWSR-gegevens, aangepast voor de nieuwe labkenmerken. -->
+	
+	<gml:boundedBy>
+		<gml:Envelope srsName="urn:ogc:def:crs:EPSG::28992" axisLabels="lat lon" uomLabels="deg deg" srsDimension="2">
+			<gml:lowerCorner>000000 280000</gml:lowerCorner>
+			<gml:upperCorner>300000 625000</gml:upperCorner>
+		</gml:Envelope>
+	</gml:boundedBy>
+	
+	<gml:featureMembers>
+	<umam:Maatregelen>
+		<umam:identificatie>NL.umam.11.MAT90886</umam:identificatie>
+		<umam:typeMaatregel>IN07;Inrichtingsmaatregelen;verbreden watergang/-systeem langzaam stromend of stilstaand: NVO kleiner dan 3 m</umam:typeMaatregel>
+		<umam:omschrijving>Aanleggen natuurvriendelijke oevers</umam:omschrijving>
+		<umam:eenheid>km;kilometer</umam:eenheid>
+		<umam:waarde>3</umam:waarde>
+		<umam:kostenMaatregel>
+			<umam:MaatregelKostenDatatype>
+				<umam:beginDatum>2100-01-01</umam:beginDatum>
+				<umam:kostenGrondverwerving>-9999</umam:kostenGrondverwerving>
+			</umam:MaatregelKostenDatatype>
+		</umam:kostenMaatregel>
+		<umam:initieleKostendrager>11;Hoogheemraadschap Amstel Gooi en Vecht</umam:initieleKostendrager>
+		<umam:planVerankering>simple</umam:planVerankering>
+		<umam:toepasselijkheidMaatregel>Kaderrichtlijn Water</umam:toepasselijkheidMaatregel>
+		<umam:geldenVoorWaterbeheerGebied xlink:type="simple" xlink:href="NL11_6_2, NL11_6_3"/>
+	</umam:Maatregelen>
+	<umam:Maatregelen>
+		<umam:identificatie>NL.umam.11.MAT90890</umam:identificatie>
+		<umam:typeMaatregel>BE03;Beheermaatregelen;uitvoeren op waterkwaliteit gericht onderhouds-/maaibeheer (water en natte oever)</umam:typeMaatregel>
+		<umam:omschrijving>Natuurvriendelijk onderhoud oevers in boezem en faunaverbinding</umam:omschrijving>
+		<umam:eenheid>km;kilometer</umam:eenheid>
+		<umam:kostenMaatregel>
+			<umam:MaatregelKostenDatatype>
+				<umam:beginDatum>2100-01-01</umam:beginDatum>
+				<umam:kostenGrondverwerving>-9999</umam:kostenGrondverwerving>
+			</umam:MaatregelKostenDatatype>
+		</umam:kostenMaatregel>
+		<umam:initieleKostendrager>11;Hoogheemraadschap Amstel Gooi en Vecht</umam:initieleKostendrager>
+		<umam:planVerankering>simple</umam:planVerankering>
+		<umam:toepasselijkheidMaatregel>Kaderrichtlijn Water</umam:toepasselijkheidMaatregel>
+		<umam:geldenVoorWaterbeheerGebied xlink:type="simple" xlink:href="NL11_2_2"/>
+	</umam:Maatregelen>
+	</gml:featureMembers>
+</gml:FeatureCollection>

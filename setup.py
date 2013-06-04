@@ -14,6 +14,7 @@ install_requires = [
     'Django',
     'django-staticfiles',
     'django-extensions',
+    'factory-boy',
     'lizard-area',
     'lizard-esf',
     'lizard-history >= 0.2.3',

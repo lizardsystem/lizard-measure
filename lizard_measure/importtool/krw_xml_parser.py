@@ -1,0 +1,118 @@
+#!/usr/bin/python
+# (c) Nelen & Schuurmans. PGL licansed, see LICENSE.txt.
+
+import logging
+
+from lxml import objectify
+
+from lizard_measure.importtool.measurefile import (
+    MatIdentificatie,
+    TypeMaatregel,
+    WATERBEHEERDER_DATASET,
+    MeasureObject,
+    MaatregelKostenDatatype,
+    InitieleKostendrager,
+    GeldenVoorWaterbeheerGebied,
+)
+logger = logging.getLogger(__name__)
+
+
+class XMLParser(object):
+
+    def __init__(self, filepath):
+        self.filepath = filepath
+        with open(filepath) as xmlfile:
+            self.root = objectify.fromstring(xmlfile.read())
+
+
+class MeasureXMLParser(XMLParser):
+    """Parse Maatregelen.xml from krw-portal."""
+
+    def __init__(self, filepath):
+        XMLParser.__init__(self, filepath)
+        self.measure_tags = self.root.featureMembers.getchildren()
+
+    def parse(self, dataset_name):
+        """Return list of MeasureObjects."""
+        measure_objects = []
+        for measure_tag in self.measure_tags:
+            identificatie = self.parse_identificatie(measure_tag)
+            if dataset_name != WATERBEHEERDER_DATASET.get(
+                identificatie.waterschapid):
+                continue
+            measure_object = MeasureObject()
+            measure_object.identificatie = identificatie
+            measure_object.typeMaatregel = self.parse_typemaatregel(
+                measure_tag)
+            measure_object.omschrijving = self.parse_omschrijving(measure_tag)
+            measure_object.waarde = self.parse_waarde(measure_tag)
+            measure_object.maatregelKostenDatatype = self.parse_kostendatatype(
+                measure_tag)
+            measure_object.initieleKostendrager = self.parse_initielekostendrager(
+                measure_tag)
+            measure_object.geldenVoorWaterbeheerGebied = self.parse_geldenvoorwaterbeheergebieden(measure_tag)
+            measure_object.importRaw = objectify.dump(measure_tag)
+
+            measure_objects.append(measure_object)
+
+        return measure_objects
+
+    def parse_omschrijving(self, measure_tag):
+        try:
+            return measure_tag.omschrijving.text
+        except AttributeError:
+            logger.exception("Attr. omschrijving not exists for {}.".format(
+                    measure_tag.identificatie.text))
+            return ""
+
+    def parse_waarde(self, measure_tag):
+        try:
+            return measure_tag.waarde.text
+        except AttributeError:
+            logger.warning("Attr. waarde not exists for {}.".format(
+                    measure_tag.identificatie.text))
+
+    def parse_identificatie(self, measure_tag):
+        """Return Identificatie object.
+        Identificatie(land, waterschapid, matident)"""
+        values = measure_tag.identificatie.text.split('.')
+        identificatie = MatIdentificatie(
+            values[0], values[2], values[3][3:])
+        return identificatie
+
+    def parse_typemaatregel(self, measure_tag):
+        """Returns typeMaatregel object.
+       TypeMaatregel(code, naam, title)"""
+        values = measure_tag.typeMaatregel.text.split(';')
+        return TypeMaatregel(values[0], values[1], values[2])
+
+    def parse_kostendatatype(self, measure_tag):
+        """Return MaatregelKostenDatatype object."""
+        dt = '1-1-1970'
+        kosten = 0
+        try:
+            dt = measure_tag.kostenMaatregel.MaatregelKostenDatatype.beginDatum.text
+            kosten = measure_tag.kostenMaatregel.MaatregelKostenDatatype.kostenGrondverwerving.text
+        except AttributeError:
+            logger.exception(measure_tag.identificatie.text)
+
+        try:
+            if float(kosten) < 0:
+                kosten = 0
+        except:
+            logger.exception()
+        return MaatregelKostenDatatype(dt, kosten)
+
+    def parse_initielekostendrager(self, measure_tag):
+        """Return InitieleKostenDrager object.
+        InitieleKostendrager(waterschapId, naam)"""
+        values = measure_tag.initieleKostendrager.text.split(';')
+        kostendrager = InitieleKostendrager(values[0], values[1])
+        return kostendrager
+
+    def parse_geldenvoorwaterbeheergebieden(self, measure_tag):
+        """Return GeldenVoorWaterbeheerGebied object."""
+        value = measure_tag.geldenVoorWaterbeheerGebied.attrib.get(
+            '{http://www.w3.org/1999/xlink}href')
+        values = value.replace(' ', '').split(',')
+        return GeldenVoorWaterbeheerGebied(values)
