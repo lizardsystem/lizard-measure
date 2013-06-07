@@ -1,9 +1,8 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
 
+import os
 from django.test import TestCase
 from django.http import QueryDict
-from django.db import models as djmodels
-from lizard_measure import test_models
 
 from lizard_measure.views import HorizontalBarGraphView
 
@@ -15,6 +14,7 @@ from lizard_measure.views import COLOR_5
 from lizard_measure.views import value_to_html_color
 from lizard_measure.importtool.krw_xml_parser import (
     MeasureXMLParser,
+    ScoreXMLParser,
 )
 from lizard_measure import test_models as testmodels
 
@@ -79,7 +79,6 @@ class ValueToHtmlColorTest(TestCase):
 class MeasureXMLParserTest(TestCase):
 
     def setUp(self):
-        import os
         filepath = os.path.join(
             os.path.dirname(__file__),
             "test_data/test_measure.xml")
@@ -134,3 +133,36 @@ class MeasureXMLParserTest(TestCase):
         mat2_gebieden = self.measure_objects[1].geldenVoorWaterbeheerGebied.gebieden
         self.assertTrue(len(mat1_gebieden) == 2)
         self.assertTrue(len(mat2_gebieden) == 1)
+
+
+class ScoreXMLParserTest(TestCase):
+
+    def setUp(self):
+        filepath = os.path.join(
+            os.path.dirname(__file__),
+            "test_data/test_doelen.xml")
+        self.parser = ScoreXMLParser(filepath)
+        self.score_objects = self.parser.parse("Waternet")
+
+    def test_parse_vantoepassingopgeoobject(self):
+        ident = "NL11_1_1"
+        parsed_ident = self.score_objects[0].vanToepassingOpGeoObject
+        self.assertTrue(ident == parsed_ident)
+
+    def test_parse_chemischestof(self):
+        parameter = "O2"
+        omschrijving = "zuurstof"
+        parsed_parameter = self.score_objects[0].chemischeStof.parameter
+        parsed_omschrijving = self.score_objects[0].chemischeStof.omschrijving
+        self.assertTrue(parameter == parsed_parameter)
+        self.assertTrue(omschrijving == parsed_omschrijving)
+
+    def test_parse_onderdeelvannormpakket(self):
+        onderdeelvannormpakket = '80130'
+        parsed_onderdeelvannormpakket = self.score_objects[0].onderdeelvannormpakket
+        self.assertTrue(onderdeelvannormpakket == parsed_onderdeelvannormpakket)
+
+    def test_parse_identificatie(self):
+        scoreid = '80130'
+        parsed_scoreid = self.score_objects[0].identificatie.scoreid
+        self.assertTrue(scoreid == parsed_scoreid)

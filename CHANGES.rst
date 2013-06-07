@@ -5,8 +5,9 @@ Changelog of lizard-measure
 1.80.6 (unreleased)
 -------------------
 
-- Added functionality to import krw-measures from
-  xml-file, new format.
+- Added functionality to import krw-measures, krw-scores from
+  xml-file, new format (see management command 'import_krw_score_new' and
+  'import_krw_measure_new').
 
 
 1.80.5 (2013-04-15)

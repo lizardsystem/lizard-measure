@@ -15,9 +15,9 @@ logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     """
-    Insert new measure for provided data_set.
+    Insert new measures for provided data_set.
     """
-    help = ("Example: bin/django import_krw_portaal --action=insert --dataset_name=Waternet")
+    help = ("Example: bin/django import_krw_measure_new --action=insert --dataset_name=Waternet")
 
     option_list = BaseCommand.option_list + (
         make_option('--action',

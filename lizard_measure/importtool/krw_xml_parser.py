@@ -14,6 +14,13 @@ from lizard_measure.importtool.measurefile import (
     InitieleKostendrager,
     GeldenVoorWaterbeheerGebied,
 )
+
+from lizard_measure.importtool.scorefile import (
+    ScoreObject,
+    ChemischeStof,
+    ScoreIdentificatie,
+)
+
 logger = logging.getLogger(__name__)
 
 
@@ -23,6 +30,57 @@ class XMLParser(object):
         self.filepath = filepath
         with open(filepath) as xmlfile:
             self.root = objectify.fromstring(xmlfile.read())
+
+
+class ScoreXMLParser(XMLParser):
+    """Parse doelen.xml from krw-portal."""
+
+    def __init__(self, filepath):
+        XMLParser.__init__(self, filepath)
+        self.toetsnorm_tags = self.root.featureMembers.getchildren()
+
+    def parse(self, dataset_name):
+        score_objects = []
+        for toetsnorm_tag in self.toetsnorm_tags:
+            identificatie = self.parse_identificatie(toetsnorm_tag)
+            if dataset_name != WATERBEHEERDER_DATASET.get(
+                identificatie.waterschapid):
+                continue
+            score_object = ScoreObject()
+            score_object.identificatie = identificatie
+            score_object.vanToepassingOpGeoObject = self.parse_vantoepassingopgeoobject(
+                toetsnorm_tag)
+            score_object.chemischeStof = self.parse_chemischestof(toetsnorm_tag) 
+            score_object.onderdeelvannormpakket = self.parse_onderdeelvannormpakket(
+                toetsnorm_tag)
+            score_objects.append(score_object)           
+        return score_objects
+
+    def parse_identificatie(self, toetsnorm_tag):
+        """Return ScoreIdentificatie object.
+        ScoreIdentificatie(land, waterschapid, scoreid)"""
+        values = toetsnorm_tag.identificatie.text.split('.')
+        identificatie = ScoreIdentificatie(
+            values[0], values[2], values[3][3:])
+        return identificatie
+
+    def parse_vantoepassingopgeoobject(self, toetsnorm_tag):
+        """Return ident of geo object as string."""
+        value = toetsnorm_tag.vanToepassingOpGeoObject.attrib.get(
+            '{http://www.w3.org/1999/xlink}href')
+        return value
+
+    def parse_chemischestof(self, toetsnorm_tag):
+        """Return instance of ChemisheStof(parameter, omschrijving) class."""
+        value = toetsnorm_tag.kwaliteitsElementOfParameter.ParameterTyperingDataType.parameterGrootheid.ParameterGrootheidDataType.parameter.StofDataType.chemischeStof.text
+        values = value.split(';')
+        return ChemischeStof(values[0], values[1])
+
+    def parse_onderdeelvannormpakket(self, toetsnorm_tag):
+        """Return id of parent score."""
+        value = toetsnorm_tag.onderdeelVanNormpakket.attrib.get(
+            '{http://www.w3.org/1999/xlink}href')
+        return value
 
 
 class MeasureXMLParser(XMLParser):
@@ -73,8 +131,8 @@ class MeasureXMLParser(XMLParser):
                     measure_tag.identificatie.text))
 
     def parse_identificatie(self, measure_tag):
-        """Return Identificatie object.
-        Identificatie(land, waterschapid, matident)"""
+        """Return MatIdentificatie object.
+        MatIdentificatie(land, waterschapid, matident)"""
         values = measure_tag.identificatie.text.split('.')
         identificatie = MatIdentificatie(
             values[0], values[2], values[3][3:])
