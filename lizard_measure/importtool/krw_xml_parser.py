@@ -71,7 +71,7 @@ class ScoreXMLParser(XMLParser):
         return value
 
     def parse_chemischestof(self, toetsnorm_tag):
-        """Return instance of ChemisheStof(parameter, omschrijving) class."""
+        """Return instance of ChemischeStof(parameter, omschrijving) class."""
         value = toetsnorm_tag.kwaliteitsElementOfParameter.ParameterTyperingDataType.parameterGrootheid.ParameterGrootheidDataType.parameter.StofDataType.chemischeStof.text
         values = value.split(';')
         return ChemischeStof(values[0], values[1])
